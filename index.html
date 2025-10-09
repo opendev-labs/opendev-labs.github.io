@@ -14,12 +14,12 @@
       theme: {
         extend: {
           animation: {
-            'dotPulse': 'dotPulse 1.4s infinite ease-in-out both',
+            'blinkingCursor': 'blinkingCursor 1s step-end infinite',
           },
           keyframes: {
-            dotPulse: {
-                '0%, 80%, 100%': { transform: 'scale(0)' },
-                '40%': { transform: 'scale(1)' },
+            blinkingCursor: {
+                '0%, 100%': { opacity: '1' },
+                '50%': { opacity: '0' },
             }
           }
         },
@@ -61,23 +61,8 @@
   }
 }
 </script>
-  <script type="module" crossorigin src="/assets/index-BTbUu0Hd.js"></script>
+  <script type="module" crossorigin src="/assets/index-B39D-nC0.js"></script>
 </head>
-    <style>
-      body {
-        background-image: url('/background.jpg');
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        background-attachment: fixed; /* Optional: fixes background during scroll */
-        min-height: 100vh; /* Ensure body covers full viewport height */
-        margin: 0; /* Remove default body margin */
-      }
-      /* Optional: Ensure #root div doesn't obstruct background if it has a solid background */
-      #root {
-        background-color: transparent; 
-      }
-    </style>
 <body class="dark">
   <div id="root"></div>
 </body>
