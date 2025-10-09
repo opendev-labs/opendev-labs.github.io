@@ -61,8 +61,23 @@
   }
 }
 </script>
-  <script type="module" crossorigin src="/assets/index-BXtU687w.js"></script>
+  <script type="module" crossorigin src="/assets/index-BTbUu0Hd.js"></script>
 </head>
+    <style>
+      body {
+        background-image: url('/background.jpg');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed; /* Optional: fixes background during scroll */
+        min-height: 100vh; /* Ensure body covers full viewport height */
+        margin: 0; /* Remove default body margin */
+      }
+      /* Optional: Ensure #root div doesn't obstruct background if it has a solid background */
+      #root {
+        background-color: transparent; 
+      }
+    </style>
 <body class="dark">
   <div id="root"></div>
 </body>
