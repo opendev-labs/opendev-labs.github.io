@@ -4,7 +4,7 @@ import { getFirestore, collection, addDoc, getDocs, query, where, doc, setDoc, u
 
 // Configuration from existing Void project
 const firebaseConfig = {
-    apiKey: "REDACTED_GOOGLE_KEY_3",
+    apiKey: "", // SECURITY: Removed leaked API key. Use environment variables.
     authDomain: "void-v1.firebaseapp.com",
     projectId: "void-v1",
     storageBucket: "void-v1.firebasestorage.app",
