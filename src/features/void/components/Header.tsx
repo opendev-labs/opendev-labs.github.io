@@ -9,6 +9,17 @@ import {
   NewProjectIcon
 } from './common/Icons';
 
+/* --- ASSETS --- */
+import LogoQuantum from '../../../assets/logos/quantum.png';
+import LogoQbet from '../../../assets/logos/qbet.png';
+import LogoTranscender from '../../../assets/logos/transcender.png';
+import LogoLamaDB from '../../../assets/logos/lamadb.png';
+import LogoQCloud from '../../../assets/logos/qcloud.png';
+import LogoSyncStack from '../../../assets/logos/syncstack.png';
+import LogoCoWriter from '../../../assets/logos/cowriter.png';
+import LogoAgentBash from '../../../assets/logos/agentbash.png';
+import LogoSpoonCLI from '../../../assets/logos/spooncli.png';
+
 /* --- ICONS & LOGO --- */
 
 const AppLogo = () => (
@@ -37,30 +48,70 @@ const UserAvatar = ({ name }: { name: string }) => {
 
 const MENU_ITEMS = {
   platform: {
-    label: "Platform",
-    items: [
-      { name: "Runtime Fabric", desc: "Global edge execution engine", icon: CpuChipIcon, path: "/ide/platform/fabric" },
-      { name: "Deployments", desc: "Zero-config builds & scaling", icon: RocketLaunchIcon, path: "/ide/deploy" },
-      { name: "Execution Grid", desc: "Serverless compute primitives", icon: CubeIcon, path: "/ide/platform/grid" },
-      { name: "Observability", desc: "Deep system introspection", icon: ChartBarIcon, path: "/ide/platform/observability" },
+    label: "Products",
+    sections: [
+      {
+        title: "Intelligence",
+        items: [
+          { name: "Project Quantum", desc: "Intelligent quantum-logic orchestration", icon: SparklesIcon, path: "/quantum" },
+          { name: "Co-Writer", desc: "Collaborative neural-assisted composition", icon: BookOpenIcon, path: "/co-writer" },
+          { name: "AgentBash", desc: "Autonomous agentic CLI primitives", icon: TerminalIcon, path: "/agentbash" },
+        ]
+      },
+      {
+        title: "Compute & State",
+        items: [
+          { name: "QBET", desc: "High-fidelity terminal for sovereign nodes", icon: CommandLineIcon, path: "/ide" },
+          { name: "LamaDB", desc: "Native browser database for high-velocity state", icon: CubeIcon, path: "/lamadb" },
+          { name: "Q-Cloud", desc: "Quantum-ready serverless infrastructure", icon: RocketLaunchIcon, path: "/q-cloud" },
+        ]
+      },
+      {
+        title: "Infrastructure",
+        items: [
+          { name: "Transcender", desc: "Neural mesh connectivity protocol", icon: CpuChipIcon, path: "/transcender" },
+          { name: "SyncStack", desc: "Distributed state synchronization layer", icon: PuzzlePieceIcon, path: "/syncstack" },
+          { name: "Spoon-CLI", desc: "The standard for high-pressure clusters", icon: TerminalIcon, path: "/cli" },
+        ]
+      }
     ]
   },
   ai: {
-    label: "AI",
-    items: [
-      { name: "HeroChat UI", desc: "Quantum intelligence interface", icon: SparklesIcon, path: "/ide/ai/chat" },
-      { name: "Intent Compiler", desc: "Natural language to infrastructure", icon: CommandLineIcon, path: "/ide/ai/compiler" },
-      { name: "Agent Runtime", desc: "Host autonomous compiled agents", icon: CpuChipIcon, path: "/ide/ai/agents" },
-      { name: "Model Gateway", desc: "Unified LLM routing & caching", icon: CubeIcon, path: "/ide/ai/gateway" },
+    label: "Intelligence",
+    sections: [
+      {
+        title: "AI Interface",
+        items: [
+          { name: "HeroChat UI", desc: "Quantum intelligence interface", icon: SparklesIcon, path: "/ide/ai/chat" },
+          { name: "Intent Compiler", desc: "Natural language to infrastructure", icon: CommandLineIcon, path: "/ide/ai/compiler" },
+        ]
+      },
+      {
+        title: "Runtime",
+        items: [
+          { name: "Agent Runtime", desc: "Host autonomous compiled agents", icon: CpuChipIcon, path: "/ide/ai/agents" },
+          { name: "Model Gateway", desc: "Unified LLM routing & caching", icon: CubeIcon, path: "/ide/ai/gateway" },
+        ]
+      }
     ]
   },
   developers: {
-    label: "Developers",
-    items: [
-      { name: "Documentation", desc: "Guides, references, and specs", icon: BookOpenIcon, path: "/ide/docs" },
-      { name: "APIs", desc: "Programmatic control", icon: TerminalIcon, path: "/ide/docs/api" },
-      { name: "SDKs", desc: "Type-safe client libraries", icon: CubeIcon, path: "/ide/docs/sdks" },
-      { name: "Examples", desc: "Starters and patterns", icon: PuzzlePieceIcon, path: "/ide/docs/examples" },
+    label: "Resources",
+    sections: [
+      {
+        title: "Learning",
+        items: [
+          { name: "Documentation", desc: "Guides, references, and specs", icon: BookOpenIcon, path: "/ide/docs" },
+          { name: "SDKs", desc: "Type-safe client libraries", icon: CubeIcon, path: "/ide/docs/sdks" },
+        ]
+      },
+      {
+        title: "Reference",
+        items: [
+          { name: "APIs", desc: "Programmatic control", icon: TerminalIcon, path: "/ide/docs/api" },
+          { name: "Examples", desc: "Starters and patterns", icon: PuzzlePieceIcon, path: "/ide/docs/examples" },
+        ]
+      }
     ]
   }
 };
@@ -95,8 +146,8 @@ const NavItem: React.FC<{
       </button>
 
       {/* Dropdown Menu */}
-      <div className={`absolute top-full left-0 pt-2 w-max min-w-[240px] z-50 transition-all duration-200 origin-top-left ${isOpen ? 'opacity-100 translate-y-0 visible' : 'opacity-0 translate-y-1 invisible'}`}>
-        <div className="bg-black border border-zinc-900 rounded-lg p-2 shadow-2xl ring-1 ring-white/5">
+      <div className={`absolute top-full left-0 pt-2 z-50 transition-all duration-300 origin-top-left ${isOpen ? 'opacity-100 translate-y-0 visible' : 'opacity-0 translate-y-1 invisible'}`}>
+        <div className="bg-[#050505] border border-zinc-900 rounded-xl p-6 shadow-[0_0_50px_-12px_rgba(0,0,0,0.5)] ring-1 ring-white/10">
           {children}
         </div>
       </div>
@@ -112,16 +163,16 @@ const MenuItem: React.FC<{
 }> = ({ name, desc, icon: Icon, path }) => (
   <Link
     to={path}
-    className="flex items-start gap-3 p-3 rounded-md hover:bg-zinc-950 transition-colors group"
+    className="flex items-start gap-4 p-3 rounded-lg hover:bg-zinc-900/50 transition-all duration-200 group border border-transparent hover:border-zinc-800"
   >
-    <div className="mt-0.5 text-zinc-500 group-hover:text-white transition-colors">
-      <Icon className="w-5 h-5" />
+    <div className="w-8 h-8 rounded-md bg-zinc-950 border border-zinc-900 flex items-center justify-center flex-shrink-0 group-hover:border-zinc-700 transition-colors">
+      <Icon className="w-4 h-4 text-zinc-500 group-hover:text-white transition-colors" />
     </div>
-    <div>
-      <div className="text-[13px] font-semibold text-zinc-200 group-hover:text-white leading-none mb-1.5">
+    <div className="text-left">
+      <div className="text-[13px] font-bold text-zinc-100 group-hover:text-white leading-tight mb-0.5">
         {name}
       </div>
-      <div className="text-[11px] text-zinc-500 font-medium leading-snug group-hover:text-zinc-400">
+      <div className="text-[11px] text-zinc-500 font-medium leading-snug group-hover:text-zinc-400 max-w-[180px]">
         {desc}
       </div>
     </div>
@@ -155,25 +206,46 @@ export const Header: React.FC = () => {
           {/* Desktop Nav */}
           <nav className="hidden lg:flex items-center gap-6">
             <NavItem label={MENU_ITEMS.platform.label}>
-              <div className="grid grid-cols-1 w-[320px] gap-1">
-                {MENU_ITEMS.platform.items.map((item) => (
-                  <MenuItem key={item.name} {...item} />
+              <div className="flex gap-8 w-[900px]">
+                {MENU_ITEMS.platform.sections?.map((section) => (
+                  <div key={section.title} className="flex-1">
+                    <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest px-3 mb-3">
+                      {section.title}
+                    </div>
+                    <div className="grid grid-cols-1 gap-1">
+                      {section.items.map(p => <MenuItem key={p.name} {...p} />)}
+                    </div>
+                  </div>
                 ))}
               </div>
             </NavItem>
 
             <NavItem label={MENU_ITEMS.ai.label}>
-              <div className="grid grid-cols-1 w-[300px] gap-1">
-                {MENU_ITEMS.ai.items.map((item) => (
-                  <MenuItem key={item.name} {...item} />
+              <div className="flex gap-8 w-[600px]">
+                {MENU_ITEMS.ai.sections?.map((section) => (
+                  <div key={section.title} className="flex-1">
+                    <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest px-3 mb-3">
+                      {section.title}
+                    </div>
+                    <div className="grid grid-cols-1 gap-1">
+                      {section.items.map(p => <MenuItem key={p.name} {...p} />)}
+                    </div>
+                  </div>
                 ))}
               </div>
             </NavItem>
 
             <NavItem label={MENU_ITEMS.developers.label}>
-              <div className="grid grid-cols-1 w-[280px] gap-1">
-                {MENU_ITEMS.developers.items.map((item) => (
-                  <MenuItem key={item.name} {...item} />
+              <div className="flex gap-8 w-[600px]">
+                {MENU_ITEMS.developers.sections?.map((section) => (
+                  <div key={section.title} className="flex-1">
+                    <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest px-3 mb-3">
+                      {section.title}
+                    </div>
+                    <div className="grid grid-cols-1 gap-1">
+                      {section.items.map(p => <MenuItem key={p.name} {...p} />)}
+                    </div>
+                  </div>
                 ))}
               </div>
             </NavItem>
@@ -239,7 +311,7 @@ export const Header: React.FC = () => {
             <div key={key}>
               <h3 className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest mb-4">{section.label}</h3>
               <div className="flex flex-col gap-2">
-                {section.items.map(item => (
+                {section.sections?.map(s => s.items).flat().map(item => (
                   <Link
                     key={item.name}
                     to={item.path}
