@@ -14,7 +14,7 @@ const Footer = () => (
     <div className="container mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
       <div className="flex items-center gap-2">
         <Logo />
-        <span className="font-bold tracking-tighter text-lg uppercase">opendev-labs.</span>
+        <span className="font-bold tracking-tighter text-lg lowercase">opendev-labs</span>
       </div>
       <div className="flex gap-8 text-[10px] font-bold text-zinc-500 uppercase tracking-widest">
         <Link to="/changelog" className="hover:text-white transition-colors">Changelog</Link>
@@ -50,7 +50,7 @@ export default function Layout() {
           <div className="flex items-center gap-8">
             <Link to="/" className="flex items-center gap-3 group">
               <Logo />
-              <span className="font-bold tracking-tighter text-xl group-hover:opacity-80 transition-opacity uppercase">opendev-labs.</span>
+              <span className="font-bold tracking-tighter text-xl group-hover:opacity-80 transition-opacity lowercase">opendev-labs</span>
             </Link>
 
             <div className="hidden md:flex items-center gap-6">
