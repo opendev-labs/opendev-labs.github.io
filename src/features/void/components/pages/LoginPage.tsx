@@ -1,150 +1,144 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { safeNavigate } from '../../services/navigation'; // Keep for other uses if needed, or remove
-import { GitHubIcon, GitLabIcon, GmailIcon } from '../common/Icons';
 import { useAuth } from '../../hooks/useAuth';
-import { ErrorMessage } from '../common/ErrorMessage';
-import { GITHUB_CLIENT_ID, GITHUB_OAUTH_URL, GITHUB_SCOPES } from '../../config';
-import { motion } from 'framer-motion';
-
-const AppLogo = () => (
-    <div className="w-8 h-8 bg-white rotate-45 flex items-center justify-center overflow-hidden mx-auto mb-4">
-        <div className="w-6 h-6 bg-black rotate-[-45deg]"></div>
-    </div>
-);
-
+import { GitHubIcon } from '../common/Icons';
+import loginBg from '../../../../assets/login-bg.jpg';
 
 export const LoginPage: React.FC = () => {
-    const { login, loginWithGitHub } = useAuth();
-    const [error, setError] = useState('');
+    const { loginWithGitHub, isAuthenticated } = useAuth();
     const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState('');
     const navigate = useNavigate();
+
+    // If already authenticated, redirect to dashboard
+    useEffect(() => {
+        if (isAuthenticated) {
+            navigate('/ide/dashboard');
+        }
+    }, [isAuthenticated, navigate]);
 
     const handleGitHubLogin = async () => {
         setIsLoading(true);
+        setError('');
         try {
             await loginWithGitHub();
+            // Redirect happens via useEffect if successful
         } catch (err: any) {
-            console.error(err);
-            setError('Failed to sign in with GitHub. Please try again.');
+            console.error("Login Error:", err);
+            setError(err.message || "Failed to authenticate with GitHub. Infrastructure is in simulation mode.");
         } finally {
             setIsLoading(false);
         }
     };
 
-    const handleNav = (e: React.MouseEvent<HTMLAnchorElement>, path: string) => {
-        e.preventDefault();
-        navigate(path);
-    };
-
-    const handleGmailLogin = () => {
-        login({ name: 'Demo User', email: 'demo.user@gmail.com' });
-    };
-
-    const handleGitLabLogin = () => {
-        login({ name: 'GitLab User', email: 'user@gitlab.com' });
-    };
-
-    const handleEmailLogin = (e: React.FormEvent) => {
-        e.preventDefault();
-        setError('');
-        const formData = new FormData(e.target as HTMLFormElement);
-        const email = formData.get('email') as string;
-        const password = formData.get('password') as string;
-
-        if (!email || !password) {
-            setError('Please enter both email and password.');
-            return;
-        }
-
-        if (!/\S+@\S+\.\S+/.test(email)) {
-            setError('Please enter a valid email address.');
-            return;
-        }
-
-        localStorage.setItem('void_verification_user', JSON.stringify({ email, name: 'Valued User' }));
-        navigate('/ide/verify-email');
-    };
-
     return (
-        <div className="py-20 flex items-center justify-center relative overflow-hidden bg-black">
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-white/5 blur-[120px] rounded-full pointer-events-none" />
+        <div className="fixed inset-0 flex flex-col md:flex-row bg-black overflow-hidden selection:bg-white selection:text-black">
+            {/* Left Side: Cyberpunk Immersion */}
+            <div className="hidden md:flex md:w-3/5 lg:w-2/3 relative h-full overflow-hidden border-r border-zinc-900">
+                <div
+                    className="absolute inset-0 bg-cover bg-center transition-transform duration-[20s] hover:scale-110"
+                    style={{ backgroundImage: `url(${loginBg})` }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black opacity-60" />
+                <div className="absolute inset-0 bg-black/20" />
 
-            <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-                className="w-full max-w-md p-10 bg-zinc-950 border border-zinc-900 rounded-2xl relative z-10"
-            >
-                <div className="text-center mb-10">
-                    <AppLogo />
-                    <h1 className="text-2xl font-bold tracking-tighter text-white mb-2 uppercase tracking-[0.2em]">opendev-labs</h1>
-                    <p className="text-zinc-500 text-sm font-medium">Log in to your account</p>
-                </div>
-
-                <div className="space-y-4">
-                    <button
-                        onClick={handleGitHubLogin}
-                        disabled={isLoading}
-                        className="w-full h-11 flex items-center justify-center gap-3 bg-white text-black rounded-full text-[11px] font-bold uppercase tracking-widest hover:bg-zinc-200 transition-all hover:scale-105 active:scale-95 shadow-lg shadow-white/5 disabled:opacity-50"
-                    >
-                        <GitHubIcon className="w-5 h-5 text-black" />
-                        <span>Continue with GitHub</span>
-                    </button>
-
-                    <div className="grid grid-cols-2 gap-4">
-                        <button
-                            onClick={handleGitLabLogin}
-                            className="flex items-center justify-center h-10 gap-3 bg-zinc-900 border border-zinc-800 rounded-md text-zinc-300 hover:text-white hover:border-zinc-700 transition-all active:scale-[0.98]"
-                        >
-                            <GitLabIcon className="w-4 h-4" />
-                            <span className="text-xs font-bold">GitLab</span>
-                        </button>
-                        <button
-                            onClick={handleGmailLogin}
-                            className="flex items-center justify-center h-10 gap-3 bg-zinc-900 border border-zinc-800 rounded-md text-zinc-300 hover:text-white hover:border-zinc-700 transition-all active:scale-[0.98]"
-                        >
-                            <GmailIcon className="w-4 h-4" />
-                            <span className="text-xs font-bold">Google</span>
-                        </button>
+                <div className="absolute bottom-12 left-12 max-w-lg z-20">
+                    <div className="flex items-center gap-3 mb-6 bg-white/5 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 w-fit">
+                        <div className="w-2 h-2 bg-white rounded-full animate-pulse" />
+                        <span className="text-[10px] text-white font-bold uppercase tracking-[0.2em]">Global Edge Network</span>
                     </div>
+                    <h1 className="text-5xl font-bold text-white tracking-tighter mb-4 leading-none">
+                        ENTER THE<br /><span className="text-zinc-400">INTELLIGENCE.</span>
+                    </h1>
+                    <p className="text-zinc-400 text-lg font-medium tracking-tight">
+                        Deploy your infrastructure at the speed of thought.
+                        Join the elite protocol favored by architecture architects.
+                    </p>
                 </div>
 
-                <div className="my-8 flex items-center">
-                    <div className="flex-grow border-t border-zinc-900"></div>
-                    <span className="flex-shrink mx-4 text-[10px] font-bold text-zinc-600 uppercase tracking-widest">OR</span>
-                    <div className="flex-grow border-t border-zinc-900"></div>
-                </div>
-
-                <form className="space-y-4" onSubmit={handleEmailLogin}>
-                    {error && <ErrorMessage message={error} />}
-                    <div className="space-y-4">
-                        <input
-                            type="email"
-                            name="email"
-                            className="w-full bg-zinc-900 border border-zinc-800 py-3 px-4 rounded-md text-sm text-white focus:outline-none focus:border-zinc-600 transition-all placeholder:text-zinc-700 font-medium"
-                            placeholder="Email address"
-                        />
-                        <input
-                            type="password"
-                            name="password"
-                            className="w-full bg-zinc-900 border border-zinc-800 py-3 px-4 rounded-md text-sm text-white focus:outline-none focus:border-zinc-600 transition-all placeholder:text-zinc-700 font-medium"
-                            placeholder="Password"
-                        />
-                    </div>
-                    <button type="submit" className="w-full py-3 px-4 bg-zinc-900 border border-zinc-800 hover:bg-zinc-800 hover:border-zinc-700 text-white text-sm font-bold rounded-md transition-all active:scale-[0.98]">
-                        Sign in with Email
-                    </button>
-                </form>
-
-                <p className="mt-10 text-center text-xs text-zinc-500 font-medium">
-                    Don't have an account?{' '}
-                    <Link to="/ide/signup" className="text-white hover:underline transition-colors">
-                        Create an account
+                <div className="absolute top-12 left-12 z-20">
+                    <Link to="/" className="flex items-center gap-2 group">
+                        <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <div className="w-4 h-4 border-2 border-black rounded-sm" />
+                        </div>
+                        <span className="text-white font-bold tracking-tighter text-xl">opendev-labs</span>
                     </Link>
-                </p>
-            </motion.div>
+                </div>
+            </div>
+
+            {/* Right Side: Professional Protocol Authorization */}
+            <div className="w-full md:w-2/5 lg:w-1/3 h-full flex items-center justify-center p-8 bg-black">
+                <div className="w-full max-w-sm">
+                    <div className="md:hidden flex flex-col items-center mb-12">
+                        <Link to="/" className="flex items-center gap-2 mb-4">
+                            <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center">
+                                <div className="w-5 h-5 border-[2.5px] border-black rounded-sm" />
+                            </div>
+                            <span className="text-white font-bold tracking-tighter text-2xl">opendev-labs</span>
+                        </Link>
+                    </div>
+
+                    <div className="mb-10 text-center md:text-left">
+                        <h2 className="text-3xl font-bold text-white tracking-tighter mb-2">Initialize Session</h2>
+                        <p className="text-zinc-500 text-sm font-medium">Authenticate to access the orchestration dashboard.</p>
+                    </div>
+
+                    <div className="space-y-4">
+                        {error && (
+                            <div className="p-4 bg-zinc-900 border border-zinc-800 rounded-xl mb-6">
+                                <p className="text-xs text-zinc-400 leading-relaxed italic">{error}</p>
+                                <p className="text-[10px] text-zinc-600 font-bold uppercase tracking-widest mt-2 border-t border-zinc-800 pt-2">Fallback protocol active</p>
+                            </div>
+                        )}
+
+                        <button
+                            onClick={handleGitHubLogin}
+                            disabled={isLoading}
+                            className="w-full h-12 flex items-center justify-center gap-3 bg-white text-black rounded-full text-[11px] font-bold uppercase tracking-widest hover:bg-zinc-200 transition-all hover:scale-[1.02] active:scale-95 shadow-xl shadow-white/5 disabled:opacity-50"
+                        >
+                            {isLoading ? (
+                                <div className="w-5 h-5 border-2 border-black border-t-transparent rounded-full animate-spin" />
+                            ) : (
+                                <GitHubIcon className="w-5 h-5" />
+                            )}
+                            <span>Continue with GitHub</span>
+                        </button>
+
+                        <div className="relative my-8">
+                            <div className="absolute inset-0 flex items-center">
+                                <div className="w-full border-t border-zinc-900"></div>
+                            </div>
+                            <div className="relative flex justify-center text-[10px] uppercase font-bold tracking-[0.2em]">
+                                <span className="bg-black px-4 text-zinc-700">or management</span>
+                            </div>
+                        </div>
+
+                        <div className="space-y-3">
+                            <input
+                                type="email"
+                                placeholder="ACCESS_IDENTITY@DOMAIN"
+                                className="w-full h-12 bg-black border border-zinc-900 rounded-xl px-5 text-sm text-white placeholder:text-zinc-700 focus:outline-none focus:border-zinc-500 transition-colors tracking-tight font-mono"
+                            />
+                            <button className="w-full h-12 bg-zinc-950 border border-zinc-900 text-zinc-500 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-zinc-900 hover:text-white transition-all">
+                                Request Access Link
+                            </button>
+                        </div>
+                    </div>
+
+                    <p className="mt-12 text-center md:text-left text-xs text-zinc-600 font-medium leading-relaxed">
+                        By initializing, you agree to our <Link to="/terms" className="text-zinc-400 hover:underline">Terms of Protocol</Link> and <Link to="/privacy" className="text-zinc-400 hover:underline">Privacy Policy</Link>.
+                    </p>
+
+                    <div className="mt-12 pt-8 border-t border-zinc-900 text-center md:text-left">
+                        <p className="text-xs text-zinc-500">
+                            Don't have an account?{' '}
+                            <Link to="/signup" className="text-white font-bold hover:underline ml-1">
+                                Join Protocol
+                            </Link>
+                        </p>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 };
-

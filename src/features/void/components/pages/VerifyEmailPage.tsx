@@ -1,6 +1,6 @@
-
 import React, { useState, useEffect, useMemo } from 'react';
 import { useAuth } from '../../hooks/useAuth';
+import { Link } from 'react-router-dom';
 import type { User } from '../../types';
 
 const FAKE_CODE = '123456';
@@ -45,45 +45,55 @@ export const VerifyEmailPage: React.FC = () => {
     }, [userToVerify]);
 
     return (
-        <div className="min-h-[70vh] flex items-center justify-center px-4 bg-black py-20">
+        <div className="min-h-screen flex items-center justify-center px-4 bg-black py-20 selection:bg-white selection:text-black">
             <div className="w-full max-w-sm">
-                <div className="text-center mb-10">
-                    <h1 className="text-3xl font-bold tracking-tighter text-white mb-2">Check your email</h1>
-                    <p className="text-zinc-500 text-sm font-medium">We sent a verification code to <span className="text-white font-mono">{emailDisplay}</span>.</p>
+                <div className="text-center mb-12">
+                    <Link to="/" className="inline-flex items-center gap-2 mb-8 group">
+                        <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <div className="w-5 h-5 border-[2.5px] border-black rounded-sm" />
+                        </div>
+                        <span className="text-white font-bold tracking-tighter text-2xl">opendev-labs</span>
+                    </Link>
+                    <h1 className="text-4xl font-bold tracking-tighter text-white mb-3">Identity Audit</h1>
+                    <p className="text-zinc-500 text-sm font-medium">Verify your transmission to <span className="text-white font-mono">{emailDisplay}</span>.</p>
                 </div>
 
-                <div className="bg-zinc-950 border border-zinc-900 rounded-xl p-8 text-center mb-10 shadow-2xl">
-                    <p className="text-zinc-500 text-xs font-bold uppercase tracking-widest mb-4">Your Code</p>
-                    <p className="text-4xl font-mono tracking-[0.2em] text-white font-bold my-4 select-all">{FAKE_CODE}</p>
-                    <div className="pt-4 border-t border-zinc-900">
-                        <p className="text-[10px] text-zinc-600 font-bold uppercase tracking-tighter italic">Simulation Mode: No email was dispatched.</p>
+                <div className="bg-zinc-950/50 border border-zinc-900 rounded-[32px] p-10 text-center mb-10 shadow-2xl backdrop-blur-sm">
+                    <p className="text-[10px] text-zinc-600 font-bold uppercase tracking-[0.3em] mb-6">Sequence Payload</p>
+                    <p className="text-5xl font-mono tracking-[0.2em] text-white font-bold my-6 select-all">{FAKE_CODE}</p>
+                    <div className="pt-6 border-t border-zinc-900">
+                        <p className="text-[10px] text-zinc-700 font-bold uppercase tracking-widest italic leading-relaxed">Simulation Protocol: Hardware dispatch bypassed.</p>
                     </div>
                 </div>
 
                 <form className="space-y-6" onSubmit={handleVerify}>
                     <div>
-                        <label htmlFor="code" className="sr-only">Verification Code</label>
                         <input
                             type="text"
-                            id="code"
                             value={code}
                             onChange={(e) => setCode(e.target.value)}
-                            className="w-full bg-zinc-950 border border-zinc-900 py-3 px-4 text-[13px] text-center text-white font-mono rounded-md placeholder:text-zinc-700 focus:outline-none focus:ring-1 focus:ring-white transition-all"
-                            placeholder="Enter 6-digit code"
+                            className="w-full h-12 bg-black border border-zinc-900 px-5 text-center text-white font-mono text-lg rounded-xl placeholder:text-zinc-800 focus:outline-none focus:border-zinc-500 transition-colors"
+                            placeholder="000000"
                             required
                         />
                     </div>
 
-                    {error && <p className="text-xs text-red-500 text-center font-bold uppercase tracking-tight">{error}</p>}
+                    {error && <p className="text-[10px] text-red-500 text-center font-bold uppercase tracking-widest">{error}</p>}
 
-                    <button type="submit" className="w-full h-11 bg-white text-black text-[11px] font-bold uppercase tracking-widest rounded-full hover:bg-zinc-200 transition-all hover:scale-105 active:scale-95 shadow-lg shadow-white/5">
+                    <button type="submit" className="w-full h-12 bg-white text-black text-[11px] font-bold uppercase tracking-widest rounded-full hover:bg-zinc-200 transition-all hover:scale-[1.02] active:scale-95 shadow-xl shadow-white/5">
                         Verify Identity
                     </button>
 
-                    <button type="button" className="w-full text-zinc-500 text-xs font-bold hover:text-white transition-colors uppercase tracking-widest">
-                        Resend Code
+                    <button type="button" className="w-full text-zinc-500 text-[10px] font-bold hover:text-white transition-colors uppercase tracking-[0.3em]">
+                        Re-dispatch Sequence
                     </button>
                 </form>
+
+                <div className="mt-12 text-center">
+                    <Link to="/login" className="text-xs text-zinc-600 hover:text-white font-bold uppercase tracking-widest transition-colors">
+                        Abort Mission & Return
+                    </Link>
+                </div>
             </div>
         </div>
     );

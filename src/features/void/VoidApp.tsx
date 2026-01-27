@@ -221,9 +221,6 @@ const AppContent: React.FC = () => {
                             <Route path="deploy/:id" element={<DeploymentPage projectId="" />} />
                             <Route path="docs/*" element={<DocsPage />} />
                             <Route path="pricing" element={<PricingPage />} />
-                            <Route path="login" element={<LoginPage />} />
-                            <Route path="signup" element={<SignUpPage />} />
-                            <Route path="verify-email" element={<VerifyEmailPage />} />
                             <Route path="upgrade" element={<UpgradePage />} />
                             <Route path="usage" element={<UsagePage />} />
                             <Route path="cli" element={<CLIPage projects={projects} onUpdateProject={handleUpdateProject} />} />
