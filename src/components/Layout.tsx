@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Menu, X, LayoutDashboard, Terminal, Database, Server, Box } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -17,9 +17,9 @@ const Footer = () => (
         <span className="font-bold tracking-tighter text-lg uppercase">opendev-labs.</span>
       </div>
       <div className="flex gap-8 text-[10px] font-bold text-zinc-500 uppercase tracking-widest">
-        <Link to="/docs" className="hover:text-white transition-colors">Documentation</Link>
+        <Link to="/changelog" className="hover:text-white transition-colors">Changelog</Link>
+        <Link to="/docs" className="hover:text-white transition-colors">Docs</Link>
         <Link to="/pricing" className="hover:text-white transition-colors">Pricing</Link>
-        <Link to="/cli" className="hover:text-white transition-colors">CLI</Link>
         <a href="https://github.com/opendev-labs" className="hover:text-white transition-colors">GitHub</a>
       </div>
       <p className="text-[10px] font-bold text-zinc-700 uppercase tracking-[0.2em]">
@@ -40,6 +40,7 @@ export default function Layout() {
     { name: 'Q-Cloud', href: '/q-cloud' },
     { name: 'SyncStack', href: '/syncstack' },
     { name: 'Dashboard', href: '/ide' },
+    { name: 'Changelog', href: '/changelog' },
   ];
 
   return (
@@ -56,8 +57,7 @@ export default function Layout() {
               <Link
                 key={link.name}
                 to={link.href}
-                className={`text-[11px] font-bold uppercase tracking-widest transition-colors hover:text-white ${pathname === link.href ? 'text-white' : 'text-zinc-500'
-                  }`}
+                className={`text-[11px] font-bold uppercase tracking-widest transition-colors hover:text-white ${pathname === link.href ? "text-white" : "text-zinc-500"}`}
               >
                 {link.name}
               </Link>
@@ -97,7 +97,6 @@ export default function Layout() {
           </button>
         </div>
 
-        {/* Mobile Menu */}
         {isOpen && (
           <div className="absolute top-16 left-0 w-full bg-black border-b border-zinc-900 p-6 flex flex-col gap-6 md:hidden animate-in fade-in slide-in-from-top-4 duration-200">
             {navLinks.map((link) => (

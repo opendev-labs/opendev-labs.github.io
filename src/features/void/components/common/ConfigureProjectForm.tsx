@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { AnimatedLoaderIcon } from './AnimatedLoaderIcon';
 
@@ -14,13 +13,13 @@ export const ConfigureProjectForm: React.FC<ConfigureProjectFormProps> = ({ defa
     const [createRepo, setCreateRepo] = useState(false);
     const [isPrivate, setIsPrivate] = useState(false);
     const [isDeploying, setIsDeploying] = useState(false);
+
     const urlFriendlyName = projectName.toLowerCase().replace(/[^a-z0-9-]/g, '-');
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (projectName.trim() && !isDeploying) {
             setIsDeploying(true);
-            // Simulate network delay before navigating
             setTimeout(() => {
                 onDeploy(projectName.trim(), createRepo, isPrivate);
             }, 1000);
@@ -43,6 +42,7 @@ export const ConfigureProjectForm: React.FC<ConfigureProjectFormProps> = ({ defa
                     This project will be initialized at <code className="text-white italic">{urlFriendlyName}.opendev.app</code>
                 </p>
             </div>
+
             <div className="flex justify-end gap-4">
                 <button type="button" onClick={onCancel} className="h-10 border border-zinc-900 text-[10px] font-bold text-zinc-500 uppercase tracking-widest px-8 hover:border-white hover:text-white transition-all disabled:opacity-20" disabled={isDeploying}>
                     Abort
