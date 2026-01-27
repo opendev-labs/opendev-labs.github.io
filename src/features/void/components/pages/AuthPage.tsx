@@ -4,7 +4,7 @@ import { useAuth } from '../../hooks/useAuth';
 import { GitHubIcon } from '../common/Icons';
 import loginBg from '../../../../assets/login-bg.jpg';
 
-export const LoginPage: React.FC = () => {
+export const AuthPage: React.FC = () => {
     const { loginWithGitHub, isAuthenticated } = useAuth();
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');

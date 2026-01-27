@@ -10,10 +10,9 @@ import { mockProjects, generateInitialProjectData, availableIntegrations } from 
 import { DocsPage } from './components/pages/DocsPage';
 import { NewProjectPage } from './components/pages/NewProjectPage';
 import { PricingPage } from './components/pages/PricingPage';
-import { LoginPage } from './components/pages/LoginPage';
-import { SignUpPage } from './components/pages/SignUpPage';
 import { UpgradePage } from './components/pages/UpgradePage';
 import { VerifyEmailPage } from './components/pages/VerifyEmailPage';
+import { AuthPage } from './components/pages/AuthPage';
 import { HomePage } from './components/pages/HomePage';
 import { UsagePage } from './components/pages/UsagePage';
 import { NotFoundPage } from './components/pages/NotFoundPage';
