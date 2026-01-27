@@ -15,8 +15,7 @@ import SyncStack from './pages/SyncStack';
 import Changelog from './pages/Changelog';
 
 const VoidApp = lazy(() => import('./features/void/VoidApp'));
-const LazyLoginPage = lazy(() => import('./features/void/components/pages/LoginPage').then(m => ({ default: m.LoginPage })));
-const LazySignUpPage = lazy(() => import('./features/void/components/pages/SignUpPage').then(m => ({ default: m.SignUpPage })));
+const LazyAuthPage = lazy(() => import('./features/void/components/pages/AuthPage').then(m => ({ default: m.LoginPage })));
 const LazyVerifyEmailPage = lazy(() => import('./features/void/components/pages/VerifyEmailPage').then(m => ({ default: m.VerifyEmailPage })));
 
 // Wrapper to handle scroll on route change
@@ -45,14 +44,9 @@ const AppRoutes = () => {
           <Route path="contact" element={<Contact />} />
           <Route path="changelog" element={<Changelog />} />
 
-          <Route path="login" element={
+          <Route path="auth" element={
             <Suspense fallback={<div className="min-h-screen bg-black" />}>
-              <LazyLoginPage />
-            </Suspense>
-          } />
-          <Route path="signup" element={
-            <Suspense fallback={<div className="min-h-screen bg-black" />}>
-              <LazySignUpPage />
+              <LazyAuthPage />
             </Suspense>
           } />
           <Route path="verify-email" element={

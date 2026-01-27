@@ -12,7 +12,8 @@ export default function Home() {
                     <img
                         src={HeroBg}
                         alt="Background"
-                        className="w-full h-full object-cover opacity-80 scale-105"
+                        className="w-full h-full object-cover opacity-60 scale-105 will-change-transform"
+                        style={{ objectPosition: 'center 20%' }}
                     />
 
                     {/* Dark Vignette Overlay - Darker at edges */}
