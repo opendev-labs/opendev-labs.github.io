@@ -21,7 +21,7 @@ export default function SyncStack() {
                     </p>
 
                     <div className="flex flex-col md:flex-row items-center justify-center gap-4 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300">
-                        <Link to="/ide" className="h-12 px-10 rounded-full bg-white text-black text-[11px] font-bold uppercase tracking-widest hover:bg-zinc-200 transition-all hover:scale-105 active:scale-95 flex items-center justify-center shadow-lg shadow-white/5">
+                        <Link to="/void" className="h-12 px-10 rounded-full bg-white text-black text-[11px] font-bold uppercase tracking-widest hover:bg-zinc-200 transition-all hover:scale-105 active:scale-95 flex items-center justify-center shadow-lg shadow-white/5">
                             Initialize Cluster
                         </Link>
                         <a href="https://github.com/opendev-labs/syncstack" className="h-12 px-10 rounded-full border border-zinc-900 text-white text-[11px] font-bold uppercase tracking-widest hover:bg-zinc-900 transition-all hover:scale-105 active:scale-95 flex items-center justify-center shadow-lg">
@@ -97,7 +97,7 @@ export default function SyncStack() {
             {/* CTA Section */}
             <section className="py-40 text-center">
                 <h2 className="text-4xl font-bold tracking-tighter uppercase mb-12">Synchronize Your Nexus.</h2>
-                <Link to="/ide" className="group inline-flex items-center gap-3 text-[10px] font-bold uppercase tracking-[0.3em] text-zinc-500 hover:text-white transition-all">
+                <Link to="/void" className="group inline-flex items-center gap-3 text-[10px] font-bold uppercase tracking-[0.3em] text-zinc-500 hover:text-white transition-all">
                     Initialize SyncStack Cluster <ArrowRight size={16} className="group-hover:translate-x-2 transition-transform" />
                 </Link>
             </section>

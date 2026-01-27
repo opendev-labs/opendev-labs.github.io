@@ -61,7 +61,7 @@ const MENU_ITEMS = {
       {
         title: "Compute & State",
         items: [
-          { name: "QBET", desc: "High-fidelity terminal for sovereign nodes", icon: CommandLineIcon, path: "/ide" },
+          { name: "QBET", desc: "High-fidelity terminal for sovereign nodes", icon: CommandLineIcon, path: "/void" },
           { name: "LamaDB", desc: "Native browser database for high-velocity state", icon: CubeIcon, path: "/lamadb" },
           { name: "Q-Cloud", desc: "Quantum-ready serverless infrastructure", icon: RocketLaunchIcon, path: "/q-cloud" },
         ]
@@ -82,15 +82,15 @@ const MENU_ITEMS = {
       {
         title: "AI Interface",
         items: [
-          { name: "HeroChat UI", desc: "Quantum intelligence interface", icon: SparklesIcon, path: "/ide/ai/chat" },
-          { name: "Intent Compiler", desc: "Natural language to infrastructure", icon: CommandLineIcon, path: "/ide/ai/compiler" },
+          { name: "HeroChat UI", desc: "Quantum intelligence interface", icon: SparklesIcon, path: "/void/ai/chat" },
+          { name: "Intent Compiler", desc: "Natural language to infrastructure", icon: CommandLineIcon, path: "/void/ai/compiler" },
         ]
       },
       {
         title: "Runtime",
         items: [
-          { name: "Agent Runtime", desc: "Host autonomous compiled agents", icon: CpuChipIcon, path: "/ide/ai/agents" },
-          { name: "Model Gateway", desc: "Unified LLM routing & caching", icon: CubeIcon, path: "/ide/ai/gateway" },
+          { name: "Agent Runtime", desc: "Host autonomous compiled agents", icon: CpuChipIcon, path: "/void/ai/agents" },
+          { name: "Model Gateway", desc: "Unified LLM routing & caching", icon: CubeIcon, path: "/void/ai/gateway" },
         ]
       }
     ]
@@ -101,15 +101,15 @@ const MENU_ITEMS = {
       {
         title: "Learning",
         items: [
-          { name: "Documentation", desc: "Guides, references, and specs", icon: BookOpenIcon, path: "/ide/docs" },
-          { name: "SDKs", desc: "Type-safe client libraries", icon: CubeIcon, path: "/ide/docs/sdks" },
+          { name: "Documentation", desc: "Guides, references, and specs", icon: BookOpenIcon, path: "/void/docs" },
+          { name: "SDKs", desc: "Type-safe client libraries", icon: CubeIcon, path: "/void/docs/sdks" },
         ]
       },
       {
         title: "Reference",
         items: [
-          { name: "APIs", desc: "Programmatic control", icon: TerminalIcon, path: "/ide/docs/api" },
-          { name: "Examples", desc: "Starters and patterns", icon: PuzzlePieceIcon, path: "/ide/docs/examples" },
+          { name: "APIs", desc: "Programmatic control", icon: TerminalIcon, path: "/void/docs/api" },
+          { name: "Examples", desc: "Starters and patterns", icon: PuzzlePieceIcon, path: "/void/docs/examples" },
         ]
       }
     ]
@@ -250,7 +250,7 @@ export const Header: React.FC = () => {
               </div>
             </NavItem>
 
-            <Link to="/ide/pricing" className="text-[13px] font-medium text-zinc-400 hover:text-white transition-colors">
+            <Link to="/void/pricing" className="text-[13px] font-medium text-zinc-400 hover:text-white transition-colors">
               Pricing
             </Link>
           </nav>
@@ -261,7 +261,7 @@ export const Header: React.FC = () => {
           {isAuthenticated && user ? (
             <div className="flex items-center gap-4">
               <Link
-                to="/ide/new"
+                to="/void/new"
                 className="hidden sm:flex items-center gap-2 text-[11px] font-bold text-zinc-400 hover:text-white transition-colors border border-zinc-800 rounded-md px-3 py-1.5 hover:border-zinc-700 bg-zinc-950 uppercase tracking-widest"
               >
                 <NewProjectIcon /> <span>New Project</span>
@@ -276,8 +276,8 @@ export const Header: React.FC = () => {
                   <div className="px-4 py-2 border-b border-zinc-900">
                     <p className="text-xs text-white font-bold truncate uppercase tracking-tight">{user.name}</p>
                   </div>
-                  <Link to="/ide/dashboard" className="block w-full text-left px-4 py-2 text-xs font-semibold text-zinc-400 hover:text-white hover:bg-zinc-900 transition-colors">Dashboard</Link>
-                  <Link to="/ide/settings" className="block w-full text-left px-4 py-2 text-xs font-semibold text-zinc-400 hover:text-white hover:bg-zinc-900 transition-colors">Settings</Link>
+                  <Link to="/void/dashboard" className="block w-full text-left px-4 py-2 text-xs font-semibold text-zinc-400 hover:text-white hover:bg-zinc-900 transition-colors">Dashboard</Link>
+                  <Link to="/void/settings" className="block w-full text-left px-4 py-2 text-xs font-semibold text-zinc-400 hover:text-white hover:bg-zinc-900 transition-colors">Settings</Link>
                   <div className="h-px bg-zinc-900 my-1"></div>
                   <button onClick={logout} className="w-full text-left px-4 py-2 text-xs font-semibold text-red-500 hover:text-red-400 hover:bg-zinc-900 transition-colors">Log Out</button>
                 </div>
@@ -285,11 +285,11 @@ export const Header: React.FC = () => {
             </div>
           ) : (
             <div className="flex items-center gap-3">
-              <Link to="/ide/login" className="text-[13px] font-medium text-zinc-400 hover:text-white transition-colors">
+              <Link to="/void/login" className="text-[13px] font-medium text-zinc-400 hover:text-white transition-colors">
                 Login
               </Link>
               <Link
-                to="/ide/signup"
+                to="/void/signup"
                 className="text-[13px] font-bold bg-white text-black px-4 py-1.5 rounded-md hover:bg-zinc-200 transition-colors"
               >
                 Launch
@@ -326,7 +326,7 @@ export const Header: React.FC = () => {
             </div>
           ))}
           <div className="h-px bg-zinc-900 my-2"></div>
-          <Link to="/ide/pricing" onClick={() => setIsMobileMenuOpen(false)} className="text-sm font-bold text-white uppercase tracking-widest">Pricing</Link>
+          <Link to="/void/pricing" onClick={() => setIsMobileMenuOpen(false)} className="text-sm font-bold text-white uppercase tracking-widest">Pricing</Link>
         </div>
       )}
     </header>

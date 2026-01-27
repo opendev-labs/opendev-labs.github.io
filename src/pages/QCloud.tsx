@@ -25,7 +25,7 @@ export default function QCloud() {
                     </p>
 
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                        <Link to="/ide" className="w-full sm:w-auto h-12 px-10 rounded-full bg-white text-black text-[11px] font-bold uppercase tracking-widest hover:bg-zinc-200 transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-2 shadow-lg">
+                        <Link to="/void" className="w-full sm:w-auto h-12 px-10 rounded-full bg-white text-black text-[11px] font-bold uppercase tracking-widest hover:bg-zinc-200 transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-2 shadow-lg">
                             Deploy Now <ArrowRight size={16} />
                         </Link>
                         <Link to="/enterprise" className="w-full sm:w-auto h-12 px-10 rounded-full bg-black border border-zinc-800 text-white text-[11px] font-bold uppercase tracking-widest hover:bg-zinc-900 transition-all hover:scale-105 active:scale-95 flex items-center justify-center shadow-lg">

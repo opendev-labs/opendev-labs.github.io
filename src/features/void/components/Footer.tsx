@@ -31,18 +31,18 @@ export const Footer: React.FC = () => {
         <div className="space-y-4">
           <h4 className="text-[11px] font-bold uppercase tracking-widest text-zinc-400">Platform</h4>
           <ul className="space-y-3 flex flex-col">
-            <FooterLink to="/ide/new">Deploy</FooterLink>
-            <FooterLink to="/ide/cli">CLI</FooterLink>
-            <FooterLink to="/ide/docs">Functions</FooterLink>
-            <FooterLink to="/ide/docs">Databases</FooterLink>
+            <FooterLink to="/void/new">Deploy</FooterLink>
+            <FooterLink to="/void/cli">CLI</FooterLink>
+            <FooterLink to="/void/docs">Functions</FooterLink>
+            <FooterLink to="/void/docs">Databases</FooterLink>
           </ul>
         </div>
 
         <div className="space-y-4">
           <h4 className="text-[11px] font-bold uppercase tracking-widest text-zinc-400">Resources</h4>
           <ul className="space-y-3 flex flex-col">
-            <FooterLink to="/ide/docs">Documentation</FooterLink>
-            <FooterLink to="/ide/docs">Status</FooterLink>
+            <FooterLink to="/void/docs">Documentation</FooterLink>
+            <FooterLink to="/void/docs">Status</FooterLink>
             <FooterLink to="/">Home</FooterLink>
           </ul>
         </div>
@@ -50,9 +50,9 @@ export const Footer: React.FC = () => {
         <div className="space-y-4">
           <h4 className="text-[11px] font-bold uppercase tracking-widest text-zinc-400">Company</h4>
           <ul className="space-y-3 flex flex-col">
-            <FooterLink to="/ide/about">About</FooterLink>
-            <FooterLink to="/ide/pricing">Pricing</FooterLink>
-            <FooterLink to="/ide/legal">Privacy</FooterLink>
+            <FooterLink to="/void/about">About</FooterLink>
+            <FooterLink to="/void/pricing">Pricing</FooterLink>
+            <FooterLink to="/void/legal">Privacy</FooterLink>
           </ul>
         </div>
 

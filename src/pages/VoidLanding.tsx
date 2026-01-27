@@ -27,7 +27,7 @@ export default function VoidLanding() {
                     </p>
 
                     <div className="flex flex-col md:flex-row items-center justify-center gap-4">
-                        <Link to="/ide" className="h-12 px-8 rounded-full bg-blue-600 text-white font-bold hover:bg-blue-500 transition-colors flex items-center gap-2 shadow-lg shadow-blue-500/20">
+                        <Link to="/void" className="h-12 px-8 rounded-full bg-blue-600 text-white font-bold hover:bg-blue-500 transition-colors flex items-center gap-2 shadow-lg shadow-blue-500/20">
                             Launch Void <ArrowRight size={16} />
                         </Link>
                         <Link to="/pricing" className="h-12 px-8 rounded-full bg-black border border-[#333] text-white hover:bg-[#111] transition-colors flex items-center justify-center">

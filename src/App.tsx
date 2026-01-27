@@ -24,7 +24,7 @@ const AppRoutes = () => {
     <>
       <ScrollToTop />
       <Routes>
-        <Route path="/ide/*" element={
+        <Route path="/void/*" element={
           <Suspense fallback={<div className="min-h-screen bg-black flex items-center justify-center text-white">Loading Void...</div>}>
             <VoidApp />
           </Suspense>
@@ -33,8 +33,14 @@ const AppRoutes = () => {
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
           <Route path="products" element={<Products />} />
-          <Route path="void" element={<VoidLanding />} />
-          <Route path="lamadb" element={<LamaDB />} />
+          <Route path="overview/void" element={<VoidLanding />} />
+          <Route path="overview/lamadb" element={<LamaDB />} />
+          <Route path="lamadb" element={
+            <Suspense fallback={<div className="min-h-screen bg-black flex items-center justify-center text-white">Loading LamaDB...</div>}>
+              {/* For now, LamaDB can use its landing page at the root route or we can point to a dashboard */}
+              <LamaDB />
+            </Suspense>
+          } />
           <Route path="q-cloud" element={<QCloud />} />
           <Route path="syncstack" element={<SyncStack />} />
           <Route path="quantum" element={<Placeholder title="Project Quantum" />} />
