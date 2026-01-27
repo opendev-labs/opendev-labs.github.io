@@ -18,12 +18,11 @@ export default function QCloud() {
                         <span>Quantum Infrastructure</span>
                     </div>
 
-                    <h1 className="text-5xl md:text-8xl font-bold tracking-tighter mb-8 text-transparent bg-clip-text bg-gradient-to-b from-white to-zinc-500">
-                        Q-Cloud
+                    <h1 className="text-5xl md:text-7xl font-bold mb-6 tracking-tight">
+                        Q-CLOUD <span className="text-orange-500">INFRASTRUCTURE</span>
                     </h1>
-                    <p className="text-xl md:text-2xl text-zinc-400 max-w-2xl mx-auto mb-10 leading-relaxed text-balance">
-                        The sovereign compute layer for a faster reality.
-                        Global, serverless, and optimized for high-velocity and AI-driven applications.
+                    <p className="text-xl text-gray-400 max-w-2xl mx-auto mb-10">
+                        Quantum-ready serverless infrastructure for the next generation of AI agents and neural applications. Powered by opendev-labs.
                     </p>
 
                     <div className="flex flex-col md:flex-row items-center justify-center gap-4">
@@ -44,7 +43,7 @@ export default function QCloud() {
                         <div>
                             <h2 className="text-3xl md:text-5xl font-bold mb-8">What is Q-Cloud?</h2>
                             <p className="text-zinc-400 text-lg leading-relaxed mb-6">
-                                Q-Cloud is OpenDev Labs' specialized cloud infrastructure designed to bridge the gap between traditional compute and quantum-ready architectures. It provides a global edge network that prioritizes speed, security, and developer sovereignty.
+                                Q-Cloud is opendev-labs' specialized cloud infrastructure designed to bridge the gap between traditional compute and quantum-ready architectures. It provides a global edge network that prioritizes speed, security, and developer sovereignty.
                             </p>
                             <p className="text-zinc-500 text-base leading-relaxed mb-8">
                                 Unlike traditional clouds that treat compute as a commodity, Q-Cloud treats it as a precision instrument. Every function invocation, every byte stored, and every packet sent is optimized for the lowest possible latency and maximum reliability.
