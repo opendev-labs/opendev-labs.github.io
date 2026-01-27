@@ -11,6 +11,7 @@ import { ErrorBoundary } from './components/ErrorBoundary';
 import VoidLanding from './pages/VoidLanding';
 import LamaDB from './pages/LamaDB';
 import QCloud from './pages/QCloud';
+import SyncStack from './pages/SyncStack';
 
 const VoidApp = lazy(() => import('./features/void/VoidApp'));
 const LazyLoginPage = lazy(() => import('./features/void/components/pages/LoginPage').then(m => ({ default: m.LoginPage })));
@@ -34,6 +35,7 @@ const AppRoutes = () => {
           <Route path="void" element={<VoidLanding />} />
           <Route path="lamadb" element={<LamaDB />} />
           <Route path="q-cloud" element={<QCloud />} />
+          <Route path="syncstack" element={<SyncStack />} />
           <Route path="solutions" element={<Placeholder title="Solutions" />} />
           <Route path="resources" element={<Placeholder title="Resources" />} />
           <Route path="enterprise" element={<Placeholder title="Enterprise" />} />

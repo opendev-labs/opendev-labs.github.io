@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Terminal, Database, Cpu, Globe, ArrowRight, ShieldCheck, Zap } from 'lucide-react';
+import { Terminal, Database, Cpu, Globe, ArrowRight, ShieldCheck, Zap, Box } from 'lucide-react';
 import HeroBg from '../assets/bg.png';
 
 export default function Home() {
@@ -55,16 +55,16 @@ export default function Home() {
             {/* Features Grid */}
             <section className="py-24 relative overflow-hidden">
                 <div className="max-w-[1200px] mx-auto px-6">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-1">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-1">
                         <div className="group p-8 bg-black border border-zinc-900 transition-all hover:bg-zinc-950 duration-500">
                             <div className="w-10 h-10 bg-white/5 border border-white/10 rounded flex items-center justify-center mb-8 group-hover:border-zinc-500 transition-colors">
                                 <Terminal size={18} className="text-zinc-400 group-hover:text-white" />
                             </div>
-                            <h3 className="text-lg font-semibold mb-3 tracking-tight">Platform</h3>
-                            <p className="text-zinc-500 text-sm leading-relaxed mb-6 font-medium">
-                                A high-performance development environment with built-in AI intelligence and global deployment.
+                            <h3 className="text-sm font-bold uppercase tracking-widest mb-3 text-white">Platform</h3>
+                            <p className="text-zinc-500 text-[10px] font-bold uppercase tracking-widest leading-relaxed mb-6">
+                                High-performance development environment with built-in AI intelligence.
                             </p>
-                            <Link to="/ide" className="text-xs font-bold uppercase tracking-widest flex items-center gap-1.5 hover:text-white transition-colors">
+                            <Link to="/ide" className="text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5 hover:text-white transition-colors">
                                 Open Platform <ArrowRight size={14} />
                             </Link>
                         </div>
@@ -73,25 +73,38 @@ export default function Home() {
                             <div className="w-10 h-10 bg-white/5 border border-white/10 rounded flex items-center justify-center mb-8 group-hover:border-zinc-500 transition-colors">
                                 <Database size={18} className="text-zinc-400 group-hover:text-white" />
                             </div>
-                            <h3 className="text-lg font-semibold mb-3 tracking-tight">LamaDB</h3>
-                            <p className="text-zinc-500 text-sm leading-relaxed mb-6 font-medium">
-                                The native browser database for high-velocity applications. Store, sync, and secure data locally.
+                            <h3 className="text-sm font-bold uppercase tracking-widest mb-3 text-white">LamaDB</h3>
+                            <p className="text-zinc-500 text-[10px] font-bold uppercase tracking-widest leading-relaxed mb-6">
+                                Native browser database for high-velocity local state management.
                             </p>
-                            <Link to="/lamadb" className="text-xs font-bold uppercase tracking-widest flex items-center gap-1.5 hover:text-white transition-colors">
+                            <Link to="/lamadb" className="text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5 hover:text-white transition-colors">
                                 Explore DB <ArrowRight size={14} />
                             </Link>
                         </div>
 
                         <div className="group p-8 bg-black border border-zinc-900 transition-all hover:bg-zinc-950 duration-500">
                             <div className="w-10 h-10 bg-white/5 border border-white/10 rounded flex items-center justify-center mb-8 group-hover:border-zinc-500 transition-colors">
-                                <Cpu size={18} className="text-zinc-400 group-hover:text-white" />
+                                <Globe size={18} className="text-zinc-400 group-hover:text-white" />
                             </div>
-                            <h3 className="text-lg font-semibold mb-3 tracking-tight">Q-Cloud</h3>
-                            <p className="text-zinc-500 text-sm leading-relaxed mb-6 font-medium">
-                                Quantum-ready serverless infrastructure. Scale your compute globally with sub-atomic latency.
+                            <h3 className="text-sm font-bold uppercase tracking-widest mb-3 text-white">Q-Cloud</h3>
+                            <p className="text-zinc-500 text-[10px] font-bold uppercase tracking-widest leading-relaxed mb-6">
+                                Quantum-ready serverless infrastructure with sub-atomic latency.
                             </p>
-                            <Link to="/q-cloud" className="text-xs font-bold uppercase tracking-widest flex items-center gap-1.5 hover:text-white transition-colors">
+                            <Link to="/q-cloud" className="text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5 hover:text-white transition-colors">
                                 View Infra <ArrowRight size={14} />
+                            </Link>
+                        </div>
+
+                        <div className="group p-8 bg-black border border-zinc-900 transition-all hover:bg-zinc-950 duration-500">
+                            <div className="w-10 h-10 bg-white/5 border border-white/10 rounded flex items-center justify-center mb-8 group-hover:border-zinc-500 transition-colors">
+                                <Box size={18} className="text-zinc-400 group-hover:text-white" />
+                            </div>
+                            <h3 className="text-sm font-bold uppercase tracking-widest mb-3 text-white">SyncStack</h3>
+                            <p className="text-zinc-500 text-[10px] font-bold uppercase tracking-widest leading-relaxed mb-6">
+                                Distributed state synchronization layer for high-pressure clusters.
+                            </p>
+                            <Link to="/syncstack" className="text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5 hover:text-white transition-colors">
+                                Synchronize <ArrowRight size={14} />
                             </Link>
                         </div>
                     </div>
@@ -158,6 +171,8 @@ export default function Home() {
                                     ▸ Resolving dependencies...
                                     <br />
                                     ▸ Bootstrapping LamaDB... <span className="text-zinc-300">Done</span>
+                                    <br />
+                                    ▸ Initializing SyncStack... <span className="text-zinc-300">Synchronized</span>
                                     <br />
                                     ▸ Connecting Q-Cloud... <span className="text-zinc-300">Ready</span>
                                 </div>
