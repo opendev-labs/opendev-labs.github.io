@@ -41,7 +41,7 @@ export default function Home() {
                         </p>
 
                         <div className="flex flex-col md:flex-row items-center justify-center gap-4 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300">
-                            <Link to="/ide" className="h-12 px-10 rounded-full bg-white text-black text-[11px] font-bold uppercase tracking-widest hover:bg-zinc-200 transition-all hover:scale-105 active:scale-95 flex items-center gap-2 justify-center shadow-lg">
+                            <Link to="/void" className="h-12 px-10 rounded-full bg-white text-black text-[11px] font-bold uppercase tracking-widest hover:bg-zinc-200 transition-all hover:scale-105 active:scale-95 flex items-center gap-2 justify-center shadow-lg">
                                 <svg className="w-4 h-4" viewBox="0 0 116 100" fill="currentColor"><path fillRule="evenodd" clipRule="evenodd" d="M57.5 100L0 0H116L57.5 100Z" /></svg>
                                 Deploy Now
                             </Link>
@@ -65,7 +65,7 @@ export default function Home() {
                             <p className="text-zinc-500 text-[10px] font-bold uppercase tracking-widest leading-relaxed mb-6">
                                 High-performance development environment with built-in AI intelligence.
                             </p>
-                            <Link to="/ide" className="text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5 hover:text-white transition-colors">
+                            <Link to="/void" className="text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5 hover:text-white transition-colors">
                                 Open Platform <ArrowRight size={14} />
                             </Link>
                         </div>

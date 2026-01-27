@@ -108,7 +108,7 @@ const AppContent: React.FC = () => {
         };
 
         setProjects(prev => [newProject, ...prev]);
-        navigate(`/ide/projects/${newProject.id}`);
+        navigate(`/void/projects/${newProject.id}`);
     };
 
     const handleImportRepository = (repo: Repository, projectName: string) => {
@@ -134,7 +134,7 @@ const AppContent: React.FC = () => {
         };
 
         setProjects(prev => [newProject, ...prev]);
-        navigate(`/ide/projects/${newProject.id}`);
+        navigate(`/void/projects/${newProject.id}`);
     };
 
     const handleDeployWorkflow = (workflow: Workflow, projectName: string) => {
@@ -186,7 +186,7 @@ const AppContent: React.FC = () => {
         });
 
         setProjects(prev => [newProject, ...prev]);
-        navigate(`/ide/projects/${newProject.id}`);
+        navigate(`/void/projects/${newProject.id}`);
     };
 
     const isProjectDetail = location.pathname.includes('/projects/');

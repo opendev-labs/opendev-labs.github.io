@@ -82,8 +82,8 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
 
   const handleNav = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
-    // VoidApp safeNavigate prepends /ide/ correctly if it's configured to do so,
-    // but here we are in /ide already.
+    // VoidApp safeNavigate prepends /void/ correctly if it's configured to do so,
+    // but here we are in /void already.
     safeNavigate(href);
   };
 

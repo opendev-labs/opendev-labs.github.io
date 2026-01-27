@@ -28,7 +28,7 @@ const PLATFORM_SECTIONS = [
   {
     title: "Compute & State",
     items: [
-      { name: "QBET", desc: "High-fidelity terminal for sovereign nodes", icon: CommandLineIcon, path: "/ide" },
+      { name: "QBET", desc: "High-fidelity terminal for sovereign nodes", icon: CommandLineIcon, path: "/void" },
       { name: "LamaDB", desc: "Native browser database for high-velocity state", icon: CubeIcon, path: "/lamadb" },
       { name: "Q-Cloud", desc: "Quantum-ready serverless infrastructure", icon: RocketLaunchIcon, path: "/q-cloud" },
     ]
@@ -187,7 +187,7 @@ export default function Layout() {
                   Log In
                 </Link>
                 <Link
-                  to="/ide"
+                  to="/void"
                   className="h-8 px-5 bg-white text-black text-[11px] font-bold uppercase tracking-widest hover:bg-zinc-200 transition-all flex items-center rounded hover:scale-105 active:scale-95 shadow-lg"
                 >
                   Deploy
