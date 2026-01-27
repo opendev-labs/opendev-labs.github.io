@@ -82,7 +82,7 @@ export const AuthPage: React.FC = () => {
 
                 <div className="absolute bottom-16 left-16 max-w-lg z-20">
                     <h1 className="text-7xl font-bold text-white tracking-tighter mb-6 leading-[0.9] lowercase">
-                        opendev-labs<br /><span className="text-zinc-500 transition-colors">intelligent ecosystem.</span>
+                        opendev-labs<br /><span className="text-black transition-colors">intelligent ecosystem.</span>
                     </h1>
                     <p className="text-zinc-400 text-lg font-medium tracking-tight leading-relaxed max-w-sm">
                         Build, deploy, and scale your intelligent applications with the industry standard for developer workflows.
