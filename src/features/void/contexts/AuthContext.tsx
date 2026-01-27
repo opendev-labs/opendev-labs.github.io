@@ -33,7 +33,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Sync with Auth State & Restore Token
   useEffect(() => {
     // Restore token from localStorage if available (simple persistence)
-    const storedToken = localStorage.getItem('void_gh_token');
+    const storedToken = localStorage.getItem('opendev_gh_token');
     if (storedToken) setToken(storedToken);
 
     const unsubscribe = LamaDB.auth.onAuthStateChanged((firebaseUser) => {
@@ -46,7 +46,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       } else {
         setUser(null);
         setToken(null);
-        localStorage.removeItem('void_gh_token');
+        localStorage.removeItem('opendev_gh_token');
       }
       setIsLoading(false);
     });
@@ -69,7 +69,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       if (credential?.accessToken) {
         setToken(credential.accessToken);
-        localStorage.setItem('void_gh_token', credential.accessToken);
+        localStorage.setItem('opendev_gh_token', credential.accessToken);
       }
 
       safeNavigate('/');

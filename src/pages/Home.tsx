@@ -53,87 +53,122 @@ export default function Home() {
             </section>
 
             {/* Features Grid */}
-            <section className="py-24 border-b border-[#333] relative">
-                <div className="max-w-[1400px] mx-auto px-6">
-                    <div className="mb-16">
-                        <h2 className="text-3xl md:text-5xl font-bold mb-6">The OpenDev Stack</h2>
-                        <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 tracking-tight leading-none bg-clip-text text-transparent bg-gradient-to-r from-white via-white to-white/40">
-                            BUILD THE FUTURE AT <br />
-                            <span className="text-orange-500">OPENDEV-LABS.</span>
-                        </h1>        <div className="group border border-[#333] bg-[#050505] p-8 rounded-2xl hover:border-white/20 transition-colors">
-                            <div className="w-12 h-12 bg-blue-500/10 rounded-lg flex items-center justify-center mb-6 text-blue-400">
-                                <Terminal size={24} />
+            <section className="py-24 relative overflow-hidden">
+                <div className="max-w-[1200px] mx-auto px-6">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-1">
+                        <div className="group p-8 bg-black border border-zinc-900 transition-all hover:bg-zinc-950 duration-500">
+                            <div className="w-10 h-10 bg-white/5 border border-white/10 rounded flex items-center justify-center mb-8 group-hover:border-zinc-500 transition-colors">
+                                <Terminal size={18} className="text-zinc-400 group-hover:text-white" />
                             </div>
-                            <h3 className="text-xl font-bold mb-3">Void Environment</h3>
-                            <p className="text-[#666] leading-relaxed mb-6">An AI-powered development environment that writes code, manages deployments, and scales your applications automatically.</p>
-                            <Link to="/void" className="text-sm font-medium flex items-center gap-1 hover:text-blue-400 transition-colors">Explore Void <ArrowRight size={14} /></Link>
+                            <h3 className="text-lg font-semibold mb-3 tracking-tight">Platform</h3>
+                            <p className="text-zinc-500 text-sm leading-relaxed mb-6 font-medium">
+                                A high-performance development environment with built-in AI intelligence and global deployment.
+                            </p>
+                            <Link to="/ide" className="text-xs font-bold uppercase tracking-widest flex items-center gap-1.5 hover:text-white transition-colors">
+                                Open Platform <ArrowRight size={14} />
+                            </Link>
                         </div>
 
-                        <div className="group border border-[#333] bg-[#050505] p-8 rounded-2xl hover:border-white/20 transition-colors">
-                            <div className="w-12 h-12 bg-orange-500/10 rounded-lg flex items-center justify-center mb-6 text-orange-400">
-                                <Database size={24} />
+                        <div className="group p-8 bg-black border border-zinc-900 transition-all hover:bg-zinc-950 duration-500">
+                            <div className="w-10 h-10 bg-white/5 border border-white/10 rounded flex items-center justify-center mb-8 group-hover:border-zinc-500 transition-colors">
+                                <Database size={18} className="text-zinc-400 group-hover:text-white" />
                             </div>
-                            <h3 className="text-xl font-bold mb-3">LamaDB</h3>
-                            <p className="text-[#666] leading-relaxed mb-6">The native database for the frontend web. Store, sync, and visualize your data directly from your browser or personal device.</p>
-                            <Link to="/lamadb" className="text-sm font-medium flex items-center gap-1 hover:text-orange-400 transition-colors">Learn about LamaDB <ArrowRight size={14} /></Link>
+                            <h3 className="text-lg font-semibold mb-3 tracking-tight">LamaDB</h3>
+                            <p className="text-zinc-500 text-sm leading-relaxed mb-6 font-medium">
+                                The native browser database for high-velocity applications. Store, sync, and secure data locally.
+                            </p>
+                            <Link to="/lamadb" className="text-xs font-bold uppercase tracking-widest flex items-center gap-1.5 hover:text-white transition-colors">
+                                Explore DB <ArrowRight size={14} />
+                            </Link>
                         </div>
 
-                        <div className="group border border-[#333] bg-[#050505] p-8 rounded-2xl hover:border-white/20 transition-colors">
-                            <div className="w-12 h-12 bg-purple-500/10 rounded-lg flex items-center justify-center mb-6 text-purple-400">
-                                <Cpu size={24} />
+                        <div className="group p-8 bg-black border border-zinc-900 transition-all hover:bg-zinc-950 duration-500">
+                            <div className="w-10 h-10 bg-white/5 border border-white/10 rounded flex items-center justify-center mb-8 group-hover:border-zinc-500 transition-colors">
+                                <Cpu size={18} className="text-zinc-400 group-hover:text-white" />
                             </div>
-                            <h3 className="text-xl font-bold mb-3">Q-Cloud Compute</h3>
-                            <p className="text-[#666] leading-relaxed mb-6">Serverless infrastructure that scales to zero and up to infinity. Run your functions closer to your users.</p>
-                            <Link to="/q-cloud" className="text-sm font-medium flex items-center gap-1 hover:text-purple-400 transition-colors">View Infrastructure <ArrowRight size={14} /></Link>
+                            <h3 className="text-lg font-semibold mb-3 tracking-tight">Q-Cloud</h3>
+                            <p className="text-zinc-500 text-sm leading-relaxed mb-6 font-medium">
+                                Quantum-ready serverless infrastructure. Scale your compute globally with sub-atomic latency.
+                            </p>
+                            <Link to="/q-cloud" className="text-xs font-bold uppercase tracking-widest flex items-center gap-1.5 hover:text-white transition-colors">
+                                View Infra <ArrowRight size={14} />
+                            </Link>
                         </div>
                     </div>
                 </div>
             </section>
 
             {/* Code / Terminal Section */}
-            <section className="py-24 border-b border-[#333] bg-[#050505]">
-                <div className="max-w-[1400px] mx-auto px-6 flex flex-col md:flex-row items-center gap-16">
-                    <div className="flex-1">
-                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-sm text-blue-400 mb-6 font-mono">
-                            $ poly init
+            <section className="py-32 bg-black relative border-t border-zinc-900">
+                <div className="max-w-[1200px] mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+                    <div>
+                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-xs font-bold text-zinc-400 mb-8 uppercase tracking-widest">
+                            Built for Engineers
                         </div>
-                        <h2 className="text-4xl md:text-5xl font-bold mb-6">Develop at the speed of thought.</h2>
-                        <p className="text-[#888] text-lg leading-relaxed mb-8">
-                            With the Poly CLI and Void integration, you can bootstrap, deploy, and monitor your applications without leaving your terminal.
+                        <h2 className="text-4xl md:text-5xl font-bold mb-8 tracking-tighter leading-[1.1]">
+                            Develop at the <span className="text-zinc-500">speed of thought.</span>
+                        </h2>
+                        <p className="text-zinc-500 text-lg leading-relaxed mb-10 font-medium max-w-lg">
+                            Boost your productivity with a unified stack. Bootstrap, deploy, and monitor without context switching.
                         </p>
-                        <ul className="space-y-4 mb-8">
-                            <li className="flex items-center gap-3 text-[#ccc]">
-                                <ShieldCheck className="text-green-500" size={20} />
-                                <span>Enterprise-grade security by default</span>
-                            </li>
-                            <li className="flex items-center gap-3 text-[#ccc]">
-                                <Globe className="text-blue-500" size={20} />
-                                <span>Global edge network deployment</span>
-                            </li>
-                            <li className="flex items-center gap-3 text-[#ccc]">
-                                <Zap className="text-yellow-500" size={20} />
-                                <span>Instant rollbacks and immutable logs</span>
-                            </li>
-                        </ul>
-                    </div>
-                    <div className="flex-1 w-full relative group">
-                        <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg opacity-20 blur transition duration-1000 group-hover:opacity-40"></div>
-                        <div className="relative bg-[#0a0a0a] rounded-lg border border-[#333] p-4 font-mono text-sm leading-relaxed overflow-hidden shadow-2xl">
-                            <div className="flex items-center gap-2 mb-4 border-b border-[#333] pb-4">
-                                <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                                <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                                <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                                <span className="ml-2 text-[#666]">cube@opendev-labs:~/project</span>
+                        <div className="grid grid-cols-2 gap-6">
+                            <div className="space-y-4">
+                                <div className="flex items-center gap-3 text-sm font-semibold text-zinc-300">
+                                    <ShieldCheck className="text-zinc-500" size={18} />
+                                    <span>Secure By Default</span>
+                                </div>
+                                <div className="flex items-center gap-3 text-sm font-semibold text-zinc-300">
+                                    <Zap className="text-zinc-500" size={18} />
+                                    <span>Instant Deploy</span>
+                                </div>
                             </div>
-                            <div className="space-y-2">
-                                <p className="text-[#888]"><span className="text-green-400">$</span> poly create lama-db-instance</p>
-                                <p className="text-[#ccc]">Creating LamaDB instance 'production-db'...</p>
-                                <p className="text-[#ccc]">Provisioning storage... <span className="text-green-400">Done (0.4s)</span></p>
-                                <p className="text-[#ccc]">Generating API keys... <span className="text-green-400">Done (0.1s)</span></p>
-                                <p className="text-[#888] mt-4"><span className="text-green-400">$</span> poly deploy --env production</p>
-                                <p className="text-[#ccc]">Building project...</p>
-                                <p className="text-[#ccc]">Uploading assets [====================] 100%</p>
-                                <p className="text-white font-bold mt-2">Deployment Complete: <span className="text-blue-400 underline">https://project.opendev-labs.io</span></p>
+                            <div className="space-y-4">
+                                <div className="flex items-center gap-3 text-sm font-semibold text-zinc-300">
+                                    <Globe className="text-zinc-500" size={18} />
+                                    <span>Global Network</span>
+                                </div>
+                                <div className="flex items-center gap-3 text-sm font-semibold text-zinc-300">
+                                    <ArrowRight className="text-zinc-500" size={18} />
+                                    <span>Deep Integration</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="relative group perspective-1000">
+                        <div className="absolute -inset-0.5 bg-gradient-to-r from-zinc-500/10 to-white/10 rounded-xl opacity-0 blur group-hover:opacity-100 transition duration-1000"></div>
+                        <div className="relative bg-[#050505] rounded-xl border border-zinc-800 p-0 overflow-hidden shadow-2xl">
+                            {/* Terminal Header */}
+                            <div className="flex items-center justify-between px-4 py-3 bg-zinc-950 border-b border-zinc-900">
+                                <div className="flex items-center gap-2">
+                                    <div className="w-2.5 h-2.5 rounded-full bg-zinc-800"></div>
+                                    <div className="w-2.5 h-2.5 rounded-full bg-zinc-800"></div>
+                                    <div className="w-2.5 h-2.5 rounded-full bg-zinc-800"></div>
+                                </div>
+                                <div className="text-[10px] uppercase tracking-widest font-bold text-zinc-600">opendev-labs shell</div>
+                                <div className="w-12"></div>
+                            </div>
+                            {/* Terminal Content */}
+                            <div className="p-6 font-mono text-[13px] leading-relaxed">
+                                <div className="flex gap-3">
+                                    <span className="text-zinc-600">~</span>
+                                    <span className="text-zinc-300">poly init product-engine</span>
+                                </div>
+                                <div className="text-zinc-500 pl-6 mt-1 mb-4">
+                                    ▸ Resolving dependencies...
+                                    <br />
+                                    ▸ Bootstrapping LamaDB... <span className="text-zinc-300">Done</span>
+                                    <br />
+                                    ▸ Connecting Q-Cloud... <span className="text-zinc-300">Ready</span>
+                                </div>
+                                <div className="flex gap-3">
+                                    <span className="text-zinc-600">~</span>
+                                    <span className="text-zinc-300">poly deploy --prod</span>
+                                </div>
+                                <div className="mt-4 pl-6 border-l-2 border-zinc-800">
+                                    <div className="text-zinc-400">Success! Project is live at:</div>
+                                    <div className="text-white font-bold tracking-tight mt-1 underline decoration-zinc-800">https://product.opendev-labs.io</div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -142,3 +177,4 @@ export default function Home() {
         </div>
     );
 }
+

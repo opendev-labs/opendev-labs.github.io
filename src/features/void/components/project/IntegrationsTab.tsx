@@ -4,25 +4,24 @@ import { availableIntegrations } from '../../constants';
 
 const IntegrationCard: React.FC<{ integration: Integration, onToggle: (id: string) => void }> = ({ integration, onToggle }) => {
     return (
-        <div className="bg-void-line/50 p-4 rounded-lg border border-void-line flex items-start gap-4">
-            <div className="w-10 h-10 bg-white flex items-center justify-center p-1">
-                <img src={integration.logoUrl} alt={`${integration.name} logo`} className="w-full h-full object-contain" />
+        <div className="border border-zinc-900 bg-black p-8 flex flex-col sm:flex-row items-start sm:items-center gap-8 group hover:bg-zinc-950/50 transition-all">
+            <div className="w-16 h-16 bg-white border border-zinc-900 flex items-center justify-center p-3 shrink-0">
+                <img src={integration.logoUrl} alt={`${integration.name} logo`} className="w-full h-full object-contain grayscale group-hover:grayscale-0 transition-all duration-500" />
             </div>
-            <div className="flex-grow">
+            <div className="flex-grow space-y-2">
                 <div className="flex justify-between items-center">
-                    <h4 className="font-semibold text-white">{integration.name}</h4>
-                    <button 
+                    <h4 className="text-[13px] font-bold text-white tracking-tight">{integration.name}</h4>
+                    <button
                         onClick={() => onToggle(integration.id)}
-                        className={`text-xs font-semibold px-3 py-1 transition-colors ${
-                            integration.isConnected 
-                                ? 'bg-zinc-700 text-zinc-300 hover:bg-zinc-600'
+                        className={`h-10 px-6 text-[10px] font-bold uppercase tracking-widest transition-all ${integration.isConnected
+                                ? 'border border-zinc-800 text-zinc-500 hover:border-white hover:text-white'
                                 : 'bg-white text-black hover:bg-zinc-200'
-                        }`}
+                            }`}
                     >
-                        {integration.isConnected ? 'Manage' : 'Connect'}
+                        {integration.isConnected ? 'Configure' : 'Initialize'}
                     </button>
                 </div>
-                <p className="text-sm text-zinc-400 mt-1">{integration.description}</p>
+                <p className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest leading-relaxed max-w-xl">{integration.description}</p>
             </div>
         </div>
     )
@@ -31,18 +30,16 @@ const IntegrationCard: React.FC<{ integration: Integration, onToggle: (id: strin
 
 export const IntegrationsTab: React.FC<{ integrations: Integration[] }> = ({ integrations }) => {
 
-    // This state would normally be managed at a higher level
     const [connectedIds, setConnectedIds] = React.useState(() => new Set(integrations.filter(i => i.isConnected).map(i => i.id)));
-    
+
     const handleToggleIntegration = (id: string) => {
         setConnectedIds(prev => {
             const newSet = new Set(prev);
             if (newSet.has(id)) {
-                // In a real app, this might open a management modal or disconnect
-                alert(`Managing integration: ${id}`);
+                alert(`Managing integration protocol: ${id}`);
             } else {
                 newSet.add(id);
-                 alert(`Connecting integration: ${id}. This would typically involve an OAuth flow.`);
+                alert(`Initializing bridge with ${id}. Awaiting authentication sequence.`);
             }
             return newSet;
         });
@@ -52,18 +49,19 @@ export const IntegrationsTab: React.FC<{ integrations: Integration[] }> = ({ int
         ...int,
         isConnected: connectedIds.has(int.id)
     }));
-    
+
     return (
-        <div className="bg-void-card border border-void-line rounded-lg">
-            <div className="p-6 border-b border-void-line">
-                <h3 className="font-semibold text-white text-xl">Integrations Marketplace</h3>
-                <p className="text-zinc-400 text-sm mt-1">Enhance your project with third-party services.</p>
+        <div className="border border-zinc-900 bg-black overflow-hidden">
+            <div className="px-8 py-10 border-b border-zinc-900 bg-zinc-950/50">
+                <h3 className="text-xl font-bold text-white tracking-tighter mb-2">Network Links</h3>
+                <p className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest">External protocol bridge.</p>
             </div>
-            <div className="p-6 space-y-4">
-               {allIntegrationsWithStatus.map(int => (
-                   <IntegrationCard key={int.id} integration={int} onToggle={handleToggleIntegration} />
-               ))}
+            <div className="divide-y divide-zinc-900">
+                {allIntegrationsWithStatus.map(int => (
+                    <IntegrationCard key={int.id} integration={int} onToggle={handleToggleIntegration} />
+                ))}
             </div>
         </div>
     );
 };
+

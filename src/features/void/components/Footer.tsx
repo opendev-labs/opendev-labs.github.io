@@ -1,62 +1,71 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { DiscordIcon, GitHubIcon, XIconSocial } from './common/Icons';
 
-const FooterLink: React.FC<{ href: string; children: React.ReactNode }> = ({ href, children }) => (
-    <a href={href} onClick={e => e.preventDefault()} className="text-zinc-400 hover:text-void-neon transition-colors">{children}</a>
+const FooterLink: React.FC<{ to: string; children: React.ReactNode }> = ({ to, children }) => (
+  <Link to={to} className="text-zinc-500 hover:text-white transition-colors text-xs font-medium">{children}</Link>
 );
 
 const SocialLink: React.FC<{ href: string; children: React.ReactNode }> = ({ href, children }) => (
-     <a href={href} target="_blank" rel="noopener noreferrer" className="text-zinc-500 hover:text-white transition-colors">
-        {children}
-    </a>
+  <a href={href} target="_blank" rel="noopener noreferrer" className="text-zinc-600 hover:text-white transition-colors">
+    {children}
+  </a>
 )
 
 export const Footer: React.FC = () => {
   return (
-    <footer className="py-12 px-4 md:px-8 border-t border-void-line">
-      <div className="container mx-auto grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+    <footer className="py-16 border-t border-zinc-900 bg-black">
+      <div className="container mx-auto grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-12 px-6">
         <div className="col-span-2 lg:col-span-1">
-             <h3 className="font-semibold text-white">Void</h3>
-             <p className="text-sm text-zinc-500 mt-2">Next-Gen Serverless Platform</p>
-        </div>
-        
-        <div className="space-y-3">
-             <h4 className="font-semibold text-zinc-400 text-sm">Platform</h4>
-             <ul className="space-y-2 text-sm">
-                <li><FooterLink href="#/new">Deploy</FooterLink></li>
-                <li><FooterLink href="#/cli">CLI</FooterLink></li>
-                <li><FooterLink href="#/docs#serverless-functions">Functions</FooterLink></li>
-                <li><FooterLink href="#/docs#storage">Databases</FooterLink></li>
-             </ul>
-        </div>
-        
-        <div className="space-y-3">
-             <h4 className="font-semibold text-zinc-400 text-sm">Resources</h4>
-             <ul className="space-y-2 text-sm">
-                <li><FooterLink href="#/docs">Documentation</FooterLink></li>
-                <li><FooterLink href="#">Status</FooterLink></li>
-                <li><FooterLink href="#">Support</FooterLink></li>
-             </ul>
+          <div className="flex items-center gap-2 mb-4">
+            <div className="w-5 h-5 bg-white rotate-45 flex items-center justify-center overflow-hidden">
+              <div className="w-3 h-3 bg-black rotate-[-45deg]"></div>
+            </div>
+            <h3 className="text-xs font-bold tracking-[0.2em] uppercase text-white">opendev-labs</h3>
+          </div>
+          <p className="text-[11px] font-medium text-zinc-500 leading-relaxed max-w-[180px]">
+            The standard for modern neural infrastructure and global application logic.
+          </p>
         </div>
 
-        <div className="space-y-3">
-             <h4 className="font-semibold text-zinc-400 text-sm">Company</h4>
-             <ul className="space-y-2 text-sm">
-                <li><FooterLink href="#">About</FooterLink></li>
-                <li><FooterLink href="#">Careers</FooterLink></li>
-                <li><FooterLink href="#/pricing">Pricing</FooterLink></li>
-             </ul>
+        <div className="space-y-4">
+          <h4 className="text-[11px] font-bold uppercase tracking-widest text-zinc-400">Platform</h4>
+          <ul className="space-y-3 flex flex-col">
+            <FooterLink to="/ide/new">Deploy</FooterLink>
+            <FooterLink to="/ide/cli">CLI</FooterLink>
+            <FooterLink to="/ide/docs">Functions</FooterLink>
+            <FooterLink to="/ide/docs">Databases</FooterLink>
+          </ul>
+        </div>
+
+        <div className="space-y-4">
+          <h4 className="text-[11px] font-bold uppercase tracking-widest text-zinc-400">Resources</h4>
+          <ul className="space-y-3 flex flex-col">
+            <FooterLink to="/ide/docs">Documentation</FooterLink>
+            <FooterLink to="/ide/docs">Status</FooterLink>
+            <FooterLink to="/">Home</FooterLink>
+          </ul>
+        </div>
+
+        <div className="space-y-4">
+          <h4 className="text-[11px] font-bold uppercase tracking-widest text-zinc-400">Company</h4>
+          <ul className="space-y-3 flex flex-col">
+            <FooterLink to="/ide/about">About</FooterLink>
+            <FooterLink to="/ide/pricing">Pricing</FooterLink>
+            <FooterLink to="/ide/legal">Privacy</FooterLink>
+          </ul>
         </div>
 
       </div>
-      <div className="container mx-auto mt-12 pt-8 border-t border-void-line flex flex-col sm:flex-row justify-between items-center text-sm text-zinc-500">
-        <p>&copy; {new Date().getFullYear()} Void Technologies Inc.</p>
-        <div className="flex items-center gap-4 mt-4 sm:mt-0">
-            <SocialLink href="https://x.com"><XIconSocial /></SocialLink>
-            <SocialLink href="https://github.com"><GitHubIcon /></SocialLink>
-            <SocialLink href="https://discord.com"><DiscordIcon /></SocialLink>
+      <div className="container mx-auto px-6 mt-16 pt-8 border-t border-zinc-900 flex flex-col sm:flex-row justify-between items-center text-[10px] font-bold uppercase tracking-widest text-zinc-600">
+        <p>&copy; {new Date().getFullYear()} opendev-labs inc.</p>
+        <div className="flex items-center gap-6 mt-6 sm:mt-0">
+          <SocialLink href="https://x.com"><XIconSocial /></SocialLink>
+          <SocialLink href="https://github.com"><GitHubIcon /></SocialLink>
+          <SocialLink href="https://discord.com"><DiscordIcon /></SocialLink>
         </div>
       </div>
     </footer>
   );
 };
+
