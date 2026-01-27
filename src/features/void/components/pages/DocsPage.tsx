@@ -160,12 +160,12 @@ export default function handler(req, res) {
         <H2 id="reference">Reference Library</H2>
         <H3 id="cli">Terminal Interface (CLI)</H3>
         <p>Manage your infrastructure fleet directly from your local terminal environment.</p>
-        <CodeBlock>npm install -g @opendev-labs/cli</CodeBlock>
+        <CodeBlock>npm install -g @opendev-labs/spoon</CodeBlock>
         <H3 id="common-commands">Core Protocol Commands</H3>
         <ul className="list-disc pl-6 space-y-4">
-            <li><code className="bg-zinc-900 border border-zinc-800 px-1.5 py-0.5 rounded">opendev login</code> - Protocol authentication.</li>
-            <li><code className="bg-zinc-900 border border-zinc-800 px-1.5 py-0.5 rounded">opendev deploy</code> - Propagate project to edge.</li>
-            <li><code className="bg-zinc-900 border border-zinc-800 px-1.5 py-0.5 rounded">opendev env add</code> - Inject environment variables.</li>
+            <li><code className="bg-zinc-900 border border-zinc-800 px-1.5 py-0.5 rounded">spoon login</code> - Protocol authentication.</li>
+            <li><code className="bg-zinc-900 border border-zinc-800 px-1.5 py-0.5 rounded">spoon deploy</code> - Propagate project to edge.</li>
+            <li><code className="bg-zinc-900 border border-zinc-800 px-1.5 py-0.5 rounded">spoon env add</code> - Inject environment variables.</li>
         </ul>
 
         <H3 id="api">REST Protocol (API)</H3>
@@ -258,8 +258,8 @@ export const DocsPage: React.FC = () => {
                                             <a
                                                 href={`#${link.id}`}
                                                 className={`block text-xs font-medium transition-all ${activeSection === link.id
-                                                        ? 'text-white translate-x-1'
-                                                        : 'text-zinc-500 hover:text-white'
+                                                    ? 'text-white translate-x-1'
+                                                    : 'text-zinc-500 hover:text-white'
                                                     }`}
                                             >
                                                 {link.title}

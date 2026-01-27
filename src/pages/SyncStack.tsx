@@ -21,10 +21,10 @@ export default function SyncStack() {
                     </p>
 
                     <div className="flex flex-col md:flex-row items-center justify-center gap-4 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300">
-                        <Link to="/ide" className="h-12 px-10 bg-white text-black text-[10px] font-bold uppercase tracking-widest hover:bg-zinc-200 transition-all">
+                        <Link to="/ide" className="h-12 px-10 rounded-full bg-white text-black text-[11px] font-bold uppercase tracking-widest hover:bg-zinc-200 transition-all hover:scale-105 active:scale-95 flex items-center justify-center shadow-lg shadow-white/5">
                             Initialize Cluster
                         </Link>
-                        <a href="https://github.com/opendev-labs/syncstack" className="h-12 px-10 border border-zinc-900 text-white text-[10px] font-bold uppercase tracking-widest hover:border-white transition-all flex items-center">
+                        <a href="https://github.com/opendev-labs/syncstack" className="h-12 px-10 rounded-full border border-zinc-900 text-white text-[11px] font-bold uppercase tracking-widest hover:bg-zinc-900 transition-all hover:scale-105 active:scale-95 flex items-center justify-center shadow-lg">
                             Inspect Source
                         </a>
                     </div>
