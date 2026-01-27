@@ -75,7 +75,6 @@ export const ConfigureProjectForm: React.FC<ConfigureProjectFormProps> = ({ defa
                     </label>
                 )}
             </div>
-            )}
         </form>
     );
 };

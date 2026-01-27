@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { safeNavigate } from '../../services/navigation'; // Keep for other uses if needed, or remove
 import { GitHubIcon, GitLabIcon, GmailIcon } from '../common/Icons';
 import { useAuth } from '../../hooks/useAuth';
