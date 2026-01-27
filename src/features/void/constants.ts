@@ -10,7 +10,7 @@ export const mockDeployments: Deployment[] = [
     branch: 'main',
     timestamp: '2024-07-21T10:30:00Z',
     status: DeploymentStatus.DEPLOYED,
-    url: '/ide/deploy/pulse-v2-api',
+    url: '/void/deploy/pulse-v2-api',
   },
   {
     id: 'dpl_2',

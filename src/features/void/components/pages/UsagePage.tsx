@@ -61,7 +61,7 @@ export const UsagePage: React.FC = () => {
                         </div>
                         <div className="flex items-center gap-4">
                             <span className="px-3 py-1 bg-white text-black text-[10px] font-bold uppercase tracking-widest">Node Pro</span>
-                            <Link to="/ide/pricing" className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest hover:text-white transition-colors">Economic Settings</Link>
+                            <Link to="/void/pricing" className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest hover:text-white transition-colors">Economic Settings</Link>
                         </div>
                     </div>
 
@@ -95,7 +95,7 @@ export const UsagePage: React.FC = () => {
 
                 <div className="px-10 py-6 bg-zinc-950 border-t border-zinc-900 flex justify-between items-center">
                     <p className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest italic">Protocol status: Operational</p>
-                    <Link to="/ide/upgrade" className="text-[10px] font-bold text-white uppercase tracking-widest hover:underline">Scale Infrastructure &rarr;</Link>
+                    <Link to="/void/upgrade" className="text-[10px] font-bold text-white uppercase tracking-widest hover:underline">Scale Infrastructure &rarr;</Link>
                 </div>
             </div>
         </div>

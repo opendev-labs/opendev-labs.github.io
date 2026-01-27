@@ -51,13 +51,13 @@ export const HomePage: React.FC = () => {
 
                         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                             <Link
-                                to="/ide/signup"
+                                to="/void/signup"
                                 className="w-full sm:w-auto h-12 px-10 rounded-full bg-white text-black text-sm font-bold hover:bg-zinc-200 transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-2"
                             >
                                 Start Building <ArrowRightIcon className="w-4 h-4" />
                             </Link>
                             <Link
-                                to="/ide/docs"
+                                to="/void/docs"
                                 className="w-full sm:w-auto h-12 px-10 rounded-full bg-black border border-zinc-800 text-white text-sm font-bold hover:bg-zinc-900 transition-all flex items-center justify-center"
                             >
                                 Documentation

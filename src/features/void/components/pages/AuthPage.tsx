@@ -21,7 +21,7 @@ export const AuthPage: React.FC = () => {
 
     useEffect(() => {
         if (isAuthenticated) {
-            navigate('/ide/dashboard');
+            navigate('/void/dashboard');
         }
     }, [isAuthenticated, navigate]);
 
