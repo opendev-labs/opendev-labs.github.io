@@ -33,10 +33,10 @@ export const Dropzone: React.FC<DropzoneProps> = ({ onNewDeployment }) => {
     e.preventDefault();
     e.stopPropagation();
     setIsDragging(false);
-    
+
     // In a real app, you would handle the files: e.dataTransfer.files
     setIsDeploying(true);
-    
+
     // Simulate deployment process
     setTimeout(() => {
       const newDeployment: Deployment = {
@@ -45,9 +45,9 @@ export const Dropzone: React.FC<DropzoneProps> = ({ onNewDeployment }) => {
         branch: 'main',
         timestamp: new Date().toISOString(),
         status: DeploymentStatus.BUILDING,
-        url: `https://new-project-${Date.now().toString().slice(-5)}.void.app`,
+        url: `https://new-project-${Date.now().toString().slice(-5)}.opendev.app`,
       };
-      
+
       const newProject: Project = {
         id: `proj_${Date.now()}`,
         name: 'new-react-app',
@@ -65,7 +65,7 @@ export const Dropzone: React.FC<DropzoneProps> = ({ onNewDeployment }) => {
 
   const dropzoneClasses = `
     border-2 border-dashed rounded-lg p-12 text-center transition-all duration-300
-    ${isDragging ? 'border-void-neon bg-void-neon/10' : 'border-void-line hover:border-void-neon/50'}
+    ${isDragging ? 'border-white bg-white/5' : 'border-zinc-900 hover:border-white/50'}
   `;
 
   return (
@@ -78,14 +78,14 @@ export const Dropzone: React.FC<DropzoneProps> = ({ onNewDeployment }) => {
     >
       {isDeploying ? (
         <div className="flex flex-col items-center justify-center">
-            <div className="w-8 h-8 border-2 border-dashed rounded-full animate-spin border-zinc-400"></div>
-            <p className="mt-4 text-zinc-300">Initiating deployment...</p>
+          <div className="w-8 h-8 border-2 border-dashed rounded-full animate-spin border-zinc-400"></div>
+          <p className="mt-4 text-zinc-300">Initiating deployment...</p>
         </div>
       ) : (
         <div className="flex flex-col items-center justify-center">
-            <UploadIcon />
-            <p className="mt-4 text-lg font-semibold text-zinc-300">Drag & drop your project here</p>
-            <p className="text-sm text-zinc-500">or click to browse files</p>
+          <UploadIcon />
+          <p className="mt-4 text-lg font-semibold text-zinc-300">Drag & drop your project here</p>
+          <p className="text-sm text-zinc-500">or click to browse files</p>
         </div>
       )}
     </div>

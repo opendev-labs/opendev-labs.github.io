@@ -13,7 +13,7 @@ export const VerifyEmailPage: React.FC = () => {
 
     useEffect(() => {
         try {
-            const storedUser = localStorage.getItem('void_verification_user');
+            const storedUser = localStorage.getItem('opendev_verification_user');
             if (storedUser) {
                 setUserToVerify(JSON.parse(storedUser));
             }
@@ -29,15 +29,15 @@ export const VerifyEmailPage: React.FC = () => {
         if (code === FAKE_CODE) {
             if (userToVerify) {
                 login(userToVerify);
-                localStorage.removeItem('void_verification_user');
+                localStorage.removeItem('opendev_verification_user');
             } else {
-                 setError('Could not find user to verify. Please try logging in again.');
+                setError('Could not find user to verify. Please try logging in again.');
             }
         } else {
             setError('Invalid verification code. Please try again.');
         }
     };
-    
+
     const emailDisplay = useMemo(() => {
         if (!userToVerify?.email) return 'your email';
         const [local, domain] = userToVerify.email.split('@');
@@ -45,20 +45,22 @@ export const VerifyEmailPage: React.FC = () => {
     }, [userToVerify]);
 
     return (
-        <div className="py-12 sm:py-20 flex items-center justify-center">
+        <div className="min-h-[70vh] flex items-center justify-center px-4 bg-black py-20">
             <div className="w-full max-w-sm">
-                <div className="text-center mb-8">
-                    <h1 className="text-3xl font-bold tracking-tighter text-white">Check your email</h1>
-                    <p className="mt-2 text-zinc-400">We sent a verification code to {emailDisplay}.</p>
+                <div className="text-center mb-10">
+                    <h1 className="text-3xl font-bold tracking-tighter text-white mb-2">Check your email</h1>
+                    <p className="text-zinc-500 text-sm font-medium">We sent a verification code to <span className="text-white font-mono">{emailDisplay}</span>.</p>
                 </div>
 
-                <div className="bg-void-card border border-void-line rounded-lg p-6 text-center mb-6">
-                    <p className="text-zinc-400 text-sm">Your verification code is:</p>
-                    <p className="text-3xl font-mono tracking-widest text-white font-bold my-2 neon-text">{FAKE_CODE}</p>
-                    <p className="text-xs text-zinc-500">(This is a simulation. No email was actually sent.)</p>
+                <div className="bg-zinc-950 border border-zinc-900 rounded-xl p-8 text-center mb-10 shadow-2xl">
+                    <p className="text-zinc-500 text-xs font-bold uppercase tracking-widest mb-4">Your Code</p>
+                    <p className="text-4xl font-mono tracking-[0.2em] text-white font-bold my-4 select-all">{FAKE_CODE}</p>
+                    <div className="pt-4 border-t border-zinc-900">
+                        <p className="text-[10px] text-zinc-600 font-bold uppercase tracking-tighter italic">Simulation Mode: No email was dispatched.</p>
+                    </div>
                 </div>
-                
-                <form className="space-y-4" onSubmit={handleVerify}>
+
+                <form className="space-y-6" onSubmit={handleVerify}>
                     <div>
                         <label htmlFor="code" className="sr-only">Verification Code</label>
                         <input
@@ -66,19 +68,24 @@ export const VerifyEmailPage: React.FC = () => {
                             id="code"
                             value={code}
                             onChange={(e) => setCode(e.target.value)}
-                            className="w-full bg-void-card border border-void-line py-2 px-3 text-sm text-center text-zinc-200 focus:outline-none focus:ring-1 focus:ring-void-neon"
-                            placeholder="Enter code"
+                            className="w-full bg-zinc-950 border border-zinc-900 py-3 px-4 text-[13px] text-center text-white font-mono rounded-md placeholder:text-zinc-700 focus:outline-none focus:ring-1 focus:ring-white transition-all"
+                            placeholder="Enter 6-digit code"
                             required
                         />
                     </div>
 
-                    {error && <p className="text-sm text-red-400 text-center">{error}</p>}
+                    {error && <p className="text-xs text-red-500 text-center font-bold uppercase tracking-tight">{error}</p>}
 
-                    <button type="submit" className="w-full bg-white text-black font-semibold py-2.5 px-4 hover:bg-zinc-200 transition-colors">
-                        Verify
+                    <button type="submit" className="w-full h-11 bg-white text-black font-bold text-sm rounded-md hover:bg-zinc-200 transition-all active:scale-95">
+                        Verify Identity
+                    </button>
+
+                    <button type="button" className="w-full text-zinc-500 text-xs font-bold hover:text-white transition-colors uppercase tracking-widest">
+                        Resend Code
                     </button>
                 </form>
             </div>
         </div>
     );
 };
+
