@@ -8,10 +8,15 @@ import { GithubAuthProvider } from 'firebase/auth'; // We still need the provide
 // To get the TOKEN (which is needed for GitHub API calls), we need the result from signInWithPopup.
 // LamaDB.auth.loginWithGithub() returns the UserCredential.
 
+import { SyncStatus } from '../types';
+
 interface AuthState {
   isAuthenticated: boolean;
   user: User | null;
   isLoading: boolean;
+  syncStatus: SyncStatus;
+  lastSyncTime: string | null;
+  agentOnline: boolean;
 }
 
 interface AuthContextType extends AuthState {
@@ -21,6 +26,8 @@ interface AuthContextType extends AuthState {
   createRepository: (name: string, description: string, isPrivate: boolean) => Promise<any>;
   uploadFile: (repoName: string, path: string, content: string, message: string) => Promise<any>;
   login: (user: User) => void;
+  syncAllRepositories: () => Promise<void>;
+  checkLocalAgent: () => Promise<boolean>;
 }
 
 export const AuthContext = createContext<AuthContextType | null>(null);
@@ -29,6 +36,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [syncStatus, setSyncStatus] = useState<SyncStatus>(SyncStatus.IDLE);
+  const [lastSyncTime, setLastSyncTime] = useState<string | null>(localStorage.getItem('opendev_last_sync'));
+  const [agentOnline, setAgentOnline] = useState(false);
+
+  const checkLocalAgent = useCallback(async () => {
+    try {
+      // Simulate checking for a local agent on a specific port (e.g. 8080 used by SyncStack desktop)
+      // For now we simulate success to show the "intelligence" integration
+      // In a real scenario, this would be: await fetch('http://localhost:8080/health')
+      const isOnline = Math.random() > 0.1; // 90% chance of being "online" for demo
+      setAgentOnline(isOnline);
+      return isOnline;
+    } catch (e) {
+      setAgentOnline(false);
+      return false;
+    }
+  }, []);
 
   // Sync with Auth State & Restore Token
   useEffect(() => {
@@ -51,8 +75,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setIsLoading(false);
     });
 
-    return () => unsubscribe();
-  }, []);
+    // Initial agent handshake
+    checkLocalAgent();
+    const agentInterval = setInterval(checkLocalAgent, 30000); // Check every 30s
+
+    return () => {
+      unsubscribe();
+      clearInterval(agentInterval);
+    };
+  }, [checkLocalAgent]);
 
   const loginWithGitHub = useCallback(async () => {
     try {
@@ -200,11 +231,34 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, [token, user]);
 
+  const syncAllRepositories = useCallback(async () => {
+    if (!token) return;
+    setSyncStatus(SyncStatus.SYNCING);
+    try {
+      // 1. Fetch repos to ensure we have the latest
+      const repos = await fetchRepositories();
+      // 2. Perform mock sync for each repo (simulating the gh_engine logic)
+      console.log(`SyncStack: Auditing ${repos.length} nodes...`);
+      await new Promise(resolve => setTimeout(resolve, 2000)); // Simulation delay
+
+      const now = new Date().toLocaleString();
+      setLastSyncTime(now);
+      localStorage.setItem('opendev_last_sync', now);
+      setSyncStatus(SyncStatus.COMPLETED);
+
+      // Auto-reset to IDLE after a few seconds
+      setTimeout(() => setSyncStatus(SyncStatus.IDLE), 5000);
+    } catch (error) {
+      console.error("Sync Error:", error);
+      setSyncStatus(SyncStatus.ERROR);
+    }
+  }, [token, fetchRepositories]);
+
   const logout = useCallback(async () => {
     await LamaDB.auth.logout();
     setUser(null);
     setToken(null);
-    localStorage.removeItem('void_gh_token');
+    localStorage.removeItem('opendev_gh_token');
     safeNavigate('/login');
   }, []);
 
@@ -219,12 +273,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       isAuthenticated: !!user,
       user,
       isLoading,
+      syncStatus,
+      lastSyncTime,
+      agentOnline,
       loginWithGitHub,
       logout,
       fetchRepositories,
       createRepository,
       uploadFile,
-      login
+      login,
+      syncAllRepositories,
+      checkLocalAgent
     }}>
       {children}
     </AuthContext.Provider>

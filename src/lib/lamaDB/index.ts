@@ -13,32 +13,53 @@ const firebaseConfig = {
     measurementId: "G-PWZ79LFXRX"
 };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const firestore = getFirestore(app);
+// Graceful initialization check
+let app: any;
+let auth: any;
+let firestore: any;
+
+if (firebaseConfig.apiKey && firebaseConfig.apiKey.length > 10) {
+    try {
+        app = initializeApp(firebaseConfig);
+        auth = getAuth(app);
+        firestore = getFirestore(app);
+        console.log("Nexus Registry: Firebase initialized successfully.");
+    } catch (error) {
+        console.warn("Nexus Registry: Firebase initialization failed. Falling back to degraded mode.", error);
+    }
+} else {
+    console.warn("Nexus Registry: Missing valid API key. Operational services are degraded.");
+}
 
 export class LamaAuth {
     static async loginWithGoogle() {
+        if (!auth) throw new Error("Firebase Auth not initialized");
         const provider = new GoogleAuthProvider();
         return signInWithPopup(auth, provider);
     }
 
     static async loginWithGithub() {
+        if (!auth) throw new Error("Firebase Auth not initialized");
         const provider = new GithubAuthProvider();
         provider.addScope('repo');
         return signInWithPopup(auth, provider);
     }
 
     static async logout() {
+        if (!auth) return;
         return signOut(auth);
     }
 
     static onAuthStateChanged(callback: (user: User | null) => void) {
+        if (!auth) {
+            callback(null);
+            return () => { };
+        }
         return onAuthStateChanged(auth, callback);
     }
 
     static getCurrentUser() {
-        return auth.currentUser;
+        return auth?.currentUser || null;
     }
 }
 
@@ -46,6 +67,19 @@ export class LamaStore {
     private db = firestore;
 
     collection(name: string) {
+        if (!this.db) {
+            return {
+                add: async () => { throw new Error("Firestore not initialized") },
+                get: async () => [],
+                doc: () => ({
+                    set: async () => { throw new Error("Firestore not initialized") },
+                    update: async () => { throw new Error("Firestore not initialized") },
+                    delete: async () => { throw new Error("Firestore not initialized") },
+                    get: async () => null
+                }),
+                whereUser: () => { throw new Error("Firestore not initialized") }
+            };
+        }
         return {
             add: async (data: any) => addDoc(collection(this.db, name), data),
             get: async () => {
