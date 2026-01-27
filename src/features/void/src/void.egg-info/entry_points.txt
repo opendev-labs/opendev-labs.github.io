@@ -1,0 +1,2 @@
+[console_scripts]
+void = void:void_main

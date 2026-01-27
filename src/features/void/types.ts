@@ -1,0 +1,201 @@
+
+
+export enum DeploymentStatus {
+    QUEUED = 'Queued',
+    BUILDING = 'Building',
+    DEPLOYING = 'Deploying',
+    DEPLOYED = 'Deployed',
+    ERROR = 'Error',
+    CANCELED = 'Canceled',
+}
+
+export interface Deployment {
+    id: string;
+    commit: string;
+    branch: string;
+    timestamp: string;
+    status: DeploymentStatus;
+    url: string;
+}
+
+export interface Domain {
+    name: string;
+    isPrimary: boolean;
+    gitBranch?: string;
+}
+
+export enum LogLevel {
+    INFO = 'INFO',
+    WARN = 'WARN',
+    ERROR = 'ERROR',
+    DEBUG = 'DEBUG',
+    SYSTEM = 'SYSTEM',
+}
+
+export interface LogEntry {
+    timestamp: string;
+    level: LogLevel;
+    message: string;
+}
+
+export interface AiChatMessage {
+    sender: 'user' | 'ai';
+    text: string;
+}
+
+export interface Template {
+    id: string;
+    name: string;
+    framework: string;
+    description: string;
+    author: string;
+    imageUrl?: string;
+    logoUrl?: string;
+}
+
+// New types for Git provider integration
+export type GitProvider = 'GitHub' | 'GitLab' | 'Bitbucket';
+
+export interface Repository {
+    id: string;
+    name: string;
+    owner: string;
+    description: string;
+    updatedAt: string;
+    provider: GitProvider;
+}
+
+export interface User {
+    name: string;
+    email: string;
+    avatar?: string;
+}
+
+// --- New types for Vercel-inspired features ---
+
+export enum TeamMemberRole {
+    OWNER = 'Owner',
+    MEMBER = 'Member',
+}
+
+export interface WebVitals {
+    lcp: number; // Largest Contentful Paint in s
+    fid: number; // First Input Delay in ms
+    cls: number; // Cumulative Layout Shift
+}
+
+export interface AnalyticsData {
+    dailyVisitors: { day: string; visitors: number }[];
+    totalPageViews: number;
+    avgLoadTime: number; // in ms
+    webVitals: WebVitals;
+}
+
+export enum FunctionStatus {
+    ACTIVE = 'Active',
+    IDLE = 'Idle',
+    ERROR = 'Error',
+}
+
+export interface ServerlessFunction {
+    id: string;
+    name: string;
+    path: string;
+    status: FunctionStatus;
+    region: string;
+    invocations: number;
+}
+
+export interface TeamMember {
+    id: string;
+    name: string;
+    email: string;
+    role: TeamMemberRole;
+    avatarUrl?: string;
+}
+
+export interface ActivityEvent {
+    id: string;
+    type: 'Deployment' | 'Domain' | 'Settings' | 'Storage' | 'Integration' | 'Git';
+    description: string;
+    actor: string; // User name
+    timestamp: string;
+}
+
+
+// --- New types for Storage and Integrations ---
+
+export enum DatabaseType {
+    POSTGRES = 'PostgreSQL',
+    REDIS = 'Redis',
+}
+
+export enum DatabaseStatus {
+    ACTIVE = 'Active',
+    CREATING = 'Creating',
+    ERROR = 'Error',
+}
+
+export interface Database {
+    id: string;
+    name: string;
+    type: DatabaseType;
+    region: string;
+    status: DatabaseStatus;
+    version: string;
+}
+
+export interface Integration {
+    id: string;
+    name: string;
+    description: string;
+    category: 'Monitoring' | 'Database' | 'Logging' | 'Auth' | 'Commerce';
+    logoUrl: string;
+    isConnected: boolean;
+}
+
+export interface FileSystemNode {
+    name: string;
+    type: 'file' | 'directory';
+    content?: string;
+    children?: FileSystemNode[];
+}
+
+// New type for workflows
+export interface Workflow {
+    id: string;
+    name: string;
+    description: string;
+    components: {
+        name: string;
+        type: 'framework' | 'database' | 'service';
+        logoUrl?: string
+    }[];
+}
+
+
+export interface Project {
+    id: string;
+    name: string;
+    framework: string;
+    lastUpdated: string;
+    deployments: Deployment[];
+    domains: Domain[];
+    envVars: { [key: string]: string };
+    gitProvider?: GitProvider;
+    // Vercel-like features
+    analytics?: AnalyticsData;
+    functions?: ServerlessFunction[];
+    teamMembers?: TeamMember[];
+    activityLog?: ActivityEvent[];
+    storage?: Database[];
+    integrations?: Integration[];
+}
+
+
+export interface UsageMetrics {
+    bandwidth: { used: number; total: number; unit: 'GB' };
+    buildMinutes: { used: number; total: number; unit: 'minutes' };
+    functionInvocations: { used: number; total: number; unit: '' };
+    storage: { used: number; total: number; unit: 'GB' };
+}
