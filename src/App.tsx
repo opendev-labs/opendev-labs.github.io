@@ -15,7 +15,7 @@ import SyncStack from './pages/SyncStack';
 import Changelog from './pages/Changelog';
 
 const VoidApp = lazy(() => import('./features/void/VoidApp'));
-const LazyAuthPage = lazy(() => import('./features/void/components/pages/AuthPage').then(m => ({ default: m.LoginPage })));
+const LazyAuthPage = lazy(() => import('./features/void/components/pages/AuthPage').then(m => ({ default: m.AuthPage })));
 const LazyVerifyEmailPage = lazy(() => import('./features/void/components/pages/VerifyEmailPage').then(m => ({ default: m.VerifyEmailPage })));
 
 // Wrapper to handle scroll on route change

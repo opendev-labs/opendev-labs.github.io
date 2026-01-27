@@ -20,7 +20,7 @@ const Footer = () => (
         <Link to="/changelog" className="hover:text-white transition-colors">Changelog</Link>
         <Link to="/docs" className="hover:text-white transition-colors">Docs</Link>
         <Link to="/pricing" className="hover:text-white transition-colors">Pricing</Link>
-        <a href="https://github.com/opendev-labs" className="hover:text-white transition-colors">GitHub</a>
+        <a href="https://github.com/opendev-labs" className="hover:text-white transition-colors" target="_blank" rel="noopener noreferrer">GitHub</a>
       </div>
       <p className="text-[10px] font-bold text-zinc-700 uppercase tracking-[0.2em]">
         &copy; 2026 Nexus Registry Protocol
@@ -45,56 +45,58 @@ export default function Layout() {
 
   return (
     <div className="min-h-screen bg-black text-white selection:bg-white selection:text-black font-sans">
-      <nav className="fixed top-0 w-full z-50 bg-black/80 backdrop-blur-xl border-b border-zinc-900 h-16 flex items-center justify-between px-6 md:px-12">
-        <div className="flex items-center gap-8">
-          <Link to="/" className="flex items-center gap-3 group">
-            <Logo />
-            <span className="font-bold tracking-tighter text-xl group-hover:opacity-80 transition-opacity uppercase">opendev-labs.</span>
-          </Link>
+      <nav className="fixed top-0 w-full z-50 bg-black/80 backdrop-blur-xl border-b border-zinc-900 h-16">
+        <div className="h-full flex items-center justify-between px-6 md:px-12 max-w-[1400px] mx-auto">
+          <div className="flex items-center gap-8">
+            <Link to="/" className="flex items-center gap-3 group">
+              <Logo />
+              <span className="font-bold tracking-tighter text-xl group-hover:opacity-80 transition-opacity uppercase">opendev-labs.</span>
+            </Link>
 
-          <div className="hidden md:flex items-center gap-6">
-            {navLinks.map((link) => (
-              <Link
-                key={link.name}
-                to={link.href}
-                className={`text-[11px] font-bold uppercase tracking-widest transition-colors hover:text-white ${pathname === link.href ? "text-white" : "text-zinc-500"}`}
-              >
-                {link.name}
-              </Link>
-            ))}
+            <div className="hidden md:flex items-center gap-6">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.name}
+                  to={link.href}
+                  className={`text-[11px] font-bold uppercase tracking-widest transition-colors hover:text-white ${pathname === link.href ? "text-white" : "text-zinc-500"}`}
+                >
+                  {link.name}
+                </Link>
+              ))}
+            </div>
           </div>
-        </div>
 
-        <div className="flex items-center gap-4">
-          {isAuthenticated ? (
-            <div className="flex items-center gap-6">
-              <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest hidden sm:block">
-                node: {user?.email?.split('@')[0]}
-              </span>
-              <button
-                onClick={logout}
-                className="h-10 px-6 bg-white text-black text-[10px] font-bold uppercase tracking-widest hover:bg-zinc-200 transition-all rounded-full hover:scale-105 active:scale-95"
-              >
-                Disconnect
-              </button>
-            </div>
-          ) : (
-            <div className="flex items-center gap-6">
-              <Link to="/auth" className="text-[11px] font-bold uppercase tracking-widest text-zinc-500 hover:text-white transition-colors">
-                Log In
-              </Link>
-              <Link
-                to="/ide"
-                className="h-10 px-8 bg-white text-black text-[10px] font-bold uppercase tracking-widest hover:bg-zinc-200 transition-all flex items-center rounded-full hover:scale-105 active:scale-95 shadow-lg"
-              >
-                Deploy Now
-              </Link>
-            </div>
-          )}
+          <div className="flex items-center gap-4">
+            {isAuthenticated ? (
+              <div className="flex items-center gap-6">
+                <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest hidden sm:block">
+                  node: {user?.email?.split('@')[0]}
+                </span>
+                <button
+                  onClick={logout}
+                  className="h-10 px-6 bg-white text-black text-[10px] font-bold uppercase tracking-widest hover:bg-zinc-200 transition-all rounded-full hover:scale-105 active:scale-95"
+                >
+                  Disconnect
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center gap-6">
+                <Link to="/auth" className="text-[11px] font-bold uppercase tracking-widest text-zinc-500 hover:text-white transition-colors">
+                  Log In
+                </Link>
+                <Link
+                  to="/ide"
+                  className="h-10 px-8 bg-white text-black text-[10px] font-bold uppercase tracking-widest hover:bg-zinc-200 transition-all flex items-center rounded-full hover:scale-105 active:scale-95 shadow-lg"
+                >
+                  Deploy Now
+                </Link>
+              </div>
+            )}
 
-          <button className="md:hidden p-2 text-zinc-400 hover:text-white" onClick={() => setIsOpen(!isOpen)}>
-            {isOpen ? <X size={20} /> : <Menu size={20} />}
-          </button>
+            <button className="md:hidden p-2 text-zinc-400 hover:text-white" onClick={() => setIsOpen(!isOpen)}>
+              {isOpen ? <X size={20} /> : <Menu size={20} />}
+            </button>
+          </div>
         </div>
 
         {isOpen && (

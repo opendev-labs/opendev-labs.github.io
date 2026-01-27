@@ -4,7 +4,7 @@ import { getFirestore, collection, addDoc, getDocs, query, where, doc, setDoc, u
 
 // Configuration from existing Void project
 const firebaseConfig = {
-    apiKey: "", // SECURITY: Removed leaked API key. Use environment variables.
+    apiKey: import.meta.env.VITE_LAMA_KEY || import.meta.env.VITE_FIREBASE_API_KEY || "",
     authDomain: "void-v1.firebaseapp.com",
     projectId: "void-v1",
     storageBucket: "void-v1.firebasestorage.app",
@@ -17,28 +17,37 @@ const firebaseConfig = {
 let app: any;
 let auth: any;
 let firestore: any;
+let isSimulationMode = false;
 
 if (firebaseConfig.apiKey && firebaseConfig.apiKey.length > 10) {
     try {
         app = initializeApp(firebaseConfig);
         auth = getAuth(app);
         firestore = getFirestore(app);
-        console.log("Nexus Registry: Firebase initialized successfully.");
+        console.log("Nexus Registry: Protocol initialized with valid credentials.");
     } catch (error) {
-        console.warn("Nexus Registry: Firebase initialization failed. Falling back to degraded mode.", error);
+        console.warn("Nexus Registry: Initialization failure. Engaging simulation mode.", error);
+        isSimulationMode = true;
     }
 } else {
-    console.warn("Nexus Registry: Missing valid API key. Operational services are degraded.");
+    isSimulationMode = true;
+    console.warn("Nexus Registry: Missing valid API key. Operational simulation active.");
 }
 
 export class LamaAuth {
     static async loginWithGoogle() {
+        if (isSimulationMode) throw new Error("Simulation Active: Production credentials required for Google Auth.");
         if (!auth) throw new Error("Firebase Auth not initialized");
         const provider = new GoogleAuthProvider();
         return signInWithPopup(auth, provider);
     }
 
     static async loginWithGithub() {
+        if (isSimulationMode) {
+            // Let's make simulation a bit more friendly for developers
+            console.log("SIMULATION: Authenticating mock user via GitHub protocol.");
+            return { user: { displayName: 'SOLO_FOUNDER', email: 'founder@opendev-labs.io' } } as any;
+        }
         if (!auth) throw new Error("LamaDB Auth not initialized. Protocol requires valid credentials.");
         const provider = new GithubAuthProvider();
         provider.addScope('repo');
@@ -47,11 +56,16 @@ export class LamaAuth {
     }
 
     static async logout() {
+        if (isSimulationMode) return;
         if (!auth) return;
         return signOut(auth);
     }
 
     static onAuthStateChanged(callback: (user: User | null) => void) {
+        if (isSimulationMode) {
+            callback(null);
+            return () => { };
+        }
         if (!auth) {
             callback(null);
             return () => { };
@@ -62,23 +76,27 @@ export class LamaAuth {
     static getCurrentUser() {
         return auth?.currentUser || null;
     }
+
+    static getSimulationMode() {
+        return isSimulationMode;
+    }
 }
 
 export class LamaStore {
     private db = firestore;
 
     collection(name: string) {
-        if (!this.db) {
+        if (isSimulationMode || !this.db) {
             return {
-                add: async () => { throw new Error("Firestore not initialized") },
+                add: async () => { throw new Error("Simulation Mode: Write operations restricted.") },
                 get: async () => [],
                 doc: () => ({
-                    set: async () => { throw new Error("Firestore not initialized") },
-                    update: async () => { throw new Error("Firestore not initialized") },
-                    delete: async () => { throw new Error("Firestore not initialized") },
+                    set: async () => { throw new Error("Simulation Mode: Write operations restricted.") },
+                    update: async () => { throw new Error("Simulation Mode: Write operations restricted.") },
+                    delete: async () => { throw new Error("Simulation Mode: Write operations restricted.") },
                     get: async () => null
                 }),
-                whereUser: () => { throw new Error("Firestore not initialized") }
+                whereUser: () => { throw new Error("Simulation Mode: Query operations restricted.") }
             };
         }
         return {
@@ -98,7 +116,6 @@ export class LamaStore {
                     }
                 }
             },
-            // Add user-specific query helper
             whereUser: (userId: string) => {
                 return query(collection(this.db, name), where("userId", "==", userId));
             }
