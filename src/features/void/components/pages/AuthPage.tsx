@@ -140,30 +140,36 @@ export const AuthPage: React.FC = () => {
                         )}
 
                         <form onSubmit={handleEmailAction} className="space-y-3">
-                            <div className={`space-y-3 transition-all duration-500 ease-in-out ${showEmailFields ? 'opacity-100 translate-y-0 h-auto mb-4' : 'opacity-0 -translate-y-2 h-0 overflow-hidden'}`}>
-                                <input
-                                    type="email"
-                                    required
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    placeholder="Email Address"
-                                    className="w-full h-11 bg-black border border-zinc-800 rounded-lg px-4 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-white transition-all"
-                                />
-                                <input
-                                    type="password"
-                                    required={showEmailFields}
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    placeholder="Password"
-                                    className="w-full h-11 bg-black border border-zinc-800 rounded-lg px-4 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-white transition-all"
-                                />
-                                <input
-                                    type="text"
-                                    value={code}
-                                    onChange={(e) => setCode(e.target.value)}
-                                    placeholder="Verification Code (optional)"
-                                    className="w-full h-11 bg-black border border-zinc-800 rounded-lg px-4 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-white transition-all"
-                                />
+                            <div
+                                className={`grid transition-all duration-500 ease-in-out ${showEmailFields ? 'grid-rows-[1fr] opacity-100 mb-4' : 'grid-rows-[0fr] opacity-0 mb-0'}`}
+                            >
+                                <div className="overflow-hidden">
+                                    <div className="space-y-3 py-1">
+                                        <input
+                                            type="email"
+                                            required
+                                            value={email}
+                                            onChange={(e) => setEmail(e.target.value)}
+                                            placeholder="Email Address"
+                                            className="w-full h-11 bg-black border border-zinc-800 rounded-lg px-4 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-white transition-all underline-offset-4"
+                                        />
+                                        <input
+                                            type="password"
+                                            required={showEmailFields}
+                                            value={password}
+                                            onChange={(e) => setPassword(e.target.value)}
+                                            placeholder="Password"
+                                            className="w-full h-11 bg-black border border-zinc-800 rounded-lg px-4 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-white transition-all underline-offset-4"
+                                        />
+                                        <input
+                                            type="text"
+                                            value={code}
+                                            onChange={(e) => setCode(e.target.value)}
+                                            placeholder="Verification Code (optional)"
+                                            className="w-full h-11 bg-black border border-zinc-800 rounded-lg px-4 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-white transition-all underline-offset-4"
+                                        />
+                                    </div>
+                                </div>
                             </div>
 
                             <button
