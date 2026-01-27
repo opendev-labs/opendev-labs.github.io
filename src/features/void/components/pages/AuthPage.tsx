@@ -67,11 +67,11 @@ export const AuthPage: React.FC = () => {
             {/* Left Side: Immersive Background Side */}
             <div className="hidden md:flex md:w-1/2 lg:w-3/5 relative h-full overflow-hidden border-r border-zinc-900/50">
                 <div
-                    className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-[40s] hover:scale-105 will-change-transform opacity-60"
+                    className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-[40s] hover:scale-105 will-change-transform opacity-80"
                     style={{ backgroundImage: `url(${loginBg})` }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-br from-black via-black/40 to-black opacity-80" />
-                <div className="absolute inset-0 backdrop-blur-[2px]" />
+
 
                 {/* Decorative Elements */}
                 <div className="absolute inset-0 opacity-[0.1] pointer-events-none"
