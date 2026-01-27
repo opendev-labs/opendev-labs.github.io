@@ -61,14 +61,6 @@ export const AuthPage: React.FC = () => {
                     </p>
                 </div>
 
-                <div className="absolute top-12 left-12 z-20">
-                    <Link to="/" className="flex items-center gap-2 group">
-                        <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center group-hover:rotate-90 transition-all duration-500 shadow-2xl">
-                            <div className="w-5 h-5 border-[3px] border-black rounded-sm" />
-                        </div>
-                        <span className="text-white font-bold tracking-tighter text-2xl">opendev-labs</span>
-                    </Link>
-                </div>
             </div>
 
             {/* Right Side: Professional Protocol Authorization */}
@@ -79,14 +71,6 @@ export const AuthPage: React.FC = () => {
                 />
 
                 <div className="w-full max-w-sm relative z-10">
-                    <div className="md:hidden flex flex-col items-center mb-16">
-                        <Link to="/" className="flex items-center gap-2 mb-6">
-                            <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-2xl shadow-white/5">
-                                <div className="w-6 h-6 border-[3px] border-black rounded-sm" />
-                            </div>
-                        </Link>
-                        <h2 className="text-white font-bold tracking-tighter text-3xl">opendev-labs</h2>
-                    </div>
 
                     <div className="mb-12 text-center md:text-left">
                         <div className="inline-block px-3 py-1 bg-zinc-900 border border-zinc-800 rounded-md mb-4">
