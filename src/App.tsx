@@ -37,27 +37,31 @@ const AppRoutes = () => {
           <Route path="lamadb" element={<LamaDB />} />
           <Route path="q-cloud" element={<QCloud />} />
           <Route path="syncstack" element={<SyncStack />} />
+          <Route path="quantum" element={<Placeholder title="Project Quantum" />} />
+          <Route path="transcender" element={<Placeholder title="Transcender" />} />
+          <Route path="co-writer" element={<Placeholder title="Co-Writer" />} />
+          <Route path="agentbash" element={<Placeholder title="AgentBash" />} />
+          <Route path="cli" element={<Placeholder title="Spoon-CLI" />} />
           <Route path="solutions" element={<Placeholder title="Solutions" />} />
           <Route path="resources" element={<Placeholder title="Resources" />} />
           <Route path="enterprise" element={<Placeholder title="Enterprise" />} />
           <Route path="pricing" element={<Placeholder title="Pricing" />} />
           <Route path="contact" element={<Contact />} />
           <Route path="changelog" element={<Changelog />} />
-
-          <Route path="auth" element={
-            <Suspense fallback={<div className="min-h-screen bg-black" />}>
-              <LazyAuthPage />
-            </Suspense>
-          } />
-          <Route path="verify-email" element={
-            <Suspense fallback={<div className="min-h-screen bg-black" />}>
-              <LazyVerifyEmailPage />
-            </Suspense>
-          } />
           <Route path="dashboard" element={<Placeholder title="User Dashboard" />} />
-
           <Route path="*" element={<Placeholder title="404 - Not Found" />} />
         </Route>
+
+        <Route path="auth" element={
+          <Suspense fallback={<div className="min-h-screen bg-black" />}>
+            <LazyAuthPage />
+          </Suspense>
+        } />
+        <Route path="verify-email" element={
+          <Suspense fallback={<div className="min-h-screen bg-black" />}>
+            <LazyVerifyEmailPage />
+          </Suspense>
+        } />
       </Routes>
     </>
   );

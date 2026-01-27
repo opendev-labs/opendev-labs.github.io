@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useAuth } from '../../hooks/useAuth';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { ArrowLeft } from 'lucide-react';
 import type { User } from '../../types';
 
 const FAKE_CODE = '123456';
 
 export const VerifyEmailPage: React.FC = () => {
     const { login } = useAuth();
+    const navigate = useNavigate();
     const [code, setCode] = useState('');
     const [error, setError] = useState('');
     const [userToVerify, setUserToVerify] = useState<User | null>(null);
@@ -30,6 +32,7 @@ export const VerifyEmailPage: React.FC = () => {
             if (userToVerify) {
                 login(userToVerify);
                 localStorage.removeItem('opendev_verification_user');
+                navigate('/ide/dashboard');
             } else {
                 setError('Could not find user to verify. Please try logging in again.');
             }
@@ -45,17 +48,26 @@ export const VerifyEmailPage: React.FC = () => {
     }, [userToVerify]);
 
     return (
-        <div className="min-h-screen flex items-center justify-center px-4 bg-black py-20 selection:bg-white selection:text-black">
+        <div className="min-h-screen flex items-center justify-center px-4 bg-black py-20 selection:bg-white selection:text-black relative">
+            {/* Back to Home Button */}
+            <Link
+                to="/"
+                className="absolute top-8 left-8 flex items-center gap-2 text-zinc-500 hover:text-white transition-colors group z-30"
+            >
+                <div className="w-8 h-8 rounded-full border border-zinc-900 flex items-center justify-center group-hover:border-zinc-700 transition-colors">
+                    <ArrowLeft size={14} />
+                </div>
+                <span className="text-[10px] font-bold uppercase tracking-widest">Back to Hub</span>
+            </Link>
+
             <div className="w-full max-w-sm">
                 <div className="text-center mb-12">
-                    <Link to="/" className="inline-flex items-center gap-2 mb-8 group">
-                        <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
-                            <div className="w-5 h-5 border-[2.5px] border-black rounded-sm" />
-                        </div>
-                        <span className="text-white font-bold tracking-tighter text-2xl">opendev-labs</span>
-                    </Link>
-                    <h1 className="text-4xl font-bold tracking-tighter text-white mb-3">Identity Audit</h1>
-                    <p className="text-zinc-500 text-sm font-medium">Verify your transmission to <span className="text-white font-mono">{emailDisplay}</span>.</p>
+                    <div className="inline-flex items-center gap-2 mb-8 px-3 py-1 rounded-full bg-zinc-900/50 border border-zinc-800 text-[10px] font-bold text-zinc-500 uppercase tracking-widest">
+                        <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+                        <span>Identity Audit Protocol</span>
+                    </div>
+                    <h1 className="text-4xl font-bold tracking-tighter text-white mb-3">Verify Transmission</h1>
+                    <p className="text-zinc-500 text-sm font-medium leading-relaxed">Incoming sequence dispatched to <br /><span className="text-white font-mono">{emailDisplay}</span></p>
                 </div>
 
                 <div className="bg-zinc-950/50 border border-zinc-900 rounded-[32px] p-10 text-center mb-10 shadow-2xl backdrop-blur-sm">
