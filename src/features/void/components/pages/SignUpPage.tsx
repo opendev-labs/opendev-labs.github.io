@@ -1,39 +1,13 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { GitHubIcon, GitLabIcon, GmailIcon } from '../common/Icons';
+import { GitHubIcon } from '../common/Icons';
 import { useAuth } from '../../hooks/useAuth';
 import { ErrorMessage } from '../common/ErrorMessage';
-import { GITHUB_CLIENT_ID, GITHUB_OAUTH_URL, GITHUB_SCOPES } from '../../config';
-
-const SocialButton: React.FC<{ provider: string, icon: React.ReactNode, href?: string, onClick?: () => void }> = ({ provider, icon, href, onClick }) => {
-    const Tag = href ? 'a' : 'button';
-    return (
-        <Tag href={href} onClick={onClick} className="w-full h-11 flex items-center justify-center gap-3 border border-zinc-900 bg-black text-white rounded-full hover:bg-zinc-900 transition-all hover:scale-[1.02] active:scale-95 shadow-lg">
-            {icon}
-            <span className="text-[11px] font-bold text-zinc-300 uppercase tracking-widest">Continue with {provider}</span>
-        </Tag>
-    )
-}
-
-const AppLogo = () => (
-    <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center mx-auto mb-8 shadow-2xl">
-        <div className="w-6 h-6 border-[3px] border-black rounded-sm" />
-    </div>
-);
-
 
 export const SignUpPage: React.FC = () => {
-    const { login } = useAuth();
+    const { loginWithGitHub } = useAuth();
     const [error, setError] = useState('');
     const navigate = useNavigate();
-
-    const handleGmailSignUp = () => {
-        login({ name: 'New User', email: 'new.user@gmail.com' });
-    };
-
-    const handleGitLabSignUp = () => {
-        login({ name: 'New GitLab User', email: 'new.user@gitlab.com' });
-    };
 
     const handleSignUp = (e: React.FormEvent) => {
         e.preventDefault();
@@ -44,88 +18,97 @@ export const SignUpPage: React.FC = () => {
         const password = formData.get('password') as string;
 
         if (!name || !email || !password) {
-            setError('Please fill in all fields.');
+            setError('All deployment coordinates are required.');
             return;
         }
 
         if (password.length < 8) {
-            setError('Password must be at least 8 characters long.');
+            setError('Security key must be at least 8 segments.');
             return;
         }
 
         localStorage.setItem('opendev_verification_user', JSON.stringify({ name, email }));
-        navigate('/ide/verify-email');
+        navigate('/verify-email');
     }
 
-    const gitHubAuthUrl = `${GITHUB_OAUTH_URL}?client_id=${GITHUB_CLIENT_ID}&scope=${encodeURIComponent(GITHUB_SCOPES)}`;
+    const handleGitHubSignUp = async () => {
+        try {
+            await loginWithGitHub();
+            navigate('/ide/dashboard');
+        } catch (err: any) {
+            setError(err.message || "GitHub protocol failed.");
+        }
+    };
 
     return (
-        <div className="min-h-[80vh] flex items-center justify-center px-4 bg-black">
-            <div className="w-full max-w-md p-10 bg-black border border-zinc-900 rounded-2xl shadow-2xl">
-                <AppLogo />
-                <div className="text-center mb-10">
-                    <h1 className="text-3xl font-bold tracking-tighter text-white mb-2">Join opendev-labs</h1>
-                    <p className="text-zinc-500 text-sm font-medium">Deploy your first project in minutes.</p>
+        <div className="min-h-screen flex items-center justify-center p-6 bg-black selection:bg-white selection:text-black">
+            <div className="w-full max-w-md">
+                <div className="text-center mb-12">
+                    <Link to="/" className="inline-flex items-center gap-2 mb-8 group">
+                        <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <div className="w-5 h-5 border-[2.5px] border-black rounded-sm" />
+                        </div>
+                        <span className="text-white font-bold tracking-tighter text-2xl">opendev-labs</span>
+                    </Link>
+                    <h1 className="text-4xl font-bold tracking-tighter text-white mb-3">Join the Protocol</h1>
+                    <p className="text-zinc-500 text-sm font-medium">Provision your developer identity in the global edge network.</p>
                 </div>
 
-                <div className="space-y-3 mb-8">
-                    <SocialButton provider="GitHub" icon={<GitHubIcon />} href={gitHubAuthUrl} />
-                    <SocialButton provider="GitLab" icon={<GitLabIcon />} onClick={handleGitLabSignUp} />
-                    <SocialButton provider="Gmail" icon={<GmailIcon />} onClick={handleGmailSignUp} />
-                </div>
-
-                <div className="relative my-8">
-                    <div className="absolute inset-0 flex items-center">
-                        <div className="w-full border-t border-zinc-900"></div>
-                    </div>
-                    <div className="relative flex justify-center text-xs uppercase">
-                        <span className="bg-black px-4 text-zinc-600 font-bold tracking-widest">or</span>
-                    </div>
-                </div>
-
-                <form className="space-y-4" onSubmit={handleSignUp}>
+                <div className="space-y-5 bg-zinc-950/30 border border-zinc-900 p-10 rounded-[32px] shadow-2xl backdrop-blur-sm">
                     {error && <ErrorMessage message={error} />}
-                    <div>
+
+                    <button
+                        onClick={handleGitHubSignUp}
+                        className="w-full h-12 flex items-center justify-center gap-3 bg-white text-black rounded-full text-[11px] font-bold uppercase tracking-widest hover:bg-zinc-200 transition-all hover:scale-[1.02] active:scale-95 shadow-xl shadow-white/5"
+                    >
+                        <GitHubIcon className="w-5 h-5" />
+                        <span>Initialize with GitHub</span>
+                    </button>
+
+                    <div className="relative my-10">
+                        <div className="absolute inset-0 flex items-center">
+                            <div className="w-full border-t border-zinc-900"></div>
+                        </div>
+                        <div className="relative flex justify-center text-[10px] uppercase font-bold tracking-[0.3em]">
+                            <span className="bg-[#050505] px-4 text-zinc-700">or manual entry</span>
+                        </div>
+                    </div>
+
+                    <form className="space-y-4" onSubmit={handleSignUp}>
                         <input
                             type="text"
-                            id="name"
                             name="name"
-                            className="w-full bg-zinc-950 border border-zinc-900 py-3 px-4 text-sm text-white rounded-md placeholder:text-zinc-700 focus:outline-none focus:ring-1 focus:ring-white transition-all"
-                            placeholder="Full Name"
+                            className="w-full h-12 bg-black border border-zinc-900 px-5 text-sm text-white rounded-xl placeholder:text-zinc-700 focus:outline-none focus:border-zinc-500 transition-colors"
+                            placeholder="Full Legal Name"
                         />
-                    </div>
-                    <div>
                         <input
                             type="email"
-                            id="email"
                             name="email"
-                            className="w-full bg-zinc-950 border border-zinc-900 py-3 px-4 text-sm text-white rounded-md placeholder:text-zinc-700 focus:outline-none focus:ring-1 focus:ring-white transition-all"
-                            placeholder="Email Address"
+                            className="w-full h-12 bg-black border border-zinc-900 px-5 text-sm text-white rounded-xl placeholder:text-zinc-700 focus:outline-none focus:border-zinc-500 transition-colors"
+                            placeholder="Provisioning Email"
                         />
-                    </div>
-                    <div>
                         <input
                             type="password"
-                            id="password"
                             name="password"
-                            className="w-full bg-zinc-950 border border-zinc-900 py-3 px-4 text-sm text-white rounded-md placeholder:text-zinc-700 focus:outline-none focus:ring-1 focus:ring-white transition-all"
-                            placeholder="Password (8+ characters)"
+                            className="w-full h-12 bg-black border border-zinc-900 px-5 text-sm text-white rounded-xl placeholder:text-zinc-700 focus:outline-none focus:border-zinc-500 transition-colors"
+                            placeholder="New Access Key (8+ segments)"
                         />
-                    </div>
-                    <button type="submit" className="w-full h-11 bg-white text-black text-[11px] font-bold uppercase tracking-widest rounded-full hover:bg-zinc-200 transition-all hover:scale-105 active:scale-95 shadow-lg shadow-white/5">
-                        Create Account
-                    </button>
-                </form>
+                        <button type="submit" className="w-full h-12 bg-zinc-950 border border-zinc-900 text-white text-[11px] font-bold uppercase tracking-widest rounded-full hover:bg-zinc-900 transition-all hover:scale-[1.02] active:scale-95 shadow-lg mt-4">
+                            Establish Identity
+                        </button>
+                    </form>
 
-                <p className="mt-10 text-center text-sm text-zinc-500 font-medium">
-                    By signing up, you agree to our <Link to="/terms" className="text-white hover:underline">Terms</Link> and <Link to="/privacy" className="text-white hover:underline">Privacy Policy</Link>.
-                </p>
+                    <p className="mt-8 text-center text-[10px] text-zinc-600 font-bold uppercase tracking-widest leading-relaxed">
+                        By establishing identity, you agree to our<br />
+                        <Link to="/terms" className="text-zinc-400 hover:underline">Terms of Protocol</Link> and <Link to="/privacy" className="text-zinc-400 hover:underline">Privacy</Link>.
+                    </p>
+                </div>
 
-                <div className="mt-8 pt-6 border-t border-zinc-900 text-center">
+                <div className="mt-10 text-center">
                     <p className="text-sm text-zinc-500">
-                        Already have an account?{' '}
-                        <Link to="/ide/login" className="text-white font-bold hover:underline ml-1">
-                            Log in
+                        Already established?{' '}
+                        <Link to="/login" className="text-white font-bold hover:underline ml-1">
+                            Authorize Session
                         </Link>
                     </p>
                 </div>
