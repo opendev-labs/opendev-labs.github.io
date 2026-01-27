@@ -73,7 +73,7 @@ export default function Layout() {
               </span>
               <button
                 onClick={logout}
-                className="h-9 px-4 border border-zinc-900 text-[10px] font-bold uppercase tracking-widest hover:border-white hover:text-white transition-all"
+                className="h-10 px-6 bg-white text-black text-[10px] font-bold uppercase tracking-widest hover:bg-zinc-200 transition-all rounded-full hover:scale-105 active:scale-95"
               >
                 Disconnect
               </button>
@@ -85,9 +85,9 @@ export default function Layout() {
               </Link>
               <Link
                 to="/ide"
-                className="h-9 px-6 bg-white text-black text-[10px] font-bold uppercase tracking-widest hover:bg-zinc-200 transition-all flex items-center"
+                className="h-10 px-8 bg-white text-black text-[10px] font-bold uppercase tracking-widest hover:bg-zinc-200 transition-all flex items-center rounded-full hover:scale-105 active:scale-95 shadow-lg"
               >
-                Get Started
+                Deploy Now
               </Link>
             </div>
           )}

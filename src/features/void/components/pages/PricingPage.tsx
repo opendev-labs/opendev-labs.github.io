@@ -34,7 +34,7 @@ const PricingCard: React.FC<{ plan: string, price: string, description: string, 
                 ))}
             </ul>
 
-            <button className={`w-full h-11 text-[11px] font-bold tracking-[0.2em] uppercase transition-all duration-300 ${isFeatured ? 'bg-white text-black hover:bg-zinc-200 shadow-lg shadow-white/5' : 'bg-black text-white border border-zinc-900 hover:bg-zinc-900'}`}>
+            <button className={`w-full h-11 text-[11px] font-bold tracking-[0.2em] uppercase transition-all duration-300 rounded-full hover:scale-105 active:scale-95 shadow-lg ${isFeatured ? 'bg-white text-black hover:bg-zinc-200 shadow-white/5' : 'bg-black text-white border border-zinc-900 hover:bg-zinc-900'}`}>
                 {plan === 'Enterprise' ? 'Contact Intelligence' : 'Initialize Node'}
             </button>
         </div>

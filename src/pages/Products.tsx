@@ -55,7 +55,7 @@ export default function Products() {
                 large={true}
             />
             <FeatureCard
-                title="Poly CLI"
+                title="Spoon CLI"
                 desc="Advanced trading analysis and agent creation."
                 icon={Code2}
             />

@@ -76,7 +76,7 @@ export const VerifyEmailPage: React.FC = () => {
 
                     {error && <p className="text-xs text-red-500 text-center font-bold uppercase tracking-tight">{error}</p>}
 
-                    <button type="submit" className="w-full h-11 bg-white text-black font-bold text-sm rounded-md hover:bg-zinc-200 transition-all active:scale-95">
+                    <button type="submit" className="w-full h-11 bg-white text-black text-[11px] font-bold uppercase tracking-widest rounded-full hover:bg-zinc-200 transition-all hover:scale-105 active:scale-95 shadow-lg shadow-white/5">
                         Verify Identity
                     </button>
 

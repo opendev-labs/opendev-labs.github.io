@@ -40,12 +40,12 @@ export default function Home() {
                         </p>
 
                         <div className="flex flex-col md:flex-row items-center justify-center gap-4 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300">
-                            <Link to="/ide" className="h-12 px-8 rounded-full bg-white text-black font-medium hover:bg-gray-200 transition-colors flex items-center gap-2 justify-center shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 duration-200">
+                            <Link to="/ide" className="h-12 px-10 rounded-full bg-white text-black text-[11px] font-bold uppercase tracking-widest hover:bg-zinc-200 transition-all hover:scale-105 active:scale-95 flex items-center gap-2 justify-center shadow-lg">
                                 <svg className="w-4 h-4" viewBox="0 0 116 100" fill="currentColor"><path fillRule="evenodd" clipRule="evenodd" d="M57.5 100L0 0H116L57.5 100Z" /></svg>
-                                Enter Void
+                                Deploy Now
                             </Link>
-                            <Link to="/contact" className="h-12 px-8 rounded-full bg-black/80 text-white border border-white/20 font-medium hover:bg-black transition-all flex items-center justify-center hover:border-white/40 shadow-lg">
-                                Contact Sales
+                            <Link to="/contact" className="h-12 px-10 rounded-full bg-black border border-zinc-800 text-white text-[11px] font-bold uppercase tracking-widest hover:bg-zinc-900 transition-all hover:scale-105 active:scale-95 flex items-center justify-center shadow-lg">
+                                Documentation
                             </Link>
                         </div>
                     </div>
@@ -165,7 +165,7 @@ export default function Home() {
                             <div className="p-6 font-mono text-[13px] leading-relaxed">
                                 <div className="flex gap-3">
                                     <span className="text-zinc-600">~</span>
-                                    <span className="text-zinc-300">poly init product-engine</span>
+                                    <span className="text-zinc-300">spoon init product-engine</span>
                                 </div>
                                 <div className="text-zinc-500 pl-6 mt-1 mb-4">
                                     ▸ Resolving dependencies...
@@ -178,7 +178,7 @@ export default function Home() {
                                 </div>
                                 <div className="flex gap-3">
                                     <span className="text-zinc-600">~</span>
-                                    <span className="text-zinc-300">poly deploy --prod</span>
+                                    <span className="text-zinc-300">spoon deploy --prod</span>
                                 </div>
                                 <div className="mt-4 pl-6 border-l-2 border-zinc-800">
                                     <div className="text-zinc-400">Success! Project is live at:</div>
