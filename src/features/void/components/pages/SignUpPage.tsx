@@ -8,9 +8,9 @@ import { GITHUB_CLIENT_ID, GITHUB_OAUTH_URL, GITHUB_SCOPES } from '../../config'
 const SocialButton: React.FC<{ provider: string, icon: React.ReactNode, href?: string, onClick?: () => void }> = ({ provider, icon, href, onClick }) => {
     const Tag = href ? 'a' : 'button';
     return (
-        <Tag href={href} onClick={onClick} className="w-full flex items-center justify-center gap-3 py-2.5 px-4 border border-zinc-900 bg-zinc-950 hover:bg-zinc-900 transition-all rounded-md">
+        <Tag href={href} onClick={onClick} className="w-full h-11 flex items-center justify-center gap-3 border border-zinc-900 bg-black text-white rounded-full hover:bg-zinc-900 transition-all hover:scale-[1.02] active:scale-95 shadow-lg">
             {icon}
-            <span className="text-sm font-bold text-zinc-300">Continue with {provider}</span>
+            <span className="text-[11px] font-bold text-zinc-300 uppercase tracking-widest">Continue with {provider}</span>
         </Tag>
     )
 }
@@ -112,7 +112,7 @@ export const SignUpPage: React.FC = () => {
                             placeholder="Password (8+ characters)"
                         />
                     </div>
-                    <button type="submit" className="w-full h-11 bg-white text-black font-bold text-sm rounded-md hover:bg-zinc-200 transition-all active:scale-95 shadow-lg shadow-white/5">
+                    <button type="submit" className="w-full h-11 bg-white text-black text-[11px] font-bold uppercase tracking-widest rounded-full hover:bg-zinc-200 transition-all hover:scale-105 active:scale-95 shadow-lg shadow-white/5">
                         Create Account
                     </button>
                 </form>

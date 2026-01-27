@@ -44,7 +44,7 @@ export default function VoidLanding() {
                         <Terminal className="mb-6 text-blue-500" size={32} />
                         <h3 className="text-xl font-bold mb-3">Intelligent CLI</h3>
                         <p className="text-zinc-500">
-                            Poly CLI understands your intent. "poly deploy production" is all you need to say.
+                            Spoon CLI understands your intent. "spoon deploy production" is all you need to say.
                         </p>
                     </div>
                     <div className="p-8 border border-[#222] rounded-2xl bg-[#050505] hover:border-blue-500/30 transition-colors">

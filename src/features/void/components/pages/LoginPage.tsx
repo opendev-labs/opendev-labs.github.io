@@ -86,7 +86,7 @@ export const LoginPage: React.FC = () => {
                     <button
                         onClick={handleGitHubLogin}
                         disabled={isLoading}
-                        className="w-full h-11 flex items-center justify-center gap-3 bg-white text-black rounded-md font-bold hover:bg-zinc-200 transition-all active:scale-[0.98] disabled:opacity-50 text-sm"
+                        className="w-full h-11 flex items-center justify-center gap-3 bg-white text-black rounded-full text-[11px] font-bold uppercase tracking-widest hover:bg-zinc-200 transition-all hover:scale-105 active:scale-95 shadow-lg shadow-white/5 disabled:opacity-50"
                     >
                         <GitHubIcon className="w-5 h-5 text-black" />
                         <span>Continue with GitHub</span>

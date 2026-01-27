@@ -240,7 +240,7 @@ const RepoList: React.FC<{
                             {configuringRepoId !== repo.id && (
                                 <button
                                     onClick={() => setConfiguringRepoId(repo.id)}
-                                    className="h-9 px-6 text-[11px] font-bold uppercase tracking-widest bg-white text-black hover:bg-zinc-200 transition-all rounded-md"
+                                    className="h-10 px-8 text-[11px] font-bold uppercase tracking-widest bg-white text-black hover:bg-zinc-200 transition-all rounded-full hover:scale-105 active:scale-95 shadow-lg shadow-white/5"
                                 >
                                     Import
                                 </button>
