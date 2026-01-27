@@ -1,5 +1,3 @@
-
-
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import type { LogEntry, AiChatMessage } from '../types';
 import { LogLevel, DeploymentStatus } from '../types';
@@ -26,7 +24,7 @@ export const AIAssistant: React.FC<AIAssistantProps> = ({ logs, deploymentStatus
     if (errorLogs.length === 0) return;
 
     setIsLoading(true);
-    setMessages(prev => [...prev, { sender: 'ai', text: "I've detected an error in your recent deployment. Analyzing the logs now..." }]);
+    setMessages(prev => [...prev, { sender: 'ai', text: "Analyzing protocol failure logs. Synchronizing neural context..." }]);
 
     const aiResponse = await getAIAssistance(errorLogs);
 
@@ -35,16 +33,13 @@ export const AIAssistant: React.FC<AIAssistantProps> = ({ logs, deploymentStatus
   }, [logs]);
 
   useEffect(() => {
-    // We only act when a new deployment has failed and we have the error logs.
     if (
       deploymentStatus === DeploymentStatus.ERROR &&
       hasErrors &&
       deploymentId !== analyzedDeploymentIdRef.current
     ) {
-      // Clear previous messages for the new error analysis
       setMessages([]);
       handleAnalyzeErrors();
-      // Mark this deployment ID as analyzed to prevent re-triggering on subsequent renders.
       analyzedDeploymentIdRef.current = deploymentId;
     }
   }, [deploymentStatus, deploymentId, logs, hasErrors, handleAnalyzeErrors]);
@@ -65,57 +60,59 @@ export const AIAssistant: React.FC<AIAssistantProps> = ({ logs, deploymentStatus
     setInput('');
     setIsLoading(true);
 
-    // In a real app, this would call the Gemini chat API.
-    // For now, we simulate a generic response.
     await new Promise(resolve => setTimeout(resolve, 1500));
 
     const errorLogs = logs.filter(log => log.level === LogLevel.ERROR);
-    const aiResponse = await getAIAssistance(errorLogs); // Re-analyze with new context if needed
+    const aiResponse = await getAIAssistance(errorLogs);
 
-    setMessages(prev => [...prev, { sender: 'ai', text: `Regarding your question about "${userMessage}":\n\n${aiResponse}` }]);
+    setMessages(prev => [...prev, { sender: 'ai', text: aiResponse }]);
     setIsLoading(false);
   }
 
   return (
-    <div className="bg-void-card border border-void-line rounded-lg flex flex-col h-full sticky top-24 animate-fade-in-up">
-      <div className="flex items-center gap-3 p-4 border-b border-void-line">
-        <SparklesIcon />
-        <h3 className="font-semibold text-white">AI Deployment Assistant</h3>
+    <div className="bg-black border border-zinc-900 rounded-none flex flex-col h-full sticky top-24 animate-in fade-in slide-in-from-bottom-4 duration-700">
+      <div className="flex items-center gap-3 p-5 border-b border-zinc-900 bg-zinc-950/50">
+        <SparklesIcon className="w-5 h-5 text-zinc-400" />
+        <h3 className="text-[10px] font-bold text-white uppercase tracking-[0.2em]">Neural Analyst</h3>
       </div>
 
-      <div ref={chatContainerRef} className="flex-grow p-4 space-y-4 overflow-y-auto">
+      <div ref={chatContainerRef} className="flex-grow p-6 space-y-6 overflow-y-auto">
         {messages.map((msg, index) => (
           <div key={index} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
-            <div className={`max-w-xs md:max-w-md lg:max-w-xs xl:max-w-md rounded-lg px-4 py-2 ${msg.sender === 'user' ? 'bg-void-neon text-black' : 'bg-void-line text-zinc-200'}`}>
-              <p className="text-sm whitespace-pre-wrap">{msg.text}</p>
+            <div className={`max-w-[85%] rounded-none px-4 py-3 ${msg.sender === 'user' ? 'bg-white text-black text-[13px] font-bold' : 'bg-black border border-zinc-900 text-zinc-300 text-[13px] font-medium leading-relaxed'}`}>
+              <p className="whitespace-pre-wrap">{msg.text}</p>
             </div>
           </div>
         ))}
         {isLoading && messages[messages.length - 1]?.sender !== 'user' && (
           <div className="flex justify-start">
-            <div className="bg-void-line rounded-lg px-4 py-3">
-              <div className="flex items-center space-x-1">
-                <div className="w-2 h-2 bg-zinc-400 rounded-full animate-pulse [animation-delay:-0.3s]"></div>
-                <div className="w-2 h-2 bg-zinc-400 rounded-full animate-pulse [animation-delay:-0.15s]"></div>
-                <div className="w-2 h-2 bg-zinc-400 rounded-full animate-pulse"></div>
+            <div className="bg-black border border-zinc-900 px-4 py-4">
+              <div className="flex gap-1.5">
+                <div className="w-1.5 h-1.5 bg-zinc-600 rounded-full animate-pulse"></div>
+                <div className="w-1.5 h-1.5 bg-zinc-600 rounded-full animate-pulse [animation-delay:200ms]"></div>
+                <div className="w-1.5 h-1.5 bg-zinc-600 rounded-full animate-pulse [animation-delay:400ms]"></div>
               </div>
             </div>
           </div>
         )}
       </div>
 
-      <div className="p-4 border-t border-void-line bg-void-card/80 rounded-b-lg">
-        <form onSubmit={handleSendMessage} className="flex items-center gap-2">
+      <div className="p-5 border-t border-zinc-900 bg-black">
+        <form onSubmit={handleSendMessage} className="flex gap-2">
           <input
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Ask a follow-up question..."
-            className="w-full bg-void-line border border-zinc-700 py-2 px-3 text-sm text-zinc-200 focus:outline-none focus:ring-1 focus:ring-void-neon"
+            placeholder="Inquire node status..."
+            className="flex-grow bg-zinc-950 border border-zinc-900 px-4 py-3 text-xs font-bold text-white placeholder:text-zinc-700 focus:outline-none focus:border-white transition-all uppercase tracking-widest"
             disabled={isLoading}
           />
-          <button type="submit" className="bg-void-neon p-3 hover:opacity-90 disabled:bg-void-neon/50" disabled={isLoading || !input.trim()}>
-            <SendIcon />
+          <button
+            type="submit"
+            className="h-11 w-11 bg-white text-black flex items-center justify-center hover:bg-zinc-200 disabled:opacity-50 transition-all"
+            disabled={isLoading || !input.trim()}
+          >
+            <SendIcon className="w-4 h-4" />
           </button>
         </form>
       </div>

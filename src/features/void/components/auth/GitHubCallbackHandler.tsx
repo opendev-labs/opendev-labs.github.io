@@ -70,18 +70,19 @@ export const GitHubCallbackHandler: React.FC = () => {
     }, [login]);
 
     return (
-        <div className="fixed inset-0 bg-void-bg flex flex-col items-center justify-center z-[100]">
-            <AnimatedLoaderIcon size={64} strokeWidth={1.5} />
+        <div className="fixed inset-0 bg-black flex flex-col items-center justify-center z-[100] selection:bg-white selection:text-black">
+            <AnimatedLoaderIcon size={64} strokeWidth={1.5} className="text-white" />
             <LoadingText text={statusText} />
 
             {/* Debug Info */}
-            <div className="mt-8 text-xs text-zinc-600 font-mono max-w-lg break-all p-4 border border-zinc-800 rounded">
-                DEBUG URL: {window.location.href}
+            <div className="mt-8 text-[10px] font-bold text-zinc-700 font-mono max-w-lg break-all p-6 border border-zinc-900 bg-black/50 uppercase tracking-wider leading-relaxed">
+                DEBUG PROTOCOL: {window.location.href}
             </div>
 
-            <div className="absolute bottom-10 text-center text-xs text-zinc-600 max-w-md">
-                This is a simulation. In a real application, your browser would securely communicate with the Void backend.
+            <div className="absolute bottom-12 text-center text-[9px] font-bold text-zinc-600 max-w-md uppercase tracking-[0.2em] leading-loose">
+                This is a neural simulation. In a live environment, your node would securely synchronize with the opendev-labs nexus registry.
             </div>
         </div>
+
     );
 };

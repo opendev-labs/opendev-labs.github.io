@@ -12,14 +12,14 @@ type OutputLine = {
 
 const HELP_MESSAGE = `
 <div class="space-y-1">
-<div>Void CLI - Available Commands:</div>
-<div class="pl-2"><span class="text-void-neon w-28 inline-block">help</span> Show this help message.</div>
-<div class="pl-2"><span class="text-void-neon w-28 inline-block">projects</span> List all projects.</div>
-<div class="pl-2"><span class="text-void-neon w-28 inline-block">deploy &lt;name&gt;</span> Trigger a new deployment for a project.</div>
-<div class="pl-2"><span class="text-void-neon w-28 inline-block">logs &lt;name&gt;</span> View latest deployment logs for a project.</div>
-<div class="pl-2"><span class="text-void-neon w-28 inline-block">whoami</span> Display current user info.</div>
-<div class="pl-2"><span class="text-void-neon w-28 inline-block">clear</span> Clear the terminal screen.</div>
-<div class="pl-2"><span class="text-void-neon w-28 inline-block">logout</span> Log out of the CLI session.</div>
+<div class="font-bold text-white uppercase tracking-widest text-[10px] mb-2">opendev CLI - Operational Protocols</div>
+<div class="pl-0 flex gap-4"><span class="text-white font-bold w-32 shrink-0">help</span> <span class="text-zinc-600">Display available protocols.</span></div>
+<div class="pl-0 flex gap-4"><span class="text-white font-bold w-32 shrink-0">fleet</span> <span class="text-zinc-600">List all registry nodes.</span></div>
+<div class="pl-0 flex gap-4"><span class="text-white font-bold w-32 shrink-0">launch &lt;node&gt;</span> <span class="text-zinc-600">Initiate node deployment sequence.</span></div>
+<div class="pl-0 flex gap-4"><span class="text-white font-bold w-32 shrink-0">telemetry &lt;node&gt;</span> <span class="text-zinc-600">Access real-time log stream.</span></div>
+<div class="pl-0 flex gap-4"><span class="text-white font-bold w-32 shrink-0">whoami</span> <span class="text-zinc-600">Verify current authorization.</span></div>
+<div class="pl-0 flex gap-4"><span class="text-white font-bold w-32 shrink-0">clear</span> <span class="text-zinc-600">Purge terminal buffer.</span></div>
+<div class="pl-0 flex gap-4"><span class="text-white font-bold w-32 shrink-0">exit</span> <span class="text-zinc-600">Terminate secure session.</span></div>
 </div>
 `;
 
@@ -50,11 +50,12 @@ export const CLIPage: React.FC<{ projects: Project[], onUpdateProject: (p: Proje
     }, []);
 
     useEffect(() => {
-        addLine('Welcome to Void CLI v1.0.0', 'system');
-        addLine('Type `help` for a list of available commands.', 'system');
+        addLine('opendev secure terminal [version 1.0.0]', 'system');
+        addLine('establishing neural handshake with nexus...', 'system');
+        addLine('ready. type `help` for protocols.', 'system');
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-    
+
     useEffect(() => {
         if (containerRef.current) {
             containerRef.current.scrollTop = containerRef.current.scrollHeight;
@@ -71,8 +72,7 @@ export const CLIPage: React.FC<{ projects: Project[], onUpdateProject: (p: Proje
         addLine(`> ${command}`, 'input');
         setIsProcessing(true);
 
-        // A small delay to make it feel more responsive
-        await new Promise(r => setTimeout(r, 50));
+        await new Promise(r => setTimeout(r, 100));
 
         switch (cmd.toLowerCase()) {
             case 'help':
@@ -83,94 +83,98 @@ export const CLIPage: React.FC<{ projects: Project[], onUpdateProject: (p: Proje
                 break;
             case 'whoami':
                 if (user) {
-                    addLine(`Logged in as ${user.name} <${user.email}>`, 'success');
+                    addLine(`Authorized: ${user.name} <${user.email}>`, 'success');
                 } else {
-                    addLine('Not logged in.', 'error');
+                    addLine('No active authorization detected.', 'error');
                 }
                 break;
+            case 'fleet':
             case 'projects':
                 if (projects.length > 0) {
-                    const headers = ['NAME', 'FRAMEWORK', 'LAST DEPLOYMENT', 'STATUS'];
+                    const headers = ['NAME', 'FRAMEWORK', 'LAST MODIFIED', 'STATUS'];
                     const rows = projects.map(p => [
                         p.name,
                         p.framework,
-                        new Date(p.deployments[0].timestamp).toLocaleString(),
+                        new Date(p.deployments[0].timestamp).toLocaleDateString(),
                         p.deployments[0].status,
                     ]);
-                    addLine(<pre className="whitespace-pre">{formatTable(headers, rows)}</pre>);
+                    addLine(<pre className="whitespace-pre text-zinc-400 mt-2 font-mono text-[12px]">{formatTable(headers, rows)}</pre>);
                 } else {
-                    addLine('No projects found.', 'output');
+                    addLine('Empty fleet registry.', 'output');
                 }
                 break;
+            case 'launch':
             case 'deploy':
                 const deployProjectName = args[0];
                 if (!deployProjectName) {
-                    addLine('Usage: deploy <project-name>', 'error');
+                    addLine('Usage: launch <node-id>', 'error');
                     break;
                 }
                 const projectToDeploy = projects.find(p => p.name.toLowerCase() === deployProjectName.toLowerCase());
                 if (!projectToDeploy) {
-                    addLine(`Error: Project "${deployProjectName}" not found.`, 'error');
+                    addLine(`Error: Registry entry "${deployProjectName}" not found.`, 'error');
                     break;
                 }
-                
+
                 const newDeployment: Deployment = {
                     id: `dpl_cli_${Date.now()}`,
-                    commit: `build(cli): Manual deployment trigger`,
+                    commit: `build(cli): protocol handshake sequence`,
                     branch: 'main',
                     timestamp: new Date().toISOString(),
                     status: DeploymentStatus.QUEUED,
-                    url: projectToDeploy.domains.find(d => d.isPrimary)?.name || `https://${projectToDeploy.name}.void.app`,
+                    url: projectToDeploy.domains.find(d => d.isPrimary)?.name || `https://${projectToDeploy.name}.opendev.app`,
                 };
-                
+
                 const updatedProject = {
                     ...projectToDeploy,
                     deployments: [newDeployment, ...projectToDeploy.deployments],
                 };
                 onUpdateProject(updatedProject);
-                
-                addLine(`Deployment queued for ${projectToDeploy.name}.`, 'system');
+
+                addLine(`queued. synching nexus nodes for ${projectToDeploy.name}...`, 'system');
                 await new Promise(resolve => setTimeout(resolve, 1000));
-                
+
                 for (const log of successBuildLogs) {
-                    addLine(<div className="flex gap-2"><span className="text-zinc-600">{new Date().toLocaleTimeString()}</span><span>{`[${log.level}] ${log.message}`}</span></div>, log.level === 'SYSTEM' ? 'system' : 'output');
-                    await new Promise(r => setTimeout(r, 200 + Math.random() * 200));
+                    addLine(<div className="flex gap-4"><span className="text-zinc-800 tabular-nums">{new Date().toLocaleTimeString([], { hour12: false })}</span><span className="text-zinc-500 font-bold uppercase text-[10px] w-12">{log.level}</span><span className="text-zinc-300">{log.message}</span></div>, 'output');
+                    await new Promise(r => setTimeout(r, 100 + Math.random() * 150));
                 }
-                
+
                 const finalDeployment = { ...newDeployment, status: DeploymentStatus.DEPLOYED };
-                onUpdateProject({ ...updatedProject, deployments: [finalDeployment, ...updatedProject.deployments.slice(1)]});
-                addLine(`Deployment successful! Live at ${finalDeployment.url}`, 'success');
+                onUpdateProject({ ...updatedProject, deployments: [finalDeployment, ...updatedProject.deployments.slice(1)] });
+                addLine(`Deployment success. Access live node: ${finalDeployment.url}`, 'success');
                 break;
 
+            case 'telemetry':
             case 'logs':
                 const logProjectName = args[0];
-                 if (!logProjectName) {
-                    addLine('Usage: logs <project-name>', 'error');
+                if (!logProjectName) {
+                    addLine('Usage: telemetry <node-id>', 'error');
                     break;
                 }
                 const projectToLog = projects.find(p => p.name.toLowerCase() === logProjectName.toLowerCase());
-                 if (!projectToLog) {
-                    addLine(`Error: Project "${logProjectName}" not found.`, 'error');
+                if (!projectToLog) {
+                    addLine(`Error: Registry entry "${logProjectName}" not found.`, 'error');
                     break;
                 }
                 const latestDeployment = projectToLog.deployments[0];
                 const logSource = latestDeployment.status === DeploymentStatus.ERROR ? buildLogs : successBuildLogs;
-                addLine(`Showing logs for latest deployment: ${latestDeployment.id}`, 'system');
+                addLine(`Streaming telemetry for node: ${latestDeployment.id}`, 'system');
                 logSource.forEach(log => {
-                     addLine(<div className="flex gap-2"><span className="text-zinc-600">{new Date().toLocaleTimeString()}</span><span>{`[${log.level}] ${log.message}`}</span></div>, log.level === 'ERROR' ? 'error' : 'output');
+                    addLine(<div className="flex gap-4"><span className="text-zinc-800 tabular-nums">{new Date().toLocaleTimeString([], { hour12: false })}</span><span className="text-zinc-500 font-bold uppercase text-[10px] w-12">{log.level}</span><span className="text-zinc-300">{log.message}</span></div>, log.level === 'ERROR' ? 'error' : 'output');
                 });
                 break;
-            
+
+            case 'exit':
             case 'logout':
-                addLine('Logging out...', 'system');
+                addLine('terminating secure tunnel...', 'system');
                 await new Promise(r => setTimeout(r, 500));
                 logout();
                 break;
 
             default:
-                addLine(`command not found: ${cmd}`, 'error');
+                addLine(`unknown command: ${cmd}. type 'help' for protocols.`, 'error');
         }
-        
+
         setIsProcessing(false);
     };
 
@@ -200,17 +204,17 @@ export const CLIPage: React.FC<{ projects: Project[], onUpdateProject: (p: Proje
             setLines([]);
         }
     };
-    
+
     const renderLine = (line: OutputLine, index: number) => {
         const classMap = {
-            input: 'text-zinc-400',
-            output: 'text-zinc-200',
-            error: 'text-red-400',
-            success: 'text-green-400',
-            system: 'text-void-neon',
+            input: 'text-zinc-500',
+            output: 'text-zinc-300',
+            error: 'text-red-900',
+            success: 'text-white font-bold',
+            system: 'text-zinc-400 italic',
         };
 
-        const baseClasses = "min-h-[20px]";
+        const baseClasses = "min-h-[24px] leading-relaxed";
 
         if (line.isHtml) {
             return <div key={index} className={`${baseClasses} ${classMap[line.type]}`} dangerouslySetInnerHTML={{ __html: line.content as string }} />;
@@ -221,25 +225,25 @@ export const CLIPage: React.FC<{ projects: Project[], onUpdateProject: (p: Proje
 
 
     return (
-        <div 
+        <div
             ref={containerRef}
-            className="bg-black font-mono text-sm p-4 h-[75vh] overflow-y-auto border border-void-line rounded-lg focus-within:border-void-neon transition-colors"
+            className="bg-black font-mono text-[13px] p-10 h-[70vh] overflow-y-auto border border-zinc-900 group focus-within:border-white transition-all duration-700 selection:bg-white selection:text-black"
             onClick={() => inputRef.current?.focus()}
         >
-            <div className="space-y-1">
+            <div className="space-y-1 mb-6">
                 {lines.map(renderLine)}
             </div>
-            
+
             {!isProcessing ? (
-                <div className="flex items-center gap-2">
-                    <span className="text-void-accent">{user?.name.split(' ')[0].toLowerCase() || 'guest'}@void:~$</span>
+                <div className="flex items-center gap-4">
+                    <span className="text-white font-bold">{user?.name.split(' ')[0].toLowerCase() || 'guest'}@opendev:~$</span>
                     <input
                         ref={inputRef}
                         type="text"
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
                         onKeyDown={handleKeyDown}
-                        className="bg-transparent border-none text-zinc-200 w-full focus:outline-none p-0"
+                        className="bg-transparent border-none text-white w-full focus:outline-none p-0 caret-white"
                         autoFocus
                         spellCheck="false"
                         autoComplete="off"
@@ -247,10 +251,12 @@ export const CLIPage: React.FC<{ projects: Project[], onUpdateProject: (p: Proje
                     />
                 </div>
             ) : (
-                 <div className="flex items-center gap-2 h-[20px]">
-                    <span className="text-zinc-500">Processing...</span>
+                <div className="flex items-center gap-3 h-[24px]">
+                    <div className="w-1.5 h-1.5 bg-white rounded-full animate-ping"></div>
+                    <span className="text-[10px] font-bold text-zinc-700 uppercase tracking-widest">Executing protocol sequence...</span>
                 </div>
             )}
         </div>
     );
 };
+

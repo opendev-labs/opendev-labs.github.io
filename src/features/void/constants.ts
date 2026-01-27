@@ -6,27 +6,27 @@ import { DeploymentStatus, LogLevel, FunctionStatus, TeamMemberRole, DatabaseTyp
 export const mockDeployments: Deployment[] = [
   {
     id: 'dpl_1',
-    commit: 'a1b2c3d - Feat: Add user authentication',
+    commit: 'a1b2c3d - protocol: Synchronize node authentication',
     branch: 'main',
     timestamp: '2024-07-21T10:30:00Z',
     status: DeploymentStatus.DEPLOYED,
-    url: '#/deploy/pulse-v2-api',
+    url: '/ide/deploy/pulse-v2-api',
   },
   {
     id: 'dpl_2',
-    commit: 'e4f5g6h - Fix: Database connection issue',
-    branch: 'hotfix/db-connect',
+    commit: 'e4f5g6h - patch: Neural mesh connection stability',
+    branch: 'hotfix/nexus-mesh',
     timestamp: '2024-07-20T15:00:00Z',
     status: DeploymentStatus.ERROR,
-    url: 'https://pulse-v2-api-e4f5g6h.void.app',
+    url: 'https://pulse-v2-api-e4f5g6h.opendev.app',
   },
   {
     id: 'dpl_3',
-    commit: 'i7j8k9l - Chore: Update dependencies',
-    branch: 'dependabot/npm',
+    commit: 'i7j8k9l - update: Fleet dependency manifests',
+    branch: 'ops/node-update',
     timestamp: '2024-07-19T09:00:00Z',
     status: DeploymentStatus.CANCELED,
-    url: 'https://pulse-v2-api-i7j8k9l.void.app',
+    url: 'https://pulse-v2-api-i7j8k9l.opendev.app',
   },
 ];
 
@@ -55,18 +55,19 @@ export const mockServerlessFunctions: ServerlessFunction[] = [
 ];
 
 export const mockTeamMembers: TeamMember[] = [
-  { id: 'user_1', name: 'You', email: 'you@void.app', role: TeamMemberRole.OWNER, avatarUrl: 'https://placehold.co/40x40/9b5cff/FFFFFF/png?text=Y' },
-  { id: 'user_2', name: 'Jane Doe', email: 'jane.doe@void.app', role: TeamMemberRole.MEMBER, avatarUrl: 'https://placehold.co/40x40/7DF9FF/000000/png?text=JD' },
+  { id: 'user_1', name: 'You', email: 'you@opendev.app', role: TeamMemberRole.OWNER, avatarUrl: 'https://placehold.co/40x40/000000/FFFFFF/png?text=OP' },
+  { id: 'user_2', name: 'Jane Doe', email: 'jane.doe@opendev.app', role: TeamMemberRole.MEMBER, avatarUrl: 'https://placehold.co/40x40/000000/FFFFFF/png?text=JD' },
 ];
 
 export const mockActivityLog: ActivityEvent[] = [
-  { id: 'act_1', type: 'Deployment', description: 'Deployed a1b2c3d to production', actor: 'You', timestamp: '2024-07-21T10:30:00Z' },
-  { id: 'act_6', type: 'Integration', description: 'Connected Sentry integration', actor: 'You', timestamp: '2024-07-21T09:48:00Z' },
-  { id: 'act_5', type: 'Storage', description: 'Created PostgreSQL database "pulse-db"', actor: 'You', timestamp: '2024-07-21T09:45:00Z' },
-  { id: 'act_2', type: 'Domain', description: 'Added domain pulse-api.void.app', actor: 'You', timestamp: '2024-07-21T09:15:00Z' },
-  { id: 'act_3', type: 'Settings', description: 'Updated SECRET_KEY environment variable', actor: 'Jane Doe', timestamp: '2024-07-20T18:00:00Z' },
-  { id: 'act_4', type: 'Deployment', description: 'Deployment e4f5g6h failed', actor: 'You', timestamp: '2024-07-20T15:00:00Z' },
+  { id: 'act_1', type: 'Deployment', description: 'Launched node a1b2c3d to production fleet', actor: 'You', timestamp: '2024-07-21T10:30:00Z' },
+  { id: 'act_6', type: 'Integration', description: 'Initialized Sentry protocol bridge', actor: 'You', timestamp: '2024-07-21T09:48:00Z' },
+  { id: 'act_5', type: 'Storage', description: 'Created PostgreSQL compute node "pulse-db"', actor: 'You', timestamp: '2024-07-21T09:45:00Z' },
+  { id: 'act_2', type: 'Domain', description: 'Bound domain pulse-api.opendev.app', actor: 'You', timestamp: '2024-07-21T09:15:00Z' },
+  { id: 'act_3', type: 'Settings', description: 'Updated SECURE_SECRET_KEY protocol variable', actor: 'Jane Doe', timestamp: '2024-07-20T18:00:00Z' },
+  { id: 'act_4', type: 'Deployment', description: 'Node launch e4f5g6h aborted', actor: 'You', timestamp: '2024-07-20T15:00:00Z' },
 ];
+
 
 export const mockDatabases: Database[] = [
   { id: 'db_1', name: 'pulse-db', type: DatabaseType.POSTGRES, region: 'us-east-1 (CLE)', status: DatabaseStatus.ACTIVE, version: '14.8' },
@@ -108,7 +109,7 @@ export const mockProjects: Project[] = [
         branch: 'main',
         timestamp: new Date().toISOString(),
         status: DeploymentStatus.DEPLOYED,
-        url: 'https://landing-page.void.app',
+        url: 'https://landing-page.opendev.app',
       },
       {
         id: 'dpl_lp_2',
@@ -116,7 +117,7 @@ export const mockProjects: Project[] = [
         branch: 'main',
         timestamp: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
         status: DeploymentStatus.DEPLOYED,
-        url: 'https://landing-page.void.app',
+        url: 'https://landing-page.opendev.app',
       },
       {
         id: 'dpl_lp_3',
@@ -124,12 +125,12 @@ export const mockProjects: Project[] = [
         branch: 'dependabot',
         timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
         status: DeploymentStatus.DEPLOYED,
-        url: 'https://landing-page-i7j8k9l.void.app',
+        url: 'https://landing-page-i7j8k9l.opendev.app',
       },
     ],
     domains: [
-      { name: 'landing-page.void.app', isPrimary: true },
-      { name: 'landing-page-a1b2c3d.void.app', isPrimary: false, gitBranch: 'main' },
+      { name: 'landing-page.opendev.app', isPrimary: true },
+      { name: 'landing-page-a1b2c3d.opendev.app', isPrimary: false, gitBranch: 'main' },
     ],
     envVars: {
       'DATABASE_URL': 'postgres://user:pass@host:port/db',
@@ -156,7 +157,7 @@ export const mockProjects: Project[] = [
         branch: 'main',
         timestamp: '2024-07-20T18:45:00Z',
         status: DeploymentStatus.DEPLOYED,
-        url: 'https://nova-landing-page.void.app',
+        url: 'https://nova-landing-page.opendev.app',
       },
       {
         id: 'dpl_5',
@@ -164,14 +165,14 @@ export const mockProjects: Project[] = [
         branch: 'main',
         timestamp: '2024-07-19T12:00:00Z',
         status: DeploymentStatus.DEPLOYED,
-        url: 'https://nova-landing-page.void.app',
+        url: 'https://nova-landing-page.opendev.app',
       },
     ],
     domains: [
-      { name: 'nova-landing-page.void.app', isPrimary: true }
+      { name: 'nova-landing-page.opendev.app', isPrimary: true }
     ],
     envVars: {
-      'PUBLIC_API_ENDPOINT': 'https://api.nova.void.app/graphql'
+      'PUBLIC_API_ENDPOINT': 'https://api.nova.opendev.app/graphql'
     }
   },
   {
@@ -187,7 +188,7 @@ export const mockProjects: Project[] = [
         branch: 'schema-updates',
         timestamp: '2024-07-18T11:20:00Z',
         status: DeploymentStatus.ERROR,
-        url: 'https://quantum-analytics-db.void.app',
+        url: 'https://quantum-analytics-db.opendev.app',
       },
       {
         id: 'dpl_7',
@@ -195,7 +196,7 @@ export const mockProjects: Project[] = [
         branch: 'schema-updates',
         timestamp: '2024-07-17T16:40:00Z',
         status: DeploymentStatus.DEPLOYED,
-        url: 'https://quantum-analytics-db.void.app',
+        url: 'https://quantum-analytics-db.opendev.app',
       }
     ],
     domains: [],
@@ -419,12 +420,12 @@ export const mockFileSystem: FileSystemNode[] = [
       {
         name: 'App.tsx',
         type: 'file',
-        content: `import React from 'react';\n\nconst App = () => <h1>Hello Void!</h1>;\n\nexport default App;`
+        content: `import React from 'react';\n\nconst App = () => <h1 className="text-4xl font-bold tracking-tighter">Hello opendev-labs!</h1>;\n\nexport default App;`
       },
       {
         name: 'index.css',
         type: 'file',
-        content: 'body { margin: 0; }'
+        content: 'body { margin: 0; background: black; color: white; font-family: sans-serif; }'
       }
     ]
   },
@@ -432,17 +433,18 @@ export const mockFileSystem: FileSystemNode[] = [
     name: 'public',
     type: 'directory',
     children: [
-      { name: 'index.html', type: 'file', content: '<!DOCTYPE html>...' },
+      { name: 'index.html', type: 'file', content: '<!DOCTYPE html><html><head><title>opendev-labs App</title></head><body><div id="root"></div></body></html>' },
     ]
   },
   {
     name: 'package.json',
     type: 'file',
     content: `{
-    "name": "my-void-app",
+    "name": "my-opendev-app",
     "version": "1.0.0",
     "dependencies": {
-        "react": "latest"
+        "react": "latest",
+        "react-dom": "latest"
     }
 }`
   }

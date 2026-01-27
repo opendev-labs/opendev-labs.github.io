@@ -1,4 +1,3 @@
-
 import React from 'react';
 import type { TeamMember } from '../../types';
 import { TeamMemberRole } from '../../types';
@@ -7,52 +6,54 @@ export const TeamTab: React.FC<{ members: TeamMember[] }> = ({ members }) => {
 
     const handleInvite = (e: React.FormEvent) => {
         e.preventDefault();
-        // Simulation: In a real app, this would trigger an invitation flow.
-        alert("Invitation simulation: The user would receive an email to join the project.");
+        alert("Invitation simulation: Dispatching neural handshake...");
     };
 
     return (
-        <div className="bg-void-card border border-void-line rounded-lg">
-            <div className="p-6">
-                <h3 className="font-semibold text-white text-xl">Project Members</h3>
-                <p className="text-zinc-400 text-sm mt-1">Manage who has access to this project.</p>
+        <div className="border border-zinc-900 bg-black overflow-hidden">
+            <div className="px-8 py-10 border-b border-zinc-900 bg-zinc-950/50">
+                <h3 className="text-xl font-bold text-white tracking-tighter mb-2">Fleet Registry</h3>
+                <p className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest">Authorized neural nodes.</p>
             </div>
-            
-            <div className="divide-y divide-void-line">
+
+            <div className="divide-y divide-zinc-900">
                 {members.map(member => (
-                    <div key={member.id} className="p-4 flex justify-between items-center">
-                        <div className="flex items-center gap-3">
-                            <img src={member.avatarUrl} alt={member.name} className="w-9 h-9" />
-                            <div>
-                                <p className="font-semibold text-white">{member.name}</p>
-                                <p className="text-xs text-zinc-400">{member.email}</p>
+                    <div key={member.id} className="p-8 flex justify-between items-center hover:bg-zinc-950/50 transition-all">
+                        <div className="flex items-center gap-6">
+                            <div className="w-12 h-12 border border-zinc-900 flex items-center justify-center bg-black overflow-hidden">
+                                <img src={member.avatarUrl} alt={member.name} className="w-full h-full object-cover grayscale opacity-60 group-hover:opacity-100 transition-all duration-500" />
+                            </div>
+                            <div className="space-y-1">
+                                <p className="text-[13px] font-bold text-white tracking-tight">{member.name}</p>
+                                <p className="text-[10px] font-bold text-zinc-700 uppercase tracking-widest">{member.email}</p>
                             </div>
                         </div>
-                        <div className="flex items-center gap-2">
-                            <span className={`text-xs px-2 py-0.5 ${member.role === TeamMemberRole.OWNER ? 'bg-void-neon/20 text-void-neon' : 'bg-zinc-700 text-zinc-300'}`}>
-                                {member.role}
+                        <div className="flex items-center gap-10">
+                            <span className={`text-[9px] font-bold uppercase tracking-[0.2em] px-3 py-1 border ${member.role === TeamMemberRole.OWNER ? 'border-white text-white' : 'border-zinc-900 text-zinc-600'}`}>
+                                {member.role === TeamMemberRole.OWNER ? 'PROTOCOL' : member.role}
                             </span>
-                             {member.role !== TeamMemberRole.OWNER && (
-                                <button className="text-xs text-red-400 hover:underline">Remove</button>
-                             )}
+                            {member.role !== TeamMemberRole.OWNER && (
+                                <button className="text-[10px] font-bold text-zinc-800 hover:text-red-900 uppercase tracking-widest transition-colors">Sever</button>
+                            )}
                         </div>
                     </div>
                 ))}
             </div>
 
-            <div className="p-6 border-t border-void-line bg-void-line/20 rounded-b-lg">
-                <h4 className="font-semibold text-white mb-3">Invite New Member</h4>
-                <form onSubmit={handleInvite} className="flex gap-2">
+            <div className="p-10 border-t border-zinc-900 bg-zinc-950/20">
+                <h4 className="text-[10px] font-bold text-white uppercase tracking-widest mb-6">Authorize Node</h4>
+                <form onSubmit={handleInvite} className="flex gap-4">
                     <input
                         type="email"
-                        placeholder="new-member@example.com"
-                        className="flex-grow bg-void-card border border-void-line py-2 px-3 text-sm text-zinc-200 focus:outline-none focus:ring-1 focus:ring-void-neon"
+                        placeholder="node-identity@nexus.sh"
+                        className="flex-grow h-12 bg-black border border-zinc-900 px-6 text-[11px] font-mono text-white placeholder:text-zinc-800 focus:outline-none focus:border-white transition-all"
                     />
-                    <button type="submit" className="bg-white text-black font-semibold px-4 py-2 hover:bg-zinc-200 transition-colors text-sm">
-                        Invite
+                    <button type="submit" className="h-12 bg-white text-black font-bold uppercase tracking-widest px-10 hover:bg-zinc-200 transition-all">
+                        Authorize
                     </button>
                 </form>
             </div>
         </div>
     );
 };
+

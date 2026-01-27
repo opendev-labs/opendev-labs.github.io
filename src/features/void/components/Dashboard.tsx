@@ -13,8 +13,6 @@ interface DashboardProps {
   onUpdateProject: (project: Project) => void;
 }
 
-/* --- DASHBOARD COMPONENTS --- */
-
 export const Dashboard: React.FC<DashboardProps> = ({ projects, onUpdateProject }) => {
   const { user } = useAuth();
   const [search, setSearch] = useState('');
@@ -30,88 +28,84 @@ export const Dashboard: React.FC<DashboardProps> = ({ projects, onUpdateProject 
   const tabs = ['Overview', 'Integrations', 'Activity', 'Domains', 'Usage', 'Observability', 'Storage', 'Settings'];
 
   return (
-    <div className="min-h-[calc(100vh-200px)] animate-in fade-in duration-700">
-      {/* Top Navigation Layout */}
-      <div className="flex items-center gap-8 border-b border-white/[0.08] mb-10 overflow-x-auto no-scrollbar scroll-smooth">
+    <div className="min-h-[calc(100vh-200px)] animate-in fade-in duration-700 max-w-[1400px] mx-auto px-4">
+      {/* Secondary Navigation */}
+      <div className="flex items-center gap-8 border-b border-zinc-900 mb-12 overflow-x-auto no-scrollbar">
         {tabs.map(tab => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={`pb-4 text-sm font-medium transition-all duration-300 relative whitespace-nowrap px-1 ${activeTab === tab
+            className={`pb-4 text-xs font-bold tracking-widest uppercase transition-all duration-300 relative whitespace-nowrap px-1 ${activeTab === tab
               ? 'text-white'
-              : 'text-zinc-500 hover:text-zinc-300'
+              : 'text-zinc-600 hover:text-zinc-400'
               }`}
           >
             {tab}
             {activeTab === tab && (
               <motion.div
-                layoutId="activeTab"
-                className="absolute bottom-0 left-0 right-0 h-[2px] bg-void-accent shadow-[0_0_12px_rgba(0,242,255,0.8)]"
-                transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                layoutId="activeTabDashboard"
+                className="absolute bottom-0 left-0 right-0 h-[1.5px] bg-white"
+                transition={{ type: "spring", stiffness: 400, damping: 30 }}
               />
             )}
           </button>
         ))}
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-10 items-start">
-
+      <div className="flex flex-col lg:flex-row gap-12 items-start">
         {/* Sidebar (Usage) */}
-        <div className="hidden lg:block w-80 shrink-0 space-y-8 sticky top-24">
-          <div className="glass-panel rounded-2xl p-6 space-y-6 overflow-hidden relative group">
-            <div className="absolute -top-24 -right-24 w-48 h-48 bg-void-accent/10 blur-[80px] rounded-full group-hover:bg-void-accent/20 transition-colors duration-700" />
-
-            <div className="flex items-center justify-between relative z-10">
-              <h3 className="text-sm font-bold tracking-tight text-white uppercase opacity-70">Current Usage</h3>
-              <span className="text-[10px] bg-void-accent/10 text-void-accent px-2 py-0.5 rounded-full border border-void-accent/20">PRO TRIAL</span>
+        <div className="hidden lg:block w-72 shrink-0 space-y-8 sticky top-24">
+          <div className="border border-zinc-900 bg-black p-6 space-y-8">
+            <div className="flex items-center justify-between">
+              <h3 className="text-[10px] font-bold tracking-[0.2em] text-zinc-600 uppercase">Protocol Usage</h3>
+              <span className="text-[9px] font-bold text-white bg-zinc-900 px-2 py-0.5 rounded-sm">NODE PRO</span>
             </div>
 
-            <div className="space-y-6 relative z-10">
-              <div className="space-y-2">
-                <div className="flex justify-between text-xs">
-                  <span className="text-zinc-400">Total Requests</span>
-                  <span className="text-white font-medium">3.7M / 10M</span>
+            <div className="space-y-8">
+              <div className="space-y-3">
+                <div className="flex justify-between text-[11px] font-bold">
+                  <span className="text-zinc-500 uppercase tracking-widest">Logic Flow</span>
+                  <span className="text-white tracking-tighter">3.7M / 10M</span>
                 </div>
-                <div className="h-1.5 bg-white/[0.03] rounded-full overflow-hidden border border-white/[0.05]">
+                <div className="h-[2px] bg-zinc-900 overflow-hidden">
                   <motion.div
                     initial={{ width: 0 }}
                     animate={{ width: "37%" }}
-                    transition={{ duration: 1, delay: 0.5 }}
-                    className="h-full bg-gradient-to-r from-void-accent to-void-neon shadow-[0_0_8px_rgba(0,242,255,0.4)]"
+                    transition={{ duration: 1.5, ease: "circOut" }}
+                    className="h-full bg-white"
                   />
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <div className="flex justify-between text-xs">
-                  <span className="text-zinc-400">Bandwidth</span>
-                  <span className="text-white font-medium">142.5 GB / 500 GB</span>
+              <div className="space-y-3">
+                <div className="flex justify-between text-[11px] font-bold">
+                  <span className="text-zinc-500 uppercase tracking-widest">Telemetry</span>
+                  <span className="text-white tracking-tighter">142.5 GB / 500 GB</span>
                 </div>
-                <div className="h-1.5 bg-white/[0.03] rounded-full overflow-hidden border border-white/[0.05]">
+                <div className="h-[2px] bg-zinc-900 overflow-hidden">
                   <motion.div
                     initial={{ width: 0 }}
                     animate={{ width: "28.5%" }}
-                    transition={{ duration: 1, delay: 0.7 }}
-                    className="h-full bg-gradient-to-r from-purple-500 to-pink-500 shadow-[0_0_8px_rgba(168,85,247,0.4)]"
+                    transition={{ duration: 1.5, ease: "circOut", delay: 0.2 }}
+                    className="h-full bg-zinc-400"
                   />
                 </div>
               </div>
             </div>
 
-            <button className="w-full relative group overflow-hidden bg-white text-black text-xs font-bold py-3 rounded-xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]">
-              <span className="relative z-10">UPGRADE TO ENTERPRISE</span>
-              <div className="absolute inset-0 bg-gradient-to-r from-zinc-200 to-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            <button className="w-full h-11 bg-white text-black text-[10px] font-bold tracking-[0.2em] uppercase transition-all duration-300 hover:bg-zinc-200">
+              Scale Infrastructure
             </button>
           </div>
 
-          <div className="glass-panel rounded-2xl p-6 border-void-accent/20 bg-void-accent/[0.02]">
-            <h4 className="text-sm font-bold text-white mb-2 flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-void-accent animate-pulse" />
-              Trial Status
+          <div className="p-6 border border-zinc-900 bg-zinc-950/50">
+            <h4 className="text-[10px] font-bold text-white uppercase tracking-widest mb-3 flex items-center gap-2">
+              <div className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+              Neural Status
             </h4>
-            <p className="text-xs text-zinc-400 leading-relaxed mb-4">Your premium trial for <span className="text-white font-medium">opendev-labs</span> is currently active and will expire in <span className="text-void-accent">4 days</span>.</p>
-            <button className="text-xs text-void-accent font-semibold hover:text-white transition-colors flex items-center gap-1 group">
-              Manage Subscription
+            <p className="text-[13px] text-zinc-500 leading-relaxed font-medium mb-6">Your professional node fleet is synchronized. Cycle reset in <span className="text-white">4 days</span>.</p>
+            <button className="text-[10px] text-white font-bold uppercase tracking-widest hover:underline transition-all flex items-center gap-2 group">
+              Manage Nodes
               <span className="group-hover:translate-x-1 transition-transform">→</span>
             </button>
           </div>
@@ -120,60 +114,65 @@ export const Dashboard: React.FC<DashboardProps> = ({ projects, onUpdateProject 
         {/* Main Content Area */}
         <div className="flex-grow w-full">
           {/* Search & Actions Bar */}
-          <div className="flex flex-col sm:flex-row gap-4 mb-10">
-            <div className="relative flex-grow group">
-              <SearchIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 group-focus-within:text-void-accent transition-colors" />
+          <div className="flex flex-col sm:flex-row gap-4 mb-12">
+            <div className="relative flex-grow">
+              <SearchIcon className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-600" />
               <input
                 type="text"
-                placeholder="Find a project..."
+                placeholder="Synchronize with node..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full bg-white/[0.03] border border-white/[0.08] text-sm text-white rounded-xl pl-12 pr-4 py-3.5 focus:outline-none focus:border-void-accent/50 focus:ring-4 focus:ring-void-accent/5 transition-all placeholder:text-zinc-600"
+                className="w-full bg-black border border-zinc-900 text-sm font-medium text-white rounded-none pl-14 pr-6 py-4 focus:outline-none focus:border-white transition-all placeholder:text-zinc-700"
               />
             </div>
-            <div className="flex gap-3">
-              <button className="px-4 py-2 glass-panel rounded-xl text-zinc-400 hover:text-white hover:border-white/20 transition-all active:scale-95 shadow-lg shadow-black/20">
-                <RefreshIcon className="w-4 h-4" />
+            <div className="flex gap-2">
+              <button className="h-14 px-5 border border-zinc-900 text-zinc-500 hover:text-white transition-all">
+                <RefreshIcon className="w-5 h-5" />
               </button>
               <button
                 onClick={handleNewProjectClick}
-                className="bg-white text-black text-sm font-bold px-6 py-3.5 rounded-xl hover:bg-zinc-200 transition-all flex items-center gap-2 whitespace-nowrap active:scale-95 shadow-xl shadow-void-accent/10"
+                className="h-14 bg-white text-black text-[11px] font-bold tracking-[0.2em] px-8 hover:bg-zinc-200 transition-all flex items-center gap-3 whitespace-nowrap"
               >
                 <PlusIcon className="w-4 h-4" />
-                NEW PROJECT
+                INITIALIZE NODE
               </button>
             </div>
           </div>
 
           {/* Projects Grid */}
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-sm font-bold tracking-tight text-white uppercase opacity-70">Active Projects</h3>
-            <span className="text-[10px] text-zinc-500 font-medium">{filteredProjects.length} TOTAL</span>
+          <div className="flex items-center justify-between mb-8 pb-4 border-b border-zinc-900">
+            <h3 className="text-[10px] font-bold tracking-[0.2em] text-zinc-500 uppercase">Synchronized Nodes</h3>
+            <span className="text-[10px] font-bold text-zinc-700 uppercase">{filteredProjects.length} ACTIVE</span>
           </div>
 
           {filteredProjects.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-1 bg-zinc-900 border border-zinc-900">
               {filteredProjects.map((project, index) => (
                 <motion.div
                   key={project.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: index * 0.1 }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.5, delay: index * 0.05 }}
+                  className="bg-black"
                 >
                   <ProjectCard project={project} />
                 </motion.div>
               ))}
             </div>
           ) : (
-            <div className="glass-panel border-dashed rounded-3xl p-20 text-center relative overflow-hidden">
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-void-accent/5 blur-[100px] rounded-full" />
+            <div className="border border-zinc-900 bg-zinc-950 py-32 text-center relative overflow-hidden">
               <div className="relative z-10">
-                <div className="w-16 h-16 bg-white/[0.03] border border-white/[0.08] rounded-2xl flex items-center justify-center mx-auto mb-6">
-                  <SearchIcon className="w-6 h-6 text-zinc-600" />
+                <div className="w-16 h-16 bg-black border border-zinc-900 flex items-center justify-center mx-auto mb-8">
+                  <SearchIcon className="w-6 h-6 text-zinc-800" />
                 </div>
-                <h4 className="text-lg font-bold text-white mb-2">No projects found</h4>
-                <p className="text-zinc-500 mb-8 max-w-xs mx-auto">We couldn't find any projects matching your search criteria. Try a different term or create a new one.</p>
-                <button onClick={() => setSearch('')} className="text-sm font-bold text-void-accent hover:text-white transition-colors underline underline-offset-8 decoration-void-accent/30 hover:decoration-void-accent">Clear Search Filters</button>
+                <h4 className="text-xl font-bold text-white tracking-tight mb-2">No nodes found</h4>
+                <p className="text-zinc-500 mb-10 max-w-xs mx-auto text-sm font-medium">Verify your search parameters or initialize a new node cluster.</p>
+                <button
+                  onClick={() => setSearch('')}
+                  className="text-[10px] font-bold text-white uppercase tracking-widest hover:underline"
+                >
+                  Clear Filters
+                </button>
               </div>
             </div>
           )}
