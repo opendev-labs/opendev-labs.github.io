@@ -1,5 +1,13 @@
 
 
+export enum SyncStatus {
+    IDLE = 'Idle',
+    SYNCING = 'Syncing',
+    COMPLETED = 'Completed',
+    ERROR = 'Error',
+    AGENT_OFFLINE = 'Agent Offline',
+}
+
 export enum DeploymentStatus {
     QUEUED = 'Queued',
     BUILDING = 'Building',
