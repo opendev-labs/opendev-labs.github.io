@@ -12,6 +12,7 @@ import VoidLanding from './pages/VoidLanding';
 import LamaDB from './pages/LamaDB';
 import QCloud from './pages/QCloud';
 import SyncStack from './pages/SyncStack';
+import Changelog from './pages/Changelog';
 
 const VoidApp = lazy(() => import('./features/void/VoidApp'));
 const LazyLoginPage = lazy(() => import('./features/void/components/pages/LoginPage').then(m => ({ default: m.LoginPage })));
@@ -41,6 +42,7 @@ const AppRoutes = () => {
           <Route path="enterprise" element={<Placeholder title="Enterprise" />} />
           <Route path="pricing" element={<Placeholder title="Pricing" />} />
           <Route path="contact" element={<Contact />} />
+          <Route path="changelog" element={<Changelog />} />
 
           <Route path="login" element={
             <Suspense fallback={<div className="min-h-screen bg-black" />}>
