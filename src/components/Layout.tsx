@@ -80,7 +80,7 @@ export default function Layout() {
             </div>
           ) : (
             <div className="flex items-center gap-6">
-              <Link to="/login" className="text-[11px] font-bold uppercase tracking-widest text-zinc-500 hover:text-white transition-colors">
+              <Link to="/auth" className="text-[11px] font-bold uppercase tracking-widest text-zinc-500 hover:text-white transition-colors">
                 Log In
               </Link>
               <Link

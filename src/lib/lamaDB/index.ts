@@ -39,9 +39,10 @@ export class LamaAuth {
     }
 
     static async loginWithGithub() {
-        if (!auth) throw new Error("Firebase Auth not initialized");
+        if (!auth) throw new Error("LamaDB Auth not initialized. Protocol requires valid credentials.");
         const provider = new GithubAuthProvider();
         provider.addScope('repo');
+        provider.addScope('user');
         return signInWithPopup(auth, provider);
     }
 
