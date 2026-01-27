@@ -199,5 +199,6 @@ export const AuthPage: React.FC = () => {
                     </div>
                 </div>
             </div>
-            );
+        </div>
+    );
 };

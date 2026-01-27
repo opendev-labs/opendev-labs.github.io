@@ -207,7 +207,7 @@ export default function Layout() {
             <div className="space-y-4">
               <p className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest">Products</p>
               <div className="grid grid-cols-1 gap-4">
-                {PRODUCTS.map(p => (
+                {PLATFORM_SECTIONS.flatMap(s => s.items).map(p => (
                   <Link key={p.name} to={p.path} onClick={() => setIsOpen(false)} className="flex items-center gap-3">
                     <p.icon className="w-5 h-5 text-zinc-500" />
                     <span className="text-sm font-semibold">{p.name}</span>
