@@ -36,7 +36,7 @@ export default function Home() {
                             Build and deploy <br /> on the <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400 drop-shadow-none">Q-Cloud</span>.
                         </h1>
                         <p className="text-lg md:text-xl text-zinc-300 max-w-2xl mx-auto mb-10 leading-relaxed drop-shadow-lg font-medium animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-200">
-                            OpenDev Labs provides the sovereign tools and quantum infrastructure to build, scale, and secure a faster, more programmable reality.
+                            opendev-labs provides the sovereign tools and quantum infrastructure to build, scale, and secure a faster, more programmable reality.
                         </p>
 
                         <div className="flex flex-col md:flex-row items-center justify-center gap-4 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300">
@@ -57,11 +57,10 @@ export default function Home() {
                 <div className="max-w-[1400px] mx-auto px-6">
                     <div className="mb-16">
                         <h2 className="text-3xl md:text-5xl font-bold mb-6">The OpenDev Stack</h2>
-                        <p className="text-[#888] text-xl max-w-2xl">A complete suite of tools designed for the next generation of web development.</p>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        <div className="group border border-[#333] bg-[#050505] p-8 rounded-2xl hover:border-white/20 transition-colors">
+                        <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 tracking-tight leading-none bg-clip-text text-transparent bg-gradient-to-r from-white via-white to-white/40">
+                            BUILD THE FUTURE AT <br />
+                            <span className="text-orange-500">OPENDEV-LABS.</span>
+                        </h1>        <div className="group border border-[#333] bg-[#050505] p-8 rounded-2xl hover:border-white/20 transition-colors">
                             <div className="w-12 h-12 bg-blue-500/10 rounded-lg flex items-center justify-center mb-6 text-blue-400">
                                 <Terminal size={24} />
                             </div>
