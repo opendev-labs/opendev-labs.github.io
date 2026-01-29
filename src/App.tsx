@@ -46,12 +46,17 @@ const AppRoutes = () => {
           } />
           <Route path="q-cloud" element={<QCloud />} />
           <Route path="syncstack" element={<SyncStack />} />
+          <Route path="engine" element={<Product />} />
           <Route path="quantum" element={<Placeholder title="Project Quantum" />} />
           <Route path="transcender" element={<Placeholder title="Transcender" />} />
           <Route path="co-writer" element={<Placeholder title="Co-Writer" />} />
           <Route path="agentbash" element={<Placeholder title="AgentBash" />} />
           <Route path="spoon" element={<Spoon />} />
-          <Route path="product" element={<Product />} />
+          <Route path="product" element={
+            <Suspense fallback={<div className="min-h-screen bg-black flex items-center justify-center text-white">Loading Product Engine...</div>}>
+              <VoidApp />
+            </Suspense>
+          } />
           <Route path="spoon/auth" element={<Navigate to="/auth" replace />} />
           <Route path="cli" element={<Placeholder title="Spoon-CLI" />} />
           <Route path="solutions" element={<Placeholder title="Solutions" />} />
