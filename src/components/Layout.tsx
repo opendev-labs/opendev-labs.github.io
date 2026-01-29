@@ -36,9 +36,9 @@ const PLATFORM_SECTIONS = [
   {
     title: "Infrastructure",
     items: [
+      { name: "Spoon-CLI", desc: "Universal AI Orchestration Engine", icon: TerminalIcon, path: "/cli" },
       { name: "Transcender", desc: "Neural mesh connectivity protocol", icon: CpuChipIcon, path: "/transcender" },
       { name: "SyncStack", desc: "Distributed state synchronization layer", icon: PuzzlePieceIcon, path: "/syncstack" },
-      { name: "Spoon-CLI", desc: "The standard for high-pressure clusters", icon: TerminalIcon, path: "/cli" },
     ]
   }
 ];
@@ -171,8 +171,11 @@ export default function Layout() {
           <div className="flex items-center gap-4 text-[13px] font-medium">
             {isAuthenticated ? (
               <div className="flex items-center gap-6">
+                <Link to="/dashboard" className="text-[10px] font-bold text-zinc-500 hover:text-white uppercase tracking-widest hidden sm:block">
+                  Mission Control
+                </Link>
                 <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest hidden sm:block">
-                  node: {user?.email?.split('@')[0]}
+                  node: {user?.name === '@iamyash.io' ? 'FOUNDER' : user?.email?.split('@')[0]}
                 </span>
                 <button
                   onClick={logout}
