@@ -4,13 +4,13 @@ import { getFirestore, collection, addDoc, getDocs, query, where, doc, setDoc, u
 
 // Configuration from existing Void project
 const firebaseConfig = {
-    apiKey: import.meta.env.VITE_LAMA_KEY || import.meta.env.VITE_FIREBASE_API_KEY || "",
-    authDomain: "void-v1.firebaseapp.com",
-    projectId: "void-v1",
-    storageBucket: "void-v1.firebasestorage.app",
-    messagingSenderId: "603444929770",
-    appId: "1:603444929770:web:2ceef309f6550b1d522393",
-    measurementId: "G-PWZ79LFXRX"
+    apiKey: "REDACTED_GOOGLE_KEY_2",
+    authDomain: "opendev-labs-syncstack.firebaseapp.com",
+    projectId: "opendev-labs-syncstack",
+    storageBucket: "opendev-labs-syncstack.firebasestorage.app",
+    messagingSenderId: "617497615103",
+    appId: "1:617497615103:web:46a5db59f73f50973dcaca",
+    measurementId: "G-T8W1ZVF7Q4"
 };
 
 // Graceful initialization check
