@@ -119,7 +119,7 @@ const Footer = () => (
         <a href="https://github.com/opendev-labs" className="hover:text-white transition-colors" target="_blank" rel="noopener noreferrer">GitHub</a>
       </div>
       <p className="text-[10px] font-bold text-zinc-700 uppercase tracking-[0.2em]">
-        &copy; 2026 Nexus Registry Protocol
+        &copy; 2026 Nexus Registry Protocol // Created by @iamyash.io
       </p>
     </div>
   </footer>
