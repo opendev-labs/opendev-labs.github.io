@@ -40,9 +40,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         const unsubscribe = LamaDB.auth.onAuthStateChanged((firebaseUser) => {
             if (firebaseUser) {
+                const email = firebaseUser.email || '';
+                const isFounder = email.includes('founder') || email.includes('iamyash');
+
                 setUser({
-                    name: firebaseUser.displayName || firebaseUser.email?.split('@')[0] || 'User',
-                    email: firebaseUser.email || '',
+                    name: isFounder ? '@iamyash.io' : (firebaseUser.displayName || email.split('@')[0] || 'Member'),
+                    email: email,
                     avatar: firebaseUser.photoURL || undefined
                 });
             } else {

@@ -15,6 +15,7 @@ import SyncStack from './pages/SyncStack';
 import Changelog from './pages/Changelog';
 import Spoon from './pages/Spoon';
 import Product from './pages/Product';
+import NexusDashboard from './pages/NexusDashboard';
 import { Navigate } from 'react-router-dom';
 
 const VoidApp = lazy(() => import('./features/void/VoidApp'));
@@ -65,7 +66,7 @@ const AppRoutes = () => {
           <Route path="pricing" element={<Placeholder title="Pricing" />} />
           <Route path="contact" element={<Contact />} />
           <Route path="changelog" element={<Changelog />} />
-          <Route path="dashboard" element={<Placeholder title="User Dashboard" />} />
+          <Route path="dashboard" element={<NexusDashboard />} />
           <Route path="*" element={<Placeholder title="404 - Not Found" />} />
         </Route>
 
