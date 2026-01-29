@@ -2,28 +2,28 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { GitHubIcon, GoogleIcon } from '../common/Icons';
-import { ArrowLeft } from 'lucide-react';
-import loginBg from '../../../../assets/login-bg.jpg';
+import { ArrowLeft, Cpu, Terminal, ShieldCheck, Zap, Box } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export const AuthPage: React.FC = () => {
     const { loginWithGitHub, loginWithGoogle, isAuthenticated } = useAuth();
     const [isLoading, setIsLoading] = useState(false);
-    const [authMethod, setAuthMethod] = useState<'none' | 'github' | 'google' | 'email'>('none');
-    const [showEmailFields, setShowEmailFields] = useState(false);
+    const [authMethod, setAuthMethod] = useState<'none' | 'github' | 'google' | 'email' | 'connect'>('none');
     const [error, setError] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [code, setCode] = useState('');
     const navigate = useNavigate();
     const location = useLocation();
 
     const isSignUp = location.pathname.includes('signup') || location.search.includes('mode=signup');
+    const isConnectMode = location.search.includes('mode=connect');
+    const challenge = new URLSearchParams(location.search).get('challenge');
 
     useEffect(() => {
-        if (isAuthenticated) {
+        if (isAuthenticated && !isConnectMode) {
             navigate('/void/dashboard');
         }
-    }, [isAuthenticated, navigate]);
+    }, [isAuthenticated, navigate, isConnectMode]);
 
     const handleGitHubLogin = async () => {
         setIsLoading(true);
@@ -31,8 +31,8 @@ export const AuthPage: React.FC = () => {
         setError('');
         try {
             await loginWithGitHub();
+            if (isConnectMode) setAuthMethod('connect');
         } catch (err: any) {
-            console.error("Auth Error:", err);
             setError(err.message || "GitHub authentication failed.");
             setAuthMethod('none');
         } finally {
@@ -47,7 +47,6 @@ export const AuthPage: React.FC = () => {
         try {
             await loginWithGoogle();
         } catch (err: any) {
-            console.error("Auth Error:", err);
             setError(err.message || "Google authentication failed.");
             setAuthMethod('none');
         } finally {
@@ -55,154 +54,144 @@ export const AuthPage: React.FC = () => {
         }
     };
 
-    const handleEmailAction = (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!showEmailFields) {
-            setShowEmailFields(true);
-            return;
-        }
-        setIsLoading(true);
-        setAuthMethod('email');
-        setTimeout(() => {
-            setError("Verification code sent to " + email);
-            setIsLoading(false);
-            setAuthMethod('none');
-        }, 1500);
-    };
-
     return (
-        <div className="fixed inset-0 flex flex-col md:flex-row bg-black overflow-hidden selection:bg-white selection:text-black">
-            {/* Left Side: Cinematic Immersive Panel */}
-            <div className="hidden md:flex md:w-1/2 lg:w-3/5 relative h-full overflow-hidden border-r border-[#111]">
-                <div
-                    className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-[40s] hover:scale-105 will-change-transform opacity-70"
-                    style={{ backgroundImage: `url(${loginBg})` }}
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80" />
-
-                <div className="absolute bottom-16 left-16 max-w-lg z-20">
-                    <h1 className="text-7xl font-bold text-white tracking-tighter mb-6 leading-[0.9] lowercase">
-                        opendev-labs<br /><span className="text-black transition-colors">intelligent ecosystem.</span>
-                    </h1>
-                    <p className="text-zinc-400 text-lg font-medium tracking-tight leading-relaxed max-w-sm">
-                        Build, deploy, and scale your intelligent applications with the industry standard for developer workflows.
-                    </p>
-                </div>
+        <div className="fixed inset-0 bg-black text-white font-sans overflow-hidden selection:bg-white selection:text-black">
+            {/* 2026 Dynamic Background */}
+            <div className="absolute inset-0 z-0">
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[1200px] bg-blue-600/10 blur-[150px] rounded-full animate-pulse" />
+                <div className="absolute top-1/4 left-1/4 w-[600px] h-[600px] bg-purple-600/5 blur-[120px] rounded-full" />
+                <div className="absolute inset-0 opacity-[0.03] bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:40px_40px]" />
             </div>
 
-            {/* Right Side: Simple Auth Section */}
-            <div className="w-full md:w-1/2 lg:w-2/5 h-full flex flex-col items-center justify-center p-6 md:p-12 bg-black relative overflow-y-auto">
+            <div className="relative z-10 h-full flex items-center justify-center p-6">
                 <Link
                     to="/"
-                    className="absolute top-8 left-8 flex items-center gap-2 text-zinc-500 hover:text-white transition-colors group z-30"
+                    className="absolute top-10 left-10 flex items-center gap-3 text-zinc-500 hover:text-white transition-all group font-bold uppercase tracking-[0.4em] text-[10px]"
                 >
-                    <ArrowLeft size={16} />
-                    <span className="text-xs font-bold uppercase tracking-widest">Home</span>
+                    <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
+                    Back to Reality
                 </Link>
 
-                <div className="w-full max-w-[340px] relative z-20">
-                    <div className="mb-10 text-center">
-                        <h2 className="text-3xl font-bold text-white tracking-tight mb-2">
-                            {isSignUp ? 'Create an account' : 'Log in to OpenDev'}
-                        </h2>
-                        <p className="text-zinc-500 text-sm font-medium">
-                            {isSignUp ? 'Start building in seconds.' : 'Welcome back.'}
-                        </p>
-                    </div>
-
-                    {error && (
-                        <div className="p-3 rounded-lg mb-6 bg-red-500/10 border border-red-500/20 text-red-400 text-center">
-                            <p className="text-[11px] font-medium">{error}</p>
-                        </div>
-                    )}
-
-                    <div className="space-y-3">
-                        {!showEmailFields && (
-                            <>
-                                <button
-                                    onClick={handleGitHubLogin}
-                                    disabled={isLoading}
-                                    className="w-full h-11 flex items-center justify-center gap-3 bg-white text-black rounded-lg text-xs font-bold hover:bg-zinc-200 transition-all disabled:opacity-50"
-                                >
-                                    <GitHubIcon className="w-4 h-4" />
-                                    Continue with GitHub
-                                </button>
-
-                                <button
-                                    onClick={handleGoogleLogin}
-                                    disabled={isLoading}
-                                    className="w-full h-11 flex items-center justify-center gap-3 bg-black border border-zinc-800 text-white rounded-lg text-xs font-bold hover:bg-zinc-950 transition-all disabled:opacity-50"
-                                >
-                                    <GoogleIcon className="w-4 h-4" />
-                                    Continue with Google
-                                </button>
-                            </>
-                        )}
-
-                        <form onSubmit={handleEmailAction} className="space-y-3">
-                            <div
-                                className={`grid transition-all duration-500 ease-in-out ${showEmailFields ? 'grid-rows-[1fr] opacity-100 mb-4' : 'grid-rows-[0fr] opacity-0 mb-0'}`}
+                <div className="w-full max-w-lg">
+                    <AnimatePresence mode="wait">
+                        {authMethod === 'connect' ? (
+                            <motion.div
+                                key="connect"
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                className="bg-zinc-950/50 backdrop-blur-3xl border border-blue-500/30 p-12 rounded-[40px] text-center shadow-3xl shadow-blue-500/10"
                             >
-                                <div className="overflow-hidden">
-                                    <div className="space-y-3 py-1">
+                                <div className="w-20 h-20 bg-blue-500/10 rounded-full flex items-center justify-center mx-auto mb-10">
+                                    <Terminal className="text-blue-500 animate-pulse" size={32} />
+                                </div>
+                                <h2 className="text-4xl font-bold tracking-tighter uppercase mb-4">Neural Uplink Active</h2>
+                                <p className="text-zinc-400 text-sm tracking-widest uppercase mb-10 leading-relaxed">
+                                    Linking terminal challenge: <span className="text-white font-mono">{challenge}</span>
+                                </p>
+                                <div className="p-10 bg-zinc-900/50 rounded-2xl border border-zinc-800 text-left mb-10">
+                                    <div className="flex items-center gap-4 mb-4">
+                                        <div className="w-2 h-2 rounded-full bg-green-500" />
+                                        <span className="text-[10px] uppercase tracking-widest font-bold text-zinc-500">Identity Verified</span>
+                                    </div>
+                                    <p className="text-xs font-bold text-zinc-300 tracking-wider">FOUNDER DETECTED: @iamyash.io</p>
+                                </div>
+                                <button
+                                    onClick={() => navigate('/void/dashboard')}
+                                    className="w-full h-16 bg-white text-black text-[12px] font-bold uppercase tracking-[0.4em] rounded-full hover:bg-blue-500 hover:text-white transition-all"
+                                >
+                                    Access Nexus
+                                </button>
+                            </motion.div>
+                        ) : (
+                            <motion.div
+                                key="auth"
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                className="space-y-12"
+                            >
+                                <div className="text-center space-y-4">
+                                    <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-zinc-900 border border-zinc-800 text-[10px] font-bold text-blue-400 uppercase tracking-[0.3em] mb-4">
+                                        <ShieldCheck size={14} />
+                                        <span>Sovereign Identity Protocol</span>
+                                    </div>
+                                    <h1 className="text-6xl md:text-7xl font-bold tracking-tighter uppercase leading-[0.85]">
+                                        OPENDEV<br /><span className="text-zinc-600">LABS.</span>
+                                    </h1>
+                                    <p className="text-zinc-500 text-sm font-medium tracking-widest uppercase">
+                                        The unified identity for the 2026 AI Era
+                                    </p>
+                                </div>
+
+                                <div className="bg-zinc-950/40 backdrop-blur-2xl border border-zinc-900 p-10 rounded-[40px] shadow-2xl">
+                                    {error && (
+                                        <div className="p-4 rounded-xl mb-8 bg-red-500/10 border border-red-500/20 text-red-500 text-center text-[10px] font-bold uppercase tracking-widest">
+                                            {error}
+                                        </div>
+                                    )}
+
+                                    <div className="grid grid-cols-1 gap-4">
+                                        <button
+                                            onClick={handleGitHubLogin}
+                                            disabled={isLoading}
+                                            className="group relative w-full h-16 flex items-center justify-center gap-4 bg-white text-black rounded-2xl text-[11px] font-bold uppercase tracking-[0.3em] hover:bg-blue-500 hover:text-white transition-all active:scale-[0.98] overflow-hidden"
+                                        >
+                                            <div className="absolute inset-0 bg-blue-500 translate-y-full group-hover:translate-y-0 transition-transform duration-300 -z-0" />
+                                            <GitHubIcon className="w-5 h-5 relative z-10" />
+                                            <span className="relative z-10">Continue with GitHub</span>
+                                        </button>
+
+                                        <button
+                                            onClick={handleGoogleLogin}
+                                            disabled={isLoading}
+                                            className="w-full h-16 flex items-center justify-center gap-4 bg-black border border-zinc-800 text-white rounded-2xl text-[11px] font-bold uppercase tracking-[0.3em] hover:border-zinc-500 transition-all active:scale-[0.98]"
+                                        >
+                                            <GoogleIcon className="w-5 h-5" />
+                                            <span>Continue with Google</span>
+                                        </button>
+                                    </div>
+
+                                    <div className="relative py-10">
+                                        <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-zinc-900" /></div>
+                                        <div className="relative flex justify-center"><span className="bg-black/80 px-4 text-[10px] font-bold text-zinc-700 uppercase tracking-widest">Or Secure Entry</span></div>
+                                    </div>
+
+                                    <form className="space-y-4">
                                         <input
                                             type="email"
-                                            required
                                             value={email}
                                             onChange={(e) => setEmail(e.target.value)}
-                                            placeholder="Email Address"
-                                            className="w-full h-11 bg-black border border-zinc-800 rounded-lg px-4 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-white transition-all underline-offset-4"
+                                            placeholder="IDENTITY@OPENDEV-LABS.IO"
+                                            className="w-full h-16 bg-zinc-900/50 border border-zinc-800 rounded-2xl px-8 text-xs font-bold tracking-widest text-white placeholder:text-zinc-700 focus:outline-none focus:border-blue-500/50 transition-all"
                                         />
-                                        <input
-                                            type="password"
-                                            required={showEmailFields}
-                                            value={password}
-                                            onChange={(e) => setPassword(e.target.value)}
-                                            placeholder="Password"
-                                            className="w-full h-11 bg-black border border-zinc-800 rounded-lg px-4 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-white transition-all underline-offset-4"
-                                        />
-                                        <input
-                                            type="text"
-                                            value={code}
-                                            onChange={(e) => setCode(e.target.value)}
-                                            placeholder="Verification Code (optional)"
-                                            className="w-full h-11 bg-black border border-zinc-800 rounded-lg px-4 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-white transition-all underline-offset-4"
-                                        />
+                                        <button
+                                            disabled={isLoading}
+                                            className="w-full h-16 bg-black border border-zinc-800 text-zinc-500 rounded-2xl text-[11px] font-bold uppercase tracking-[0.3em] hover:text-white hover:border-zinc-600 transition-all opacity-50 cursor-not-allowed"
+                                        >
+                                            Continue with Email
+                                        </button>
+                                    </form>
+
+                                    <div className="mt-12 text-center text-[10px] font-bold text-zinc-700 uppercase tracking-[0.4em] flex items-center justify-center gap-4">
+                                        <Zap size={14} />
+                                        <span>Nexus Registry v11.11</span>
                                     </div>
                                 </div>
-                            </div>
 
-                            <button
-                                type="submit"
-                                disabled={isLoading}
-                                className={`w-full h-11 rounded-lg text-xs font-bold transition-all flex items-center justify-center ${showEmailFields ? 'bg-white text-black hover:bg-zinc-200' : 'bg-black border border-zinc-800 text-white hover:border-zinc-500'}`}
-                            >
-                                {isLoading ? (
-                                    <div className={`w-4 h-4 border-2 rounded-full animate-spin ${showEmailFields ? 'border-black border-t-transparent' : 'border-white border-t-transparent'}`} />
-                                ) : (
-                                    showEmailFields ? 'Sign in' : 'Continue with Email'
-                                )}
-                            </button>
-                        </form>
-                    </div>
-
-                    <div className="mt-8 pt-8 border-t border-zinc-900 text-center space-y-4">
-                        <p className="text-[11px] text-zinc-500 font-medium">
-                            {isSignUp ? 'Already have an account?' : "Don't have an account?"}
-                            <Link
-                                to={isSignUp ? "/auth" : "/auth?mode=signup"}
-                                className="text-white ml-1 font-bold hover:underline underline-offset-4"
-                                onClick={() => setShowEmailFields(false)}
-                            >
-                                {isSignUp ? 'Log in' : 'Sign up'}
-                            </Link>
-                        </p>
-
-                        <div className="text-[10px] font-bold text-zinc-700 uppercase tracking-widest flex items-center justify-center gap-2">
-                            <span className="w-1 h-1 rounded-full bg-zinc-800" />
-                            Powered by Void • Auto-deploy to GitHub
-                        </div>
-                    </div>
+                                <div className="text-center space-y-6">
+                                    <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-[0.3em]">
+                                        Created by <a href="https://instagram.com/iamyash.io" className="text-white hover:text-blue-500 transition-colors">@iamyash.io</a>
+                                    </p>
+                                    <div className="flex items-center justify-center gap-8 text-zinc-800">
+                                        <Box size={18} />
+                                        <div className="w-px h-6 bg-zinc-900" />
+                                        <Zap size={18} />
+                                        <div className="w-px h-6 bg-zinc-900" />
+                                        <Cpu size={18} />
+                                    </div>
+                                </div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
                 </div>
             </div>
         </div>
