@@ -14,6 +14,7 @@ import QCloud from './pages/QCloud';
 import SyncStack from './pages/SyncStack';
 import Changelog from './pages/Changelog';
 import Spoon from './pages/Spoon';
+import Product from './pages/Product';
 import { Navigate } from 'react-router-dom';
 
 const VoidApp = lazy(() => import('./features/void/VoidApp'));
@@ -50,6 +51,7 @@ const AppRoutes = () => {
           <Route path="co-writer" element={<Placeholder title="Co-Writer" />} />
           <Route path="agentbash" element={<Placeholder title="AgentBash" />} />
           <Route path="spoon" element={<Spoon />} />
+          <Route path="product" element={<Product />} />
           <Route path="spoon/auth" element={<Navigate to="/auth" replace />} />
           <Route path="cli" element={<Placeholder title="Spoon-CLI" />} />
           <Route path="solutions" element={<Placeholder title="Solutions" />} />
