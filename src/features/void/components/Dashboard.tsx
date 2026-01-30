@@ -22,7 +22,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ projects, onUpdateProject 
 
   const handleNewProjectClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    safeNavigate('/new');
+    safeNavigate('/void/new');
   };
 
   const tabs = ['Overview', 'Integrations', 'Activity', 'Domains', 'Usage', 'Observability', 'Storage', 'Settings'];
@@ -93,14 +93,14 @@ export const Dashboard: React.FC<DashboardProps> = ({ projects, onUpdateProject 
               </div>
             </div>
 
-            <button className="w-full h-11 bg-white text-black text-[10px] font-bold tracking-[0.2em] uppercase transition-all duration-300 hover:bg-zinc-200 rounded-xl">
+            <button className="w-full h-11 bg-white text-black text-[10px] font-bold tracking-[0.2em] uppercase transition-all duration-300 hover:bg-zinc-200 rounded-none">
               Scale Infrastructure
             </button>
           </div>
 
           <div className="p-6 border border-zinc-900 bg-zinc-950/50">
             <h4 className="text-[10px] font-bold text-white uppercase tracking-widest mb-3 flex items-center gap-2">
-              <div className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+              <div className="w-1.5 h-1.5 rounded-none bg-white animate-pulse" />
               Neural Status
             </h4>
             <p className="text-[13px] text-zinc-500 leading-relaxed font-medium mb-6">Your professional node fleet is synchronized. Cycle reset in <span className="text-white">4 days</span>.</p>

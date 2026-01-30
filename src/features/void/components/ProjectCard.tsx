@@ -77,7 +77,7 @@ interface ProjectCardProps {
 }
 
 export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
-  const href = `/projects/${project.id}`; // Relative within VoidApp
+  const href = `/void/projects/${project.id}`; // Relative within VoidApp
   const displayUrl = project.domains?.[0]?.name.replace('https://', '') || 'unassigned node';
 
   const handleNav = (e: React.MouseEvent<HTMLAnchorElement>) => {

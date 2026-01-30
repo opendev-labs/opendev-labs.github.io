@@ -40,9 +40,9 @@ export default function Home() {
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-[10px] font-bold text-zinc-400 mb-10 uppercase tracking-[0.4em] backdrop-blur-md"
+                        className="inline-flex items-center gap-3 px-4 py-1.5 rounded-none bg-white/5 border border-white/10 text-[10px] font-bold text-zinc-400 mb-10 uppercase tracking-[0.4em] backdrop-blur-md"
                     >
-                        <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
+                        <span className="w-1.5 h-1.5 rounded-none bg-blue-500 animate-pulse" />
                         <span>Nexus Registry Protocol // v11.12</span>
                     </motion.div>
 
@@ -93,7 +93,7 @@ export default function Home() {
             {/* Platform Primitives Grid */}
             <section className="py-32 relative bg-black">
                 <div className="max-w-[1400px] mx-auto px-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-1 ring-1 ring-zinc-900 rounded-[40px] overflow-hidden">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-1 ring-1 ring-zinc-900 rounded-none overflow-hidden">
                         {[
                             { title: "Void Hub", desc: "High-performance environment for neural orchestration.", icon: Terminal, path: "/void" },
                             { title: "LamaDB", desc: "Native browser database for high-velocity local state.", icon: Database, path: "/lamadb" },
@@ -101,7 +101,7 @@ export default function Home() {
                             { title: "SyncStack", desc: "Distributed synchronization layer for sovereign clusters.", icon: Box, path: "/syncstack" }
                         ].map((item, i) => (
                             <div key={i} className="group p-12 bg-black border border-zinc-900 transition-all hover:bg-zinc-900/40 duration-500">
-                                <div className="w-12 h-12 bg-zinc-950 border border-zinc-800 rounded-xl flex items-center justify-center mb-10 group-hover:border-zinc-600 transition-colors">
+                                <div className="w-12 h-12 bg-zinc-950 border border-zinc-800 rounded-none flex items-center justify-center mb-10 group-hover:border-zinc-600 transition-colors">
                                     <item.icon size={20} className="text-zinc-500 group-hover:text-white" />
                                 </div>
                                 <h3 className="text-sm font-bold uppercase tracking-[0.3em] mb-4 text-white">{item.title}</h3>
@@ -124,7 +124,7 @@ export default function Home() {
                         <motion.div
                             initial={{ opacity: 0 }}
                             whileInView={{ opacity: 1 }}
-                            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-zinc-900 border border-zinc-800 text-[10px] font-bold text-zinc-500 mb-10 uppercase tracking-[0.4em]"
+                            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-none bg-zinc-900 border border-zinc-800 text-[10px] font-bold text-zinc-500 mb-10 uppercase tracking-[0.4em]"
                         >
                             High-Fidelity Autonomy
                         </motion.div>
@@ -151,13 +151,13 @@ export default function Home() {
                     </div>
 
                     <Card glass className="p-1">
-                        <div className="bg-black rounded-[30px] p-0 overflow-hidden shadow-3xl">
+                        <div className="bg-black rounded-none p-0 overflow-hidden shadow-3xl">
                             {/* Terminal Header */}
                             <div className="flex items-center justify-between px-6 py-4 bg-zinc-950 border-b border-zinc-900">
                                 <div className="flex items-center gap-2">
-                                    <div className="w-2.5 h-2.5 rounded-full bg-zinc-800" />
-                                    <div className="w-2.5 h-2.5 rounded-full bg-zinc-800" />
-                                    <div className="w-2.5 h-2.5 rounded-full bg-zinc-800" />
+                                    <div className="w-2.5 h-2.5 rounded-none bg-zinc-800" />
+                                    <div className="w-2.5 h-2.5 rounded-none bg-zinc-800" />
+                                    <div className="w-2.5 h-2.5 rounded-none bg-zinc-800" />
                                 </div>
                                 <div className="text-[9px] uppercase tracking-[0.4em] font-bold text-zinc-700">Protocol Shell // spoon-cli</div>
                                 <div className="w-12" />

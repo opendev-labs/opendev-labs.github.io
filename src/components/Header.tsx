@@ -26,7 +26,7 @@ const UserAvatar = ({ name }: { name: string }) => {
         .toUpperCase();
 
     return (
-        <div className="w-8 h-8 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center text-[10px] font-bold text-zinc-400 group-hover:border-zinc-600 transition-colors">
+        <div className="w-8 h-8 rounded-none bg-zinc-900 border border-zinc-800 flex items-center justify-center text-[10px] font-bold text-zinc-400 group-hover:border-zinc-600 transition-colors">
             {initials || '??'}
         </div>
     );
@@ -45,7 +45,7 @@ const MENU_DATA = [
     {
         title: "Compute & State",
         items: [
-            { name: "VOID Hub", desc: "High-fidelity terminal for sovereign nodes", icon: CommandLineIcon, path: "/void" },
+            { name: "Office Dashboard", desc: "High-fidelity terminal for sovereign nodes", icon: CommandLineIcon, path: "/office" },
             { name: "LamaDB", desc: "Native browser database for high-velocity state", icon: CubeIcon, path: "/lamadb" },
             { name: "Q-Cloud", desc: "Quantum-ready serverless infrastructure", icon: RocketLaunchIcon, path: "/q-cloud" },
         ]
@@ -138,7 +138,7 @@ export const Header: React.FC = () => {
                 <div className="flex items-center gap-6">
                     {isAuthenticated ? (
                         <div className="flex items-center gap-6">
-                            <Link to="/void/new" className="hidden md:flex items-center gap-2 text-[10px] font-bold text-zinc-400 hover:text-white uppercase tracking-widest border border-zinc-800 px-3 py-1.5 rounded-none hover:bg-zinc-900 transition-all">
+                            <Link to="/office/new" className="hidden md:flex items-center gap-2 text-[10px] font-bold text-zinc-400 hover:text-white uppercase tracking-widest border border-zinc-800 px-3 py-1.5 rounded-none hover:bg-zinc-900 transition-all">
                                 <NewProjectIcon /> <span>Deploy</span>
                             </Link>
 
@@ -156,10 +156,10 @@ export const Header: React.FC = () => {
                                         <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest leading-none mb-1">Authenticated Node</p>
                                         <p className="text-[11px] text-zinc-200 font-bold truncate">{user?.email}</p>
                                     </div>
-                                    <Link to="/void" className="flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-zinc-400 hover:text-white hover:bg-zinc-900/50 transition-all">
+                                    <Link to="/office" className="flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-zinc-400 hover:text-white hover:bg-zinc-900/50 transition-all">
                                         Mission Control
                                     </Link>
-                                    <Link to="/void/settings" className="flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-zinc-400 hover:text-white hover:bg-zinc-900/50 transition-all">
+                                    <Link to="/office/settings" className="flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-zinc-400 hover:text-white hover:bg-zinc-900/50 transition-all">
                                         Node Settings
                                     </Link>
                                     <div className="h-px bg-zinc-900 my-1 mx-2" />
@@ -195,7 +195,7 @@ export const Header: React.FC = () => {
                                 <div className="grid grid-cols-1 gap-4">
                                     {section.items.map(item => (
                                         <Link key={item.name} to={item.path} className="flex items-center gap-4 group">
-                                            <div className="w-10 h-10 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center">
+                                            <div className="w-10 h-10 rounded-none bg-zinc-900 border border-zinc-800 flex items-center justify-center">
                                                 <item.icon className="w-5 h-5 text-zinc-500 group-hover:text-white" />
                                             </div>
                                             <span className="text-sm font-bold text-zinc-300 group-hover:text-white uppercase tracking-widest">{item.name}</span>

@@ -47,19 +47,19 @@ export default function SyncStack() {
             </div>
             <div className="space-y-4 pt-4">
                 <div className="flex items-center gap-4">
-                    <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+                    <div className="w-2 h-2 rounded-none bg-blue-500 animate-pulse" />
                     <span className="text-zinc-500 text-[11px] uppercase tracking-widest">Sharding protocol: active</span>
                 </div>
                 <div className="flex items-center gap-4">
-                    <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse delay-75" />
+                    <div className="w-2 h-2 rounded-none bg-blue-500 animate-pulse delay-75" />
                     <span className="text-zinc-500 text-[11px] uppercase tracking-widest">Global replication: 99.9%</span>
                 </div>
                 <div className="flex items-center gap-4">
-                    <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse delay-150" />
+                    <div className="w-2 h-2 rounded-none bg-blue-500 animate-pulse delay-150" />
                     <span className="text-zinc-500 text-[11px] uppercase tracking-widest">Node consensus: established</span>
                 </div>
             </div>
-            <div className="mt-8 p-4 bg-blue-500/5 border border-blue-500/10 rounded-xl">
+            <div className="mt-8 p-4 bg-blue-500/5 border border-blue-500/10 rounded-none">
                 <p className="text-[10px] font-bold text-blue-400 uppercase tracking-widest mb-1 font-mono">Synchronization Delta</p>
                 <p className="text-xs text-blue-200 font-mono">PROG: [||||||||||||||||||||||] 100%</p>
             </div>
