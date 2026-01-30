@@ -9,9 +9,9 @@ const Logo = () => (
                 <stop offset="100%" stopColor="#bc00ff" />
             </linearGradient>
         </defs>
-        <path d="M50 90L10 15H90L50 90Z" stroke="url(#footer-rainbow)" strokeWidth="4" />
-        <path d="M50 70L25 25H75L50 70Z" stroke="url(#footer-rainbow)" strokeWidth="2" opacity="0.6" />
-        <path d="M50 50L40 35H60L50 50Z" fill="white" opacity="0.8" />
+        <path d="M10 25H90L50 90L10 25Z" stroke="url(#footer-rainbow)" strokeWidth="4" />
+        <path d="M30 40H70L50 72.5L30 40Z" stroke="url(#footer-rainbow)" strokeWidth="2" opacity="0.6" />
+        <path d="M42.5 50H57.5L50 62.5L42.5 50Z" stroke="white" strokeWidth="1.5" opacity="0.8" />
     </svg>
 );
 
