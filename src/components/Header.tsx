@@ -9,11 +9,22 @@ import {
 } from '../features/void/components/common/Icons';
 import { Plus } from 'lucide-react';
 import { Button } from './ui/Button';
+import { motion } from 'framer-motion';
 
 /* --- LOGO --- */
 const Logo = () => (
-    <div className="relative group/logo flex items-center justify-center cursor-pointer">
-        <svg width="34" height="34" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="transition-all duration-700 group-hover/logo:animate-rainbow-disco">
+    <motion.div
+        className="relative flex items-center justify-center cursor-pointer"
+        whileHover="hover"
+        whileTap="tap"
+    >
+        <motion.svg
+            width="34" height="34" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"
+            className="transition-all duration-700"
+            variants={{
+                hover: { filter: "hue-rotate(360deg)", transition: { duration: 1, repeat: Infinity, ease: "linear" } }
+            }}
+        >
             <defs>
                 <filter id="hyper-glow" x="-100%" y="-100%" width="300%" height="300%">
                     <feGaussianBlur stdDeviation="4" result="blur" />
@@ -35,26 +46,47 @@ const Logo = () => (
             </defs>
 
             {/* Static Base Content */}
-            <path d="M10 25H90L50 90L10 25Z" stroke="url(#rainbow-1)" strokeWidth="2" filter="url(#hyper-glow)" className="opacity-40" />
+            <path d="M10 25H90L50 90L10 25Z" stroke="url(#rainbow-1)" strokeWidth="2" filter="url(#hyper-glow)" className="opacity-20" />
 
-            {/* Hover Tunnel Effect Layers */}
-            <g className="opacity-0 group-hover/logo:opacity-100 transition-opacity duration-300">
-                <path d="M10 25H90L50 90L10 25Z" stroke="url(#rainbow-1)" strokeWidth="1" className="animate-tunnel origin-center [animation-delay:-0s]" />
-                <path d="M10 25H90L50 90L10 25Z" stroke="url(#rainbow-2)" strokeWidth="1" className="animate-tunnel origin-center [animation-delay:-0.5s]" />
-                <path d="M10 25H90L50 90L10 25Z" stroke="url(#rainbow-3)" strokeWidth="1" className="animate-tunnel origin-center [animation-delay:-1s]" />
-                <path d="M10 25H90L50 90L10 25Z" stroke="white" strokeWidth="0.5" className="animate-tunnel origin-center [animation-delay:-1.5s]" />
-            </g>
+            {/* Bio-Rainbow Tunnel Effect (Stimuli Response) */}
+            <motion.g
+                initial={{ opacity: 0 }}
+                variants={{ hover: { opacity: 1 } }}
+                transition={{ duration: 0.3 }}
+            >
+                <path d="M10 25H90L50 90L10 25Z" stroke="url(#rainbow-1)" strokeWidth="0.5" className="animate-tunnel [animation-delay:-0s]" />
+                <path d="M10 25H90L50 90L10 25Z" stroke="url(#rainbow-2)" strokeWidth="0.5" className="animate-tunnel [animation-delay:-0.5s]" />
+                <path d="M10 25H90L50 90L10 25Z" stroke="url(#rainbow-3)" strokeWidth="0.5" className="animate-tunnel [animation-delay:-1s]" />
+            </motion.g>
 
-            {/* Refined Nested Layers */}
-            <path d="M10 25H90L50 90L10 25Z" stroke="url(#rainbow-1)" strokeWidth="2" filter="url(#hyper-glow)" className="animate-[pulse_4s_infinite]" />
-            <path d="M22.5 35H77.5L50 80L22.5 35Z" stroke="url(#rainbow-2)" strokeWidth="2" filter="url(#hyper-glow)" className="animate-[pulse_3s_infinite_0.5s]" />
-            <path d="M35 45H65L50 70L35 45Z" stroke="url(#rainbow-3)" strokeWidth="2" filter="url(#hyper-glow)" className="animate-[pulse_2s_infinite_1s]" />
-            <path d="M42.5 52.5H57.5L50 65L42.5 52.5Z" stroke="white" strokeWidth="1.5" className="opacity-60 animate-pulse" />
-        </svg>
+            {/* Core Reactive Layers */}
+            <motion.path
+                d="M10 25H90L50 90L10 25Z"
+                stroke="url(#rainbow-1)"
+                strokeWidth="2"
+                filter="url(#hyper-glow)"
+                variants={{ hover: { strokeWidth: 3, transition: { duration: 0.2 } } }}
+            />
+            <path d="M22.5 35H77.5L50 80L22.5 35Z" stroke="url(#rainbow-2)" strokeWidth="2" filter="url(#hyper-glow)" />
+            <path d="M35 45H65L50 70L35 45Z" stroke="url(#rainbow-3)" strokeWidth="2" filter="url(#hyper-glow)" />
 
-        {/* Reflection light */}
-        <div className="absolute -bottom-2 w-6 h-1 bg-cyan-500/40 blur-xl group-hover/logo:w-12 group-hover/logo:bg-purple-500/60 transition-all duration-700" />
-    </div>
+            {/* Perfect Central Hole */}
+            <path d="M42.5 52.5H57.5L50 65L42.5 52.5Z" stroke="white" strokeWidth="1.5" className="opacity-80" />
+        </motion.svg>
+
+        {/* Dynamic Stimuli Reflection */}
+        <motion.div
+            className="absolute -bottom-2 w-4 h-1 bg-cyan-500/0 blur-xl"
+            variants={{
+                hover: {
+                    width: 24,
+                    backgroundColor: "rgba(0, 242, 255, 0.8)",
+                    opacity: 1,
+                    transition: { duration: 0.3 }
+                }
+            }}
+        />
+    </motion.div>
 );
 
 const UserAvatar = ({ name }: { name: string }) => {
