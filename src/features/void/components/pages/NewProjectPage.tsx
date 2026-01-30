@@ -20,21 +20,21 @@ const ImportVisual = () => (
             <motion.div
                 animate={{ y: [0, -8, 0] }}
                 transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                className="p-3 bg-zinc-950 border border-zinc-800 rounded-xl shadow-2xl"
+                className="p-3 bg-zinc-950 border border-zinc-800 rounded-none shadow-2xl"
             >
                 <GitHubIcon className="w-6 h-6 text-white" />
             </motion.div>
             <motion.div
                 animate={{ y: [0, 8, 0] }}
                 transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-                className="p-3 bg-zinc-950 border border-zinc-800 rounded-xl shadow-2xl"
+                className="p-3 bg-zinc-950 border border-zinc-800 rounded-none shadow-2xl"
             >
                 <GitLabIcon className="w-6 h-6 text-white" />
             </motion.div>
             <motion.div
                 animate={{ y: [0, -6, 0] }}
                 transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                className="p-3 bg-zinc-950 border border-zinc-800 rounded-xl shadow-2xl"
+                className="p-3 bg-zinc-950 border border-zinc-800 rounded-none shadow-2xl"
             >
                 <BitbucketIcon className="w-6 h-6 text-white" />
             </motion.div>
@@ -46,9 +46,9 @@ const ImportVisual = () => (
 const TemplateVisual = () => (
     <div className="h-40 w-full bg-black border-b border-zinc-900 relative overflow-hidden flex flex-col p-6 group-hover:bg-zinc-950 transition-colors duration-500">
         <div className="flex gap-2 mb-4">
-            <div className="w-2.5 h-2.5 rounded-full bg-zinc-800"></div>
-            <div className="w-2.5 h-2.5 rounded-full bg-zinc-800"></div>
-            <div className="w-2.5 h-2.5 rounded-full bg-zinc-800"></div>
+            <div className="w-2.5 h-2.5 rounded-none bg-zinc-800"></div>
+            <div className="w-2.5 h-2.5 rounded-none bg-zinc-800"></div>
+            <div className="w-2.5 h-2.5 rounded-none bg-zinc-800"></div>
         </div>
         <div className="space-y-2 font-mono text-[11px] leading-relaxed">
             <div className="flex gap-2">
@@ -62,7 +62,7 @@ const TemplateVisual = () => (
                 <span className="text-white"> &lt;AutonomousNode /&gt;</span>
             </div>
             <div className="mt-4 flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-white animate-pulse" />
+                <div className="w-2 h-2 rounded-none bg-white animate-pulse" />
                 <span className="text-white font-bold tracking-tighter uppercase text-[9px]">Initializing Protocol...</span>
             </div>
         </div>
@@ -74,13 +74,13 @@ const WorkflowVisual = () => (
     <div className="h-40 w-full bg-black border-b border-zinc-900 relative overflow-hidden group-hover:bg-zinc-950 transition-colors duration-500 flex items-center justify-center">
         <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '24px 24px' }}></div>
         <div className="relative z-10 flex items-center gap-4">
-            <div className="w-10 h-10 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center shadow-xl">
+            <div className="w-10 h-10 rounded-none bg-zinc-900 border border-zinc-800 flex items-center justify-center shadow-xl">
                 <CubeIcon className="w-5 h-5 text-white" />
             </div>
             <div className="w-12 h-[1px] bg-zinc-800 relative">
                 <div className="absolute top-1/2 left-0 w-full h-[2px] -translate-y-1/2 bg-white/20 animate-shine"></div>
             </div>
-            <div className="w-10 h-10 rounded-full bg-black border border-white flex items-center justify-center shadow-[0_0_20px_rgba(255,255,255,0.1)]">
+            <div className="w-10 h-10 rounded-none bg-black border border-white flex items-center justify-center shadow-[0_0_20px_rgba(255,255,255,0.1)]">
                 <RocketLaunchIcon className="w-5 h-5 text-white" />
             </div>
         </div>
@@ -147,9 +147,9 @@ const ConnectedRepoView: React.FC<{
             animate={{ opacity: 1, y: 0 }}
             className="w-full"
         >
-            <div className="flex justify-between items-center mb-10 p-6 bg-zinc-950 border border-zinc-900 rounded-xl">
+            <div className="flex justify-between items-center mb-10 p-6 bg-zinc-950 border border-zinc-900 rounded-none">
                 <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-black rounded-lg border border-zinc-800 flex items-center justify-center text-white">
+                    <div className="w-12 h-12 bg-black rounded-none border border-zinc-800 flex items-center justify-center text-white">
                         {gitProviderIcons[provider]}
                     </div>
                     <div>
@@ -164,7 +164,7 @@ const ConnectedRepoView: React.FC<{
 
             {loading ? (
                 <div className="flex flex-col items-center justify-center py-32 text-zinc-600 space-y-6">
-                    <div className="w-8 h-8 border-[3px] border-white border-t-transparent rounded-full animate-spin"></div>
+                    <div className="w-8 h-8 border-[3px] border-white border-t-transparent rounded-none animate-spin"></div>
                     <p className="text-[10px] font-bold uppercase tracking-[0.2em]">Synchronizing Nodes...</p>
                 </div>
             ) : (
@@ -189,7 +189,7 @@ const GitProviderButton: React.FC<{
 }> = ({ provider, icon, onClick }) => (
     <button
         onClick={onClick}
-        className="w-full flex items-center justify-between h-14 px-6 border border-zinc-900 bg-black hover:bg-zinc-950 transition-all group rounded-lg"
+        className="w-full flex items-center justify-between h-14 px-6 border border-zinc-900 bg-black hover:bg-zinc-950 transition-all group rounded-none"
     >
         <div className="flex items-center gap-4">
             <div className="text-zinc-500 group-hover:text-white transition-colors">{icon}</div>
@@ -220,16 +220,16 @@ const RepoList: React.FC<{
                     placeholder="Search node library..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full bg-black border border-zinc-900 h-12 pl-12 pr-6 text-sm text-white font-medium focus:outline-none focus:ring-1 focus:ring-white transition-all rounded-lg placeholder:text-zinc-700"
+                    className="w-full bg-black border border-zinc-900 h-12 pl-12 pr-6 text-sm text-white font-medium focus:outline-none focus:ring-1 focus:ring-white transition-all rounded-none placeholder:text-zinc-700"
                 />
             </div>
 
-            <div className="border border-zinc-900 divide-y divide-zinc-900 bg-black rounded-lg overflow-hidden">
+            <div className="border border-zinc-900 divide-y divide-zinc-900 bg-black rounded-none overflow-hidden">
                 {filteredRepos.map(repo => (
                     <div key={repo.id} className="p-6 hover:bg-zinc-950 transition-colors">
                         <div className="flex justify-between items-center">
                             <div className="flex items-center gap-4">
-                                <div className="w-10 h-10 bg-zinc-950 border border-zinc-900 rounded-lg flex items-center justify-center">
+                                <div className="w-10 h-10 bg-zinc-950 border border-zinc-900 rounded-none flex items-center justify-center">
                                     <GitBranchIcon className="w-5 h-5 text-zinc-600" />
                                 </div>
                                 <div>
@@ -240,7 +240,7 @@ const RepoList: React.FC<{
                             {configuringRepoId !== repo.id && (
                                 <button
                                     onClick={() => setConfiguringRepoId(repo.id)}
-                                    className="h-10 px-8 text-[11px] font-bold uppercase tracking-widest bg-white text-black hover:bg-zinc-200 transition-all rounded-full hover:scale-105 active:scale-95 shadow-lg shadow-white/5"
+                                    className="h-10 px-8 text-[11px] font-bold uppercase tracking-widest bg-white text-black hover:bg-zinc-200 transition-all rounded-none hover:scale-105 active:scale-95 shadow-lg shadow-white/5"
                                 >
                                     Import
                                 </button>
@@ -388,7 +388,7 @@ export const NewProjectPage: React.FC<NewProjectPageProps> = ({
                         animate={{ opacity: 1, y: 0 }}
                         className="flex flex-col items-center"
                     >
-                        <span className="inline-block px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-[10px] font-bold tracking-[0.2em] uppercase text-zinc-500 mb-8">
+                        <span className="inline-block px-3 py-1 rounded-none bg-zinc-900 border border-zinc-800 text-[10px] font-bold tracking-[0.2em] uppercase text-zinc-500 mb-8">
                             Genesis Protocol
                         </span>
                         <h1 className="text-6xl md:text-8xl font-bold tracking-tighter text-white mb-8">

@@ -51,7 +51,7 @@ export default function Spoon() {
                 <p>▸ Syncing Cloud State...</p>
                 <p>▸ Linking Nexus ID...</p>
             </div>
-            <div className="p-4 bg-zinc-900/30 rounded-xl border border-zinc-900/50 mt-6 animate-in fade-in duration-700">
+            <div className="p-4 bg-zinc-900/30 rounded-none border border-zinc-900/50 mt-6 animate-in fade-in duration-700">
                 <div className="text-white font-mono leading-relaxed">
                     <span className="text-zinc-600 block mb-2 font-bold uppercase tracking-[0.2em] text-[10px]">Matrix Link established</span>
                     <span className="text-zinc-400">IDENTITY:</span> <span className="text-white">OPENDEV-REPOS</span><br />

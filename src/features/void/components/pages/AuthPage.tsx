@@ -24,7 +24,7 @@ export const AuthPage: React.FC = () => {
 
     useEffect(() => {
         if (isAuthenticated && !isConnectMode) {
-            navigate('/void');
+            navigate('/office');
         }
     }, [isAuthenticated, navigate, isConnectMode]);
 
@@ -92,7 +92,7 @@ export const AuthPage: React.FC = () => {
                     <motion.div
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
-                        className="inline-flex items-center gap-4 px-5 py-2 rounded-full bg-white/5 backdrop-blur-xl border border-white/10 text-[10px] font-bold text-zinc-400 uppercase tracking-[0.5em]"
+                        className="inline-flex items-center gap-4 px-5 py-2 rounded-none bg-white/5 backdrop-blur-xl border border-white/10 text-[10px] font-bold text-zinc-400 uppercase tracking-[0.5em]"
                     >
                         <Cpu size={14} className="text-blue-500" />
                         <span>Sovereign ID Protocol // ACTIVE</span>
@@ -170,7 +170,7 @@ export const AuthPage: React.FC = () => {
                                     variant="primary"
                                     size="xl"
                                     className="w-full"
-                                    onClick={() => navigate('/void')}
+                                    onClick={() => navigate('/office')}
                                 >
                                     Confirm Session
                                 </Button>
