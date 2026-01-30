@@ -138,13 +138,7 @@ export const AuthPage: React.FC = () => {
                     style={{ backgroundImage: 'linear-gradient(#333 1px, transparent 1px), linear-gradient(90deg, #333 1px, transparent 1px)', backgroundSize: '50px 50px' }}
                 />
 
-                <Link
-                    to="/"
-                    className="absolute top-12 left-12 flex items-center gap-3 text-zinc-700 hover:text-white transition-all group font-bold uppercase tracking-[0.5em] text-[10px]"
-                >
-                    <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
-                    Exit Nexus
-                </Link>
+
 
                 <div className="w-full max-w-[380px] relative z-20">
                     <AnimatePresence mode="wait">
@@ -310,6 +304,16 @@ export const AuthPage: React.FC = () => {
                             </motion.div>
                         )}
                     </AnimatePresence>
+
+                    <div className="mt-8">
+                        <Link
+                            to="/"
+                            className="flex items-center justify-center gap-3 text-zinc-700 hover:text-white transition-all group font-bold uppercase tracking-[0.5em] text-[10px] w-full py-4 opacity-50 hover:opacity-100"
+                        >
+                            <ArrowLeft size={14} className="group-hover:-translate-x-1 transition-transform" />
+                            Back to Home
+                        </Link>
+                    </div>
                 </div>
             </div>
         </div>

@@ -7,6 +7,7 @@ import {
     SparklesIcon, CommandLineIcon, BookOpenIcon, PuzzlePieceIcon,
     NewProjectIcon
 } from '../features/void/components/common/Icons';
+import { Plus } from 'lucide-react';
 import { Button } from './ui/Button';
 
 /* --- LOGO --- */
@@ -173,9 +174,22 @@ export const Header: React.FC = () => {
                             </div>
                         </div>
                     ) : (
-                        <div className="flex items-center gap-6">
-                            <Link to="/auth" className="text-[13px] font-medium text-zinc-500 hover:text-white transition-colors">Log In</Link>
-                            <Button size="sm" onClick={() => navigate('/auth?mode=signup')}>Deploy Intelligence</Button>
+                        <div className="flex items-center gap-4">
+                            <Button
+                                variant="secondary"
+                                size="sm"
+                                onClick={() => navigate('/void/new')}
+                                className="bg-black border border-zinc-800 text-white hover:bg-zinc-900 hidden sm:flex items-center gap-2"
+                            >
+                                <Plus size={12} /> Deploy
+                            </Button>
+                            <Button
+                                variant="primary"
+                                size="sm"
+                                onClick={() => navigate('/auth')}
+                            >
+                                Login
+                            </Button>
                         </div>
                     )}
 
