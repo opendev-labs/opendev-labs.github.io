@@ -55,7 +55,78 @@ export class LamaAuth {
         }
         if (!auth) throw new Error("Firebase Auth not initialized");
         const provider = new GoogleAuthProvider();
-        return signInWithPopup(auth, provider);
+
+        try {
+            return await signInWithPopup(auth, provider);
+        } catch (error: any) {
+            console.error("Nexus Registry: Google Auth Error:", error.code, error.message);
+
+            if (error.code === 'auth/account-exists-with-different-credential') {
+                console.log("Nexus Intelligence: Detected existing account collision with Google login.");
+
+                const pendingCred = GoogleAuthProvider.credentialFromError(error);
+                const email = error.customData?.email;
+
+                if (!email) {
+                    throw new Error("Account collision detected, but email is hidden. Please log in with your primary provider first.");
+                }
+
+                if (!pendingCred) {
+                    console.error("No pending Google credential available");
+                    throw error;
+                }
+
+                // Get existing providers
+                try {
+                    const methods = await fetchSignInMethodsForEmail(auth, email);
+                    console.log("Existing Identity Methods:", methods);
+
+                    if (methods.includes('github.com')) {
+                        // User needs to sign in with GitHub first, then we link Google
+                        console.log("Nexus Intelligence: Initiating GitHub verification for automatic linking...");
+
+                        const githubProvider = new GithubAuthProvider();
+                        githubProvider.addScope('repo');
+                        githubProvider.addScope('user');
+
+                        let githubResult: any;
+                        try {
+                            githubResult = await signInWithPopup(auth, githubProvider);
+                            console.log("Nexus Intelligence: GitHub verification successful. Linking Google...");
+
+                            // Link the pending Google credential
+                            const linkedResult = await linkWithCredential(githubResult.user, pendingCred);
+                            console.log("Nexus Intelligence: Protocol linked successfully! Identity converged.");
+
+                            // Return the linked result as a successful login
+                            return linkedResult;
+                        } catch (linkError: any) {
+                            console.error("Nexus Registry: Google linking failed:", linkError);
+                            if (linkError.code === 'auth/popup-closed-by-user') {
+                                throw new Error("Verification popup was closed. Please try again and approve both sign-in prompts.");
+                            }
+                            if (linkError.code === 'auth/credential-already-in-use') {
+                                // The Google account is already linked to this GitHub account
+                                console.log("Nexus Intelligence: Accounts already linked. Returning GitHub session.");
+                                return linkError.customData?.githubResult || githubResult;
+                            }
+                            throw new Error(`Account linking failed: ${linkError.message}. Please contact support.`);
+                        }
+                    } else if (methods.length > 0) {
+                        throw new Error(`This email is already associated with [${methods.join(', ')}]. Please log in with that provider first.`);
+                    } else {
+                        console.error("Unexpected state: account-exists error but no sign-in methods found");
+                        throw error;
+                    }
+                } catch (fetchError: any) {
+                    console.error("Nexus Registry: Failed to fetch sign-in methods:", fetchError);
+                    throw new Error("Unable to verify account. Please ensure you have internet connectivity and try again.");
+                }
+            }
+
+            // For other errors, throw them as-is
+            throw error;
+        }
     }
 
     static async loginWithGithub() {
@@ -78,7 +149,7 @@ export class LamaAuth {
             if (error.code === 'auth/account-exists-with-different-credential') {
                 console.log("Nexus Intelligence: Detected existing account collision. Initiating Smart Link protocol...");
 
-                const pendingCred = OAuthProvider.credentialFromError(error);
+                const pendingCred = GithubAuthProvider.credentialFromError(error);
                 const email = error.customData?.email;
 
                 console.log("Collision Email:", email);
@@ -87,7 +158,10 @@ export class LamaAuth {
                     throw new Error("Account collision detected, but email is hidden. Please log in with your primary provider (Google) first.");
                 }
 
-                if (!pendingCred) throw error;
+                if (!pendingCred) {
+                    console.error("No pending credential available");
+                    throw error;
+                }
 
                 // Get existing providers
                 try {
@@ -95,30 +169,51 @@ export class LamaAuth {
                     console.log("Existing Identity Methods:", methods);
 
                     if (methods.includes('google.com')) {
-                        // User needs to sign in with Google to prove ownership
-                        alert(`Please sign in with Google to verify ownership of ${email}. We will then link your GitHub account automatically.`);
+                        // User needs to sign in with Google to prove ownership, then link
+                        console.log("Nexus Intelligence: Initiating Google verification for automatic linking...");
 
                         const googleProvider = new GoogleAuthProvider();
                         googleProvider.setCustomParameters({ login_hint: email });
 
-                        const googleResult = await signInWithPopup(auth, googleProvider);
+                        let googleResult: any;
+                        try {
+                            googleResult = await signInWithPopup(auth, googleProvider);
+                            console.log("Nexus Intelligence: Google verification successful. Linking GitHub...");
 
-                        // Link the pending GitHub credential
-                        await linkWithCredential(googleResult.user, pendingCred);
-                        console.log("Nexus Intelligence: Protocol linked. Identity converged.");
+                            // Link the pending GitHub credential
+                            const linkedResult = await linkWithCredential(googleResult.user, pendingCred);
+                            console.log("Nexus Intelligence: Protocol linked successfully! Identity converged.");
 
-                        return googleResult;
+                            // Return the linked result as a successful login
+                            return linkedResult;
+                        } catch (linkError: any) {
+                            console.error("Nexus Registry: Linking failed:", linkError);
+                            if (linkError.code === 'auth/popup-closed-by-user') {
+                                throw new Error("Verification popup was closed. Please try again and approve both sign-in prompts.");
+                            }
+                            if (linkError.code === 'auth/credential-already-in-use') {
+                                // The GitHub account is already linked to this Google account
+                                // Just return the Google result since they're already linked
+                                console.log("Nexus Intelligence: Accounts already linked. Returning Google session.");
+                                return linkError.customData?.googleResult || googleResult;
+                            }
+                            throw new Error(`Account linking failed: ${linkError.message}. Please contact support.`);
+                        }
                     } else if (methods.length > 0) {
                         throw new Error(`This email is already associated with [${methods.join(', ')}]. Please log in with that provider first.`);
+                    } else {
+                        // No existing methods? This shouldn't happen with this error
+                        console.error("Unexpected state: account-exists error but no sign-in methods found");
+                        throw error;
                     }
-                } catch (linkError: any) {
-                    console.error("Nexus Registry: Smart Link Failed:", linkError);
-                    if (linkError.code === 'auth/popup-closed-by-user') {
-                        throw new Error("Verification cancelled. Login failed.");
-                    }
-                    throw new Error("Failed to automaticall link accounts. Please login with Google first, then connect GitHub in settings.");
+                } catch (fetchError: any) {
+                    console.error("Nexus Registry: Failed to fetch sign-in methods:", fetchError);
+                    // If we can't fetch methods, provide helpful error
+                    throw new Error("Unable to verify account. Please ensure you have internet connectivity and try again.");
                 }
             }
+
+            // For other errors, throw them as-is
             throw error;
         }
     }
