@@ -92,7 +92,7 @@ export const AuthPage: React.FC = () => {
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent opacity-95" />
                 <div className="absolute inset-0 opacity-[0.05] bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:40px_40px]" />
 
-                <div className="absolute bottom-24 left-24 max-w-xl z-20 space-y-12">
+                <div className="absolute bottom-10 left-10 max-w-xl z-20 space-y-8">
                     <motion.div
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
@@ -106,9 +106,9 @@ export const AuthPage: React.FC = () => {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.1 }}
-                        className="text-8xl lg:text-9xl font-bold text-white tracking-tighter leading-[0.8] lowercase"
+                        className="text-5xl lg:text-6xl font-bold text-white tracking-tighter leading-[0.9] lowercase"
                     >
-                        connect<br /><span className="text-zinc-600 block mt-4">the nexus.</span>
+                        connect<br /><span className="text-white block mt-2">the nexus.</span>
                     </motion.h1>
 
                     <motion.p
