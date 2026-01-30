@@ -74,9 +74,11 @@ export interface Repository {
 }
 
 export interface User {
+    uid: string;
     name: string;
     email: string;
     avatar?: string;
+    providers?: string[];
 }
 
 // --- New types for Vercel-inspired features ---

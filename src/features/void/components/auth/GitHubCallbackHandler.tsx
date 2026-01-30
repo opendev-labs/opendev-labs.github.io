@@ -46,6 +46,7 @@ export const GitHubCallbackHandler: React.FC = () => {
                 setStatusText("Fetching user details...");
                 setTimeout(() => {
                     const mockUser = {
+                        uid: 'mock_github_user',
                         name: 'GitHub User',
                         email: 'user.from.github@void.app'
                     };
