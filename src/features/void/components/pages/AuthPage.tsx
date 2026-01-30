@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../../../contexts/AuthContext';
-import { GitHubIcon, GoogleIcon } from '../common/Icons';
+import { GoogleIcon } from '../common/Icons';
 import { ArrowLeft, Cpu, Terminal, ShieldCheck, Zap, Box, Mail, Lock } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '../../../../components/ui/Button';
 import loginBg from '../../../../assets/login-bg.jpg';
 
 export const AuthPage: React.FC = () => {
-    const { loginWithGitHub, loginWithGoogle, isAuthenticated } = useAuth();
+    const { loginWithGoogle, isAuthenticated } = useAuth();
     const [isLoading, setIsLoading] = useState(false);
-    const [authMethod, setAuthMethod] = useState<'none' | 'github' | 'google' | 'email' | 'connect'>('none');
+    const [authMethod, setAuthMethod] = useState<'none' | 'google' | 'email' | 'connect'>('none');
     const [error, setError] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -27,23 +27,6 @@ export const AuthPage: React.FC = () => {
             navigate('/office');
         }
     }, [isAuthenticated, navigate, isConnectMode]);
-
-    const handleGitHubLogin = async () => {
-        setIsLoading(true);
-        setAuthMethod('github');
-        setError('');
-        try {
-            await loginWithGitHub();
-            if (isConnectMode) setAuthMethod('connect');
-        } catch (err: any) {
-            console.error("GitHub Auth Error:", err);
-            const errorCode = err.code ? `[${err.code}] ` : "";
-            setError(`${errorCode}${err.message || "GitHub protocol transmission failed."}`);
-            setAuthMethod('none');
-        } finally {
-            setIsLoading(false);
-        }
-    };
 
     const handleGoogleLogin = async () => {
         setIsLoading(true);
@@ -204,17 +187,6 @@ export const AuthPage: React.FC = () => {
 
                                 <div className="space-y-4">
                                     <div className="grid grid-cols-1 gap-4">
-                                        <Button
-                                            variant="outline"
-                                            size="xl"
-                                            className="w-full border-zinc-900/50 hover:bg-zinc-900/20 group"
-                                            icon={<GitHubIcon className="w-5 h-5 group-hover:scale-110 transition-transform" />}
-                                            isLoading={isLoading && authMethod === 'github'}
-                                            onClick={handleGitHubLogin}
-                                        >
-                                            Continue with GitHub
-                                        </Button>
-
                                         <Button
                                             variant="outline"
                                             size="xl"
