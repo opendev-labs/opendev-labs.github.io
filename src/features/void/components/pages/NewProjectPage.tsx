@@ -1,3 +1,4 @@
+```
 import { OpenURLDeploy } from '../deployment/OpenURLDeploy';
 
 // ... existing imports
@@ -540,19 +541,39 @@ export const NewProjectPage: React.FC<NewProjectPageProps> = ({
                                 <p className="text-zinc-500 text-sm font-medium">Connect your VCS provider to synchronize your repository fleet.</p>
                             </div>
 
-                            {!connectedProvider ? (
-                                <div className="space-y-1">
-                                    <GitProviderButton provider="GitHub" icon={<GitHubIcon />} onClick={() => handleConnect('GitHub')} />
-                                    <GitProviderButton provider="GitLab" icon={<GitLabIcon />} onClick={() => handleConnect('GitLab')} />
-                                    <GitProviderButton provider="Bitbucket" icon={<BitbucketIcon />} onClick={() => handleConnect('Bitbucket')} />
-                                </div>
-                            ) : (
-                                <ConnectedRepoView
-                                    provider={connectedProvider}
-                                    onDisconnect={() => setConnectedProvider(null)}
-                                    onImport={onImportRepository}
-                                />
-                            )}
+                            <div className="min-h-[300px] relative">
+                                <AnimatePresence mode='wait'>
+                                    {!connectedProvider ? (
+                                        <MotionDiv
+                                            key="guest"
+                                            initial={{ opacity: 0, x: -20 }}
+                                            animate={{ opacity: 1, x: 0 }}
+                                            exit={{ opacity: 0, x: 20 }}
+                                            transition={{ duration: 0.3 }}
+                                            className="space-y-1 absolute w-full"
+                                        >
+                                            <GitProviderButton provider="GitHub" icon={<GitHubIcon />} onClick={() => handleConnect('GitHub')} />
+                                            <GitProviderButton provider="GitLab" icon={<GitLabIcon />} onClick={() => handleConnect('GitLab')} />
+                                            <GitProviderButton provider="Bitbucket" icon={<BitbucketIcon />} onClick={() => handleConnect('Bitbucket')} />
+                                        </MotionDiv>
+                                    ) : (
+                                        <MotionDiv
+                                            key="auth"
+                                            initial={{ opacity: 0, x: 20 }}
+                                            animate={{ opacity: 1, x: 0 }}
+                                            exit={{ opacity: 0, x: -20 }}
+                                            transition={{ duration: 0.3 }}
+                                            className="absolute w-full"
+                                        >
+                                            <ConnectedRepoView
+                                                provider={connectedProvider}
+                                                onDisconnect={() => setConnectedProvider(null)}
+                                                onImport={onImportRepository}
+                                            />
+                                        </MotionDiv>
+                                    )}
+                                </AnimatePresence>
+                            </div>
                         </div>
                     </MotionDiv>
                 );
