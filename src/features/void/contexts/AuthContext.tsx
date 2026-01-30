@@ -1,7 +1,7 @@
 import React, { createContext, useCallback, useEffect, useState } from 'react';
 import type { User } from '../types';
 import { safeNavigate } from '../services/navigation';
-import { LamaDB } from '@/lib/lamaDB/config'; // ✅ SINGLETON - Single source of truth
+import { LamaDB } from '../../../lib/lamaDB/config'; // ✅ SINGLETON - Single source of truth
 import { GithubAuthProvider } from 'firebase/auth';
 
 // For the purpose of "LamaDB", we will use the exposed auth methods.
@@ -60,7 +60,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const storedToken = localStorage.getItem('opendev_gh_token');
     if (storedToken) setToken(storedToken);
 
-    const unsubscribe = LamaDB.auth.onAuthStateChanged((firebaseUser) => {
+    const unsubscribe = LamaDB.auth.onAuthStateChanged((firebaseUser: any) => {
       if (firebaseUser) {
         setUser({
           name: firebaseUser.displayName || 'User',

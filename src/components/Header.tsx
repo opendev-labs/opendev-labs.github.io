@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../features/void/hooks/useAuth';
 import {
     ChevronDownIcon, MenuIcon, XIcon, TerminalIcon,
     CpuChipIcon, RocketLaunchIcon, CubeIcon,

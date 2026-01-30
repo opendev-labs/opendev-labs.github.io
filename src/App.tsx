@@ -6,7 +6,7 @@ import Products from './pages/Products';
 import Contact from './pages/Contact';
 import Placeholder from './pages/Placeholder';
 import ScrollToTop from './components/ScrollToTop';
-import { AuthProvider } from './contexts/AuthContext';
+import { AuthProvider } from './features/void/hooks/useAuth';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import VoidLanding from './pages/VoidLanding';
 import LamaDB from './pages/LamaDB';
