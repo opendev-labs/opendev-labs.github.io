@@ -40,20 +40,18 @@ const AppRoutes = () => {
           </Suspense>
         } />
         <Route path="dashboard" element={<Navigate to="/office" replace />} />
+        <Route path="auth" element={
+          <Suspense fallback={<div className="min-h-screen bg-black" />}>
+            <LazyAuthPage />
+          </Suspense>
+        } />
+        <Route path="verify-email" element={
+          <Suspense fallback={<div className="min-h-screen bg-black" />}>
+            <LazyVerifyEmailPage />
+          </Suspense>
+        } />
         <Route path="*" element={<Placeholder title="404 - Not Found" />} />
-      </Route>
-
-      <Route path="auth" element={
-        <Suspense fallback={<div className="min-h-screen bg-black" />}>
-          <LazyAuthPage />
-        </Suspense>
-      } />
-      <Route path="verify-email" element={
-        <Suspense fallback={<div className="min-h-screen bg-black" />}>
-          <LazyVerifyEmailPage />
-        </Suspense>
-      } />
-    </Routes >
+      </Routes>
     </>
   );
 }
