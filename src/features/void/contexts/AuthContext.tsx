@@ -21,6 +21,8 @@ interface AuthState {
 
 interface AuthContextType extends AuthState {
   loginWithGitHub: () => Promise<void>;
+  loginWithGoogle: () => Promise<void>;
+  linkGithub: () => Promise<void>;
   logout: () => Promise<void>;
   fetchRepositories: () => Promise<any[]>;
   createRepository: (name: string, description: string, isPrivate: boolean) => Promise<any>;
@@ -63,9 +65,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const unsubscribe = LamaDB.auth.onAuthStateChanged((firebaseUser: any) => {
       if (firebaseUser) {
         setUser({
+          uid: firebaseUser.uid,
           name: firebaseUser.displayName || 'User',
           email: firebaseUser.email || '',
-          avatar: firebaseUser.photoURL || undefined
+          avatar: firebaseUser.photoURL || undefined,
+          providers: firebaseUser.providers || []
         });
       } else {
         setUser(null);
@@ -107,6 +111,31 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       safeNavigate('/');
     } catch (error) {
       console.error("GitHub Login Error:", error);
+      throw error;
+    }
+  }, []);
+
+  const loginWithGoogle = useCallback(async () => {
+    try {
+      await LamaDB.auth.loginWithGoogle();
+      safeNavigate('/');
+    } catch (error) {
+      console.error("Google Login Error:", error);
+      throw error;
+    }
+  }, []);
+
+  const linkGithub = useCallback(async () => {
+    try {
+      const result = await LamaDB.auth.linkGithub();
+      const credential = GithubAuthProvider.credentialFromResult(result as any);
+
+      if (credential?.accessToken) {
+        setToken(credential.accessToken);
+        localStorage.setItem('opendev_gh_token', credential.accessToken);
+      }
+    } catch (error) {
+      console.error("Link GitHub Error:", error);
       throw error;
     }
   }, []);
@@ -278,6 +307,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       lastSyncTime,
       agentOnline,
       loginWithGitHub,
+      loginWithGoogle,
+      linkGithub,
       logout,
       fetchRepositories,
       createRepository,
