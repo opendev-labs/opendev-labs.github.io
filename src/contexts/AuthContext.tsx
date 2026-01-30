@@ -73,38 +73,62 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }, []);
 
     const loginWithGitHub = useCallback(async () => {
-        const result = await LamaDB.auth.loginWithGithub();
-        // If simulation mode, result might be a mock object
-        if (LamaDB.auth.getSimulationMode()) {
-            const mockUser = {
-                name: 'opendev-labs',
-                email: 'admin@opendev-labs.io',
-                uid: 'odl_master_1',
-                avatar: 'https://github.com/opendev-labs.png'
-            };
-            setUser(mockUser);
-            localStorage.setItem('nexus_sim_user', JSON.stringify(mockUser));
-            return;
-        }
+        try {
+            setIsLoading(true);
+            const result = await LamaDB.auth.loginWithGithub();
 
-        const credential = GithubAuthProvider.credentialFromResult(result);
-        if (credential?.accessToken) {
-            setToken(credential.accessToken);
-            localStorage.setItem('void_gh_token', credential.accessToken);
+            // If simulation mode, result might be a mock object
+            if (LamaDB.auth.getSimulationMode()) {
+                // ... (existing simulation logic)
+                const mockUser = {
+                    name: 'opendev-labs',
+                    email: 'admin@opendev-labs.io',
+                    uid: 'odl_master_1',
+                    avatar: 'https://github.com/opendev-labs.png'
+                };
+                setUser(mockUser);
+                localStorage.setItem('nexus_sim_user', JSON.stringify(mockUser));
+                return;
+            }
+
+            const credential = GithubAuthProvider.credentialFromResult(result);
+            if (credential?.accessToken) {
+                setToken(credential.accessToken);
+                localStorage.setItem('void_gh_token', credential.accessToken);
+            }
+        } catch (error: any) {
+            console.error("Auth Error:", error);
+            // Show a friendly message to the user
+            if (error.message && !error.message.includes('popup-closed-by-user')) {
+                alert(`Login Failed: ${error.message}`);
+            }
+        } finally {
+            setIsLoading(false);
         }
     }, []);
 
     const loginWithGoogle = useCallback(async () => {
-        const result = await LamaDB.auth.loginWithGoogle();
-        if (LamaDB.auth.getSimulationMode()) {
-            const mockUser = {
-                name: 'opendev-labs',
-                email: 'admin@opendev-labs.io',
-                uid: 'odl_master_1',
-                avatar: 'https://github.com/opendev-labs.png'
-            };
-            setUser(mockUser);
-            localStorage.setItem('nexus_sim_user', JSON.stringify(mockUser));
+        try {
+            setIsLoading(true);
+            const result = await LamaDB.auth.loginWithGoogle();
+            if (LamaDB.auth.getSimulationMode()) {
+                // ... existing sim logic
+                const mockUser = {
+                    name: 'opendev-labs',
+                    email: 'admin@opendev-labs.io',
+                    uid: 'odl_master_1',
+                    avatar: 'https://github.com/opendev-labs.png'
+                };
+                setUser(mockUser);
+                localStorage.setItem('nexus_sim_user', JSON.stringify(mockUser));
+            }
+        } catch (error: any) {
+            console.error("Auth Error:", error);
+            if (error.message && !error.message.includes('popup-closed-by-user')) {
+                alert(`Login Failed: ${error.message}`);
+            }
+        } finally {
+            setIsLoading(false);
         }
     }, []);
 
