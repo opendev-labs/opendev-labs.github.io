@@ -40,6 +40,7 @@ const AppRoutes = () => {
           </Suspense>
         } />
         <Route path="dashboard" element={<Navigate to="/office" replace />} />
+        <Route index element={<Home />} />
         <Route path="auth" element={
           <Suspense fallback={<div className="min-h-screen bg-black" />}>
             <LazyAuthPage />
