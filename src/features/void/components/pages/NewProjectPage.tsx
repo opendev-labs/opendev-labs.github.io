@@ -120,6 +120,8 @@ const ConnectedRepoView: React.FC<{
 
     React.useEffect(() => {
         const loadRepos = async () => {
+            setRepos([]); // Clear previous state immediately
+            setLoading(true);
             if (provider === 'GitHub') {
                 const data = await fetchRepositories();
                 setRepos(data);
@@ -129,7 +131,7 @@ const ConnectedRepoView: React.FC<{
             setLoading(false);
         };
         loadRepos();
-    }, [provider, fetchRepositories]);
+    }, [provider, fetchRepositories, user?.uid]); // Add user.uid dependency to force refresh on account switch
 
     const gitProviderIcons: Record<GitProvider, React.ReactNode> = {
         GitHub: <GitHubIcon />,
