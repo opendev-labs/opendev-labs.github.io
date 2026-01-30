@@ -1,8 +1,8 @@
 import React, { createContext, useCallback, useEffect, useState } from 'react';
 import type { User } from '../types';
 import { safeNavigate } from '../services/navigation';
-import { LamaDB } from '../../../lib/lamaDB';
-import { GithubAuthProvider } from 'firebase/auth'; // We still need the provider class or we can abstract it further. LamaDB abstraction is leaky here if we need credential.
+import { LamaDB } from '@/lib/lamaDB/config'; // ✅ SINGLETON - Single source of truth
+import { GithubAuthProvider } from 'firebase/auth';
 
 // For the purpose of "LamaDB", we will use the exposed auth methods.
 // To get the TOKEN (which is needed for GitHub API calls), we need the result from signInWithPopup.
