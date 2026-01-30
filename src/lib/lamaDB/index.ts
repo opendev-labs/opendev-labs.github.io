@@ -191,30 +191,99 @@ export class LamaAuth {
 export class LamaStore {
     private db = firestore;
 
+    private getCurrentUserId(): string | null {
+        const user = LamaAuth.getCurrentUser();
+        return user ? user.uid : null;
+    }
+
     collection(name: string) {
+        const userId = this.getCurrentUserId();
+
         if (isSimulationMode || !this.db) {
             return {
-                add: async (data: any) => { console.log(`SIMULATION: Writing to ${name}:`, data); return { id: 'sim_doc_id' } },
-                get: async () => [],
+                add: async (data: any) => {
+                    if (!userId) throw new Error("Unauthorized: No active protocol identity found.");
+
+                    const newItem = { ...data, userId, id: `sim_${Date.now()}` };
+                    const key = `nexus_sim_db_${userId}_${name}`;
+                    const currentData = JSON.parse(localStorage.getItem(key) || '[]');
+                    currentData.push(newItem);
+                    localStorage.setItem(key, JSON.stringify(currentData));
+
+                    console.log(`SIMULATION: Linked data to identity ${userId} in [${name}]`);
+                    return { id: newItem.id };
+                },
+                get: async () => {
+                    if (!userId) return [];
+                    const key = `nexus_sim_db_${userId}_${name}`;
+                    return JSON.parse(localStorage.getItem(key) || '[]');
+                },
                 doc: (id: string) => ({
-                    set: async (data: any) => { console.log(`SIMULATION: Setting ${name}/${id}:`, data); },
-                    update: async (data: any) => { console.log(`SIMULATION: Updating ${name}/${id}:`, data); },
-                    delete: async () => { console.log(`SIMULATION: Deleting ${name}/${id}`); },
-                    get: async () => null
+                    set: async (data: any) => {
+                        if (!userId) return;
+                        const key = `nexus_sim_db_${userId}_${name}`;
+                        const currentData = JSON.parse(localStorage.getItem(key) || '[]');
+                        const index = currentData.findIndex((d: any) => d.id === id);
+                        if (index >= 0) {
+                            currentData[index] = { ...data, userId, id };
+                        } else {
+                            currentData.push({ ...data, userId, id });
+                        }
+                        localStorage.setItem(key, JSON.stringify(currentData));
+                    },
+                    update: async (data: any) => {
+                        if (!userId) return;
+                        const key = `nexus_sim_db_${userId}_${name}`;
+                        const currentData = JSON.parse(localStorage.getItem(key) || '[]');
+                        const index = currentData.findIndex((d: any) => d.id === id);
+                        if (index >= 0) {
+                            currentData[index] = { ...currentData[index], ...data };
+                            localStorage.setItem(key, JSON.stringify(currentData));
+                        }
+                    },
+                    delete: async () => {
+                        if (!userId) return;
+                        const key = `nexus_sim_db_${userId}_${name}`;
+                        const currentData = JSON.parse(localStorage.getItem(key) || '[]');
+                        const newData = currentData.filter((d: any) => d.id !== id);
+                        localStorage.setItem(key, JSON.stringify(newData));
+                    },
+                    get: async () => {
+                        if (!userId) return null;
+                        const key = `nexus_sim_db_${userId}_${name}`;
+                        const currentData = JSON.parse(localStorage.getItem(key) || '[]');
+                        return currentData.find((d: any) => d.id === id) || null;
+                    }
                 }),
-                whereUser: () => { return { get: async () => [] } }
+                whereUser: () => {
+                    // Simulation naturally scopes to user via the get() method locally
+                    return {
+                        get: async () => {
+                            if (!userId) return [];
+                            const key = `nexus_sim_db_${userId}_${name}`;
+                            return JSON.parse(localStorage.getItem(key) || '[]');
+                        }
+                    }
+                }
             };
         }
+
+        // REAL FIREBASE IMPLEMENTATION (User Scoped)
         return {
-            add: async (data: any) => addDoc(collection(this.db, name), data),
+            add: async (data: any) => {
+                if (!userId) throw new Error("Unauthorized: Protocol identity required for write operations.");
+                return addDoc(collection(this.db, name), { ...data, userId });
+            },
             get: async () => {
-                const q = query(collection(this.db, name));
+                if (!userId) return [];
+                // Automatically filter by userId for pure isolation
+                const q = query(collection(this.db, name), where("userId", "==", userId));
                 const snapshot = await getDocs(q);
                 return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
             },
             doc: (id: string) => {
                 return {
-                    set: async (data: any) => setDoc(doc(this.db, name, id), data),
+                    set: async (data: any) => setDoc(doc(this.db, name, id), { ...data, userId }),
                     update: async (data: any) => updateDoc(doc(this.db, name, id), data),
                     delete: async () => deleteDoc(doc(this.db, name, id)),
                     get: async () => {
@@ -222,8 +291,9 @@ export class LamaStore {
                     }
                 }
             },
-            whereUser: (userId: string) => {
-                return query(collection(this.db, name), where("userId", "==", userId));
+            whereUser: (targetUserId: string) => {
+                // Explicit override if needed, but default get() handles it
+                return query(collection(this.db, name), where("userId", "==", targetUserId));
             }
         };
     }
