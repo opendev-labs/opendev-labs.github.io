@@ -7,6 +7,7 @@ export interface User {
     email: string;
     avatar?: string;
     uid?: string;
+    providers?: string[];
 }
 
 interface AuthContextType {
@@ -20,6 +21,7 @@ interface AuthContextType {
     createRepository: (name: string, description: string, isPrivate: boolean) => Promise<any>;
     uploadFile: (repoName: string, path: string, content: string, message: string) => Promise<any>;
     login: (user: User) => void;
+    linkGithub: () => Promise<void>;
 }
 
 export const AuthContext = createContext<AuthContextType | null>(null);
@@ -46,6 +48,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                     email: firebaseUser.email || '',
                     avatar: firebaseUser.photoURL || undefined,
                     uid: firebaseUser.uid,
+                    // Extract provider IDs (e.g., "google.com", "github.com")
+                    providers: firebaseUser.providerData?.map((p: any) => p.providerId) || [],
                     lastLogin: new Date().toISOString()
                 };
                 setUser(userData);
@@ -223,6 +227,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return await response.json();
     }, [token]);
 
+    const linkGithub = useCallback(async () => {
+        const result = await LamaDB.auth.linkGithub();
+        // Force refresh user to update providers list
+        // onAuthStateChanged should trigger automatically, but if not we can reload window or fetch user again.
+        // Actually onAuthStateChanged fires on token changes usually.
+        // Let's manually add 'github.com' to local user state to be instant
+        if (user && result && !user.providers?.includes('github.com')) {
+            const newProviders = [...(user.providers || []), 'github.com'];
+            setUser({ ...user, providers: newProviders });
+        }
+    }, [user]);
+
     return (
         <AuthContext.Provider value={{
             user,
@@ -234,7 +250,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             fetchRepositories,
             createRepository,
             uploadFile,
-            login
+            login,
+            linkGithub
         }}>
             {children}
         </AuthContext.Provider>

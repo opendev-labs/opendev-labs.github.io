@@ -50,7 +50,7 @@ export default function Home() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.1 }}
-                        className="text-6xl md:text-9xl font-bold tracking-tighter mb-10 text-white leading-[0.8] lowercase"
+                        className="text-5xl md:text-8xl lg:text-9xl font-bold tracking-tighter mb-10 text-white leading-[0.8] lowercase whitespace-nowrap"
                     >
                         intelligent ecosystem.
                     </motion.h1>

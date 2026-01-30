@@ -7,7 +7,7 @@ import { useAuth } from '../../../../contexts/AuthContext';
 type SettingsTab = 'general' | 'team' | 'billing' | 'tokens';
 
 export const SettingsPage: React.FC = () => {
-    const { user } = useAuth();
+    const { user, linkGithub } = useAuth();
     const [activeTab, setActiveTab] = useState<SettingsTab>('general');
     const [isLoading, setIsLoading] = useState(false);
 
@@ -40,8 +40,8 @@ export const SettingsPage: React.FC = () => {
                             key={tab.id}
                             onClick={() => setActiveTab(tab.id)}
                             className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-bold tracking-tight rounded-none border transition-all ${activeTab === tab.id
-                                    ? 'bg-zinc-900 border-zinc-800 text-white'
-                                    : 'bg-transparent border-transparent text-zinc-500 hover:text-zinc-300 hover:bg-zinc-900/50'
+                                ? 'bg-zinc-900 border-zinc-800 text-white'
+                                : 'bg-transparent border-transparent text-zinc-500 hover:text-zinc-300 hover:bg-zinc-900/50'
                                 }`}
                         >
                             {tab.icon}
@@ -90,10 +90,24 @@ export const SettingsPage: React.FC = () => {
                                                 <Github className="text-white" size={24} />
                                                 <div>
                                                     <p className="text-white text-sm font-bold">GitHub</p>
-                                                    <p className="text-zinc-600 text-xs mt-1">Connected as {user?.email}</p>
+                                                    <p className="text-zinc-600 text-xs mt-1">
+                                                        {user?.providers?.includes('github.com')
+                                                            ? `Connected as ${user?.email}`
+                                                            : 'Not connected'}
+                                                    </p>
                                                 </div>
                                             </div>
-                                            <span className="text-xs font-bold text-emerald-500 uppercase tracking-widest px-2 py-1 bg-emerald-500/10 border border-emerald-500/20">Connected</span>
+                                            {user?.providers?.includes('github.com') ? (
+                                                <span className="text-xs font-bold text-emerald-500 uppercase tracking-widest px-2 py-1 bg-emerald-500/10 border border-emerald-500/20">Connected</span>
+                                            ) : (
+                                                <Button size="sm" variant="outline" onClick={async () => {
+                                                    try {
+                                                        await linkGithub();
+                                                    } catch (e: any) {
+                                                        alert(e.message);
+                                                    }
+                                                }}>Connect</Button>
+                                            )}
                                         </div>
                                     </div>
                                 </Section>
