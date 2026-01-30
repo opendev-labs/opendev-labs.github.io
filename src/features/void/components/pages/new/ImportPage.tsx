@@ -12,7 +12,7 @@ const ConnectedRepoView: React.FC<{
     onDisconnect: () => void,
     onImport: (repo: Repository, projectName: string) => void
 }> = ({ onDisconnect, onImport }) => {
-    const { fetchRepositories, user } = useAuth();
+    const { fetchRepositories, user, githubUser } = useAuth();
     const [repos, setRepos] = useState<Repository[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -56,7 +56,7 @@ const ConnectedRepoView: React.FC<{
                     </div>
                     <div>
                         <span className="block text-[10px] text-zinc-600 uppercase tracking-widest font-bold mb-1">Authenticated via GitHub</span>
-                        <span className="text-sm font-bold text-white tracking-tight">{user?.name || 'Authorized Architect'}</span>
+                        <span className="text-sm font-bold text-white tracking-tight">{githubUser?.login ? `@${githubUser.login}` : (user?.name || 'Authorized Architect')}</span>
                     </div>
                 </div>
                 <button onClick={onDisconnect} className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 hover:text-white transition-colors">
@@ -159,16 +159,26 @@ export const ImportPage: React.FC<{
     onImportRepository: (repo: Repository, projectName: string) => void;
 }> = ({ onImportRepository }) => {
     const navigate = useNavigate();
-    const { loginWithGitHub, user } = useAuth();
-    const [connected, setConnected] = useState(!!user?.providers?.includes('github.com'));
+    const { loginWithGitHub, linkGithub, user, isGithubConnected, logout } = useAuth();
 
     const handleConnect = async () => {
         try {
-            await loginWithGitHub();
-            setConnected(true);
+            if (user) {
+                // Already authenticated (e.g. Google), so LINK GitHub
+                await linkGithub();
+            } else {
+                // Not authenticated, so full Login
+                await loginWithGitHub();
+            }
         } catch (e) {
             console.error(e);
         }
+    };
+
+    const handleDisconnect = async () => {
+        // Just clear the GH token if they want to "disconnect" or do a full logout?
+        // For now, let's just do a full logout to keep it simple, or we could add a "unlink" later.
+        await logout();
     };
 
     return (
@@ -186,7 +196,7 @@ export const ImportPage: React.FC<{
 
                 <div className="min-h-[300px] relative">
                     <AnimatePresence mode='wait'>
-                        {!connected ? (
+                        {!isGithubConnected ? (
                             <MotionDiv
                                 key="guest"
                                 initial={{ opacity: 0, x: -20 }}
@@ -216,7 +226,7 @@ export const ImportPage: React.FC<{
                                 className="absolute w-full"
                             >
                                 <ConnectedRepoView
-                                    onDisconnect={() => setConnected(false)}
+                                    onDisconnect={handleDisconnect}
                                     onImport={onImportRepository}
                                 />
                             </MotionDiv>
