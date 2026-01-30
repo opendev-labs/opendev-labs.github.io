@@ -2,10 +2,11 @@ import React, { createContext, useContext, useState, useEffect, useCallback } fr
 import { LamaDB } from '../lib/lamaDB';
 import { GithubAuthProvider } from 'firebase/auth';
 
-interface User {
+export interface User {
     name: string;
     email: string;
     avatar?: string;
+    uid?: string;
 }
 
 interface AuthContextType {
@@ -38,20 +39,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const storedToken = localStorage.getItem('void_gh_token');
         if (storedToken) setToken(storedToken);
 
-        const unsubscribe = LamaDB.auth.onAuthStateChanged((firebaseUser) => {
+        const unsubscribe = LamaDB.auth.onAuthStateChanged(async (firebaseUser) => {
             if (firebaseUser) {
-                const email = firebaseUser.email || '';
-                const isFounder = email.includes('founder') || email.includes('iamyash');
+                const userData = {
+                    name: firebaseUser.displayName || firebaseUser.email?.split('@')[0] || 'Member',
+                    email: firebaseUser.email || '',
+                    avatar: firebaseUser.photoURL || undefined,
+                    uid: firebaseUser.uid,
+                    lastLogin: new Date().toISOString()
+                };
+                setUser(userData);
 
-                setUser({
-                    name: isFounder ? '@iamyash.io' : (firebaseUser.displayName || email.split('@')[0] || 'Member'),
-                    email: email,
-                    avatar: firebaseUser.photoURL || undefined
-                });
+                // Sync with LamaDB Firestore
+                try {
+                    await LamaDB.store.collection('users').doc(firebaseUser.uid).set(userData);
+                    console.log("Nexus Registry: ID synced with LamaDB.");
+                } catch (e) {
+                    console.error("Nexus Registry: Sync failure.", e);
+                }
             } else {
                 setUser(null);
                 setToken(null);
                 localStorage.removeItem('void_gh_token');
+                localStorage.removeItem('nexus_sim_user');
             }
             setIsLoading(false);
         });
@@ -60,6 +70,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const loginWithGitHub = useCallback(async () => {
         const result = await LamaDB.auth.loginWithGithub();
+        // If simulation mode, result might be a mock object
+        if (LamaDB.auth.getSimulationMode()) {
+            const mockUser = {
+                name: 'SOLO_FOUNDER',
+                email: 'founder@opendev-labs.io',
+                uid: 'sim_123'
+            };
+            setUser(mockUser);
+            localStorage.setItem('nexus_sim_user', JSON.stringify(mockUser));
+            return;
+        }
+
         const credential = GithubAuthProvider.credentialFromResult(result);
         if (credential?.accessToken) {
             setToken(credential.accessToken);
@@ -68,7 +90,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }, []);
 
     const loginWithGoogle = useCallback(async () => {
-        await LamaDB.auth.loginWithGoogle();
+        const result = await LamaDB.auth.loginWithGoogle();
+        if (LamaDB.auth.getSimulationMode()) {
+            const mockUser = {
+                name: 'GOOGLE_DEVELOPER',
+                email: 'dev@gmail.com',
+                uid: 'sim_google_123'
+            };
+            setUser(mockUser);
+            localStorage.setItem('nexus_sim_user', JSON.stringify(mockUser));
+        }
     }, []);
 
     const logout = useCallback(async () => {
@@ -76,6 +107,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(null);
         setToken(null);
         localStorage.removeItem('void_gh_token');
+        localStorage.removeItem('nexus_sim_user');
     }, []);
 
     const login = useCallback((user: User) => {
@@ -103,7 +135,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 url: repo.html_url
             }));
         } catch (error) {
-            console.error(error);
+            console.error("Repository fetch failed:", error);
             return [];
         }
     }, [token]);

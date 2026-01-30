@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { useAuth } from '../../hooks/useAuth';
+import { useAuth, User as LocalUser } from '../../../../contexts/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
-import type { User } from '../../types';
+import { Button } from '../../../../components/ui/Button';
+import { Card } from '../../../../components/ui/Card';
 
 const FAKE_CODE = '123456';
 
@@ -11,7 +12,7 @@ export const VerifyEmailPage: React.FC = () => {
     const navigate = useNavigate();
     const [code, setCode] = useState('');
     const [error, setError] = useState('');
-    const [userToVerify, setUserToVerify] = useState<User | null>(null);
+    const [userToVerify, setUserToVerify] = useState<LocalUser | null>(null);
 
     useEffect(() => {
         try {
@@ -32,7 +33,7 @@ export const VerifyEmailPage: React.FC = () => {
             if (userToVerify) {
                 login(userToVerify);
                 localStorage.removeItem('opendev_verification_user');
-                navigate('/void/dashboard');
+                navigate('/dashboard');
             } else {
                 setError('Could not find user to verify. Please try logging in again.');
             }
@@ -48,66 +49,72 @@ export const VerifyEmailPage: React.FC = () => {
     }, [userToVerify]);
 
     return (
-        <div className="min-h-screen flex items-center justify-center px-4 bg-black py-20 selection:bg-white selection:text-black relative">
+        <div className="min-h-screen flex items-center justify-center px-4 bg-black py-20 selection:bg-white selection:text-black relative overflow-hidden">
+            {/* Grid Backdrop */}
+            <div className="absolute inset-0 opacity-[0.03] pointer-events-none"
+                style={{ backgroundImage: 'linear-gradient(#333 1px, transparent 1px), linear-gradient(90deg, #333 1px, transparent 1px)', backgroundSize: '40px 40px' }}
+            />
+
             {/* Back to Home Button */}
             <Link
                 to="/"
-                className="absolute top-8 left-8 flex items-center gap-2 text-zinc-500 hover:text-white transition-colors group z-30"
+                className="absolute top-10 left-10 flex items-center gap-3 text-zinc-600 hover:text-white transition-all group z-30 font-bold uppercase tracking-[0.4em] text-[10px]"
             >
-                <div className="w-8 h-8 rounded-full border border-zinc-900 flex items-center justify-center group-hover:border-zinc-700 transition-colors">
-                    <ArrowLeft size={14} />
-                </div>
-                <span className="text-[10px] font-bold uppercase tracking-widest">Back to Hub</span>
+                <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
+                Back to Hub
             </Link>
 
-            <div className="w-full max-w-sm">
-                <div className="text-center mb-12">
-                    <div className="inline-flex items-center gap-2 mb-8 px-3 py-1 rounded-full bg-zinc-900/50 border border-zinc-800 text-[10px] font-bold text-zinc-500 uppercase tracking-widest">
-                        <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+            <div className="w-full max-w-[380px] relative z-10">
+                <div className="text-center mb-16">
+                    <div className="inline-flex items-center gap-3 mb-10 px-4 py-1.5 rounded-full bg-zinc-900/50 border border-zinc-800 text-[10px] font-bold text-zinc-500 uppercase tracking-[0.4em]">
+                        <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
                         <span>Identity Audit Protocol</span>
                     </div>
-                    <h1 className="text-4xl font-bold tracking-tighter text-white mb-3">Verify Transmission</h1>
-                    <p className="text-zinc-500 text-sm font-medium leading-relaxed">Incoming sequence dispatched to <br /><span className="text-white font-mono">{emailDisplay}</span></p>
+                    <h1 className="text-5xl font-bold tracking-tighter text-white mb-6 lowercase">Verify Transmission.</h1>
+                    <p className="text-zinc-500 text-sm font-medium leading-relaxed uppercase tracking-widest opacity-80">
+                        Dispatching sequence to <br /><span className="text-white font-mono lowercase tracking-normal">{emailDisplay}</span>
+                    </p>
                 </div>
 
-                <div className="bg-zinc-950/50 border border-zinc-900 rounded-[32px] p-10 text-center mb-10 shadow-2xl backdrop-blur-sm">
-                    <p className="text-[10px] text-zinc-600 font-bold uppercase tracking-[0.3em] mb-6">Sequence Payload</p>
-                    <p className="text-5xl font-mono tracking-[0.2em] text-white font-bold my-6 select-all">{FAKE_CODE}</p>
-                    <div className="pt-6 border-t border-zinc-900">
-                        <p className="text-[10px] text-zinc-700 font-bold uppercase tracking-widest italic leading-relaxed">Simulation Protocol: Hardware dispatch bypassed.</p>
+                <Card glass className="p-1 mb-12">
+                    <div className="bg-black rounded-[30px] p-12 text-center border border-zinc-900/50 shadow-2xl">
+                        <p className="text-[10px] text-zinc-600 font-bold uppercase tracking-[0.4em] mb-8 opacity-60">Sequence Payload</p>
+                        <p className="text-6xl font-mono tracking-[0.1em] text-white font-bold my-8 select-all drop-shadow-[0_0_15px_rgba(255,255,255,0.1)]">{FAKE_CODE}</p>
+                        <div className="pt-8 border-t border-zinc-900/50">
+                            <p className="text-[9px] text-zinc-700 font-bold uppercase tracking-[0.2em] italic leading-relaxed">Simulation Protocol Override: Dispatch Bypassed.</p>
+                        </div>
                     </div>
-                </div>
+                </Card>
 
                 <form className="space-y-6" onSubmit={handleVerify}>
-                    <div>
-                        <input
-                            type="text"
-                            value={code}
-                            onChange={(e) => setCode(e.target.value)}
-                            className="w-full h-12 bg-black border border-zinc-900 px-5 text-center text-white font-mono text-lg rounded-xl placeholder:text-zinc-800 focus:outline-none focus:border-zinc-500 transition-colors"
-                            placeholder="000000"
-                            required
-                        />
+                    <input
+                        type="text"
+                        value={code}
+                        onChange={(e) => setCode(e.target.value)}
+                        className="w-full h-14 bg-zinc-950 border border-zinc-900 px-6 text-center text-white font-mono text-xl font-bold rounded-2xl placeholder:text-zinc-800 focus:outline-none focus:border-zinc-700 focus:ring-1 focus:ring-white/5 transition-all"
+                        placeholder="000000"
+                        required
+                    />
+
+                    {error && <p className="text-[10px] text-red-500 text-center font-bold uppercase tracking-widest bg-red-500/5 py-2 rounded-lg border border-red-500/10 animate-in shake duration-300">{error}</p>}
+
+                    <div className="space-y-4 pt-4">
+                        <Button type="submit" variant="primary" size="xl" className="w-full">
+                            Complete Uplink
+                        </Button>
+
+                        <button type="button" className="w-full text-zinc-700 text-[9px] font-bold hover:text-white transition-colors uppercase tracking-[0.4em]">
+                            Re-dispatch Protocol Sequence
+                        </button>
                     </div>
-
-                    {error && <p className="text-[10px] text-red-500 text-center font-bold uppercase tracking-widest">{error}</p>}
-
-                    <button type="submit" className="w-full h-12 bg-white text-black text-[11px] font-bold uppercase tracking-widest rounded-full hover:bg-zinc-200 transition-all hover:scale-[1.02] active:scale-95 shadow-xl shadow-white/5">
-                        Verify Identity
-                    </button>
-
-                    <button type="button" className="w-full text-zinc-500 text-[10px] font-bold hover:text-white transition-colors uppercase tracking-[0.3em]">
-                        Re-dispatch Sequence
-                    </button>
                 </form>
 
-                <div className="mt-12 text-center">
-                    <Link to="/login" className="text-xs text-zinc-600 hover:text-white font-bold uppercase tracking-widest transition-colors">
-                        Abort Mission & Return
+                <div className="mt-16 text-center">
+                    <Link to="/auth" className="text-[10px] text-zinc-700 hover:text-white font-bold uppercase tracking-[0.3em] transition-all">
+                        Abort Protocol & Return
                     </Link>
                 </div>
             </div>
         </div>
     );
 };
-

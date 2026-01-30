@@ -1,106 +1,81 @@
-import { Link } from 'react-router-dom';
-import { Box, ArrowRight, Layers, Zap, Shield, GitBranch } from 'lucide-react';
+import React from 'react';
+import { Box, Layers, Zap, Shield, GitBranch, Cpu, Network } from 'lucide-react';
+import { ProductPageTemplate } from '../components/ProductPageTemplate';
 
 export default function SyncStack() {
-    return (
-        <div className="flex flex-col w-full min-h-screen bg-black selection:bg-white selection:text-black">
-            {/* Hero Section */}
-            <section className="relative pt-32 pb-20 border-b border-zinc-900 overflow-hidden">
-                <div className="max-w-5xl mx-auto px-6 relative z-10 text-center">
-                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-[10px] font-bold text-zinc-500 mb-8 uppercase tracking-[0.2em] animate-in fade-in slide-in-from-bottom-4 duration-1000">
-                        <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-                        <span>SyncStack v1.0.4 - Distributed Protocol Ready</span>
-                    </div>
+    const features = [
+        {
+            title: "Quantum Sharding",
+            desc: "Distributed data fragments optimized for instantaneous reconciliation across globally indexed nodes with zero-latency state propagation.",
+            icon: Layers
+        },
+        {
+            title: "Light-speed Sync",
+            desc: "Sub-millisecond latency for state propagation using advanced binary delta protocols and neural-path optimization.",
+            icon: Zap
+        },
+        {
+            title: "Immutable Integrity",
+            desc: "Every synchronization block is strictly validated against a zero-knowledge proof mesh for bulletproof cryptographic integrity.",
+            icon: Shield
+        }
+    ];
 
-                    <h1 className="text-5xl md:text-7xl font-bold tracking-tighter mb-8 text-white uppercase leading-[0.9] animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-100">
-                        Seamless <br /> <span className="text-zinc-600">Synchronization.</span>
-                    </h1>
+    const performanceMetrics = [
+        {
+            title: "Unified Cluster Binding",
+            desc: "Bind disparate infrastructure nodes into a single coherent synchronisation stack. Automatically handles network partitioning.",
+            icon: Network
+        },
+        {
+            title: "Neural Load Balancing",
+            desc: "Intelligently routes synchronization traffic based on cluster health and proximity, ensuring peak performance under stress.",
+            icon: Cpu
+        },
+        {
+            title: "Delta Reconciliation",
+            desc: "Minimal payload size by only transmitting modified states, reducing bandwidth consumption by up to 90% across the nexus.",
+            icon: GitBranch
+        }
+    ];
 
-                    <p className="text-lg text-zinc-500 max-w-2xl mx-auto mb-12 leading-relaxed font-bold uppercase tracking-tight animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-200">
-                        The distributed synchronization layer for modern nexus clusters. Zero-latency state propagation with cryptographic integrity.
-                    </p>
-
-                    <div className="flex flex-col md:flex-row items-center justify-center gap-4 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300">
-                        <Link to="/void" className="h-12 px-10 rounded-full bg-white text-black text-[11px] font-bold uppercase tracking-widest hover:bg-zinc-200 transition-all hover:scale-105 active:scale-95 flex items-center justify-center shadow-lg shadow-white/5">
-                            Initialize Cluster
-                        </Link>
-                        <a href="https://github.com/opendev-labs/syncstack" className="h-12 px-10 rounded-full border border-zinc-900 text-white text-[11px] font-bold uppercase tracking-widest hover:bg-zinc-900 transition-all hover:scale-105 active:scale-95 flex items-center justify-center shadow-lg">
-                            Inspect Source
-                        </a>
-                    </div>
+    const clusterStatus = (
+        <div className="space-y-6 font-mono text-[13px]">
+            <div className="flex justify-between items-center border-b border-zinc-900 pb-3">
+                <span className="text-zinc-600 uppercase tracking-widest text-[10px] font-bold">Cluster ID</span>
+                <span className="text-zinc-400 font-bold">NEXUS-STACK-091</span>
+            </div>
+            <div className="space-y-4 pt-4">
+                <div className="flex items-center gap-4">
+                    <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+                    <span className="text-zinc-500 text-[11px] uppercase tracking-widest">Sharding protocol: active</span>
                 </div>
-
-                {/* Abstract Background Elements */}
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-blue-500/5 blur-[120px] rounded-full pointer-events-none" />
-            </section>
-
-            {/* Feature Grid */}
-            <section className="py-32 border-b border-zinc-900">
-                <div className="max-w-[1200px] mx-auto px-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-1">
-                        <div className="p-10 border border-zinc-900 group hover:bg-zinc-950 transition-all duration-500 bg-black">
-                            <Layers className="text-zinc-700 group-hover:text-blue-500 mb-8 transition-colors" size={24} />
-                            <h3 className="text-xs font-bold uppercase tracking-[0.2em] mb-4 text-white">Quantum Sharding</h3>
-                            <p className="text-[11px] font-bold text-zinc-600 uppercase tracking-widest leading-loose">
-                                Distributed data fragments optimized for instantaneous reconciliation across globally indexed nodes.
-                            </p>
-                        </div>
-                        <div className="p-10 border border-zinc-900 group hover:bg-zinc-950 transition-all duration-500 bg-black">
-                            <Zap className="text-zinc-700 group-hover:text-yellow-500 mb-8 transition-colors" size={24} />
-                            <h3 className="text-xs font-bold uppercase tracking-[0.2em] mb-4 text-white">Light-speed Sync</h3>
-                            <p className="text-[11px] font-bold text-zinc-600 uppercase tracking-widest leading-loose">
-                                Sub-millisecond latency for state propagation using advanced binary delta protocols.
-                            </p>
-                        </div>
-                        <div className="p-10 border border-zinc-900 group hover:bg-zinc-950 transition-all duration-500 bg-black">
-                            <Shield className="text-zinc-700 group-hover:text-green-500 mb-8 transition-colors" size={24} />
-                            <h3 className="text-xs font-bold uppercase tracking-[0.2em] mb-4 text-white">Immutable Integrity</h3>
-                            <p className="text-[11px] font-bold text-zinc-600 uppercase tracking-widest leading-loose">
-                                Every synchronization block is strictly validated against a zero-knowledge proof mesh.
-                            </p>
-                        </div>
-                    </div>
+                <div className="flex items-center gap-4">
+                    <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse delay-75" />
+                    <span className="text-zinc-500 text-[11px] uppercase tracking-widest">Global replication: 99.9%</span>
                 </div>
-            </section>
-
-            {/* Technical Specification Section */}
-            <section className="py-32 bg-zinc-950">
-                <div className="max-w-4xl mx-auto px-6">
-                    <div className="space-y-16">
-                        <div className="flex gap-10 items-start">
-                            <div className="flex-shrink-0 w-12 h-12 border border-zinc-800 flex items-center justify-center font-mono text-zinc-700 text-xs">
-                                01
-                            </div>
-                            <div className="space-y-4">
-                                <h4 className="text-sm font-bold uppercase tracking-widest text-white">Unified Cluster Binding</h4>
-                                <p className="text-[11px] font-bold text-zinc-600 uppercase tracking-widest leading-relaxed">
-                                    Bind disparate infrastructure nodes into a single coherent synchronization stack. Automatically handles network partitioning and eventual consistency.
-                                </p>
-                            </div>
-                        </div>
-
-                        <div className="flex gap-10 items-start">
-                            <div className="flex-shrink-0 w-12 h-12 border border-zinc-800 flex items-center justify-center font-mono text-zinc-700 text-xs">
-                                02
-                            </div>
-                            <div className="space-y-4">
-                                <h4 className="text-sm font-bold uppercase tracking-widest text-white">Neural Load balancing</h4>
-                                <p className="text-[11px] font-bold text-zinc-600 uppercase tracking-widest leading-relaxed">
-                                    Intelligently routes synchronization traffic based on cluster health and proximity, ensuring peak performance under high-pressure state changes.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
+                <div className="flex items-center gap-4">
+                    <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse delay-150" />
+                    <span className="text-zinc-500 text-[11px] uppercase tracking-widest">Node consensus: established</span>
                 </div>
-            </section>
-
-            {/* CTA Section */}
-            <section className="py-40 text-center">
-                <h2 className="text-4xl font-bold tracking-tighter uppercase mb-12">Synchronize Your Nexus.</h2>
-                <Link to="/void" className="group inline-flex items-center gap-3 text-[10px] font-bold uppercase tracking-[0.3em] text-zinc-500 hover:text-white transition-all">
-                    Initialize SyncStack Cluster <ArrowRight size={16} className="group-hover:translate-x-2 transition-transform" />
-                </Link>
-            </section>
+            </div>
+            <div className="mt-8 p-4 bg-blue-500/5 border border-blue-500/10 rounded-xl">
+                <p className="text-[10px] font-bold text-blue-400 uppercase tracking-widest mb-1 font-mono">Synchronization Delta</p>
+                <p className="text-xs text-blue-200 font-mono">PROG: [||||||||||||||||||||||] 100%</p>
+            </div>
         </div>
+    );
+
+    return (
+        <ProductPageTemplate
+            badge="Distributed Protocol Ready"
+            badgeIcon={Box}
+            title="SyncStack"
+            description="The distributed synchronization layer for modern nexus clusters. Zero-latency state propagation with cryptographic integrity across sovereign nodes."
+            features={features}
+            performanceTitle="Seamless Synchronization."
+            performanceMetrics={performanceMetrics}
+            codeSnippet={clusterStatus}
+        />
     );
 }
