@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Database, Shield, Zap, Globe, Layers, Cpu, Code, Loader, Plus, Trash, Search, Terminal } from 'lucide-react';
 import { ProductPageTemplate } from '../components/ProductPageTemplate';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../features/void/hooks/useAuth';
 import { Button } from '../components/ui/Button';
 import { useNavigate } from 'react-router-dom';
 import { LamaDB as DB } from '../lib/lamaDB';

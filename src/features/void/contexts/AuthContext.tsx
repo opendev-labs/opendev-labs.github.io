@@ -91,12 +91,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const result = await LamaDB.auth.loginWithGithub();
 
       // We need to get the credential to acccess the token
-      // Since LamaAuth.loginWithGithub returns the firebase UserCredential (UserCredentialImpl)
+      // Since LamaAuth.loginWithGithub returns AuthResult (compatible with UserCredential)
       // We can use GithubAuthProvider.credentialFromResult logic if imported,
       // OR just access result.providerId? result.user.accessToken is not the GH token.
       // We need the OAuthCredential.
 
-      const credential = GithubAuthProvider.credentialFromResult(result);
+      const credential = GithubAuthProvider.credentialFromResult(result as any);
+
 
       if (credential?.accessToken) {
         setToken(credential.accessToken);
@@ -288,4 +289,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       {children}
     </AuthContext.Provider>
   );
+};
+
+export const useAuth = () => {
+  const context = React.useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
 };

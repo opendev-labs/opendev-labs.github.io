@@ -4,7 +4,7 @@ import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import HeroBg from '../assets/bg.png';
 import { motion } from 'framer-motion';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../features/void/hooks/useAuth';
 import { NewProjectIcon } from '../features/void/components/common/Icons';
 
 export default function Home() {

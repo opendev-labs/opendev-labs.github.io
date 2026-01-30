@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Terminal, Database, Box, Cpu, Activity, Shield, Zap, ArrowUpRight, Plus, Settings, LayoutGrid, LogOut, Search } from 'lucide-react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '../components/ui/Button';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../features/void/hooks/useAuth';
 
 export const OfficeDashboard: React.FC = () => {
     const nodes = [

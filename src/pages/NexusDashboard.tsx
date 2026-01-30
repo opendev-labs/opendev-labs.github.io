@@ -2,7 +2,7 @@ import React from 'react';
 import { Terminal, Database, Cpu, Zap, Box, Code, Activity, Users, ShieldCheck, Globe } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Card } from '../components/ui/Card';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../features/void/hooks/useAuth';
 
 const products = [
     { name: 'SPOON CLI', icon: Terminal, status: 'SYSTEM_ACTIVE', color: 'text-green-500', desc: 'Universal AI Orchestration Engine' },
