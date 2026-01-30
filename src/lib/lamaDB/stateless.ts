@@ -69,6 +69,7 @@ export interface UserContext {
     email: string;
     displayName?: string;
     photoURL?: string;
+    providers?: string[];
 }
 
 export interface AuthResult {
@@ -194,6 +195,37 @@ export class LamaAuthService {
             };
         } catch (error: any) {
             throw this.handleAuthError(error, 'loginWithGithub');
+        }
+    }
+
+    /**
+     * Link GitHub Account
+     */
+    async linkGithub(): Promise<AuthResult> {
+        if (this.simulationMode) {
+            return this.simulateMockUser('github');
+        }
+
+        if (!this.auth?.currentUser) {
+            throw new LamaDBError('Must be logged in to link account', 'auth/unauthorized');
+        }
+
+        const provider = new GithubAuthProvider();
+        provider.addScope('repo');
+        provider.addScope('user');
+
+        try {
+            const result = await linkWithPopup(this.auth.currentUser, provider);
+            const credential = GithubAuthProvider.credentialFromResult(result);
+
+            this.logAuthEvent('github_link', result.user.uid);
+
+            return {
+                user: this.mapFirebaseUser(result.user),
+                credential
+            };
+        } catch (error: any) {
+            throw this.handleAuthError(error, 'linkGithub');
         }
     }
 
@@ -341,7 +373,8 @@ export class LamaAuthService {
             uid: firebaseUser.uid,
             email: firebaseUser.email || '',
             displayName: firebaseUser.displayName || undefined,
-            photoURL: firebaseUser.photoURL || undefined
+            photoURL: firebaseUser.photoURL || undefined,
+            providers: firebaseUser.providerData.map(p => p.providerId)
         };
     }
 
