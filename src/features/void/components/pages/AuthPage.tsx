@@ -38,7 +38,11 @@ export const AuthPage: React.FC = () => {
         } catch (err: any) {
             console.error("GitHub Auth Error:", err);
             const errorCode = err.code ? `[${err.code}] ` : "";
-            setError(`${errorCode}${err.message || "GitHub protocol transmission failed."}`);
+            if (err.code === 'auth/account-exists-with-different-credential') {
+                setError("Account exists with different credentials. Please sign in with Google or Email first to link your account.");
+            } else {
+                setError(`${errorCode}${err.message || "GitHub protocol transmission failed."}`);
+            }
             setAuthMethod('none');
         } finally {
             setIsLoading(false);
