@@ -12,46 +12,67 @@ import { Button } from './ui/Button';
 
 /* --- LOGO --- */
 const Logo = () => (
-    <div className="relative group/logo">
-        <svg width="28" height="28" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="rotate-0 group-hover:rotate-180 transition-transform duration-1000 ease-in-out">
+    <div className="relative group/logo flex items-center justify-center">
+        <svg width="32" height="32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="transition-transform duration-1000 ease-in-out">
             <defs>
-                <filter id="neon-glow" x="-50%" y="-50%" width="200%" height="200%">
-                    <feGaussianBlur stdDeviation="3.5" result="coloredBlur" />
-                    <feMerge>
-                        <feMergeNode in="coloredBlur" />
-                        <feMergeNode in="SourceGraphic" />
-                    </feMerge>
+                <filter id="hyper-glow" x="-100%" y="-100%" width="300%" height="300%">
+                    <feGaussianBlur stdDeviation="4" result="blur" />
+                    <feComposite in="SourceGraphic" in2="blur" operator="over" />
                 </filter>
-                <linearGradient id="logo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+
+                {/* Rainbow Gradients matching bg.png */}
+                <linearGradient id="rainbow-1" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="#ff00d4" />
+                    <stop offset="100%" stopColor="#bc00ff" />
+                </linearGradient>
+                <linearGradient id="rainbow-2" x1="0%" y1="0%" x2="100%" y2="0%">
                     <stop offset="0%" stopColor="#00f2ff" />
-                    <stop offset="50%" stopColor="#bc00ff" />
-                    <stop offset="100%" stopColor="#ff00d4" />
+                    <stop offset="100%" stopColor="#0062ff" />
+                </linearGradient>
+                <linearGradient id="rainbow-3" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="#4CAF50" />
+                    <stop offset="100%" stopColor="#00f2ff" />
                 </linearGradient>
             </defs>
-            {/* Ambient Glow */}
+
+            {/* Infinite Layers */}
+            {/* Outer Layer (Pink/Purple) */}
             <path
                 d="M50 95L5 10H95L50 95Z"
-                stroke="url(#logo-grad)"
-                strokeWidth="6"
-                filter="url(#neon-glow)"
-                className="opacity-40 group-hover/logo:opacity-80 transition-opacity duration-700"
+                stroke="url(#rainbow-1)"
+                strokeWidth="2.5"
+                filter="url(#hyper-glow)"
+                className="animate-[pulse_3s_infinite]"
             />
-            {/* Outer Rim */}
+
+            {/* Middle Layer (Cyan/Blue) */}
             <path
-                d="M50 90L10 15H90L50 90Z"
-                stroke="url(#logo-grad)"
-                strokeWidth="2"
-                className="group-hover/logo:stroke-white transition-colors duration-700"
+                d="M50 82L15 22H85L50 82Z"
+                stroke="url(#rainbow-2)"
+                strokeWidth="2.5"
+                filter="url(#hyper-glow)"
+                className="animate-[pulse_2.5s_infinite_0.5s]"
             />
-            {/* Inner Core */}
+
+            {/* Inner Layer (Green/Cyan) */}
             <path
-                d="M50 75L30 35H70L50 75Z"
-                fill="url(#logo-grad)"
-                className="group-hover/logo:scale-110 origin-center transition-transform duration-700"
+                d="M50 69L25 34H75L50 69Z"
+                stroke="url(#rainbow-3)"
+                strokeWidth="2.5"
+                filter="url(#hyper-glow)"
+                className="animate-[pulse_2s_infinite_1s]"
+            />
+
+            {/* Core Focal Point */}
+            <path
+                d="M50 56L35 46H65L50 56Z"
+                fill="white"
+                className="opacity-80 animate-pulse"
             />
         </svg>
-        {/* Subtle Bottom Light Reflection */}
-        <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-4 h-1 bg-purple-500/30 blur-md group-hover:bg-cyan-500/50 transition-all duration-700" />
+
+        {/* Reflection light */}
+        <div className="absolute -bottom-2 w-6 h-1 bg-cyan-500/40 blur-xl group-hover/logo:w-10 transition-all duration-700" />
     </div>
 );
 

@@ -1,35 +1,49 @@
-<svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg width="512" height="512" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
     <defs>
-        <filter id="neon-glow" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="3.5" result="coloredBlur" />
-            <feMerge>
-                <feMergeNode in="coloredBlur" />
-                <feMergeNode in="SourceGraphic" />
-            </feMerge>
+        <filter id="hyper-glow" x="-100%" y="-100%" width="300%" height="300%">
+            <feGaussianBlur stdDeviation="4" result="blur" />
+            <feComposite in="SourceGraphic" in2="blur" operator="over" />
         </filter>
-        <linearGradient id="logo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+        
+        <linearGradient id="rainbow-1" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#ff00d4" />
+            <stop offset="100%" stop-color="#bc00ff" />
+        </linearGradient>
+        <linearGradient id="rainbow-2" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" stop-color="#00f2ff" />
-            <stop offset="50%" stop-color="#bc00ff" />
-            <stop offset="100%" stop-color="#ff00d4" />
+            <stop offset="100%" stop-color="#0062ff" />
+        </linearGradient>
+        <linearGradient id="rainbow-3" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#4CAF50" />
+            <stop offset="100%" stop-color="#00f2ff" />
         </linearGradient>
     </defs>
-    {/* Ambient Glow */}
+
+    {/* Infinite Layers */}
     <path 
         d="M50 95L5 10H95L50 95Z" 
-        stroke="url(#logo-grad)" 
-        stroke-width="6" 
-        filter="url(#neon-glow)" 
-        opacity="0.4"
+        stroke="url(#rainbow-1)" 
+        stroke-width="2.5" 
+        filter="url(#hyper-glow)"
     />
-    {/* Outer Rim */}
+    
     <path 
-        d="M50 90L10 15H90L50 90Z" 
-        stroke="url(#logo-grad)" 
-        stroke-width="2" 
+        d="M50 82L15 22H85L50 82Z" 
+        stroke="url(#rainbow-2)" 
+        stroke-width="2.5" 
+        filter="url(#hyper-glow)"
     />
-    {/* Inner Core */}
+    
     <path 
-        d="M50 75L30 35H70L50 75Z" 
-        fill="url(#logo-grad)" 
+        d="M50 69L25 34H75L50 69Z" 
+        stroke="url(#rainbow-3)" 
+        stroke-width="2.5" 
+        filter="url(#hyper-glow)"
+    />
+    
+    <path 
+        d="M50 56L35 46H65L50 56Z" 
+        fill="white" 
+        fill-opacity="0.8"
     />
 </svg>
