@@ -13,7 +13,7 @@ export default function VoidLanding() {
                 </div>
 
                 <div className="relative z-10 text-center max-w-4xl px-6">
-                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-sm text-blue-400 mb-8">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-none bg-blue-500/10 border border-blue-500/20 text-sm text-blue-400 mb-8">
                         <Terminal size={14} />
                         <span>Sovereign AI Environment</span>
                     </div>
@@ -27,10 +27,10 @@ export default function VoidLanding() {
                     </p>
 
                     <div className="flex flex-col md:flex-row items-center justify-center gap-4">
-                        <Link to="/void" className="h-12 px-8 rounded-full bg-blue-600 text-white font-bold hover:bg-blue-500 transition-colors flex items-center gap-2 shadow-lg shadow-blue-500/20">
+                        <Link to="/void" className="h-12 px-8 rounded-none bg-blue-600 text-white font-bold hover:bg-blue-500 transition-colors flex items-center gap-2 shadow-lg shadow-blue-500/20">
                             Launch Void <ArrowRight size={16} />
                         </Link>
-                        <Link to="/pricing" className="h-12 px-8 rounded-full bg-black border border-[#333] text-white hover:bg-[#111] transition-colors flex items-center justify-center">
+                        <Link to="/pricing" className="h-12 px-8 rounded-none bg-black border border-[#333] text-white hover:bg-[#111] transition-colors flex items-center justify-center">
                             View Pricing
                         </Link>
                     </div>
@@ -40,21 +40,21 @@ export default function VoidLanding() {
             {/* Features Section */}
             <section className="py-24 bg-black">
                 <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-12">
-                    <div className="p-8 border border-[#222] rounded-2xl bg-[#050505] hover:border-blue-500/30 transition-colors">
+                    <div className="p-8 border border-[#222] rounded-none bg-[#050505] hover:border-blue-500/30 transition-colors">
                         <Terminal className="mb-6 text-blue-500" size={32} />
                         <h3 className="text-xl font-bold mb-3">Intelligent CLI</h3>
                         <p className="text-zinc-500">
                             Spoon CLI understands your intent. "spoon deploy production" is all you need to say.
                         </p>
                     </div>
-                    <div className="p-8 border border-[#222] rounded-2xl bg-[#050505] hover:border-blue-500/30 transition-colors">
+                    <div className="p-8 border border-[#222] rounded-none bg-[#050505] hover:border-blue-500/30 transition-colors">
                         <Cpu className="mb-6 text-blue-500" size={32} />
                         <h3 className="text-xl font-bold mb-3">Neural Code Gen</h3>
                         <p className="text-zinc-500">
                             Built-in LLMs predict your next move, generating boilerplate, tests, and documentation in real-time.
                         </p>
                     </div>
-                    <div className="p-8 border border-[#222] rounded-2xl bg-[#050505] hover:border-blue-500/30 transition-colors">
+                    <div className="p-8 border border-[#222] rounded-none bg-[#050505] hover:border-blue-500/30 transition-colors">
                         <Layout className="mb-6 text-blue-500" size={32} />
                         <h3 className="text-xl font-bold mb-3">Visual Workbench</h3>
                         <p className="text-zinc-500">
