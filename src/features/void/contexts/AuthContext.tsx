@@ -17,6 +17,8 @@ interface AuthState {
   syncStatus: SyncStatus;
   lastSyncTime: string | null;
   agentOnline: boolean;
+  githubUser: any | null;
+  isGithubConnected: boolean;
 }
 
 interface AuthContextType extends AuthState {
@@ -37,6 +39,7 @@ export const AuthContext = createContext<AuthContextType | null>(null);
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
+  const [githubUser, setGithubUser] = useState<any | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [syncStatus, setSyncStatus] = useState<SyncStatus>(SyncStatus.IDLE);
   const [lastSyncTime, setLastSyncTime] = useState<string | null>(localStorage.getItem('opendev_last_sync'));
@@ -88,6 +91,31 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       clearInterval(agentInterval);
     };
   }, [checkLocalAgent]);
+
+  // Fetch GitHub profile when token is available
+  useEffect(() => {
+    const fetchGitHubProfile = async () => {
+      if (!token) {
+        setGithubUser(null);
+        return;
+      }
+      try {
+        const response = await fetch('https://api.github.com/user', {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        if (response.ok) {
+          const data = await response.json();
+          setGithubUser(data);
+          console.log("✅ GitHub Profile Fetched:", data.login);
+        }
+      } catch (e) {
+        console.error("Failed to fetch GitHub profile:", e);
+      }
+    };
+    fetchGitHubProfile();
+  }, [token]);
+
+  const isGithubConnected = !!token && !!user?.providers?.includes('github.com');
 
   const loginWithGitHub = useCallback(async () => {
     try {
@@ -306,6 +334,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       syncStatus,
       lastSyncTime,
       agentOnline,
+      githubUser,
+      isGithubConnected,
       loginWithGitHub,
       loginWithGoogle,
       linkGithub,
