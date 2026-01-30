@@ -177,7 +177,7 @@ export default function Home() {
                                     <span className="text-zinc-700">registry:</span>
                                     <span className="text-zinc-300">spoon protocol push --fidelity=max</span>
                                 </div>
-                                <div className="mt-8 p-6 rounded-2xl bg-zinc-900/30 border border-zinc-900">
+                                <div className="mt-8 p-6 rounded-none bg-zinc-900/30 border border-zinc-900">
                                     <div className="text-zinc-500 text-[10px] font-bold uppercase tracking-widest mb-2">Protocol Status</div>
                                     <div className="text-white font-bold tracking-tighter text-lg leading-tight">Uplink established. <br />Environment live at <span className="text-blue-500 underline underline-offset-4 decoration-zinc-800">opendev.app/nexus</span></div>
                                 </div>
