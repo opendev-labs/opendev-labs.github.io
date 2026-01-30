@@ -21,29 +21,29 @@
 
     {/* Infinite Layers */}
     <path 
-        d="M50 95L5 10H95L50 95Z" 
+        d="M10 25H90L50 90L10 25Z" 
         stroke="url(#rainbow-1)" 
         stroke-width="2.5" 
         filter="url(#hyper-glow)"
     />
     
     <path 
-        d="M50 82L15 22H85L50 82Z" 
+        d="M22.5 35H77.5L50 80L22.5 35Z" 
         stroke="url(#rainbow-2)" 
         stroke-width="2.5" 
         filter="url(#hyper-glow)"
     />
     
     <path 
-        d="M50 69L25 34H75L50 69Z" 
+        d="M35 45H65L50 70L35 45Z" 
         stroke="url(#rainbow-3)" 
         stroke-width="2.5" 
         filter="url(#hyper-glow)"
     />
     
     <path 
-        d="M50 56L35 46H65L50 56Z" 
-        fill="white" 
-        fill-opacity="0.8"
+        d="M42.5 52.5H57.5L50 65L42.5 52.5Z" 
+        stroke="white" 
+        stroke-width="1.5"
     />
 </svg>

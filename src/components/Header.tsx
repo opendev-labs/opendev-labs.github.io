@@ -13,14 +13,13 @@ import { Button } from './ui/Button';
 /* --- LOGO --- */
 const Logo = () => (
     <div className="relative group/logo flex items-center justify-center">
-        <svg width="32" height="32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="transition-transform duration-1000 ease-in-out">
+        <svg width="34" height="34" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="transition-transform duration-1000 ease-in-out">
             <defs>
                 <filter id="hyper-glow" x="-100%" y="-100%" width="300%" height="300%">
                     <feGaussianBlur stdDeviation="4" result="blur" />
                     <feComposite in="SourceGraphic" in2="blur" operator="over" />
                 </filter>
 
-                {/* Rainbow Gradients matching bg.png */}
                 <linearGradient id="rainbow-1" x1="0%" y1="0%" x2="100%" y2="0%">
                     <stop offset="0%" stopColor="#ff00d4" />
                     <stop offset="100%" stopColor="#bc00ff" />
@@ -35,39 +34,40 @@ const Logo = () => (
                 </linearGradient>
             </defs>
 
-            {/* Infinite Layers */}
-            {/* Outer Layer (Pink/Purple) */}
+            {/* Infinite Staggered Layers */}
+            {/* Outer Layer */}
             <path
-                d="M50 95L5 10H95L50 95Z"
+                d="M10 25H90L50 90L10 25Z"
                 stroke="url(#rainbow-1)"
-                strokeWidth="2.5"
+                strokeWidth="2"
                 filter="url(#hyper-glow)"
-                className="animate-[pulse_3s_infinite]"
+                className="animate-[pulse_4s_infinite]"
             />
 
-            {/* Middle Layer (Cyan/Blue) */}
+            {/* Middle Layer */}
             <path
-                d="M50 82L15 22H85L50 82Z"
+                d="M22.5 35H77.5L50 80L22.5 35Z"
                 stroke="url(#rainbow-2)"
-                strokeWidth="2.5"
+                strokeWidth="2"
                 filter="url(#hyper-glow)"
-                className="animate-[pulse_2.5s_infinite_0.5s]"
+                className="animate-[pulse_3s_infinite_0.5s]"
             />
 
-            {/* Inner Layer (Green/Cyan) */}
+            {/* Inner Layer */}
             <path
-                d="M50 69L25 34H75L50 69Z"
+                d="M35 45H65L50 70L35 45Z"
                 stroke="url(#rainbow-3)"
-                strokeWidth="2.5"
+                strokeWidth="2"
                 filter="url(#hyper-glow)"
                 className="animate-[pulse_2s_infinite_1s]"
             />
 
-            {/* Core Focal Point */}
+            {/* The Perfect Central Hole - No fill, solid white stroke for edge definition */}
             <path
-                d="M50 56L35 46H65L50 56Z"
-                fill="white"
-                className="opacity-80 animate-pulse"
+                d="M42.5 52.5H57.5L50 65L42.5 52.5Z"
+                stroke="white"
+                strokeWidth="1.5"
+                className="opacity-60 animate-pulse"
             />
         </svg>
 
