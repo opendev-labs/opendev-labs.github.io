@@ -12,8 +12,8 @@ import { Button } from './ui/Button';
 
 /* --- LOGO --- */
 const Logo = () => (
-    <div className="relative group/logo flex items-center justify-center">
-        <svg width="34" height="34" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="transition-transform duration-1000 ease-in-out">
+    <div className="relative group/logo flex items-center justify-center cursor-pointer">
+        <svg width="34" height="34" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="transition-all duration-700 group-hover/logo:animate-rainbow-disco">
             <defs>
                 <filter id="hyper-glow" x="-100%" y="-100%" width="300%" height="300%">
                     <feGaussianBlur stdDeviation="4" result="blur" />
@@ -34,45 +34,26 @@ const Logo = () => (
                 </linearGradient>
             </defs>
 
-            {/* Infinite Staggered Layers */}
-            {/* Outer Layer */}
-            <path
-                d="M10 25H90L50 90L10 25Z"
-                stroke="url(#rainbow-1)"
-                strokeWidth="2"
-                filter="url(#hyper-glow)"
-                className="animate-[pulse_4s_infinite]"
-            />
+            {/* Static Base Content */}
+            <path d="M10 25H90L50 90L10 25Z" stroke="url(#rainbow-1)" strokeWidth="2" filter="url(#hyper-glow)" className="opacity-40" />
 
-            {/* Middle Layer */}
-            <path
-                d="M22.5 35H77.5L50 80L22.5 35Z"
-                stroke="url(#rainbow-2)"
-                strokeWidth="2"
-                filter="url(#hyper-glow)"
-                className="animate-[pulse_3s_infinite_0.5s]"
-            />
+            {/* Hover Tunnel Effect Layers */}
+            <g className="opacity-0 group-hover/logo:opacity-100 transition-opacity duration-300">
+                <path d="M10 25H90L50 90L10 25Z" stroke="url(#rainbow-1)" strokeWidth="1" className="animate-tunnel origin-center [animation-delay:-0s]" />
+                <path d="M10 25H90L50 90L10 25Z" stroke="url(#rainbow-2)" strokeWidth="1" className="animate-tunnel origin-center [animation-delay:-0.5s]" />
+                <path d="M10 25H90L50 90L10 25Z" stroke="url(#rainbow-3)" strokeWidth="1" className="animate-tunnel origin-center [animation-delay:-1s]" />
+                <path d="M10 25H90L50 90L10 25Z" stroke="white" strokeWidth="0.5" className="animate-tunnel origin-center [animation-delay:-1.5s]" />
+            </g>
 
-            {/* Inner Layer */}
-            <path
-                d="M35 45H65L50 70L35 45Z"
-                stroke="url(#rainbow-3)"
-                strokeWidth="2"
-                filter="url(#hyper-glow)"
-                className="animate-[pulse_2s_infinite_1s]"
-            />
-
-            {/* The Perfect Central Hole - No fill, solid white stroke for edge definition */}
-            <path
-                d="M42.5 52.5H57.5L50 65L42.5 52.5Z"
-                stroke="white"
-                strokeWidth="1.5"
-                className="opacity-60 animate-pulse"
-            />
+            {/* Refined Nested Layers */}
+            <path d="M10 25H90L50 90L10 25Z" stroke="url(#rainbow-1)" strokeWidth="2" filter="url(#hyper-glow)" className="animate-[pulse_4s_infinite]" />
+            <path d="M22.5 35H77.5L50 80L22.5 35Z" stroke="url(#rainbow-2)" strokeWidth="2" filter="url(#hyper-glow)" className="animate-[pulse_3s_infinite_0.5s]" />
+            <path d="M35 45H65L50 70L35 45Z" stroke="url(#rainbow-3)" strokeWidth="2" filter="url(#hyper-glow)" className="animate-[pulse_2s_infinite_1s]" />
+            <path d="M42.5 52.5H57.5L50 65L42.5 52.5Z" stroke="white" strokeWidth="1.5" className="opacity-60 animate-pulse" />
         </svg>
 
         {/* Reflection light */}
-        <div className="absolute -bottom-2 w-6 h-1 bg-cyan-500/40 blur-xl group-hover/logo:w-10 transition-all duration-700" />
+        <div className="absolute -bottom-2 w-6 h-1 bg-cyan-500/40 blur-xl group-hover/logo:w-12 group-hover/logo:bg-purple-500/60 transition-all duration-700" />
     </div>
 );
 
