@@ -43,14 +43,14 @@ export const ProductPageTemplate: React.FC<ProductPageProps> = ({
             {/* Hero Section */}
             <section className="relative min-h-[70vh] flex flex-col items-center justify-center pt-20 overflow-hidden border-b border-zinc-900">
                 <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none opacity-20">
-                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-zinc-800/10 blur-[120px] rounded-full" />
+                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-zinc-800/10 blur-[120px]" />
                 </div>
 
                 <div className="relative z-10 text-center max-w-4xl px-6">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-[10px] font-bold text-zinc-400 mb-8 uppercase tracking-widest"
+                        className="inline-flex items-center gap-2 px-3 py-1 rounded-none bg-zinc-900 border border-zinc-800 text-[10px] font-bold text-zinc-400 mb-8 uppercase tracking-widest"
                     >
                         <BadgeIcon size={14} className="text-zinc-500" />
                         <span>{badge}</span>
@@ -93,7 +93,7 @@ export const ProductPageTemplate: React.FC<ProductPageProps> = ({
             {/* Features Grid */}
             <section className="py-32 relative overflow-hidden bg-black border-b border-zinc-900">
                 <div className="max-w-[1200px] mx-auto px-6">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-1 ring-1 ring-zinc-900 rounded-3xl overflow-hidden">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-1 ring-1 ring-zinc-900 rounded-none overflow-hidden">
                         {features.map((feature, i) => (
                             <div key={i} className="group p-12 border border-zinc-900/50 transition-all hover:bg-zinc-950 duration-500">
                                 <feature.icon className="mb-8 text-white transition-transform group-hover:scale-110" size={20} />
@@ -121,7 +121,7 @@ export const ProductPageTemplate: React.FC<ProductPageProps> = ({
                         <div className="space-y-10">
                             {performanceMetrics.map((metric, i) => (
                                 <div key={i} className="flex gap-6 group">
-                                    <div className="w-12 h-12 bg-zinc-900 border border-zinc-800 rounded-xl flex items-center justify-center shrink-0 group-hover:border-zinc-700 transition-colors">
+                                    <div className="w-12 h-12 bg-zinc-900 border border-zinc-800 rounded-none flex items-center justify-center shrink-0 group-hover:border-zinc-700 transition-colors">
                                         <metric.icon size={20} className="text-white" />
                                     </div>
                                     <div>
@@ -137,7 +137,7 @@ export const ProductPageTemplate: React.FC<ProductPageProps> = ({
 
                     {codeSnippet && (
                         <Card glass className="p-1">
-                            <div className="bg-black rounded-[30px] p-10 border border-zinc-900/50 shadow-2xl overflow-hidden min-h-[400px] flex flex-col justify-center">
+                            <div className="bg-black rounded-none p-10 border border-zinc-900/50 shadow-2xl overflow-hidden min-h-[400px] flex flex-col justify-center">
                                 <div className="font-mono text-[13px] leading-relaxed select-all">
                                     {codeSnippet}
                                 </div>

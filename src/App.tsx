@@ -19,6 +19,7 @@ import NexusDashboard from './pages/NexusDashboard';
 import { Navigate } from 'react-router-dom';
 
 const VoidApp = lazy(() => import('./features/void/VoidApp'));
+const OfficeDashboard = lazy(() => import('./pages/OfficeDashboard').then(m => ({ default: m.OfficeDashboard })));
 const LazyAuthPage = lazy(() => import('./features/void/components/pages/AuthPage').then(m => ({ default: m.AuthPage })));
 const LazyVerifyEmailPage = lazy(() => import('./features/void/components/pages/VerifyEmailPage').then(m => ({ default: m.VerifyEmailPage })));
 
@@ -28,59 +29,31 @@ const AppRoutes = () => {
     <>
       <ScrollToTop />
       <Routes>
-        <Route path="/void/*" element={
+        <Route path="office/*" element={
+          <Suspense fallback={<div className="min-h-screen bg-black flex items-center justify-center text-white font-bold uppercase tracking-[0.3em]">Opening Office...</div>}>
+            <OfficeDashboard />
+          </Suspense>
+        } />
+        <Route path="void/*" element={
           <Suspense fallback={<div className="min-h-screen bg-black flex items-center justify-center text-white">Loading Void...</div>}>
             <VoidApp />
           </Suspense>
         } />
+        <Route path="dashboard" element={<Navigate to="/office" replace />} />
+        <Route path="*" element={<Placeholder title="404 - Not Found" />} />
+      </Route>
 
-        <Route path="/" element={<Layout />}>
-          <Route index element={<Home />} />
-          <Route path="products" element={<Products />} />
-          <Route path="overview/void" element={<VoidLanding />} />
-          <Route path="overview/lamadb" element={<LamaDB />} />
-          <Route path="lamadb" element={
-            <Suspense fallback={<div className="min-h-screen bg-black flex items-center justify-center text-white">Loading LamaDB...</div>}>
-              {/* For now, LamaDB can use its landing page at the root route or we can point to a dashboard */}
-              <LamaDB />
-            </Suspense>
-          } />
-          <Route path="q-cloud" element={<QCloud />} />
-          <Route path="syncstack" element={<SyncStack />} />
-          <Route path="engine" element={<Product />} />
-          <Route path="quantum" element={<Placeholder title="Project Quantum" />} />
-          <Route path="transcender" element={<Placeholder title="Transcender" />} />
-          <Route path="co-writer" element={<Placeholder title="Co-Writer" />} />
-          <Route path="agentbash" element={<Placeholder title="AgentBash" />} />
-          <Route path="spoon" element={<Spoon />} />
-          <Route path="product" element={
-            <Suspense fallback={<div className="min-h-screen bg-black flex items-center justify-center text-white">Loading Product Engine...</div>}>
-              <VoidApp />
-            </Suspense>
-          } />
-          <Route path="spoon/auth" element={<Navigate to="/auth" replace />} />
-          <Route path="cli" element={<Placeholder title="Spoon-CLI" />} />
-          <Route path="solutions" element={<Placeholder title="Solutions" />} />
-          <Route path="resources" element={<Placeholder title="Resources" />} />
-          <Route path="enterprise" element={<Placeholder title="Enterprise" />} />
-          <Route path="pricing" element={<Placeholder title="Pricing" />} />
-          <Route path="contact" element={<Contact />} />
-          <Route path="changelog" element={<Changelog />} />
-          <Route path="dashboard" element={<Navigate to="/void" replace />} />
-          <Route path="*" element={<Placeholder title="404 - Not Found" />} />
-        </Route>
-
-        <Route path="auth" element={
-          <Suspense fallback={<div className="min-h-screen bg-black" />}>
-            <LazyAuthPage />
-          </Suspense>
-        } />
-        <Route path="verify-email" element={
-          <Suspense fallback={<div className="min-h-screen bg-black" />}>
-            <LazyVerifyEmailPage />
-          </Suspense>
-        } />
-      </Routes>
+      <Route path="auth" element={
+        <Suspense fallback={<div className="min-h-screen bg-black" />}>
+          <LazyAuthPage />
+        </Suspense>
+      } />
+      <Route path="verify-email" element={
+        <Suspense fallback={<div className="min-h-screen bg-black" />}>
+          <LazyVerifyEmailPage />
+        </Suspense>
+      } />
+    </Routes >
     </>
   );
 }

@@ -20,17 +20,15 @@ export const safeNavigate = (path: string) => {
     // Standardize path to ensure it's a valid relative URL
     const cleanPath = path.startsWith('/') ? path : `/${path}`;
 
+    // For the new Office Hub integration, we want to ensure we stay within the React Router context.
+    // We dispatch a custom event that can be caught globally if needed, 
+    // but the most reliable way for this specific architecture is a direct pushState + popstate.
+
     if (checkHistoryApiAccess()) {
-        const currentPath = window.location.pathname;
-        if (currentPath !== cleanPath) {
-            history.pushState(null, '', cleanPath);
-        }
-        // Dispatch popstate to ensure standard listeners react
+        window.history.pushState(null, '', cleanPath);
         window.dispatchEvent(new PopStateEvent('popstate'));
     } else {
-        window.dispatchEvent(new CustomEvent(MEMORY_ROUTE_CHANGE_EVENT, {
-            detail: { path: cleanPath }
-        }));
+        window.location.href = cleanPath;
     }
 };
 
