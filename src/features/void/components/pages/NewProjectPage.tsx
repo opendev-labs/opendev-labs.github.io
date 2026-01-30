@@ -122,11 +122,7 @@ const ConnectedRepoView: React.FC<{
         const loadRepos = async () => {
             if (provider === 'GitHub') {
                 const data = await fetchRepositories();
-                if (data.length > 0) {
-                    setRepos(data);
-                } else {
-                    setRepos(mockRepositories[provider]);
-                }
+                setRepos(data);
             } else {
                 setRepos(mockRepositories[provider]);
             }
@@ -139,6 +135,17 @@ const ConnectedRepoView: React.FC<{
         GitHub: <GitHubIcon />,
         GitLab: <GitLabIcon />,
         Bitbucket: <BitbucketIcon />,
+    };
+
+    const handleRefresh = async () => {
+        setLoading(true);
+        if (provider === 'GitHub') {
+            const data = await fetchRepositories();
+            setRepos(data);
+        } else {
+            setRepos(mockRepositories[provider]);
+        }
+        setLoading(false);
     };
 
     return (
@@ -168,7 +175,7 @@ const ConnectedRepoView: React.FC<{
                     <p className="text-[10px] font-bold uppercase tracking-[0.2em]">Synchronizing Nodes...</p>
                 </div>
             ) : (
-                <RepoList repos={repos} onImport={onImport} />
+                <RepoList repos={repos} onImport={onImport} onRefresh={handleRefresh} />
             )}
         </MotionDiv>
     );
@@ -201,8 +208,9 @@ const GitProviderButton: React.FC<{
 
 const RepoList: React.FC<{
     repos: Repository[],
-    onImport: (repo: Repository, projectName: string) => void
-}> = ({ repos, onImport }) => {
+    onImport: (repo: Repository, projectName: string) => void,
+    onRefresh: () => void
+}> = ({ repos, onImport, onRefresh }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [configuringRepoId, setConfiguringRepoId] = useState<string | null>(null);
 
@@ -263,7 +271,13 @@ const RepoList: React.FC<{
                 {filteredRepos.length === 0 && (
                     <div className="text-center py-20 text-zinc-600 flex flex-col items-center">
                         <SearchIcon className="w-10 h-10 mb-4 opacity-20" />
-                        <p className="text-xs font-bold uppercase tracking-[0.2em]">No Nodes Found</p>
+                        <p className="text-xs font-bold uppercase tracking-[0.2em] mb-4">No Nodes Found</p>
+                        <button
+                            onClick={onRefresh}
+                            className="px-4 py-2 bg-zinc-900 border border-zinc-800 text-[10px] font-bold uppercase tracking-widest text-zinc-400 hover:text-white hover:bg-zinc-800 transition-all rounded-none"
+                        >
+                            Sync Nodes
+                        </button>
                     </div>
                 )}
             </div>
@@ -279,8 +293,12 @@ export const NewProjectPage: React.FC<NewProjectPageProps> = ({
     setConnectedProvider
 }) => {
     const [activeView, setActiveView] = useState<'import' | 'template' | 'workflow' | 'none'>('none');
+    const { loginWithGitHub } = useAuth();
 
-    const handleConnect = (provider: GitProvider) => {
+    const handleConnect = async (provider: GitProvider) => {
+        if (provider === 'GitHub') {
+            await loginWithGitHub();
+        }
         setConnectedProvider(provider);
     };
 

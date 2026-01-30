@@ -35,7 +35,7 @@ export const HomePage: React.FC = () => {
                         transition={{ duration: 0.8 }}
                         className="max-w-4xl mx-auto"
                     >
-                        <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-[10px] font-bold tracking-[0.2em] uppercase text-zinc-400 mb-8 select-none">
+                        <span className="inline-flex items-center gap-2 px-3 py-1 rounded-none bg-zinc-900 border border-zinc-800 text-[10px] font-bold tracking-[0.2em] uppercase text-zinc-400 mb-8 select-none">
                             <div className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
                             Next-Generation Neural Infrastructure
                         </span>
@@ -51,14 +51,14 @@ export const HomePage: React.FC = () => {
 
                         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                             <Link
-                                to="/void/signup"
-                                className="w-full sm:w-auto h-12 px-10 rounded-full bg-white text-black text-sm font-bold hover:bg-zinc-200 transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-2"
+                                to="/auth?mode=signup"
+                                className="w-full sm:w-auto h-12 px-10 rounded-none bg-white text-black text-sm font-bold hover:bg-zinc-200 transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-2"
                             >
                                 Start Building <ArrowRightIcon className="w-4 h-4" />
                             </Link>
                             <Link
                                 to="/void/docs"
-                                className="w-full sm:w-auto h-12 px-10 rounded-full bg-black border border-zinc-800 text-white text-sm font-bold hover:bg-zinc-900 transition-all flex items-center justify-center"
+                                className="w-full sm:w-auto h-12 px-10 rounded-none bg-black border border-zinc-800 text-white text-sm font-bold hover:bg-zinc-900 transition-all flex items-center justify-center"
                             >
                                 Documentation
                             </Link>
