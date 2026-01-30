@@ -17,6 +17,7 @@ import Spoon from './pages/Spoon';
 import Product from './pages/Product';
 import NexusDashboard from './pages/NexusDashboard';
 import { Navigate } from 'react-router-dom';
+import { Preloader } from './components/Preloader';
 
 const VoidApp = lazy(() => import('./features/void/VoidApp'));
 const OfficeDashboard = lazy(() => import('./pages/OfficeDashboard').then(m => ({ default: m.OfficeDashboard })));
@@ -74,6 +75,7 @@ export default function App() {
   return (
     <AuthProvider>
       <ErrorBoundary>
+        <Preloader />
         <BrowserRouter>
           <AppRoutes />
         </BrowserRouter>
