@@ -55,7 +55,15 @@ const AppRoutes = () => {
             </Suspense>
           } />
           <Route path="dashboard" element={<Navigate to="/office" replace />} />
-          <Route path="*" element={<Placeholder title="404 - Not Found" />} />
+
+          {/* Product Pages */}
+          <Route path="lamadb" element={<LamaDB />} />
+          <Route path="q-cloud" element={<QCloud />} />
+          <Route path="syncstack" element={<SyncStack />} />
+          <Route path="spoon" element={<Spoon />} />
+          <Route path="products" element={<Products />} />
+          <Route path="changelog" element={<Changelog />} />
+          <Route path="product/:slug" element={<Product />} />
         </Route>
       </Routes>
     </>
