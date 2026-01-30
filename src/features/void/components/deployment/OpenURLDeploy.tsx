@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Globe, Check, Loader, ArrowRight, Github, Zap } from 'lucide-react';
 import { Button } from '../../../../components/ui/Button';
-import { useAuth } from '../../../../contexts/AuthContext';
+import { useAuth } from '../../hooks/useAuth';
 
 interface OpenURLDeployProps {
     repoName: string;

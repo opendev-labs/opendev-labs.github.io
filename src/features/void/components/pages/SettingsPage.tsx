@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { User, Shield, CreditCard, Key, Settings, Github, Save } from 'lucide-react';
 import { Button } from '../../../../components/ui/Button';
-import { useAuth } from '../../../../contexts/AuthContext';
+import { useAuth } from '../../hooks/useAuth';
 
 type SettingsTab = 'general' | 'team' | 'billing' | 'tokens';
 

@@ -44,10 +44,12 @@ const AppContent: React.FC = () => {
     // Fetch User-Scoped Projects from LamaDB
     useEffect(() => {
         const fetchProjects = async () => {
-            if (!isAuthenticated) return;
+            if (!isAuthenticated || !user) return;
 
             try {
-                const userProjects = await LamaDB.store.collection('projects').get() as Project[];
+                // Stateless API: requires user context
+                const userContext = { uid: user.email, email: user.email };
+                const userProjects = await LamaDB.store.collection('projects', userContext).get() as Project[];
                 if (userProjects.length > 0) {
                     setProjects(userProjects.sort((a, b) => new Date(b.lastUpdated).getTime() - new Date(a.lastUpdated).getTime()));
                 } else {
@@ -140,8 +142,9 @@ const AppContent: React.FC = () => {
         };
 
         // Write to LamaDB (User Scoped)
-        if (isAuthenticated) {
-            await LamaDB.store.collection('projects').add(newProject);
+        if (isAuthenticated && user) {
+            const userContext = { uid: user.email, email: user.email };
+            await LamaDB.store.collection('projects', userContext).add(newProject);
         }
 
         setProjects(prev => [newProject, ...prev]);
