@@ -21,6 +21,7 @@ import { useAuth } from './hooks/useAuth';
 import { GlobalLoader } from './components/common/GlobalLoader';
 import { StatusFooter } from './components/common/StatusFooter';
 import { CLIPage } from './components/pages/CLIPage';
+import { SettingsPage } from './components/pages/SettingsPage';
 import { GitHubCallbackHandler } from './components/auth/GitHubCallbackHandler';
 import { DeploymentPage } from './components/pages/DeploymentPage';
 import { REAL_TEMPLATES } from './real_templates';
@@ -93,7 +94,7 @@ const AppContent: React.FC = () => {
             branch: 'main',
             timestamp: new Date().toISOString(),
             status: DeploymentStatus.QUEUED,
-            url: `https://${urlFriendlyName}.opendev.app`,
+            url: `https://${urlFriendlyName}.void.app`,
         };
 
         const newProject: Project = {
@@ -102,7 +103,7 @@ const AppContent: React.FC = () => {
             framework: template.framework,
             lastUpdated: 'Just now',
             deployments: [newDeployment],
-            domains: [{ name: `https://${urlFriendlyName}.opendev.app`, isPrimary: true }],
+            domains: [{ name: `https://${urlFriendlyName}.void.app`, isPrimary: true }],
             envVars: {},
             ...generateInitialProjectData(),
         };
@@ -119,7 +120,7 @@ const AppContent: React.FC = () => {
             branch: 'main',
             timestamp: new Date().toISOString(),
             status: DeploymentStatus.QUEUED,
-            url: `https://${urlFriendlyName}.opendev.app`,
+            url: `https://${urlFriendlyName}.void.app`,
         };
 
         const newProject: Project = {
@@ -128,7 +129,7 @@ const AppContent: React.FC = () => {
             framework: 'Node.js',
             lastUpdated: 'Just now',
             deployments: [newDeployment],
-            domains: [{ name: `https://${urlFriendlyName}.opendev.app`, isPrimary: true }],
+            domains: [{ name: `https://${urlFriendlyName}.void.app`, isPrimary: true }],
             envVars: {},
             ...generateInitialProjectData(),
         };
@@ -145,7 +146,7 @@ const AppContent: React.FC = () => {
             branch: 'main',
             timestamp: new Date().toISOString(),
             status: DeploymentStatus.QUEUED,
-            url: `https://${urlFriendlyName}.opendev.app`,
+            url: `https://${urlFriendlyName}.void.app`,
         };
 
         const frameworkComponent = workflow.components.find(c => c.type === 'framework');
@@ -156,7 +157,7 @@ const AppContent: React.FC = () => {
             framework: frameworkComponent?.name || 'Workflow',
             lastUpdated: 'Just now',
             deployments: [newDeployment],
-            domains: [{ name: `https://${urlFriendlyName}.opendev.app`, isPrimary: true }],
+            domains: [{ name: `https://${urlFriendlyName}.void.app`, isPrimary: true }],
             envVars: {},
             ...generateInitialProjectData(),
             storage: [],
@@ -222,6 +223,7 @@ const AppContent: React.FC = () => {
                             <Route path="pricing" element={<PricingPage />} />
                             <Route path="upgrade" element={<UpgradePage />} />
                             <Route path="usage" element={<UsagePage />} />
+                            <Route path="settings" element={<SettingsPage />} />
                             <Route path="cli" element={<CLIPage projects={projects} onUpdateProject={handleUpdateProject} />} />
                             <Route path="*" element={<NotFoundPage />} />
                         </Routes>
