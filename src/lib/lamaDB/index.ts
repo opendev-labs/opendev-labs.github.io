@@ -1,7 +1,74 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics, logEvent } from "firebase/analytics";
-import { getAuth, GoogleAuthProvider, GithubAuthProvider, signInWithPopup, signOut, onAuthStateChanged, User, fetchSignInMethodsForEmail, linkWithCredential, OAuthProvider, linkWithPopup } from "firebase/auth";
+import { getAuth, GoogleAuthProvider, GithubAuthProvider, signInWithPopup, signOut, onAuthStateChanged, User, fetchSignInMethodsForEmail, linkWithCredential, OAuthProvider, linkWithPopup, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, sendEmailVerification } from "firebase/auth";
 import { getFirestore, collection, addDoc, getDocs, query, where, doc, setDoc, updateDoc, deleteDoc } from "firebase/firestore";
+
+/**
+ * Enterprise-Grade Error Logging & Categorization
+ */
+interface ErrorContext {
+    method: string;
+    userId?: string;
+    email?: string;
+    provider?: string;
+    timestamp: string;
+}
+
+class ErrorLogger {
+    private static errors: any[] = [];
+
+    static log(error: any, context: ErrorContext) {
+        const errorEntry = {
+            ...context,
+            errorCode: error.code || 'UNKNOWN',
+            errorMessage: error.message || 'Unknown error',
+            stack: error.stack,
+            timestamp: new Date().toISOString()
+        };
+
+        this.errors.push(errorEntry);
+
+        // Detailed console logging
+        console.group(`🔴 LamaDB Error: ${context.method}`);
+        console.error('Error Code:', errorEntry.errorCode);
+        console.error('Message:', errorEntry.errorMessage);
+        console.error('Context:', context);
+        if (error.customData) console.error('Custom Data:', error.customData);
+        console.error('Full Error:', error);
+        console.groupEnd();
+
+        // Send to analytics if available
+        if (analytics) {
+            logEvent(analytics, 'auth_error', {
+                error_code: errorEntry.errorCode,
+                method: context.method
+            });
+        }
+
+        return errorEntry;
+    }
+
+    static getUserFriendlyMessage(errorCode: string): string {
+        const messages: { [key: string]: string } = {
+            'auth/email-already-in-use': 'This email is already registered. Try signing in instead.',
+            'auth/invalid-email': 'Please enter a valid email address.',
+            'auth/weak-password': 'Password should be at least 6 characters.',
+            'auth/user-not-found': 'No account found with this email.',
+            'auth/wrong-password': 'Incorrect password. Please try again.',
+            'auth/too-many-requests': 'Too many failed attempts. Please try again later.',
+            'auth/network-request-failed': 'Network error. Please check your internet connection.',
+            'auth/popup-closed-by-user': 'Sign-in popup was closed. Please try again.',
+            'auth/unauthorized-domain': 'This domain is not authorized. Please contact support.',
+            'auth/invalid-api-key': 'Firebase configuration error. Please contact support.',
+        };
+
+        return messages[errorCode] || `Authentication error: ${errorCode}`;
+    }
+
+    static getErrors() {
+        return this.errors;
+    }
+}
 
 /**
  * Nexus Registry Strategy:
@@ -241,6 +308,162 @@ export class LamaAuth {
         }
     }
 
+    // ==========================================
+    // EMAIL/PASSWORD AUTHENTICATION (Enterprise Fallback)
+    // ==========================================
+
+    /**
+     * Sign up with email and password
+     * @returns UserCredential with newly created user
+     */
+    static async signUpWithEmail(email: string, password: string, displayName?: string) {
+        const context: ErrorContext = {
+            method: 'signUpWithEmail',
+            email,
+            timestamp: new Date().toISOString()
+        };
+
+        if (isSimulationMode) {
+            console.log(`SIMULATION: Creating account for ${email}`);
+            const mockUser = {
+                user: {
+                    displayName: displayName || email.split('@')[0],
+                    email,
+                    uid: `sim_${Date.now()}`,
+                    emailVerified: false
+                }
+            };
+            localStorage.setItem('nexus_sim_user', JSON.stringify(mockUser.user));
+            return mockUser as any;
+        }
+
+        if (!auth) {
+            const error = new Error("Firebase Auth not initialized");
+            ErrorLogger.log(error, context);
+            throw error;
+        }
+
+        try {
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+
+            // Send email verification
+            if (userCredential.user) {
+                await sendEmailVerification(userCredential.user);
+                console.log("✅ Verification email sent to:", email);
+            }
+
+            console.log("✅ Account created successfully:", email);
+            logEvent(analytics, 'sign_up', { method: 'email' });
+
+            return userCredential;
+        } catch (error: any) {
+            ErrorLogger.log(error, context);
+            throw new Error(ErrorLogger.getUserFriendlyMessage(error.code));
+        }
+    }
+
+    /**
+     * Sign in with email and password
+     * @returns UserCredential
+     */
+    static async signInWithEmail(email: string, password: string) {
+        const context: ErrorContext = {
+            method: 'signInWithEmail',
+            email,
+            timestamp: new Date().toISOString()
+        };
+
+        if (isSimulationMode) {
+            console.log(`SIMULATION: Signing in as ${email}`);
+            const stored = localStorage.getItem('nexus_sim_user');
+            if (stored) {
+                return { user: JSON.parse(stored) } as any;
+            }
+            const mockUser = {
+                user: {
+                    displayName: email.split('@')[0],
+                    email,
+                    uid: `sim_${Date.now()}`,
+                    emailVerified: false
+                }
+            };
+            localStorage.setItem('nexus_sim_user', JSON.stringify(mockUser.user));
+            return mockUser as any;
+        }
+
+        if (!auth) {
+            const error = new Error("Firebase Auth not initialized");
+            ErrorLogger.log(error, context);
+            throw error;
+        }
+
+        try {
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            console.log("✅ Signed in successfully:", email);
+            logEvent(analytics, 'login', { method: 'email' });
+            return userCredential;
+        } catch (error: any) {
+            ErrorLogger.log(error, context);
+            throw new Error(ErrorLogger.getUserFriendlyMessage(error.code));
+        }
+    }
+
+    /**
+     * Send password reset email
+     */
+    static async resetPassword(email: string) {
+        const context: ErrorContext = {
+            method: 'resetPassword',
+            email,
+            timestamp: new Date().toISOString()
+        };
+
+        if (isSimulationMode) {
+            console.log(`SIMULATION: Password reset email sent to ${email}`);
+            return;
+        }
+
+        if (!auth) {
+            const error = new Error("Firebase Auth not initialized");
+            ErrorLogger.log(error, context);
+            throw error;
+        }
+
+        try {
+            await sendPasswordResetEmail(auth, email);
+            console.log("✅ Password reset email sent to:", email);
+        } catch (error: any) {
+            ErrorLogger.log(error, context);
+            throw new Error(ErrorLogger.getUserFriendlyMessage(error.code));
+        }
+    }
+
+    /**
+     * Resend email verification
+     */
+    static async resendEmailVerification() {
+        if (isSimulationMode) {
+            console.log("SIMULATION: Email verification sent");
+            return;
+        }
+
+        if (!auth || !auth.currentUser) {
+            throw new Error("No user logged in");
+        }
+
+        try {
+            await sendEmailVerification(auth.currentUser);
+            console.log("✅ Verification email sent");
+        } catch (error: any) {
+            ErrorLogger.log(error, {
+                method: 'resendEmailVerification',
+                userId: auth.currentUser.uid,
+                timestamp: new Date().toISOString()
+            });
+            throw new Error(ErrorLogger.getUserFriendlyMessage(error.code));
+        }
+    }
+
     static async logout() {
         if (isSimulationMode) {
             console.log("SIMULATION: Protocol terminated.");
@@ -401,5 +624,6 @@ export class LamaStore {
 
 export const LamaDB = {
     auth: LamaAuth,
-    store: new LamaStore()
+    store: new LamaStore(),
+    errors: ErrorLogger  // Expose error logger for debugging
 };
