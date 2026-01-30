@@ -1,16 +1,188 @@
-import React, { useState, useMemo } from 'react';
-import type { Template, GitProvider, Repository, Workflow } from '../../types';
-import { mockTemplates, mockRepositories, mockWorkflows } from '../../constants';
-import { GitHubIcon, GitLabIcon, BitbucketIcon, SearchIcon, PuzzlePieceIcon, CubeIcon, GitBranchIcon, TerminalIcon, RocketLaunchIcon } from '../common/Icons';
-import { TemplateCard } from './TemplateCard';
-import { ConfigureProjectForm } from '../common/ConfigureProjectForm';
-import { WorkflowCard } from './WorkflowCard';
-import { useAuth } from '../../hooks/useAuth';
-import { motion } from 'framer-motion';
+import { OpenURLDeploy } from '../deployment/OpenURLDeploy';
 
-const MotionDiv = motion.div;
+// ... existing imports
 
-/* --- PREMIUM CARD COMPONENTS --- */
+// Visual for Open Hosting Card
+const HostingVisual = () => (
+    <div className="h-40 w-full bg-black border-b border-zinc-900 relative overflow-hidden group-hover:bg-zinc-950 transition-colors duration-500 flex items-center justify-center">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-emerald-900/20 via-black to-black"></div>
+        <div className="relative z-10 flex items-center justify-center">
+            <div className="w-20 h-20 rounded-full border border-emerald-500/30 flex items-center justify-center animate-pulse-slow">
+                <Globe className="w-8 h-8 text-emerald-500" />
+            </div>
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 border border-dashed border-emerald-500/10 rounded-full animate-spin-slow"></div>
+        </div>
+    </div>
+);
+
+// ... existing components
+
+export const NewProjectPage: React.FC<NewProjectPageProps> = ({
+    onDeployTemplate,
+    onImportRepository,
+    onDeployWorkflow,
+    connectedProvider,
+    setConnectedProvider
+}) => {
+    const [activeView, setActiveView] = useState<'import' | 'template' | 'workflow' | 'open_url' | 'none'>('none');
+    const { loginWithGitHub } = useAuth();
+
+    // ... handleConnect
+
+    const renderContent = () => {
+        if (activeView === 'none') {
+            return (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-1 max-w-7xl mx-auto">
+                    <PremiumCard
+                        title="Git Import"
+                        description="Deploy an existing architecture directly from your VCS fleet."
+                        visual={<ImportVisual />}
+                        onClick={() => setActiveView('import')}
+                    />
+                    <PremiumCard
+                        title="Boilerplates"
+                        description="Initialize with optimized Next.js, Vite, or Neural clusters."
+                        visual={<TemplateVisual />}
+                        onClick={() => setActiveView('template')}
+                    />
+                    <PremiumCard
+                        title="Logic Mesh"
+                        description="Orchestrate full-stack autonomous systems with managed logic."
+                        visual={<WorkflowVisual />}
+                        onClick={() => setActiveView('workflow')}
+                    />
+                    <PremiumCard
+                        title="OpenDev Hosting"
+                        description="Free, high-performance static hosting on the OpenDev network."
+                        visual={<HostingVisual />}
+                        onClick={() => setActiveView('open_url')}
+                    />
+                </div>
+            )
+        }
+
+        const backButton = (
+            <button onClick={() => setActiveView('none')} className="group flex items-center gap-3 text-[10px] font-bold uppercase tracking-widest text-zinc-600 hover:text-white mb-12 transition-all">
+                <span className="group-hover:-translate-x-1 transition-transform">&larr;</span>
+                Options
+            </button>
+        );
+
+        switch (activeView) {
+            case 'import':
+                // ... existing import case header
+                return (
+                    <MotionDiv initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} className="max-w-2xl mx-auto">
+                        {backButton}
+                        <div className="space-y-10">
+                            <div>
+                                <h2 className="text-3xl font-bold text-white tracking-tighter mb-2">Import Node</h2>
+                                <p className="text-zinc-500 text-sm font-medium">Connect your VCS provider to synchronize your repository fleet.</p>
+                            </div>
+
+                            {!connectedProvider ? (
+                                <div className="space-y-1">
+                                    <GitProviderButton provider="GitHub" icon={<GitHubIcon />} onClick={() => handleConnect('GitHub')} />
+                                    <GitProviderButton provider="GitLab" icon={<GitLabIcon />} onClick={() => handleConnect('GitLab')} />
+                                    <GitProviderButton provider="Bitbucket" icon={<BitbucketIcon />} onClick={() => handleConnect('Bitbucket')} />
+                                </div>
+                            ) : (
+                                <ConnectedRepoView
+                                    provider={connectedProvider}
+                                    onDisconnect={() => setConnectedProvider(null)}
+                                    // Identify if this is for standard import or OpenURL? 
+                                    // For now, let's keep standard behavior here. 
+                                    // The OpenURL view is separate.
+                                    onImport={onImportRepository}
+                                />
+                            )}
+                        </div>
+                    </MotionDiv>
+                );
+            case 'template':
+                return (
+                    <div className="max-w-7xl mx-auto">
+                        {backButton}
+                        <h2 className="text-3xl font-bold text-white tracking-tighter mb-10">Select Boilerplate</h2>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-1">
+                            {mockTemplates.map(template => (
+                                <TemplateCard
+                                    key={template.id}
+                                    template={template}
+                                    onDeploy={onDeployTemplate}
+                                />
+                            ))}
+                        </div>
+                    </div>
+                );
+            case 'workflow':
+                return (
+                    <div className="max-w-7xl mx-auto">
+                        {backButton}
+                        <h2 className="text-3xl font-bold text-white tracking-tighter mb-10">Mesh Architectures</h2>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-1">
+                            {mockWorkflows.map(workflow => (
+                                <WorkflowCard
+                                    key={workflow.id}
+                                    workflow={workflow}
+                                    onDeploy={onDeployWorkflow}
+                                />
+                            ))}
+                        </div>
+                    </div>
+                );
+            case 'open_url':
+                return (
+                    <div className="max-w-4xl mx-auto pb-20">
+                        {backButton}
+                        <div className="text-center mb-12">
+                            <h2 className="text-4xl font-bold text-white tracking-tighter mb-4">Deploy to OpenDev</h2>
+                            <p className="text-zinc-500 max-w-lg mx-auto">
+                                Instant, global edge hosting for your portfolios and projects. Powered by the OpenDev GitHub network.
+                            </p>
+                        </div>
+
+                        <OpenURLDeploy
+                            repoName=""
+                            onComplete={(url) => {
+                                // In a real app, this would redirect or show success state permanently
+                                // For now, we open the window and maybe reset
+                            }}
+                            onCancel={() => setActiveView('none')}
+                        />
+                    </div>
+                );
+        }
+    };
+
+    return (
+        <div className="pb-32 px-6">
+            {activeView === 'none' && (
+                <div className="text-center mb-24 pt-20">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="flex flex-col items-center"
+                    >
+                        <span className="inline-block px-3 py-1 rounded-none bg-zinc-900 border border-zinc-800 text-[10px] font-bold tracking-[0.2em] uppercase text-zinc-500 mb-8">
+                            Genesis Protocol
+                        </span>
+                        <h1 className="text-6xl md:text-8xl font-bold tracking-tighter text-white mb-8">
+                            Build something <span className="text-zinc-600 italic font-serif">new.</span>
+                        </h1>
+                        <p className="text-lg text-zinc-500 max-w-xl mx-auto font-medium leading-relaxed">
+                            Initialize from your Git fleet, clone a boilerplate, or orchestrate high-fidelity systems with Mesh Workflows.
+                        </p>
+                    </motion.div>
+                </div>
+            )}
+
+            <div className="min-h-[400px]">
+                {renderContent()}
+            </div>
+        </div>
+    );
+};
 
 // Visual for Import Card: Floating Provider Icons
 const ImportVisual = () => (
@@ -287,6 +459,9 @@ const RepoList: React.FC<{
     );
 }
 
+setConnectedProvider: (provider: GitProvider | null) => void;
+}
+
 export const NewProjectPage: React.FC<NewProjectPageProps> = ({
     onDeployTemplate,
     onImportRepository,
@@ -294,7 +469,7 @@ export const NewProjectPage: React.FC<NewProjectPageProps> = ({
     connectedProvider,
     setConnectedProvider
 }) => {
-    const [activeView, setActiveView] = useState<'import' | 'template' | 'workflow' | 'none'>('none');
+    const [activeView, setActiveView] = useState<'import' | 'template' | 'workflow' | 'open_url' | 'none'>('none');
     const { loginWithGitHub } = useAuth();
 
     const handleConnect = async (provider: GitProvider) => {
@@ -320,11 +495,18 @@ export const NewProjectPage: React.FC<NewProjectPageProps> = ({
                         visual={<TemplateVisual />}
                         onClick={() => setActiveView('template')}
                     />
+// ... Inside renderContent's 'none' block ...
                     <PremiumCard
                         title="Logic Mesh"
                         description="Orchestrate full-stack autonomous systems with managed logic."
                         visual={<WorkflowVisual />}
                         onClick={() => setActiveView('workflow')}
+                    />
+                    <PremiumCard
+                        title="OpenDev Hosting"
+                        description="Free, high-performance static hosting on the OpenDev network."
+                        visual={<HostingVisual />}
+                        onClick={() => setActiveView('open_url')}
                     />
                 </div>
             )
@@ -394,36 +576,56 @@ export const NewProjectPage: React.FC<NewProjectPageProps> = ({
                                 />
                             ))}
                         </div>
-                    </div>
-                );
+                        );
+                        case 'open_url':
+                        return (
+                        <div className="max-w-4xl mx-auto pb-20">
+                            {backButton}
+                            <div className="text-center mb-12">
+                                <h2 className="text-4xl font-bold text-white tracking-tighter mb-4">Deploy to OpenDev</h2>
+                                <p className="text-zinc-500 max-w-lg mx-auto">
+                                    Instant, global edge hosting for your portfolios and projects. Powered by the OpenDev GitHub network.
+                                </p>
+                            </div>
+
+                            <OpenURLDeploy
+                                repoName=""
+                                onComplete={(url) => {
+                                    // In a real app, this would redirect or show success state permanently
+                                    // For now, we open the window and maybe reset
+                                }}
+                                onCancel={() => setActiveView('none')}
+                            />
+                        </div>
+                        );
         }
     };
 
-    return (
-        <div className="pb-32 px-6">
-            {activeView === 'none' && (
-                <div className="text-center mb-24 pt-20">
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="flex flex-col items-center"
-                    >
-                        <span className="inline-block px-3 py-1 rounded-none bg-zinc-900 border border-zinc-800 text-[10px] font-bold tracking-[0.2em] uppercase text-zinc-500 mb-8">
-                            Genesis Protocol
-                        </span>
-                        <h1 className="text-6xl md:text-8xl font-bold tracking-tighter text-white mb-8">
-                            Build something <span className="text-zinc-600 italic font-serif">new.</span>
-                        </h1>
-                        <p className="text-lg text-zinc-500 max-w-xl mx-auto font-medium leading-relaxed">
-                            Initialize from your Git fleet, clone a boilerplate, or orchestrate high-fidelity systems with Mesh Workflows.
-                        </p>
-                    </motion.div>
-                </div>
-            )}
+                        return (
+                        <div className="pb-32 px-6">
+                            {activeView === 'none' && (
+                                <div className="text-center mb-24 pt-20">
+                                    <motion.div
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        className="flex flex-col items-center"
+                                    >
+                                        <span className="inline-block px-3 py-1 rounded-none bg-zinc-900 border border-zinc-800 text-[10px] font-bold tracking-[0.2em] uppercase text-zinc-500 mb-8">
+                                            Genesis Protocol
+                                        </span>
+                                        <h1 className="text-6xl md:text-8xl font-bold tracking-tighter text-white mb-8">
+                                            Build something <span className="text-zinc-600 italic font-serif">new.</span>
+                                        </h1>
+                                        <p className="text-lg text-zinc-500 max-w-xl mx-auto font-medium leading-relaxed">
+                                            Initialize from your Git fleet, clone a boilerplate, or orchestrate high-fidelity systems with Mesh Workflows.
+                                        </p>
+                                    </motion.div>
+                                </div>
+                            )}
 
-            <div className="min-h-[400px]">
-                {renderContent()}
-            </div>
-        </div>
-    );
+                            <div className="min-h-[400px]">
+                                {renderContent()}
+                            </div>
+                        </div>
+                        );
 };
