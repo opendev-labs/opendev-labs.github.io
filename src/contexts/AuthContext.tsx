@@ -16,6 +16,9 @@ interface AuthContextType {
     isLoading: boolean;
     loginWithGitHub: () => Promise<void>;
     loginWithGoogle: () => Promise<void>;
+    signUpWithEmail: (email: string, password: string, displayName?: string) => Promise<void>;
+    signInWithEmail: (email: string, password: string) => Promise<void>;
+    resetPassword: (email: string) => Promise<void>;
     logout: () => Promise<void>;
     fetchRepositories: () => Promise<any[]>;
     createRepository: (name: string, description: string, isPrivate: boolean) => Promise<any>;
@@ -260,6 +263,63 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
     }, [user]);
 
+    const signUpWithEmail = useCallback(async (email: string, password: string, displayName?: string) => {
+        try {
+            setIsLoading(true);
+            const result = await LamaDB.auth.signUpWithEmail(email, password, displayName);
+
+            if (result?.user) {
+                const newUser: User = {
+                    name: result.user.displayName || displayName || email.split('@')[0],
+                    email: result.user.email || email,
+                    uid: result.user.uid,
+                    avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName || email)}`,
+                    providers: ['password']
+                };
+                setUser(newUser);
+                alert('Account created! Please check your email for verification.');
+            }
+        } catch (error: any) {
+            console.error("Sign Up Error:", error);
+            alert(`Sign Up Failed: ${error.message}`);
+        } finally {
+            setIsLoading(false);
+        }
+    }, []);
+
+    const signInWithEmail = useCallback(async (email: string, password: string) => {
+        try {
+            setIsLoading(true);
+            const result = await LamaDB.auth.signInWithEmail(email, password);
+
+            if (result?.user) {
+                const existingUser: User = {
+                    name: result.user.displayName || email.split('@')[0],
+                    email: result.user.email || email,
+                    uid: result.user.uid,
+                    avatar: result.user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(email)}`,
+                    providers: ['password']
+                };
+                setUser(existingUser);
+            }
+        } catch (error: any) {
+            console.error("Sign In Error:", error);
+            alert(`Sign In Failed: ${error.message}`);
+        } finally {
+            setIsLoading(false);
+        }
+    }, []);
+
+    const resetPassword = useCallback(async (email: string) => {
+        try {
+            await LamaDB.auth.resetPassword(email);
+            alert('Password reset email sent! Please check your inbox.');
+        } catch (error: any) {
+            console.error("Reset Password Error:", error);
+            alert(`Password Reset Failed: ${error.message}`);
+        }
+    }, []);
+
     return (
         <AuthContext.Provider value={{
             user,
@@ -267,6 +327,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             isLoading,
             loginWithGitHub,
             loginWithGoogle,
+            signUpWithEmail,
+            signInWithEmail,
+            resetPassword,
             logout,
             fetchRepositories,
             createRepository,
