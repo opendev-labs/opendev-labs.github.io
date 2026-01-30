@@ -14,7 +14,7 @@ export const Card: React.FC<CardProps> = ({
     hover = true,
     glass = true
 }) => {
-    const baseStyles = "relative overflow-hidden border transition-all duration-500 rounded-[32px]";
+    const baseStyles = "relative overflow-hidden border transition-all duration-500 rounded-none";
     const glassStyles = glass ? "bg-zinc-950/40 border-zinc-900 backdrop-blur-3xl" : "bg-black border-zinc-900";
     const hoverStyles = hover ? "hover:border-zinc-700/50 hover:bg-zinc-900/40" : "";
 

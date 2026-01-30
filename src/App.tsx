@@ -66,7 +66,7 @@ const AppRoutes = () => {
           <Route path="pricing" element={<Placeholder title="Pricing" />} />
           <Route path="contact" element={<Contact />} />
           <Route path="changelog" element={<Changelog />} />
-          <Route path="dashboard" element={<NexusDashboard />} />
+          <Route path="dashboard" element={<Navigate to="/void" replace />} />
           <Route path="*" element={<Placeholder title="404 - Not Found" />} />
         </Route>
 

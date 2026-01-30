@@ -24,7 +24,7 @@ export const AuthPage: React.FC = () => {
 
     useEffect(() => {
         if (isAuthenticated && !isConnectMode) {
-            navigate('/dashboard');
+            navigate('/void');
         }
     }, [isAuthenticated, navigate, isConnectMode]);
 
@@ -153,16 +153,16 @@ export const AuthPage: React.FC = () => {
                                 key="connect"
                                 initial={{ opacity: 0, scale: 0.95 }}
                                 animate={{ opacity: 1, scale: 1 }}
-                                className="bg-zinc-950 border border-blue-500/20 p-12 rounded-[50px] text-center shadow-3xl shadow-blue-500/5 ring-1 ring-white/5"
+                                className="bg-zinc-950 border border-blue-500/20 p-12 rounded-none text-center shadow-3xl shadow-blue-500/5 ring-1 ring-white/5"
                             >
-                                <div className="w-20 h-20 bg-blue-500/10 rounded-full flex items-center justify-center mx-auto mb-10 border border-blue-500/20">
+                                <div className="w-20 h-20 bg-blue-500/10 rounded-none flex items-center justify-center mx-auto mb-10 border border-blue-500/20">
                                     <Terminal className="text-blue-500 animate-pulse" size={32} />
                                 </div>
                                 <h2 className="text-4xl font-bold tracking-tighter uppercase mb-4">Neural Uplink</h2>
                                 <p className="text-zinc-600 text-[10px] tracking-[0.4em] uppercase mb-10">
                                     Challenge: <span className="text-white font-mono lowercase tracking-normal">{challenge}</span>
                                 </p>
-                                <div className="p-8 bg-black/50 rounded-3xl border border-zinc-900 text-left mb-10">
+                                <div className="p-8 bg-black/50 rounded-none border border-zinc-900 text-left mb-10">
                                     <p className="text-[9px] font-bold text-zinc-700 tracking-[0.4em] uppercase mb-2 ml-1">Detected ID</p>
                                     <p className="text-sm font-bold text-white font-mono lowercase">authenticating_node_alpha</p>
                                 </div>
@@ -170,7 +170,7 @@ export const AuthPage: React.FC = () => {
                                     variant="primary"
                                     size="xl"
                                     className="w-full"
-                                    onClick={() => navigate('/dashboard')}
+                                    onClick={() => navigate('/void')}
                                 >
                                     Confirm Session
                                 </Button>
@@ -202,7 +202,7 @@ export const AuthPage: React.FC = () => {
                                     <motion.div
                                         initial={{ opacity: 0, y: -10 }}
                                         animate={{ opacity: 1, y: 0 }}
-                                        className="p-4 rounded-2xl bg-red-500/5 border border-red-500/10 text-red-500 text-[10px] font-bold uppercase tracking-[0.2em] text-center"
+                                        className="p-4 rounded-none bg-red-500/5 border border-red-500/10 text-red-500 text-[10px] font-bold uppercase tracking-[0.2em] text-center"
                                     >
                                         {error}
                                     </motion.div>
@@ -261,7 +261,7 @@ export const AuthPage: React.FC = () => {
                                                             value={email}
                                                             onChange={(e) => setEmail(e.target.value)}
                                                             placeholder="identity@opendev-labs.io"
-                                                            className="w-full h-14 bg-zinc-950 border border-zinc-900 rounded-2xl pl-14 pr-6 text-[12px] font-bold tracking-widest text-white placeholder:text-zinc-800 focus:outline-none focus:border-zinc-700 focus:ring-1 focus:ring-white/5 transition-all lowercase"
+                                                            className="w-full h-14 bg-zinc-950 border border-zinc-900 rounded-none pl-14 pr-6 text-[12px] font-bold tracking-widest text-white placeholder:text-zinc-800 focus:outline-none focus:border-zinc-700 focus:ring-1 focus:ring-white/5 transition-all lowercase"
                                                             required
                                                         />
                                                     </div>
@@ -272,7 +272,7 @@ export const AuthPage: React.FC = () => {
                                                             value={password}
                                                             onChange={(e) => setPassword(e.target.value)}
                                                             placeholder="••••••••"
-                                                            className="w-full h-14 bg-zinc-950 border border-zinc-900 rounded-2xl pl-14 pr-6 text-[12px] font-bold tracking-widest text-white placeholder:text-zinc-800 focus:outline-none focus:border-zinc-700 focus:ring-1 focus:ring-white/5 transition-all"
+                                                            className="w-full h-14 bg-zinc-950 border border-zinc-900 rounded-none pl-14 pr-6 text-[12px] font-bold tracking-widest text-white placeholder:text-zinc-800 focus:outline-none focus:border-zinc-700 focus:ring-1 focus:ring-white/5 transition-all"
                                                             required
                                                         />
                                                     </div>
