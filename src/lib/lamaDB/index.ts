@@ -84,8 +84,7 @@ export class LamaAuth {
                 console.log("Collision Email:", email);
 
                 if (!email) {
-                    console.error("Nexus Registry: Cannot resolve collision without email.");
-                    throw new Error("This email is already associated with another account, but we couldn't verify which provider. Please sign in with your original method (e.g. Google).");
+                    throw new Error("Account collision detected, but email is hidden. Please log in with your primary provider (Google) first.");
                 }
 
                 if (!pendingCred) throw error;
@@ -96,8 +95,9 @@ export class LamaAuth {
                     console.log("Existing Identity Methods:", methods);
 
                     if (methods.includes('google.com')) {
-                        console.log("Nexus Registry: Linking to Google Identity...");
-                        // Authenticate with Google to verify identity
+                        // User needs to sign in with Google to prove ownership
+                        alert(`Please sign in with Google to verify ownership of ${email}. We will then link your GitHub account automatically.`);
+
                         const googleProvider = new GoogleAuthProvider();
                         googleProvider.setCustomParameters({ login_hint: email });
 
@@ -108,10 +108,15 @@ export class LamaAuth {
                         console.log("Nexus Intelligence: Protocol linked. Identity converged.");
 
                         return googleResult;
+                    } else if (methods.length > 0) {
+                        throw new Error(`This email is already associated with [${methods.join(', ')}]. Please log in with that provider first.`);
                     }
-                } catch (linkError) {
+                } catch (linkError: any) {
                     console.error("Nexus Registry: Smart Link Failed:", linkError);
-                    throw new Error("Failed to link accounts automatically. Please sign in with Google first, then link GitHub from Settings.");
+                    if (linkError.code === 'auth/popup-closed-by-user') {
+                        throw new Error("Verification cancelled. Login failed.");
+                    }
+                    throw new Error("Failed to automaticall link accounts. Please login with Google first, then connect GitHub in settings.");
                 }
             }
             throw error;
