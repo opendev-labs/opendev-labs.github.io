@@ -102,7 +102,7 @@ export const Header: React.FC = () => {
 
                             {/* Mega Dropdown */}
                             <div className={`absolute top-full left-0 pt-2 z-50 transition-all duration-300 origin-top-left ${activeDropdown === 'products' ? 'opacity-100 translate-y-0 visible' : 'opacity-0 translate-y-1 invisible'}`}>
-                                <div className="bg-[#050505] border border-zinc-900 rounded-2xl p-8 shadow-[0_0_50px_-12px_rgba(0,0,0,0.5)] ring-1 ring-white/5 w-[900px] grid grid-cols-3 gap-8">
+                                <div className="bg-[#050505] border border-zinc-900 rounded-none p-8 shadow-[0_0_50px_-12px_rgba(0,0,0,0.5)] ring-1 ring-white/5 w-[900px] grid grid-cols-3 gap-8">
                                     {MENU_DATA.map((section) => (
                                         <div key={section.title}>
                                             <div className="text-[10px] font-bold text-zinc-600 uppercase tracking-[0.3em] mb-4">{section.title}</div>
@@ -111,9 +111,9 @@ export const Header: React.FC = () => {
                                                     <Link
                                                         key={item.name}
                                                         to={item.path}
-                                                        className="flex items-start gap-4 p-3 rounded-xl hover:bg-zinc-900/50 transition-all duration-200 group border border-transparent hover:border-zinc-800"
+                                                        className="flex items-start gap-4 p-3 rounded-none hover:bg-zinc-900/50 transition-all duration-200 group border border-transparent hover:border-zinc-800"
                                                     >
-                                                        <div className="w-8 h-8 rounded-lg bg-zinc-950 border border-zinc-900 flex items-center justify-center flex-shrink-0 group-hover:border-zinc-700 transition-colors">
+                                                        <div className="w-8 h-8 rounded-none bg-zinc-950 border border-zinc-900 flex items-center justify-center flex-shrink-0 group-hover:border-zinc-700 transition-colors">
                                                             <item.icon className="w-4 h-4 text-zinc-500 group-hover:text-white transition-colors" />
                                                         </div>
                                                         <div>
@@ -138,7 +138,7 @@ export const Header: React.FC = () => {
                 <div className="flex items-center gap-6">
                     {isAuthenticated ? (
                         <div className="flex items-center gap-6">
-                            <Link to="/void/new" className="hidden md:flex items-center gap-2 text-[10px] font-bold text-zinc-400 hover:text-white uppercase tracking-widest border border-zinc-800 px-3 py-1.5 rounded-lg hover:bg-zinc-900 transition-all">
+                            <Link to="/void/new" className="hidden md:flex items-center gap-2 text-[10px] font-bold text-zinc-400 hover:text-white uppercase tracking-widest border border-zinc-800 px-3 py-1.5 rounded-none hover:bg-zinc-900 transition-all">
                                 <NewProjectIcon /> <span>Deploy</span>
                             </Link>
 
@@ -151,12 +151,12 @@ export const Header: React.FC = () => {
                                     <UserAvatar name={user?.name || ''} />
                                 </button>
 
-                                <div className="absolute right-0 mt-3 w-56 bg-zinc-950 border border-zinc-900 rounded-2xl shadow-2xl py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-[110] ring-1 ring-white/5">
+                                <div className="absolute right-0 mt-3 w-56 bg-zinc-950 border border-zinc-900 rounded-none shadow-2xl py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-[110] ring-1 ring-white/5">
                                     <div className="px-4 py-3 border-b border-zinc-900 mb-1">
                                         <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest leading-none mb-1">Authenticated Node</p>
                                         <p className="text-[11px] text-zinc-200 font-bold truncate">{user?.email}</p>
                                     </div>
-                                    <Link to="/dashboard" className="flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-zinc-400 hover:text-white hover:bg-zinc-900/50 transition-all">
+                                    <Link to="/void" className="flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-zinc-400 hover:text-white hover:bg-zinc-900/50 transition-all">
                                         Mission Control
                                     </Link>
                                     <Link to="/void/settings" className="flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-zinc-400 hover:text-white hover:bg-zinc-900/50 transition-all">

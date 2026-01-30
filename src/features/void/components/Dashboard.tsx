@@ -58,7 +58,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ projects, onUpdateProject 
           <div className="border border-zinc-900 bg-black p-6 space-y-8">
             <div className="flex items-center justify-between">
               <h3 className="text-[10px] font-bold tracking-[0.2em] text-zinc-600 uppercase">Protocol Usage</h3>
-              <span className="text-[9px] font-bold text-white bg-zinc-900 px-2 py-0.5 rounded-sm">NODE PRO</span>
+              <span className="text-[9px] font-bold text-white bg-zinc-900 px-2 py-0.5 rounded-none">NODE PRO</span>
             </div>
 
             <div className="space-y-8">
@@ -93,7 +93,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ projects, onUpdateProject 
               </div>
             </div>
 
-            <button className="w-full h-11 bg-white text-black text-[10px] font-bold tracking-[0.2em] uppercase transition-all duration-300 hover:bg-zinc-200">
+            <button className="w-full h-11 bg-white text-black text-[10px] font-bold tracking-[0.2em] uppercase transition-all duration-300 hover:bg-zinc-200 rounded-xl">
               Scale Infrastructure
             </button>
           </div>
