@@ -34,7 +34,7 @@ const MotionDiv = motion.div;
 const AppContent: React.FC = () => {
     // State management refactored to use LamaDB (Firestore/IndexedDB) instead of localStorage
     const [projects, setProjects] = useState<Project[]>([]);
-    const [connectedProvider, setConnectedProvider] = useLocalStorage<GitProvider | null>('opendev_git_provider', null);
+
     const [isLoading, setIsLoading] = useState(true);
     const [isAuthenticating, setIsAuthenticating] = useState(false);
     const { isAuthenticated, user, createRepository, uploadFile } = useAuth();
@@ -247,13 +247,11 @@ const AppContent: React.FC = () => {
                         <Routes>
                             <Route index element={isAuthenticated ? <Dashboard projects={projects} onUpdateProject={handleUpdateProject} /> : <HomePage />} />
                             <Route path="dashboard" element={<Dashboard projects={projects} onUpdateProject={handleUpdateProject} />} />
-                            <Route path="new" element={
+                            <Route path="new/*" element={
                                 <NewProjectPage
                                     onDeployTemplate={handleDeployTemplate}
                                     onImportRepository={handleImportRepository}
                                     onDeployWorkflow={handleDeployWorkflow}
-                                    connectedProvider={connectedProvider}
-                                    setConnectedProvider={setConnectedProvider}
                                 />
                             } />
                             <Route path="projects/:id" element={<ProjectDetailWrapper projects={projects} onUpdateProject={handleUpdateProject} />} />
