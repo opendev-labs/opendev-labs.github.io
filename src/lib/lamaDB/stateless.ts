@@ -113,6 +113,7 @@ function getUserFriendlyMessage(errorCode: string): string {
         'auth/popup-closed-by-user': 'Sign-in popup was closed. Please try again.',
         'auth/unauthorized-domain': 'This domain is not authorized. Please contact support.',
         'auth/invalid-api-key': 'Firebase configuration error. Please contact support.',
+        'auth/account-exists-with-different-credential': 'An account already exists with the same email address but different sign-in credentials. Please sign in using a provider associated with this email.',
     };
     return messages[errorCode] || `Authentication error: ${errorCode}`;
 }
