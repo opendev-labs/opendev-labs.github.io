@@ -1,0 +1,35 @@
+<svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <filter id="neon-glow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="3.5" result="coloredBlur" />
+            <feMerge>
+                <feMergeNode in="coloredBlur" />
+                <feMergeNode in="SourceGraphic" />
+            </feMerge>
+        </filter>
+        <linearGradient id="logo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#00f2ff" />
+            <stop offset="50%" stop-color="#bc00ff" />
+            <stop offset="100%" stop-color="#ff00d4" />
+        </linearGradient>
+    </defs>
+    {/* Ambient Glow */}
+    <path 
+        d="M50 95L5 10H95L50 95Z" 
+        stroke="url(#logo-grad)" 
+        stroke-width="6" 
+        filter="url(#neon-glow)" 
+        opacity="0.4"
+    />
+    {/* Outer Rim */}
+    <path 
+        d="M50 90L10 15H90L50 90Z" 
+        stroke="url(#logo-grad)" 
+        stroke-width="2" 
+    />
+    {/* Inner Core */}
+    <path 
+        d="M50 75L30 35H70L50 75Z" 
+        fill="url(#logo-grad)" 
+    />
+</svg>

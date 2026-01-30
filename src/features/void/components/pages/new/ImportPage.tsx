@@ -31,37 +31,32 @@ const TerminalLine: React.FC<{ text: string, delay?: number, type?: 'info' | 'er
     );
 };
 
-const CollisionAlert: React.FC<{ onSwitch: () => void, onClose: () => void }> = ({ onSwitch, onClose }) => (
+const SimpleAuthAlert: React.FC<{ message: string, onRetry: () => void, onSwitchAccount: () => void }> = ({ message, onRetry, onSwitchAccount }) => (
     <MotionDiv
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.95 }}
-        className="mt-8 p-6 bg-red-500/5 border border-red-500/20 rounded-none relative overflow-hidden group"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="mt-8 p-6 bg-zinc-950 border border-zinc-800 rounded-none shadow-xl"
     >
-        <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-            <AlertCircle size={48} className="text-red-500" />
-        </div>
-        <div className="relative z-10">
-            <h4 className="text-red-500 text-xs font-bold uppercase tracking-widest mb-2 flex items-center gap-2">
-                <AlertCircle size={14} /> Identity Collision Detected
-            </h4>
-            <p className="text-zinc-400 text-sm leading-relaxed mb-6 max-w-md">
-                This GitHub account is already tied to a different OpenDev Nexus identity. You cannot link it to your current session.
-            </p>
-            <div className="flex gap-4">
-                <button
-                    onClick={onSwitch}
-                    className="h-10 px-6 bg-red-500 text-white font-bold text-[10px] uppercase tracking-widest hover:bg-red-600 transition-all flex items-center gap-2 group/btn"
-                >
-                    Switch Identity <ArrowRight size={14} className="group-hover/btn:translate-x-1 transition-transform" />
-                </button>
-                <button
-                    onClick={onClose}
-                    className="h-10 px-6 border border-zinc-800 text-zinc-500 font-bold text-[10px] uppercase tracking-widest hover:text-white hover:border-zinc-700 transition-all"
-                >
-                    Dismiss
-                </button>
+        <div className="flex items-start gap-4 mb-6">
+            <AlertCircle className="text-white mt-1" size={20} />
+            <div>
+                <h4 className="text-white text-xs font-bold uppercase tracking-widest mb-1">Authentication Failure</h4>
+                <p className="text-zinc-500 text-sm leading-relaxed">{message}</p>
             </div>
+        </div>
+        <div className="flex gap-4">
+            <button
+                onClick={onSwitchAccount}
+                className="h-10 px-6 bg-white text-black text-[10px] font-bold uppercase tracking-widest hover:bg-zinc-200 transition-all"
+            >
+                Switch Account
+            </button>
+            <button
+                onClick={onRetry}
+                className="h-10 px-6 border border-zinc-900 text-zinc-500 text-[10px] font-bold uppercase tracking-widest hover:text-white hover:border-zinc-700 transition-all"
+            >
+                Try Again
+            </button>
         </div>
     </MotionDiv>
 );
@@ -114,23 +109,20 @@ const ConnectedRepoView: React.FC<{
                             <span className="px-2 py-0.5 bg-emerald-500/10 border border-emerald-500/20 text-[9px] font-bold text-emerald-500 uppercase tracking-widest">Connected</span>
                             <span className="text-[10px] text-zinc-600 font-mono">NODE_UID: {user?.uid?.slice(0, 8)}...</span>
                         </div>
-                        <h3 className="text-xl font-bold text-white tracking-tighter">@{githubUser?.login || user?.name || 'Architect'}</h3>
-                        <p className="text-[11px] text-zinc-500 font-medium uppercase tracking-widest mt-1 opacity-60">Identity Source: GitHub Proto-Link</p>
+                        <h3 className="text-xl font-bold text-white tracking-tighter">@{githubUser?.login || user?.name || 'User'}</h3>
+                        <p className="text-[11px] text-zinc-500 font-medium uppercase tracking-widest mt-1 opacity-60">Identity Source: GitHub</p>
                     </div>
                 </div>
                 <button onClick={onDisconnect} className="text-[10px] font-bold uppercase tracking-widest text-zinc-600 hover:text-white transition-colors border-b border-transparent hover:border-white pb-1">
-                    Revoke Access
+                    Disconnect Account
                 </button>
             </div>
 
             {loading ? (
                 <div className="space-y-4 py-20 px-8 border border-zinc-900 bg-zinc-950/50">
-                    <TerminalLine text="Initializing neural handshake..." delay={0.1} />
-                    <TerminalLine text="Identifying repository clusters..." delay={0.3} />
-                    <TerminalLine text="Synchronizing meta-data shards..." delay={0.5} />
-                    <div className="pt-8 flex items-center gap-3">
+                    <div className="flex items-center gap-3">
                         <div className="w-4 h-4 border-2 border-white/20 border-t-white animate-spin"></div>
-                        <span className="text-[10px] font-bold text-white tracking-[0.2em] uppercase">Auditing nodes...</span>
+                        <span className="text-[10px] font-bold text-white tracking-[0.2em] uppercase">Loading repositories...</span>
                     </div>
                 </div>
             ) : (
@@ -158,7 +150,7 @@ const RepoList: React.FC<{
                 <SearchIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-600 group-focus-within:text-white transition-colors" />
                 <input
                     type="text"
-                    placeholder="Search node clusters..."
+                    placeholder="Search repositories..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="w-full bg-zinc-950 border border-zinc-900 h-14 pl-12 pr-6 text-sm text-white font-medium focus:outline-none focus:border-white transition-all placeholder:text-zinc-700"
@@ -182,8 +174,7 @@ const RepoList: React.FC<{
                                         <span className="text-[9px] font-bold text-zinc-600 uppercase tracking-widest border border-zinc-900 px-2">PUBLIC</span>
                                     </div>
                                     <div className="flex items-center gap-4 text-zinc-500 text-[10px] font-bold uppercase tracking-widest">
-                                        <span className="flex items-center gap-1.5"><Zap size={10} /> Active Cluster</span>
-                                        <span className="flex items-center gap-1.5"><Globe size={10} /> Edge Sync Enabled</span>
+                                        <span className="flex items-center gap-1.5"><Zap size={10} /> Active</span>
                                         <span className="opacity-40">Last Updated {repo.updatedAt}</span>
                                     </div>
                                 </div>
@@ -217,8 +208,8 @@ const RepoList: React.FC<{
                         <div className="inline-flex items-center justify-center w-12 h-12 bg-zinc-900 rounded-none mb-6">
                             <SearchIcon className="text-zinc-600" />
                         </div>
-                        <h3 className="text-white font-bold uppercase tracking-widest text-xs mb-2">Zero Matches Found</h3>
-                        <p className="text-zinc-600 text-xs">The current filter criteria return no architecture nodes.</p>
+                        <h3 className="text-white font-bold uppercase tracking-widest text-xs mb-2">No repositories found</h3>
+                        <p className="text-zinc-600 text-xs">Try adjusting your search terms.</p>
                     </div>
                 )}
             </div>
@@ -230,28 +221,23 @@ export const ImportPage: React.FC<{
     onImportRepository: (repo: Repository, projectName: string) => void;
 }> = ({ onImportRepository }) => {
     const navigate = useNavigate();
-    const { loginWithGitHub, linkGithub, user, isGithubConnected, logout } = useAuth();
+    const { loginWithGitHub, linkGithub, user, isGithubConnected, logout, loginWithGoogle } = useAuth();
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [collisionCode, setCollisionCode] = useState<string | null>(null);
 
     const handleConnect = async () => {
         setIsLoading(true);
         setError(null);
         try {
-            if (user) {
-                // TRY TO LINK
-                await linkGithub();
-            } else {
-                // LOGIN
-                await loginWithGitHub();
-            }
+            // Simplified Login - No linking (it causes collisions if both accounts exist)
+            await loginWithGitHub();
         } catch (e: any) {
             console.error("Connection Error:", e);
-            // CHECK FOR COLLISION CODES
-            if (e.code === 'auth/credential-already-in-use' || e.code === 'auth/email-already-in-use') {
-                setError('collision');
+            if (e.code === 'auth/account-exists-with-different-credential' || e.code === 'auth/credential-already-in-use') {
+                setError('Your email is already registered with another provider (likely Google). Please switch accounts to continue.');
             } else {
-                setError(e.message || 'Transmission failed.');
+                setError(e.message || 'Authentication failed.');
             }
         } finally {
             setIsLoading(false);
@@ -263,8 +249,9 @@ export const ImportPage: React.FC<{
         try {
             await logout();
             await loginWithGitHub();
-        } catch (e) {
-            console.error(e);
+        } catch (e: any) {
+            console.error("Switch Error:", e);
+            setError('Failed to switch accounts.');
         } finally {
             setIsLoading(false);
         }
@@ -281,10 +268,10 @@ export const ImportPage: React.FC<{
                 <div>
                     <div className="flex items-center gap-3 mb-6">
                         <div className="h-[1px] w-12 bg-white/20"></div>
-                        <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-zinc-500">Infrastructure Import</span>
+                        <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-zinc-500">Import Projects</span>
                     </div>
-                    <h1 className="text-5xl md:text-6xl font-bold text-white tracking-tighter mb-4">Select architecture <br /><span className="text-zinc-600 italic font-serif">to synchronize.</span></h1>
-                    <p className="text-zinc-500 text-lg max-w-xl font-medium leading-relaxed"> Connect your GitHub fleet to orchestrate high-fidelity deployments on the OpenDev Global Mash. </p>
+                    <h1 className="text-5xl md:text-6xl font-bold text-white tracking-tighter mb-4">Select projects <br /><span className="text-zinc-600 italic font-serif">to synchronize.</span></h1>
+                    <p className="text-zinc-500 text-lg max-w-xl font-medium leading-relaxed"> Connect your GitHub account to import and manage your projects on OpenDev. </p>
                 </div>
 
                 <div className="relative">
@@ -303,8 +290,8 @@ export const ImportPage: React.FC<{
                                             <div className="w-12 h-12 bg-black border border-zinc-800 flex items-center justify-center mb-6 group-hover:bg-zinc-900 transition-colors">
                                                 <GitHubIcon className="text-zinc-400 group-hover:text-white transition-colors" />
                                             </div>
-                                            <h3 className="text-xl font-bold text-white tracking-tighter mb-2">Primary Carrier: GitHub</h3>
-                                            <p className="text-sm text-zinc-500 font-medium">Native integration with the OpenDev Nexus protocol.</p>
+                                            <h3 className="text-xl font-bold text-white tracking-tighter mb-2">GitHub</h3>
+                                            <p className="text-sm text-zinc-500 font-medium">Connect your GitHub account to access your repositories.</p>
                                         </div>
                                         <button
                                             onClick={handleConnect}
@@ -314,7 +301,7 @@ export const ImportPage: React.FC<{
                                             {isLoading ? (
                                                 <div className="w-4 h-4 border-2 border-zinc-300 border-t-black animate-spin"></div>
                                             ) : (
-                                                <>Authenticate Protocol <ArrowRight size={14} className="group-hover/btn:translate-x-1 transition-transform" /></>
+                                                <>Connect GitHub <ArrowRight size={14} className="group-hover/btn:translate-x-1 transition-transform" /></>
                                             )}
                                         </button>
                                     </div>
@@ -326,17 +313,12 @@ export const ImportPage: React.FC<{
                                     </div>
                                 </div>
 
-                                {error === 'collision' && (
-                                    <CollisionAlert
-                                        onSwitch={handleSwitchAccount}
-                                        onClose={() => setError(null)}
+                                {error && (
+                                    <SimpleAuthAlert
+                                        message={error}
+                                        onRetry={handleConnect}
+                                        onSwitchAccount={handleSwitchAccount}
                                     />
-                                )}
-
-                                {error && error !== 'collision' && (
-                                    <div className="p-4 bg-red-500/10 border border-red-500/20 text-red-500 text-[10px] font-bold uppercase tracking-widest">
-                                        PROTOCOL_ERROR: {error}
-                                    </div>
                                 )}
                             </MotionDiv>
                         ) : (
