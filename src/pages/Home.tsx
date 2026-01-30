@@ -52,7 +52,7 @@ export default function Home() {
                         transition={{ delay: 0.1 }}
                         className="text-6xl md:text-9xl font-bold tracking-tighter mb-10 text-white leading-[0.8] lowercase"
                     >
-                        intelligent<br /><span className="text-zinc-600">ecosystem.</span>
+                        intelligent ecosystem.
                     </motion.h1>
 
                     <motion.p
