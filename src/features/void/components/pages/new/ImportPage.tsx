@@ -1,12 +1,70 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../../hooks/useAuth';
-import { GitProvider, Repository } from '../../../types';
+import { Repository } from '../../../types';
+import { AlertCircle, ArrowRight, ShieldCheck, Zap, Globe, Github } from 'lucide-react';
 import { GitHubIcon, SearchIcon, GitBranchIcon } from '../../common/Icons';
 import { ConfigureProjectForm } from '../../common/ConfigureProjectForm';
 
 const MotionDiv = motion.div;
+
+/* --- PREMIUM UI COMPONENTS --- */
+
+const TerminalLine: React.FC<{ text: string, delay?: number, type?: 'info' | 'error' | 'success' }> = ({ text, delay = 0, type = 'info' }) => {
+    const colors = {
+        info: 'text-zinc-500',
+        error: 'text-red-500',
+        success: 'text-emerald-500'
+    };
+    return (
+        <motion.div
+            initial={{ opacity: 0, x: -5 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay }}
+            className={`font-mono text-[10px] leading-relaxed flex gap-2 ${colors[type]}`}
+        >
+            <span className="opacity-30">[{new Date().toLocaleTimeString([], { hour12: false })}]</span>
+            <span className="font-bold opacity-50">▸</span>
+            <span className="tracking-tight">{text}</span>
+        </motion.div>
+    );
+};
+
+const CollisionAlert: React.FC<{ onSwitch: () => void, onClose: () => void }> = ({ onSwitch, onClose }) => (
+    <MotionDiv
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.95 }}
+        className="mt-8 p-6 bg-red-500/5 border border-red-500/20 rounded-none relative overflow-hidden group"
+    >
+        <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+            <AlertCircle size={48} className="text-red-500" />
+        </div>
+        <div className="relative z-10">
+            <h4 className="text-red-500 text-xs font-bold uppercase tracking-widest mb-2 flex items-center gap-2">
+                <AlertCircle size={14} /> Identity Collision Detected
+            </h4>
+            <p className="text-zinc-400 text-sm leading-relaxed mb-6 max-w-md">
+                This GitHub account is already tied to a different OpenDev Nexus identity. You cannot link it to your current session.
+            </p>
+            <div className="flex gap-4">
+                <button
+                    onClick={onSwitch}
+                    className="h-10 px-6 bg-red-500 text-white font-bold text-[10px] uppercase tracking-widest hover:bg-red-600 transition-all flex items-center gap-2 group/btn"
+                >
+                    Switch Identity <ArrowRight size={14} className="group-hover/btn:translate-x-1 transition-transform" />
+                </button>
+                <button
+                    onClick={onClose}
+                    className="h-10 px-6 border border-zinc-800 text-zinc-500 font-bold text-[10px] uppercase tracking-widest hover:text-white hover:border-zinc-700 transition-all"
+                >
+                    Dismiss
+                </button>
+            </div>
+        </div>
+    </MotionDiv>
+);
 
 const ConnectedRepoView: React.FC<{
     onDisconnect: () => void,
@@ -16,11 +74,10 @@ const ConnectedRepoView: React.FC<{
     const [repos, setRepos] = useState<Repository[]>([]);
     const [loading, setLoading] = useState(true);
 
-    React.useEffect(() => {
+    useEffect(() => {
         let isMounted = true;
         const loadRepos = async () => {
             if (!user?.uid) return;
-
             setRepos([]);
             setLoading(true);
             try {
@@ -36,41 +93,48 @@ const ConnectedRepoView: React.FC<{
         return () => { isMounted = false; };
     }, [fetchRepositories, user?.uid]);
 
-    const handleRefresh = async () => {
-        setLoading(true);
-        const data = await fetchRepositories();
-        setRepos(data);
-        setLoading(false);
-    };
-
     return (
-        <MotionDiv
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="w-full"
-        >
-            <div className="flex justify-between items-center mb-10 p-6 bg-zinc-950 border border-zinc-900 rounded-none">
-                <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-black rounded-none border border-zinc-800 flex items-center justify-center text-white">
-                        <GitHubIcon />
+        <MotionDiv initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="w-full">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12 p-8 bg-zinc-950 border border-zinc-900">
+                <div className="flex items-center gap-6">
+                    <div className="relative">
+                        <div className="w-16 h-16 bg-black border border-zinc-800 flex items-center justify-center relative z-10">
+                            {githubUser?.avatar_url ? (
+                                <img src={githubUser.avatar_url} alt="Profile" className="w-full h-full opacity-80" />
+                            ) : (
+                                <Github className="text-zinc-500" />
+                            )}
+                        </div>
+                        <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-emerald-500 flex items-center justify-center border border-black z-20">
+                            <ShieldCheck size={12} className="text-black" />
+                        </div>
                     </div>
                     <div>
-                        <span className="block text-[10px] text-zinc-600 uppercase tracking-widest font-bold mb-1">Authenticated via GitHub</span>
-                        <span className="text-sm font-bold text-white tracking-tight">{githubUser?.login ? `@${githubUser.login}` : (user?.name || 'Authorized Architect')}</span>
+                        <div className="flex items-center gap-2 mb-1">
+                            <span className="px-2 py-0.5 bg-emerald-500/10 border border-emerald-500/20 text-[9px] font-bold text-emerald-500 uppercase tracking-widest">Connected</span>
+                            <span className="text-[10px] text-zinc-600 font-mono">NODE_UID: {user?.uid?.slice(0, 8)}...</span>
+                        </div>
+                        <h3 className="text-xl font-bold text-white tracking-tighter">@{githubUser?.login || user?.name || 'Architect'}</h3>
+                        <p className="text-[11px] text-zinc-500 font-medium uppercase tracking-widest mt-1 opacity-60">Identity Source: GitHub Proto-Link</p>
                     </div>
                 </div>
-                <button onClick={onDisconnect} className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 hover:text-white transition-colors">
-                    Logout
+                <button onClick={onDisconnect} className="text-[10px] font-bold uppercase tracking-widest text-zinc-600 hover:text-white transition-colors border-b border-transparent hover:border-white pb-1">
+                    Revoke Access
                 </button>
             </div>
 
             {loading ? (
-                <div className="flex flex-col items-center justify-center py-32 text-zinc-600 space-y-6">
-                    <div className="w-8 h-8 border-[3px] border-white border-t-transparent rounded-none animate-spin"></div>
-                    <p className="text-[10px] font-bold uppercase tracking-[0.2em]">Synchronizing Nodes...</p>
+                <div className="space-y-4 py-20 px-8 border border-zinc-900 bg-zinc-950/50">
+                    <TerminalLine text="Initializing neural handshake..." delay={0.1} />
+                    <TerminalLine text="Identifying repository clusters..." delay={0.3} />
+                    <TerminalLine text="Synchronizing meta-data shards..." delay={0.5} />
+                    <div className="pt-8 flex items-center gap-3">
+                        <div className="w-4 h-4 border-2 border-white/20 border-t-white animate-spin"></div>
+                        <span className="text-[10px] font-bold text-white tracking-[0.2em] uppercase">Auditing nodes...</span>
+                    </div>
                 </div>
             ) : (
-                <RepoList repos={repos} onImport={onImport} onRefresh={handleRefresh} />
+                <RepoList repos={repos} onImport={onImport} />
             )}
         </MotionDiv>
     );
@@ -78,9 +142,8 @@ const ConnectedRepoView: React.FC<{
 
 const RepoList: React.FC<{
     repos: Repository[],
-    onImport: (repo: Repository, projectName: string) => void,
-    onRefresh: () => void
-}> = ({ repos, onImport, onRefresh }) => {
+    onImport: (repo: Repository, projectName: string) => void
+}> = ({ repos, onImport }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [configuringRepoId, setConfiguringRepoId] = useState<string | null>(null);
 
@@ -90,37 +153,47 @@ const RepoList: React.FC<{
     );
 
     return (
-        <div className="space-y-6">
-            <div className="relative">
-                <SearchIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-600" />
+        <div className="space-y-8">
+            <div className="relative group">
+                <SearchIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-600 group-focus-within:text-white transition-colors" />
                 <input
                     type="text"
-                    placeholder="Search node library..."
+                    placeholder="Search node clusters..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full bg-black border border-zinc-900 h-12 pl-12 pr-6 text-sm text-white font-medium focus:outline-none focus:ring-1 focus:ring-white transition-all rounded-none placeholder:text-zinc-700"
+                    className="w-full bg-zinc-950 border border-zinc-900 h-14 pl-12 pr-6 text-sm text-white font-medium focus:outline-none focus:border-white transition-all placeholder:text-zinc-700"
                 />
+                <div className="absolute right-4 top-1/2 -translate-y-1/2 hidden md:block">
+                    <span className="text-[9px] font-bold text-zinc-700 tracking-widest uppercase bg-zinc-900 px-2 py-1">Type to filter</span>
+                </div>
             </div>
 
-            <div className="border border-zinc-900 divide-y divide-zinc-900 bg-black rounded-none overflow-hidden">
+            <div className="grid grid-cols-1 gap-4">
                 {filteredRepos.map(repo => (
-                    <div key={repo.id} className="p-6 hover:bg-zinc-950 transition-colors">
-                        <div className="flex justify-between items-center">
-                            <div className="flex items-center gap-4">
-                                <div className="w-10 h-10 bg-zinc-950 border border-zinc-900 rounded-none flex items-center justify-center">
-                                    <GitBranchIcon className="w-5 h-5 text-zinc-600" />
+                    <div key={repo.id} className="group relative bg-zinc-950 border border-zinc-900 p-8 transition-all hover:border-zinc-700">
+                        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                            <div className="flex items-center gap-6">
+                                <div className="w-12 h-12 bg-black border border-zinc-800 flex items-center justify-center group-hover:bg-zinc-900 transition-colors">
+                                    <GitBranchIcon className="w-6 h-6 text-zinc-600 group-hover:text-white transition-colors" />
                                 </div>
                                 <div>
-                                    <p className="text-sm font-bold text-white tracking-tight">{repo.name}</p>
-                                    <p className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest mt-1">Updated {repo.updatedAt}</p>
+                                    <div className="flex items-center gap-2 mb-2">
+                                        <h4 className="text-lg font-bold text-white tracking-tighter">{repo.name}</h4>
+                                        <span className="text-[9px] font-bold text-zinc-600 uppercase tracking-widest border border-zinc-900 px-2">PUBLIC</span>
+                                    </div>
+                                    <div className="flex items-center gap-4 text-zinc-500 text-[10px] font-bold uppercase tracking-widest">
+                                        <span className="flex items-center gap-1.5"><Zap size={10} /> Active Cluster</span>
+                                        <span className="flex items-center gap-1.5"><Globe size={10} /> Edge Sync Enabled</span>
+                                        <span className="opacity-40">Last Updated {repo.updatedAt}</span>
+                                    </div>
                                 </div>
                             </div>
                             {configuringRepoId !== repo.id && (
                                 <button
                                     onClick={() => setConfiguringRepoId(repo.id)}
-                                    className="h-10 px-8 text-[11px] font-bold uppercase tracking-widest bg-white text-black hover:bg-zinc-200 transition-all rounded-none hover:scale-105 active:scale-95 shadow-lg shadow-white/5"
+                                    className="h-10 px-8 bg-white text-black text-[11px] font-bold uppercase tracking-widest hover:bg-zinc-200 transition-all hover:translate-x-1 active:translate-x-0"
                                 >
-                                    Import
+                                    Import Node
                                 </button>
                             )}
                         </div>
@@ -138,16 +211,14 @@ const RepoList: React.FC<{
                         )}
                     </div>
                 ))}
+
                 {filteredRepos.length === 0 && (
-                    <div className="text-center py-20 text-zinc-600 flex flex-col items-center">
-                        <SearchIcon className="w-10 h-10 mb-4 opacity-20" />
-                        <p className="text-xs font-bold uppercase tracking-[0.2em] mb-4">No Nodes Found</p>
-                        <button
-                            onClick={onRefresh}
-                            className="px-4 py-2 bg-zinc-900 border border-zinc-800 text-[10px] font-bold uppercase tracking-widest text-zinc-400 hover:text-white hover:bg-zinc-800 transition-all rounded-none"
-                        >
-                            Sync Nodes
-                        </button>
+                    <div className="text-center py-32 border border-zinc-900 border-dashed">
+                        <div className="inline-flex items-center justify-center w-12 h-12 bg-zinc-900 rounded-none mb-6">
+                            <SearchIcon className="text-zinc-600" />
+                        </div>
+                        <h3 className="text-white font-bold uppercase tracking-widest text-xs mb-2">Zero Matches Found</h3>
+                        <p className="text-zinc-600 text-xs">The current filter criteria return no architecture nodes.</p>
                     </div>
                 )}
             </div>
@@ -160,73 +231,122 @@ export const ImportPage: React.FC<{
 }> = ({ onImportRepository }) => {
     const navigate = useNavigate();
     const { loginWithGitHub, linkGithub, user, isGithubConnected, logout } = useAuth();
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
     const handleConnect = async () => {
+        setIsLoading(true);
+        setError(null);
         try {
             if (user) {
-                // Already authenticated (e.g. Google), so LINK GitHub
+                // TRY TO LINK
                 await linkGithub();
             } else {
-                // Not authenticated, so full Login
+                // LOGIN
                 await loginWithGitHub();
             }
-        } catch (e) {
-            console.error(e);
+        } catch (e: any) {
+            console.error("Connection Error:", e);
+            // CHECK FOR COLLISION CODES
+            if (e.code === 'auth/credential-already-in-use' || e.code === 'auth/email-already-in-use') {
+                setError('collision');
+            } else {
+                setError(e.message || 'Transmission failed.');
+            }
+        } finally {
+            setIsLoading(false);
         }
     };
 
-    const handleDisconnect = async () => {
-        // Just clear the GH token if they want to "disconnect" or do a full logout?
-        // For now, let's just do a full logout to keep it simple, or we could add a "unlink" later.
-        await logout();
+    const handleSwitchAccount = async () => {
+        setIsLoading(true);
+        try {
+            await logout();
+            await loginWithGitHub();
+        } catch (e) {
+            console.error(e);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
-        <MotionDiv initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} className="max-w-2xl mx-auto py-10">
-            <button onClick={() => navigate('/void/new')} className="group flex items-center gap-3 text-[10px] font-bold uppercase tracking-widest text-zinc-600 hover:text-white mb-12 transition-all">
-                <span className="group-hover:-translate-x-1 transition-transform">&larr;</span>
-                Genesis Options
+        <MotionDiv initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="max-w-4xl mx-auto py-20 px-6">
+            <button onClick={() => navigate('/void/new')} className="group flex items-center gap-3 text-[10px] font-bold uppercase tracking-widest text-zinc-600 hover:text-white mb-16 transition-all">
+                <span className="group-hover:-translate-x-1 transition-transform tracking-normal">&larr; [ ESC ]</span>
+                Return to Nexus
             </button>
 
-            <div className="space-y-10">
+            <div className="space-y-16">
                 <div>
-                    <h2 className="text-3xl font-bold text-white tracking-tighter mb-2">Import Node</h2>
-                    <p className="text-zinc-500 text-sm font-medium">Connect your GitHub account to synchronize your repository fleet.</p>
+                    <div className="flex items-center gap-3 mb-6">
+                        <div className="h-[1px] w-12 bg-white/20"></div>
+                        <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-zinc-500">Infrastructure Import</span>
+                    </div>
+                    <h1 className="text-5xl md:text-6xl font-bold text-white tracking-tighter mb-4">Select architecture <br /><span className="text-zinc-600 italic font-serif">to synchronize.</span></h1>
+                    <p className="text-zinc-500 text-lg max-w-xl font-medium leading-relaxed"> Connect your GitHub fleet to orchestrate high-fidelity deployments on the OpenDev Global Mash. </p>
                 </div>
 
-                <div className="min-h-[300px] relative">
+                <div className="relative">
                     <AnimatePresence mode='wait'>
                         {!isGithubConnected ? (
                             <MotionDiv
                                 key="guest"
-                                initial={{ opacity: 0, x: -20 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                exit={{ opacity: 0, x: 20 }}
-                                transition={{ duration: 0.3 }}
-                                className="space-y-1 absolute w-full"
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -10 }}
+                                className="space-y-8"
                             >
-                                <button
-                                    onClick={handleConnect}
-                                    className="w-full flex items-center justify-between h-14 px-6 border border-zinc-900 bg-black hover:bg-zinc-950 transition-all group rounded-none"
-                                >
-                                    <div className="flex items-center gap-4">
-                                        <div className="text-zinc-500 group-hover:text-white transition-colors"><GitHubIcon /></div>
-                                        <span className="text-[13px] font-bold text-zinc-400 group-hover:text-white tracking-tight">Connect GitHub</span>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                    <div className="bg-zinc-950 border border-zinc-900 p-8 flex flex-col justify-between h-64 hover:border-zinc-700 transition-all group">
+                                        <div>
+                                            <div className="w-12 h-12 bg-black border border-zinc-800 flex items-center justify-center mb-6 group-hover:bg-zinc-900 transition-colors">
+                                                <GitHubIcon className="text-zinc-400 group-hover:text-white transition-colors" />
+                                            </div>
+                                            <h3 className="text-xl font-bold text-white tracking-tighter mb-2">Primary Carrier: GitHub</h3>
+                                            <p className="text-sm text-zinc-500 font-medium">Native integration with the OpenDev Nexus protocol.</p>
+                                        </div>
+                                        <button
+                                            onClick={handleConnect}
+                                            disabled={isLoading}
+                                            className="h-12 w-full bg-white text-black text-[11px] font-bold uppercase tracking-widest hover:bg-zinc-200 transition-all flex items-center justify-center gap-2 group/btn"
+                                        >
+                                            {isLoading ? (
+                                                <div className="w-4 h-4 border-2 border-zinc-300 border-t-black animate-spin"></div>
+                                            ) : (
+                                                <>Authenticate Protocol <ArrowRight size={14} className="group-hover/btn:translate-x-1 transition-transform" /></>
+                                            )}
+                                        </button>
                                     </div>
-                                    <span className="text-zinc-800 group-hover:text-white transition-colors">&rarr;</span>
-                                </button>
+
+                                    <div className="bg-zinc-950 border border-zinc-900 p-8 flex flex-col justify-center items-center text-center h-64 opacity-40">
+                                        <AlertCircle size={32} className="text-zinc-700 mb-4" />
+                                        <h3 className="text-sm font-bold text-zinc-500 uppercase tracking-widest mb-1">Other Carriers</h3>
+                                        <p className="text-[10px] text-zinc-700 uppercase tracking-widest font-bold">Encrypted / Off-Grid</p>
+                                    </div>
+                                </div>
+
+                                {error === 'collision' && (
+                                    <CollisionAlert
+                                        onSwitch={handleSwitchAccount}
+                                        onClose={() => setError(null)}
+                                    />
+                                )}
+
+                                {error && error !== 'collision' && (
+                                    <div className="p-4 bg-red-500/10 border border-red-500/20 text-red-500 text-[10px] font-bold uppercase tracking-widest">
+                                        PROTOCOL_ERROR: {error}
+                                    </div>
+                                )}
                             </MotionDiv>
                         ) : (
                             <MotionDiv
                                 key="auth"
-                                initial={{ opacity: 0, x: 20 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                exit={{ opacity: 0, x: -20 }}
-                                transition={{ duration: 0.3 }}
-                                className="absolute w-full"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
                             >
                                 <ConnectedRepoView
-                                    onDisconnect={handleDisconnect}
+                                    onDisconnect={logout}
                                     onImport={onImportRepository}
                                 />
                             </MotionDiv>
