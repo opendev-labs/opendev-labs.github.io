@@ -1,11 +1,14 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Terminal, Database, Globe, ArrowRight, ShieldCheck, Zap, Box, Cpu } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import HeroBg from '../assets/bg.png';
 import { motion } from 'framer-motion';
+import { useAuth } from '../contexts/AuthContext';
 
 export default function Home() {
+    const navigate = useNavigate();
+    const { isAuthenticated } = useAuth();
     return (
         <div className="flex flex-col w-full bg-black">
             {/* Hero Section */}
@@ -70,11 +73,21 @@ export default function Home() {
                         transition={{ delay: 0.3 }}
                         className="flex flex-col md:flex-row items-center justify-center gap-6"
                     >
-                        <Button size="xl" onClick={() => window.location.href = '/void'}>
-                            Initialize Node
+                        <Button
+                            variant="secondary"
+                            size="xl"
+                            onClick={() => navigate('/void/new')}
+                            className="bg-black border border-zinc-800 text-white hover:bg-zinc-900 min-w-[200px]"
+                        >
+                            Deploy
                         </Button>
-                        <Button variant="outline" size="xl" onClick={() => window.location.href = '/docs'}>
-                            Documentation
+                        <Button
+                            variant="primary"
+                            size="xl"
+                            onClick={() => navigate(isAuthenticated ? '/office' : '/auth')}
+                            className="min-w-[200px]"
+                        >
+                            {isAuthenticated ? 'Dashboard' : 'Login / Signup'}
                         </Button>
                     </motion.div>
                 </div>
