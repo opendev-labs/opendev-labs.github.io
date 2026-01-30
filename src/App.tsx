@@ -29,29 +29,31 @@ const AppRoutes = () => {
     <>
       <ScrollToTop />
       <Routes>
-        <Route path="office/*" element={
-          <Suspense fallback={<div className="min-h-screen bg-black flex items-center justify-center text-white font-bold uppercase tracking-[0.3em]">Opening Office...</div>}>
-            <OfficeDashboard />
-          </Suspense>
-        } />
-        <Route path="void/*" element={
-          <Suspense fallback={<div className="min-h-screen bg-black flex items-center justify-center text-white">Loading Void...</div>}>
-            <VoidApp />
-          </Suspense>
-        } />
-        <Route path="dashboard" element={<Navigate to="/office" replace />} />
-        <Route index element={<Home />} />
-        <Route path="auth" element={
-          <Suspense fallback={<div className="min-h-screen bg-black" />}>
-            <LazyAuthPage />
-          </Suspense>
-        } />
-        <Route path="verify-email" element={
-          <Suspense fallback={<div className="min-h-screen bg-black" />}>
-            <LazyVerifyEmailPage />
-          </Suspense>
-        } />
-        <Route path="*" element={<Placeholder title="404 - Not Found" />} />
+        <Route element={<Layout />}>
+          <Route path="office/*" element={
+            <Suspense fallback={<div className="min-h-screen bg-black flex items-center justify-center text-white font-bold uppercase tracking-[0.3em]">Opening Office...</div>}>
+              <OfficeDashboard />
+            </Suspense>
+          } />
+          <Route path="void/*" element={
+            <Suspense fallback={<div className="min-h-screen bg-black flex items-center justify-center text-white">Loading Void...</div>}>
+              <VoidApp />
+            </Suspense>
+          } />
+          <Route path="dashboard" element={<Navigate to="/office" replace />} />
+          <Route index element={<Home />} />
+          <Route path="auth" element={
+            <Suspense fallback={<div className="min-h-screen bg-black" />}>
+              <LazyAuthPage />
+            </Suspense>
+          } />
+          <Route path="verify-email" element={
+            <Suspense fallback={<div className="min-h-screen bg-black" />}>
+              <LazyVerifyEmailPage />
+            </Suspense>
+          } />
+          <Route path="*" element={<Placeholder title="404 - Not Found" />} />
+        </Route>
       </Routes>
     </>
   );
