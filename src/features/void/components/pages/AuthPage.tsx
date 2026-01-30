@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
-import { useAuth } from '../../../../contexts/AuthContext';
+import { useAuth } from '../../hooks/useAuth';
 import { GoogleIcon } from '../common/Icons';
 import { ArrowLeft, Cpu, Terminal, ShieldCheck, Zap, Box, Mail, Lock } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';

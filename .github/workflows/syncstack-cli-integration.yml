@@ -1,0 +1,118 @@
+name: SyncStack CLI to Web Dashboard Integration
+
+# ============================================================================
+# GITHUB ACTION: LamaDB CLI → Web Dashboard Auto-Sync
+# ============================================================================
+# 
+# Purpose: Automatically update the live web dashboard when you run LamaDB
+#          CLI commands locally. This creates a seamless CLI-to-Web bridge.
+#
+# Trigger: Manual workflow dispatch or repository dispatch from CLI
+# ============================================================================
+
+on:
+  # Trigger manually from GitHub UI
+  workflow_dispatch:
+    inputs:
+      data_type:
+        description: 'Type of data to sync (projects, deployments, users)'
+        required: true
+        default: 'projects'
+        type: choice
+        options:
+          - projects
+          - deployments
+          - users
+          - all
+      
+      sync_mode:
+        description: 'Sync mode'
+        required: true
+        default: 'incremental'
+        type: choice
+        options:
+          - incremental
+          - full
+  
+  # Trigger from LamaDB CLI via webhook
+  repository_dispatch:
+    types: [lamadb_cli_sync]
+
+jobs:
+  sync-cli-to-dashboard:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 🔄 Checkout Repository
+        uses: actions/checkout@v4
+      
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: 📥 Install Dependencies
+        run: npm ci
+      
+      - name: 🔐 Authenticate with Firebase
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          echo "Setting up Firebase credentials..."
+          echo "$FIREBASE_SERVICE_ACCOUNT" > firebase-service-account.json
+      
+      - name: 🔄 Sync Data from CLI to Dashboard
+        env:
+          DATA_TYPE: ${{ github.event.inputs.data_type || github.event.client_payload.data_type }}
+          SYNC_MODE: ${{ github.event.inputs.sync_mode || github.event.client_payload.sync_mode }}
+          CLI_PAYLOAD: ${{ toJson(github.event.client_payload) }}
+        run: |
+          echo "🚀 SyncStack CLI → Dashboard Sync Started"
+          echo "Data Type: $DATA_TYPE"
+          echo "Sync Mode: $SYNC_MODE"
+          echo ""
+          
+          # Run sync script (you'll create this)
+          node scripts/sync-cli-data.js
+      
+      - name: 🏗️ Build Dashboard with Updated Data
+        run: npm run build
+      
+      - name: 🚀 Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          publish_branch: gh-pages
+          commit_message: "🔄 Auto-sync from LamaDB CLI: ${{ github.event.inputs.data_type || github.event.client_payload.data_type }}"
+      
+      - name: ✅ Notify Success
+        if: success()
+        run: |
+          echo "✅ Dashboard updated successfully!"
+          echo "Live at: https://opendev-labs.github.io"
+          echo ""
+          echo "Changes synced:"
+          echo "- Data Type: $DATA_TYPE"
+          echo "- Sync Mode: $SYNC_MODE"
+          echo "- Trigger: ${{ github.event_name }}"
+      
+      - name: ❌ Notify Failure
+        if: failure()
+        run: |
+          echo "❌ Dashboard sync failed"
+          echo "Check logs above for details"
+
+  notify-completion:
+    needs: sync-cli-to-dashboard
+    runs-on: ubuntu-latest
+    if: always()
+    
+    steps:
+      - name: 📢 Send Notification
+        env:
+          STATUS: ${{ job.status }}
+        run: |
+          echo "Sync completed with status: $STATUS"
+          # Add webhook to Discord/Slack here if desired

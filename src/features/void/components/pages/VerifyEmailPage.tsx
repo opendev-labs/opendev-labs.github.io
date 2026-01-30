@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { useAuth, User as LocalUser } from '../../../../contexts/AuthContext';
+import { useAuth, User as LocalUser } from '../../hooks/useAuth';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { Button } from '../../../../components/ui/Button';
