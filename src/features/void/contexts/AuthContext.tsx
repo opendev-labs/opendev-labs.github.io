@@ -24,7 +24,6 @@ interface AuthState {
 interface AuthContextType extends AuthState {
   loginWithGitHub: () => Promise<void>;
   loginWithGoogle: () => Promise<void>;
-  linkGithub: () => Promise<void>;
   logout: () => Promise<void>;
   fetchRepositories: () => Promise<any[]>;
   createRepository: (name: string, description: string, isPrivate: boolean) => Promise<any>;
@@ -153,20 +152,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, []);
 
-  const linkGithub = useCallback(async () => {
-    try {
-      const result = await LamaDB.auth.linkGithub();
-      const credential = GithubAuthProvider.credentialFromResult(result as any);
 
-      if (credential?.accessToken) {
-        setToken(credential.accessToken);
-        localStorage.setItem('opendev_gh_token', credential.accessToken);
-      }
-    } catch (error) {
-      console.error("Link GitHub Error:", error);
-      throw error;
-    }
-  }, []);
 
   const fetchRepositories = useCallback(async () => {
     if (!token) return [];
@@ -338,7 +324,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       isGithubConnected,
       loginWithGitHub,
       loginWithGoogle,
-      linkGithub,
       logout,
       fetchRepositories,
       createRepository,

@@ -12,9 +12,47 @@ import { Button } from './ui/Button';
 
 /* --- LOGO --- */
 const Logo = () => (
-    <svg width="24" height="24" viewBox="0 0 116 100" fill="white" xmlns="http://www.w3.org/2000/svg" className="rotate-0 group-hover:rotate-180 transition-transform duration-700">
-        <path fillRule="evenodd" clipRule="evenodd" d="M57.5 100L0 0H116L57.5 100Z" />
-    </svg>
+    <div className="relative group/logo">
+        <svg width="28" height="28" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="rotate-0 group-hover:rotate-180 transition-transform duration-1000 ease-in-out">
+            <defs>
+                <filter id="neon-glow" x="-50%" y="-50%" width="200%" height="200%">
+                    <feGaussianBlur stdDeviation="3.5" result="coloredBlur" />
+                    <feMerge>
+                        <feMergeNode in="coloredBlur" />
+                        <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                </filter>
+                <linearGradient id="logo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#00f2ff" />
+                    <stop offset="50%" stopColor="#bc00ff" />
+                    <stop offset="100%" stopColor="#ff00d4" />
+                </linearGradient>
+            </defs>
+            {/* Ambient Glow */}
+            <path
+                d="M50 95L5 10H95L50 95Z"
+                stroke="url(#logo-grad)"
+                strokeWidth="6"
+                filter="url(#neon-glow)"
+                className="opacity-40 group-hover/logo:opacity-80 transition-opacity duration-700"
+            />
+            {/* Outer Rim */}
+            <path
+                d="M50 90L10 15H90L50 90Z"
+                stroke="url(#logo-grad)"
+                strokeWidth="2"
+                className="group-hover/logo:stroke-white transition-colors duration-700"
+            />
+            {/* Inner Core */}
+            <path
+                d="M50 75L30 35H70L50 75Z"
+                fill="url(#logo-grad)"
+                className="group-hover/logo:scale-110 origin-center transition-transform duration-700"
+            />
+        </svg>
+        {/* Subtle Bottom Light Reflection */}
+        <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-4 h-1 bg-purple-500/30 blur-md group-hover:bg-cyan-500/50 transition-all duration-700" />
+    </div>
 );
 
 const UserAvatar = ({ name }: { name: string }) => {

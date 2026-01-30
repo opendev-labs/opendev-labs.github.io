@@ -7,6 +7,51 @@ import { motion } from 'framer-motion';
 import { useAuth } from '../features/void/hooks/useAuth';
 import { NewProjectIcon } from '../features/void/components/common/Icons';
 
+const TechnologySection = () => {
+    const techs = [
+        { name: 'React', id: 'react' },
+        { name: 'Next.js', id: 'nextjs' },
+        { name: 'TypeScript', id: 'typescript' },
+        { name: 'Node.js', id: 'nodejs' },
+        { name: 'Python', id: 'python' },
+        { name: 'Go', id: 'go' },
+        { name: 'Rust', id: 'rust' },
+        { name: 'PostgreSQL', id: 'postgres' },
+        { name: 'Redis', id: 'redis' },
+        { name: 'Vite', id: 'vite' },
+        { name: 'Tailwind CSS', id: 'tailwind' },
+        { name: 'Firebase', id: 'firebase' },
+        { name: 'Astro', id: 'astro' },
+        { name: 'Svelte', id: 'svelte' },
+        { name: 'Vue', id: 'vue' },
+        { name: 'Nuxt', id: 'nuxt' },
+        { name: 'Remix', id: 'remix' },
+        { name: 'Angular', id: 'angular' },
+        { name: 'Docker', id: 'docker' },
+        { name: 'AWS', id: 'aws' }
+    ];
+
+    return (
+        <div className="py-24 border-y border-zinc-900 overflow-hidden bg-zinc-950/20 backdrop-blur-3xl relative z-10">
+            <p className="text-[10px] font-bold tracking-[0.4em] text-zinc-600 mb-16 uppercase text-center">Engineered with Elite Tech Stacks</p>
+            <div className="relative flex overflow-x-hidden">
+                <div className="py-12 animate-marquee flex whitespace-nowrap gap-20">
+                    {techs.concat(techs).map((tech, i) => (
+                        <div key={`${tech.id}-${i}`} className="flex items-center gap-4 group cursor-default">
+                            <img
+                                src={`https://skillicons.dev/icons?i=${tech.id}`}
+                                alt={tech.name}
+                                className="h-10 w-10 grayscale group-hover:grayscale-0 transition-all duration-500 scale-100 group-hover:scale-110"
+                            />
+                            <span className="text-zinc-600 group-hover:text-white font-bold text-xs uppercase tracking-[0.2em] transition-colors">{tech.name}</span>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </div>
+    );
+};
+
 export default function Home() {
     const navigate = useNavigate();
     const { isAuthenticated } = useAuth();
@@ -108,6 +153,9 @@ export default function Home() {
                 </motion.div>
             </section>
 
+            {/* Technologies Section */}
+            <TechnologySection />
+
             {/* Platform Primitives Grid */}
             <section className="py-32 relative bg-black">
                 <div className="max-w-[1400px] mx-auto px-6">
@@ -118,18 +166,28 @@ export default function Home() {
                             { title: "Q-Cloud", desc: "Quantum-ready serverless infra with sub-atomic latency.", icon: Globe, path: "/q-cloud" },
                             { title: "SyncStack", desc: "Distributed synchronization layer for sovereign clusters.", icon: Box, path: "/syncstack" }
                         ].map((item, i) => (
-                            <div key={i} className="group p-12 bg-black border border-zinc-900 transition-all hover:bg-zinc-900/40 duration-500">
-                                <div className="w-12 h-12 bg-zinc-950 border border-zinc-800 rounded-none flex items-center justify-center mb-10 group-hover:border-zinc-600 transition-colors">
-                                    <item.icon size={20} className="text-zinc-500 group-hover:text-white" />
+                            <motion.button
+                                key={i}
+                                whileHover={{ backgroundColor: 'rgba(24, 24, 27, 0.4)' }}
+                                onClick={() => navigate(item.path)}
+                                className="group p-12 bg-black border border-zinc-900 transition-all duration-500 text-left relative overflow-hidden focus:outline-none"
+                            >
+                                <div className="relative z-10">
+                                    <div className="w-12 h-12 bg-zinc-950 border border-zinc-800 rounded-none flex items-center justify-center mb-10 group-hover:border-zinc-600 transition-colors">
+                                        <item.icon size={20} className="text-zinc-500 group-hover:text-white" />
+                                    </div>
+                                    <h3 className="text-sm font-bold uppercase tracking-[0.3em] mb-4 text-white">{item.title}</h3>
+                                    <p className="text-zinc-500 text-[11px] font-bold uppercase tracking-widest leading-relaxed mb-10 opacity-60 group-hover:opacity-100 transition-opacity">
+                                        {item.desc}
+                                    </p>
+                                    <div className="text-[10px] font-bold uppercase tracking-[0.4em] flex items-center gap-2 hover:text-white text-zinc-600 transition-colors">
+                                        Identify <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                                    </div>
                                 </div>
-                                <h3 className="text-sm font-bold uppercase tracking-[0.3em] mb-4 text-white">{item.title}</h3>
-                                <p className="text-zinc-500 text-[11px] font-bold uppercase tracking-widest leading-relaxed mb-10 opacity-60 group-hover:opacity-100 transition-opacity">
-                                    {item.desc}
-                                </p>
-                                <Link to={item.path} className="text-[10px] font-bold uppercase tracking-[0.4em] flex items-center gap-2 hover:text-white text-zinc-600 transition-colors">
-                                    Identify <ArrowRight size={14} />
-                                </Link>
-                            </div>
+                                <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <Zap size={12} className="text-white animate-pulse" />
+                                </div>
+                            </motion.button>
                         ))}
                     </div>
                 </div>

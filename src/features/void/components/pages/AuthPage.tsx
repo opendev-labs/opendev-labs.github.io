@@ -36,8 +36,11 @@ export const AuthPage: React.FC = () => {
             await loginWithGoogle();
         } catch (err: any) {
             console.error("Google Auth Error:", err);
-            const errorCode = err.code ? `[${err.code}] ` : "";
-            setError(`${errorCode}${err.message || "Google protocol transmission failed."}`);
+            if (err.code === 'auth/account-exists-with-different-credential') {
+                setError("This email is already associated with a different provider. Please try signing in with GitHub or your original method.");
+            } else {
+                setError(err.message || "Authentication failed. Please try again.");
+            }
             setAuthMethod('none');
         } finally {
             setIsLoading(false);
@@ -51,7 +54,7 @@ export const AuthPage: React.FC = () => {
         // Simulated email flow
         setTimeout(() => {
             setIsLoading(false);
-            setError("Email protocol requires manual node verification. Check your neural uplink.");
+            setError("Email login is not yet available. Please use Google or GitHub.");
         }, 1500);
     };
 
@@ -78,7 +81,7 @@ export const AuthPage: React.FC = () => {
                         className="inline-flex items-center gap-4 px-5 py-2 rounded-none bg-white/5 backdrop-blur-xl border border-white/10 text-[10px] font-bold text-zinc-400 uppercase tracking-[0.5em]"
                     >
                         <Cpu size={14} className="text-blue-500" />
-                        <span>Sovereign ID Protocol // ACTIVE</span>
+                        <span>Secure Account Access // ONLINE</span>
                     </motion.div>
 
                     <motion.h1
@@ -87,7 +90,7 @@ export const AuthPage: React.FC = () => {
                         transition={{ delay: 0.1 }}
                         className="text-5xl lg:text-6xl font-bold text-white tracking-tighter leading-[0.9] lowercase"
                     >
-                        connect<br /><span className="text-white block mt-2">the nexus.</span>
+                        connect<br /><span className="text-white block mt-2">your workspace.</span>
                     </motion.h1>
 
                     <motion.p
@@ -96,7 +99,7 @@ export const AuthPage: React.FC = () => {
                         transition={{ delay: 0.2 }}
                         className="text-zinc-500 text-lg font-medium tracking-tight leading-relaxed max-w-sm uppercase tracking-[0.2em] opacity-80"
                     >
-                        Access high-fidelity autonomy and distributed state orchestration.
+                        Deploy, manage, and scale your applications with high-fidelity control.
                     </motion.p>
 
                     <motion.div
@@ -135,9 +138,9 @@ export const AuthPage: React.FC = () => {
                                 <div className="w-20 h-20 bg-blue-500/10 rounded-none flex items-center justify-center mx-auto mb-10 border border-blue-500/20">
                                     <Terminal className="text-blue-500 animate-pulse" size={32} />
                                 </div>
-                                <h2 className="text-4xl font-bold tracking-tighter uppercase mb-4">Neural Uplink</h2>
+                                <h2 className="text-4xl font-bold tracking-tighter uppercase mb-4">Verification</h2>
                                 <p className="text-zinc-600 text-[10px] tracking-[0.4em] uppercase mb-10">
-                                    Challenge: <span className="text-white font-mono lowercase tracking-normal">{challenge}</span>
+                                    Reference: <span className="text-white font-mono">{challenge}</span>
                                 </p>
                                 <div className="p-8 bg-black/50 rounded-none border border-zinc-900 text-left mb-10">
                                     <p className="text-[9px] font-bold text-zinc-700 tracking-[0.4em] uppercase mb-2 ml-1">Detected ID</p>
@@ -165,13 +168,13 @@ export const AuthPage: React.FC = () => {
                                         animate={{ opacity: 1 }}
                                         className="text-[10px] font-bold text-blue-500 uppercase tracking-[0.6em] mb-4"
                                     >
-                                        Protocol Gateway
+                                        Authentication
                                     </motion.div>
                                     <h1 className="text-6xl font-bold tracking-tighter uppercase leading-tight">
-                                        {isSignUp ? 'Initialize' : 'Authenticate'}.
+                                        {isSignUp ? 'Create Account' : 'Sign In'}.
                                     </h1>
                                     <p className="text-zinc-600 text-[11px] font-bold uppercase tracking-[0.4em] leading-relaxed max-w-[280px]">
-                                        {isSignUp ? 'Establish your neural node in the official registry.' : 'Resume your session within the Nexus ecosystem.'}
+                                        {isSignUp ? 'Create your account to start building.' : 'Sign in to access your dashboard and projects.'}
                                     </p>
                                 </div>
 
@@ -250,7 +253,7 @@ export const AuthPage: React.FC = () => {
                                                     type="submit"
                                                     isLoading={isLoading}
                                                 >
-                                                    Deploy Protocol
+                                                    {isSignUp ? 'Create Account' : 'Sign In'}
                                                 </Button>
                                             </motion.form>
                                         )}
