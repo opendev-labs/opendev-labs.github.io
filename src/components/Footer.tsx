@@ -2,8 +2,16 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 const Logo = () => (
-    <svg width="24" height="24" viewBox="0 0 116 100" fill="white" xmlns="http://www.w3.org/2000/svg">
-        <path fillRule="evenodd" clipRule="evenodd" d="M57.5 100L0 0H116L57.5 100Z" />
+    <svg width="24" height="24" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+            <linearGradient id="footer-logo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#00f2ff" />
+                <stop offset="50%" stopColor="#bc00ff" />
+                <stop offset="100%" stopColor="#ff00d4" />
+            </linearGradient>
+        </defs>
+        <path d="M50 90L10 15H90L50 90Z" stroke="url(#footer-logo-grad)" strokeWidth="4" />
+        <path d="M50 75L30 35H70L50 75Z" fill="url(#footer-logo-grad)" opacity="0.6" />
     </svg>
 );
 
