@@ -16,7 +16,8 @@ import { openDB, DBSchema, IDBPDatabase } from 'idb';
 /**
  * Database Schema Definition
  */
-export interface SyncStackSchema extends DBSchema {
+// export interface SyncStackSchema extends DBSchema {
+export interface SyncStackSchema {
     // User data
     users: {
         key: string; // uid
@@ -244,9 +245,9 @@ export class SyncStackClient {
         const store = tx.objectStore(collection as any);
 
         // Get all items for this user
-        if (store.indexNames.contains('by-user')) {
-            const index = store.index('by-user');
-            const items = await index.getAll(userId);
+        if ((store.indexNames as any).contains('by-user')) {
+            const index = (store as any).index('by-user');
+            const items = await index.getAll(userId as any);
             // Filter out soft-deleted items
             return items.filter((item: any) => !item._deleted);
         }
