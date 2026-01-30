@@ -7,7 +7,7 @@ import { useAuth } from '../../hooks/useAuth';
 type SettingsTab = 'general' | 'team' | 'billing' | 'tokens';
 
 export const SettingsPage: React.FC = () => {
-    const { user, linkGithub } = useAuth();
+    const { user, loginWithGitHub } = useAuth();
     const [activeTab, setActiveTab] = useState<SettingsTab>('general');
     const [isLoading, setIsLoading] = useState(false);
 
@@ -102,7 +102,7 @@ export const SettingsPage: React.FC = () => {
                                             ) : (
                                                 <Button size="sm" variant="outline" onClick={async () => {
                                                     try {
-                                                        await linkGithub();
+                                                        await loginWithGitHub();
                                                     } catch (e: any) {
                                                         alert(e.message);
                                                     }

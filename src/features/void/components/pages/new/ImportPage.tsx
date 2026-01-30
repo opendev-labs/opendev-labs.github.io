@@ -221,7 +221,7 @@ export const ImportPage: React.FC<{
     onImportRepository: (repo: Repository, projectName: string) => void;
 }> = ({ onImportRepository }) => {
     const navigate = useNavigate();
-    const { loginWithGitHub, linkGithub, user, isGithubConnected, logout, loginWithGoogle } = useAuth();
+    const { loginWithGitHub, user, isGithubConnected, logout, loginWithGoogle } = useAuth();
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [collisionCode, setCollisionCode] = useState<string | null>(null);
