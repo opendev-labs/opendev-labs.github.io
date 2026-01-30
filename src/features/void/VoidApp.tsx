@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate, useParams, useLocation } from 'react-router-dom';
-import { Header } from './components/Header';
+import { Header } from '../../components/Header';
+import { Footer } from '../../components/Footer';
 import { Dashboard } from './components/Dashboard';
 import { ProjectDetailView } from './components/ProjectDetailView';
-import { Footer } from './components/Footer';
 import type { Project, Template, Deployment, GitProvider, Repository, Workflow } from './types';
 import { DeploymentStatus, DatabaseType, DatabaseStatus } from './types';
 import { mockProjects, generateInitialProjectData, availableIntegrations } from './constants';

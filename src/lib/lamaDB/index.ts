@@ -1,42 +1,58 @@
 import { initializeApp } from "firebase/app";
+import { getAnalytics, logEvent } from "firebase/analytics";
 import { getAuth, GoogleAuthProvider, GithubAuthProvider, signInWithPopup, signOut, onAuthStateChanged, User } from "firebase/auth";
 import { getFirestore, collection, addDoc, getDocs, query, where, doc, setDoc, updateDoc, deleteDoc } from "firebase/firestore";
 
-// Configuration from existing Void project
+/**
+ * Nexus Registry Strategy:
+ * Uses environment variables for production and falls back to simulation mode
+ * for development when keys are missing.
+ */
+
 const firebaseConfig = {
-    apiKey: "AIzaSyBzi-O9M1mD1UD-_U3yTOkhvIDWG-AVAeM",
-    authDomain: "opendev-labs-syncstack.firebaseapp.com",
-    projectId: "opendev-labs-syncstack",
-    storageBucket: "opendev-labs-syncstack.firebasestorage.app",
-    messagingSenderId: "617497615103",
-    appId: "1:617497615103:web:46a5db59f73f50973dcaca",
-    measurementId: "G-T8W1ZVF7Q4"
+    apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "opendev-office.firebaseapp.com",
+    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "opendev-office",
+    storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "opendev-office.firebasestorage.app",
+    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "357128961442",
+    appId: import.meta.env.VITE_FIREBASE_APP_ID || "1:357128961442:web:808eed82b411b0ce0646fb",
+    measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || "G-R0ENNGV1CL"
 };
 
-// Graceful initialization check
 let app: any;
 let auth: any;
 let firestore: any;
+let analytics: any;
 let isSimulationMode = false;
 
-if (firebaseConfig.apiKey && firebaseConfig.apiKey.length > 10) {
-    try {
+try {
+    if (firebaseConfig.apiKey && firebaseConfig.apiKey.length > 20) {
         app = initializeApp(firebaseConfig);
         auth = getAuth(app);
         firestore = getFirestore(app);
-        console.log("Nexus Registry: Protocol initialized with valid credentials.");
-    } catch (error) {
-        console.warn("Nexus Registry: Initialization failure. Engaging simulation mode.", error);
+
+        // Initialize Analytics if supported
+        if (typeof window !== 'undefined') {
+            analytics = getAnalytics(app);
+            logEvent(analytics, 'nexus_init');
+        }
+
+        console.log("Nexus Registry: Protocol initialized.");
+    } else {
         isSimulationMode = true;
+        console.warn("Nexus Registry: Missing valid VITE_FIREBASE_API_KEY. Operational simulation active.");
     }
-} else {
+} catch (error) {
+    console.error("Nexus Registry: Critical failure. Engaging emergency simulation.", error);
     isSimulationMode = true;
-    console.warn("Nexus Registry: Missing valid API key. Operational simulation active.");
 }
 
 export class LamaAuth {
     static async loginWithGoogle() {
-        if (isSimulationMode) throw new Error("Simulation Active: Production credentials required for Google Auth.");
+        if (isSimulationMode) {
+            console.log("SIMULATION: Authenticating mock user via Google protocol.");
+            return { user: { displayName: 'SOLO_FOUNDER', email: 'founder@opendev-labs.io' } } as any;
+        }
         if (!auth) throw new Error("Firebase Auth not initialized");
         const provider = new GoogleAuthProvider();
         return signInWithPopup(auth, provider);
@@ -44,11 +60,10 @@ export class LamaAuth {
 
     static async loginWithGithub() {
         if (isSimulationMode) {
-            // Let's make simulation a bit more friendly for developers
             console.log("SIMULATION: Authenticating mock user via GitHub protocol.");
             return { user: { displayName: 'SOLO_FOUNDER', email: 'founder@opendev-labs.io' } } as any;
         }
-        if (!auth) throw new Error("LamaDB Auth not initialized. Protocol requires valid credentials.");
+        if (!auth) throw new Error("LamaDB Auth not initialized.");
         const provider = new GithubAuthProvider();
         provider.addScope('repo');
         provider.addScope('user');
@@ -56,14 +71,23 @@ export class LamaAuth {
     }
 
     static async logout() {
-        if (isSimulationMode) return;
+        if (isSimulationMode) {
+            console.log("SIMULATION: Protocol terminated.");
+            return;
+        }
         if (!auth) return;
         return signOut(auth);
     }
 
     static onAuthStateChanged(callback: (user: User | null) => void) {
         if (isSimulationMode) {
-            callback(null);
+            // Check if we have a simulated user in localStorage to persist "logged in" state for dev
+            const stored = localStorage.getItem('nexus_sim_user');
+            if (stored) {
+                callback(JSON.parse(stored));
+            } else {
+                callback(null);
+            }
             return () => { };
         }
         if (!auth) {
@@ -74,11 +98,22 @@ export class LamaAuth {
     }
 
     static getCurrentUser() {
+        if (isSimulationMode) {
+            const stored = localStorage.getItem('nexus_sim_user');
+            return stored ? JSON.parse(stored) : null;
+        }
         return auth?.currentUser || null;
     }
 
     static getSimulationMode() {
         return isSimulationMode;
+    }
+
+    // Dev only helper to trigger simulation login
+    static simulateLogin() {
+        const mockUser = { displayName: 'SOLO_FOUNDER', email: 'founder@opendev-labs.io', uid: 'sim_123' };
+        localStorage.setItem('nexus_sim_user', JSON.stringify(mockUser));
+        window.location.reload();
     }
 }
 
@@ -88,15 +123,15 @@ export class LamaStore {
     collection(name: string) {
         if (isSimulationMode || !this.db) {
             return {
-                add: async () => { throw new Error("Simulation Mode: Write operations restricted.") },
+                add: async (data: any) => { console.log(`SIMULATION: Writing to ${name}:`, data); return { id: 'sim_doc_id' } },
                 get: async () => [],
-                doc: () => ({
-                    set: async () => { throw new Error("Simulation Mode: Write operations restricted.") },
-                    update: async () => { throw new Error("Simulation Mode: Write operations restricted.") },
-                    delete: async () => { throw new Error("Simulation Mode: Write operations restricted.") },
+                doc: (id: string) => ({
+                    set: async (data: any) => { console.log(`SIMULATION: Setting ${name}/${id}:`, data); },
+                    update: async (data: any) => { console.log(`SIMULATION: Updating ${name}/${id}:`, data); },
+                    delete: async () => { console.log(`SIMULATION: Deleting ${name}/${id}`); },
                     get: async () => null
                 }),
-                whereUser: () => { throw new Error("Simulation Mode: Query operations restricted.") }
+                whereUser: () => { return { get: async () => [] } }
             };
         }
         return {
@@ -111,7 +146,7 @@ export class LamaStore {
                     set: async (data: any) => setDoc(doc(this.db, name, id), data),
                     update: async (data: any) => updateDoc(doc(this.db, name, id), data),
                     delete: async () => deleteDoc(doc(this.db, name, id)),
-                    get: async () => { // Simplified
+                    get: async () => {
                         // In a real implementation you'd get the doc
                     }
                 }
