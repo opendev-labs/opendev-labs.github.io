@@ -27,10 +27,10 @@ export const Button: React.FC<ButtonProps> = ({
     };
 
     const sizes = {
-        sm: "h-8 px-4 text-[9px] rounded-none",
-        md: "h-11 px-6 text-[10px] rounded-none",
-        lg: "h-12 px-8 text-[11px] rounded-none",
-        xl: "h-14 px-10 text-[12px] rounded-none"
+        sm: "h-8 px-4 text-[9px] rounded-full",
+        md: "h-11 px-6 text-[10px] rounded-full",
+        lg: "h-12 px-8 text-[11px] rounded-full",
+        xl: "h-14 px-10 text-[12px] rounded-full"
     };
 
     return (
