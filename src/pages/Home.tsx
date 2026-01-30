@@ -5,6 +5,7 @@ import { Card } from '../components/ui/Card';
 import HeroBg from '../assets/bg.png';
 import { motion } from 'framer-motion';
 import { useAuth } from '../contexts/AuthContext';
+import { NewProjectIcon } from '../features/void/components/common/Icons';
 
 export default function Home() {
     const navigate = useNavigate();
@@ -53,9 +54,9 @@ export default function Home() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.1 }}
-                        className="text-5xl md:text-8xl lg:text-9xl font-bold tracking-tighter mb-10 text-white leading-[0.8] lowercase whitespace-nowrap"
+                        className="text-5xl md:text-8xl lg:text-9xl font-bold tracking-tighter mb-10 text-white leading-[0.8] lowercase"
                     >
-                        intelligent ecosystem.
+                        intelligent<br />ecosystem.
                     </motion.h1>
 
                     <motion.p
@@ -73,14 +74,18 @@ export default function Home() {
                         transition={{ delay: 0.3 }}
                         className="flex flex-col md:flex-row items-center justify-center gap-6"
                     >
-                        <Button
-                            variant="secondary"
-                            size="xl"
-                            onClick={() => navigate('/void/new')}
-                            className="bg-black border border-zinc-800 text-white hover:bg-zinc-900 min-w-[200px]"
-                        >
-                            Deploy
-                        </Button>
+                        <div className="relative group">
+                            {/* Black "Deploy" Button with NewProjectIcon */}
+                            <Button
+                                variant="secondary"
+                                size="xl"
+                                onClick={() => navigate('/void/new')}
+                                className="bg-black border border-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-900 min-w-[200px] flex items-center justify-center gap-3"
+                            >
+                                <NewProjectIcon />
+                                Deploy
+                            </Button>
+                        </div>
                         <Button
                             variant="primary"
                             size="xl"
