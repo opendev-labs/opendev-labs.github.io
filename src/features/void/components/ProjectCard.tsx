@@ -35,14 +35,14 @@ const FrameworkIcon: React.FC<{ framework: string }> = ({ framework }) => {
 
   if (f.includes('next')) {
     return (
-      <div className="w-10 h-10 bg-zinc-950 border border-zinc-900 flex items-center justify-center rounded-lg">
+      <div className="w-10 h-10 bg-zinc-950 border border-zinc-900 flex items-center justify-center rounded-none">
         <svg viewBox="0 0 180 180" className="w-6 h-6 fill-white"><path d="M90 0a90 90 0 1 0 0 180A90 90 0 0 0 90 0Zm33.66 128.23-42.34-54.66-20.2 26.24v28.42H48.4V51.77h12.72v44.64l38.74-51.2 5.09-6.73h17.65l-44.5 57.5 25.56 32.25Z" /></svg>
       </div>
     );
   }
 
   return (
-    <div className="w-10 h-10 bg-zinc-950 border border-zinc-900 flex items-center justify-center rounded-lg">
+    <div className="w-10 h-10 bg-zinc-950 border border-zinc-900 flex items-center justify-center rounded-none">
       <CubeIcon className="w-5 h-5 text-white" />
     </div>
   );
