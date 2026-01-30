@@ -291,19 +291,29 @@ const ConnectedRepoView: React.FC<{
     const [loading, setLoading] = useState(true);
 
     React.useEffect(() => {
+        let isMounted = true;
         const loadRepos = async () => {
-            setRepos([]); // Clear previous state immediately
-            setLoading(true);
             if (provider === 'GitHub') {
-                const data = await fetchRepositories();
-                setRepos(data);
+                if (!user?.uid) return; // Wait for user to be ready
+
+                setRepos([]);
+                setLoading(true);
+                try {
+                    const data = await fetchRepositories();
+                    if (isMounted) setRepos(data);
+                } catch (e) {
+                    console.error("Repo fetch error", e);
+                } finally {
+                    if (isMounted) setLoading(false);
+                }
             } else {
                 setRepos(mockRepositories[provider]);
+                setLoading(false);
             }
-            setLoading(false);
         };
         loadRepos();
-    }, [provider, fetchRepositories, user?.uid]); // Add user.uid dependency to force refresh on account switch
+        return () => { isMounted = false; };
+    }, [provider, fetchRepositories, user?.uid]);
 
     const gitProviderIcons: Record<GitProvider, React.ReactNode> = {
         GitHub: <GitHubIcon />,
