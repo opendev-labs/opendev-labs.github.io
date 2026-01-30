@@ -27,10 +27,13 @@ import { DeploymentPage } from './components/pages/DeploymentPage';
 import { REAL_TEMPLATES } from './real_templates';
 import { motion, AnimatePresence } from 'framer-motion';
 
+import { LamaDB } from '../../lib/lamaDB';
+
 const MotionDiv = motion.div;
 
 const AppContent: React.FC = () => {
-    const [projects, setProjects] = useLocalStorage<Project[]>('opendev_projects', mockProjects);
+    // State management refactored to use LamaDB (Firestore/IndexedDB) instead of localStorage
+    const [projects, setProjects] = useState<Project[]>([]);
     const [connectedProvider, setConnectedProvider] = useLocalStorage<GitProvider | null>('opendev_git_provider', null);
     const [isLoading, setIsLoading] = useState(true);
     const [isAuthenticating, setIsAuthenticating] = useState(false);
@@ -38,14 +41,42 @@ const AppContent: React.FC = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
+    // Fetch User-Scoped Projects from LamaDB
+    useEffect(() => {
+        const fetchProjects = async () => {
+            if (!isAuthenticated) return;
+
+            try {
+                const userProjects = await LamaDB.store.collection('projects').get() as Project[];
+                if (userProjects.length > 0) {
+                    setProjects(userProjects.sort((a, b) => new Date(b.lastUpdated).getTime() - new Date(a.lastUpdated).getTime()));
+                } else {
+                    // Seed initial data if empty (Simulated "Welcome" state) without writing it persistently yet
+                    // or write it if you want every new user to have mocks. Let's start empty or simple.
+                    // For now, let's keep it empty to prove isolation, or maybe just one welcome project.
+                    setProjects([]);
+                }
+            } catch (error) {
+                console.error("Failed to fetch projects:", error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        if (isAuthenticated) {
+            fetchProjects();
+        } else {
+            // Public/Demo mode
+            setProjects(mockProjects);
+            setIsLoading(false);
+        }
+
+    }, [isAuthenticated, user]);
+
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
         if (params.has('code')) {
             setIsAuthenticating(true);
-        } else {
-            setTimeout(() => {
-                setIsLoading(false);
-            }, 1000);
         }
     }, []);
 
@@ -101,12 +132,17 @@ const AppContent: React.FC = () => {
             id: `proj_${Date.now()}`,
             name: projectName,
             framework: template.framework,
-            lastUpdated: 'Just now',
+            lastUpdated: new Date().toISOString(), // Standardize
             deployments: [newDeployment],
             domains: [{ name: `https://${urlFriendlyName}.void.app`, isPrimary: true }],
             envVars: {},
             ...generateInitialProjectData(),
         };
+
+        // Write to LamaDB (User Scoped)
+        if (isAuthenticated) {
+            await LamaDB.store.collection('projects').add(newProject);
+        }
 
         setProjects(prev => [newProject, ...prev]);
         navigate(`/void/projects/${newProject.id}`);
