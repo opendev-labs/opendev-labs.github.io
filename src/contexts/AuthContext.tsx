@@ -121,48 +121,45 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }, []);
 
     const fetchRepositories = useCallback(async () => {
+        // Strict Guard: No User/Token = No Data
+        if (!user) return [];
+
         // Fallback to mock data if no token (Simulation Mode)
         if (!token) {
-            // Dynamic import to avoid circular dependency if possible, or just hardcode for now if keeping simple
-            // However, best to copy the mock data here or move it to a shared location.
-            // Since we can't easily move files without planning, I will duplicate the relevant mock data here for robustness OR try to fetch public repos.
+            // ... (Keep existing mock logic for opendev-labs simulation if needed, but be careful)
+            // Actually, if the user explicitly logged out and we are visiting as guest, we shouldn't show "another github repo".
+            // The simulation logic below hardcodes 'opendev-labs' repos.
+            // We should ONLY show this if the current user IS the simulation user.
 
-            // Let's try to fetch public repos of opendev-labs if possible, otherwise mock.
-            try {
-                const res = await fetch('https://api.github.com/users/opendev-labs/repos');
-                if (res.ok) {
-                    const data = await res.json();
-                    return data.map((repo: any) => ({
-                        id: String(repo.id),
-                        name: repo.name,
-                        owner: repo.owner.login,
-                        description: repo.description,
-                        updatedAt: new Date(repo.updated_at).toLocaleDateString(),
-                        provider: 'GitHub',
-                        url: repo.html_url
-                    }));
-                }
-            } catch (e) {
-                console.warn("Failed to fetch real opendev-labs repos, using mocks");
+            if (user.uid === 'odl_master_1') {
+                // Return mocks ONLY for the simulation user
+                return [
+                    { id: 'gh_1', name: 'pulse-v2-api', owner: 'opendev-labs', description: 'The main API for the Pulse analytics platform.', updatedAt: '2 hours ago', provider: 'GitHub', url: '#' },
+                    { id: 'gh_2', name: 'nova-landing-page', owner: 'opendev-labs', description: 'Marketing and landing page for the Nova project.', updatedAt: '1 day ago', provider: 'GitHub', url: '#' },
+                    { id: 'gh_3', name: 'personal-portfolio-v3', owner: 'opendev-labs', description: 'My personal portfolio website built with Astro.', updatedAt: '5 days ago', provider: 'GitHub', url: '#' },
+                    { id: 'gh_4', name: 'dotfiles', owner: 'opendev-labs', description: 'My personal development environment configuration.', updatedAt: '1 week ago', provider: 'GitHub', url: '#' },
+                    { id: 'gh_5', name: 'void-engine', owner: 'opendev-labs', description: 'Core engine for the Void environment.', updatedAt: '3 days ago', provider: 'GitHub', url: '#' },
+                    { id: 'gh_6', name: 'nexus-protocol', owner: 'opendev-labs', description: 'Distributed state synchronization layer.', updatedAt: '12 hours ago', provider: 'GitHub', url: '#' }
+                ];
             }
-
-            return [
-                { id: 'gh_1', name: 'pulse-v2-api', owner: 'opendev-labs', description: 'The main API for the Pulse analytics platform.', updatedAt: '2 hours ago', provider: 'GitHub', url: '#' },
-                { id: 'gh_2', name: 'nova-landing-page', owner: 'opendev-labs', description: 'Marketing and landing page for the Nova project.', updatedAt: '1 day ago', provider: 'GitHub', url: '#' },
-                { id: 'gh_3', name: 'personal-portfolio-v3', owner: 'opendev-labs', description: 'My personal portfolio website built with Astro.', updatedAt: '5 days ago', provider: 'GitHub', url: '#' },
-                { id: 'gh_4', name: 'dotfiles', owner: 'opendev-labs', description: 'My personal development environment configuration.', updatedAt: '1 week ago', provider: 'GitHub', url: '#' },
-                { id: 'gh_5', name: 'void-engine', owner: 'opendev-labs', description: 'Core engine for the Void environment.', updatedAt: '3 days ago', provider: 'GitHub', url: '#' },
-                { id: 'gh_6', name: 'nexus-protocol', owner: 'opendev-labs', description: 'Distributed state synchronization layer.', updatedAt: '12 hours ago', provider: 'GitHub', url: '#' }
-            ];
+            return [];
         }
 
         try {
             const response = await fetch('https://api.github.com/user/repos?sort=updated&per_page=100', {
                 headers: {
                     Authorization: `Bearer ${token}`,
-                    Accept: 'application/vnd.github.v3+json'
+                    Accept: 'application/vnd.github.v3+json',
+                    // Add cache control to prevent browser caching of other users' data
+                    'Cache-Control': 'no-cache'
                 }
             });
+            if (response.status === 401) {
+                // Token invalid - clear it
+                setToken(null);
+                localStorage.removeItem('void_gh_token');
+                throw new Error('Unauthorized');
+            }
             if (!response.ok) throw new Error('Failed to fetch repositories');
             const data = await response.json();
             return data.map((repo: any) => ({
@@ -178,7 +175,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             console.error("Repository fetch failed:", error);
             return [];
         }
-    }, [token]);
+    }, [token, user]);
 
     const createRepository = useCallback(async (name: string, description: string, isPrivate: boolean) => {
         if (!token) throw new Error("No access token");
