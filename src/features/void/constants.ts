@@ -18,7 +18,7 @@ export const mockDeployments: Deployment[] = [
     branch: 'hotfix/nexus-mesh',
     timestamp: '2024-07-20T15:00:00Z',
     status: DeploymentStatus.ERROR,
-    url: 'https://pulse-v2-api-e4f5g6h.opendev.app',
+    url: 'https://pulse-v2-api-e4f5g6h.void.app',
   },
   {
     id: 'dpl_3',
@@ -26,7 +26,7 @@ export const mockDeployments: Deployment[] = [
     branch: 'ops/node-update',
     timestamp: '2024-07-19T09:00:00Z',
     status: DeploymentStatus.CANCELED,
-    url: 'https://pulse-v2-api-i7j8k9l.opendev.app',
+    url: 'https://pulse-v2-api-i7j8k9l.void.app',
   },
 ];
 
@@ -55,15 +55,15 @@ export const mockServerlessFunctions: ServerlessFunction[] = [
 ];
 
 export const mockTeamMembers: TeamMember[] = [
-  { id: 'user_1', name: 'You', email: 'you@opendev.app', role: TeamMemberRole.OWNER, avatarUrl: 'https://placehold.co/40x40/000000/FFFFFF/png?text=OP' },
-  { id: 'user_2', name: 'Jane Doe', email: 'jane.doe@opendev.app', role: TeamMemberRole.MEMBER, avatarUrl: 'https://placehold.co/40x40/000000/FFFFFF/png?text=JD' },
+  { id: 'user_1', name: 'You', email: 'you@void.app', role: TeamMemberRole.OWNER, avatarUrl: 'https://placehold.co/40x40/000000/FFFFFF/png?text=OP' },
+  { id: 'user_2', name: 'Jane Doe', email: 'jane.doe@void.app', role: TeamMemberRole.MEMBER, avatarUrl: 'https://placehold.co/40x40/000000/FFFFFF/png?text=JD' },
 ];
 
 export const mockActivityLog: ActivityEvent[] = [
   { id: 'act_1', type: 'Deployment', description: 'Launched node a1b2c3d to production fleet', actor: 'You', timestamp: '2024-07-21T10:30:00Z' },
   { id: 'act_6', type: 'Integration', description: 'Initialized Sentry protocol bridge', actor: 'You', timestamp: '2024-07-21T09:48:00Z' },
   { id: 'act_5', type: 'Storage', description: 'Created PostgreSQL compute node "pulse-db"', actor: 'You', timestamp: '2024-07-21T09:45:00Z' },
-  { id: 'act_2', type: 'Domain', description: 'Bound domain pulse-api.opendev.app', actor: 'You', timestamp: '2024-07-21T09:15:00Z' },
+  { id: 'act_2', type: 'Domain', description: 'Bound domain pulse-api.void.app', actor: 'You', timestamp: '2024-07-21T09:15:00Z' },
   { id: 'act_3', type: 'Settings', description: 'Updated SECURE_SECRET_KEY protocol variable', actor: 'Jane Doe', timestamp: '2024-07-20T18:00:00Z' },
   { id: 'act_4', type: 'Deployment', description: 'Node launch e4f5g6h aborted', actor: 'You', timestamp: '2024-07-20T15:00:00Z' },
 ];
@@ -95,117 +95,7 @@ export const mockUsageData: UsageMetrics = {
 };
 
 
-export const mockProjects: Project[] = [
-  {
-    id: 'proj_1',
-    name: 'landing-page',
-    framework: 'React',
-    lastUpdated: 'Just now',
-    gitProvider: 'GitHub',
-    deployments: [
-      {
-        id: 'dpl_lp_1',
-        commit: 'a1b2c3d - Feat: Initial commit for landing page',
-        branch: 'main',
-        timestamp: new Date().toISOString(),
-        status: DeploymentStatus.DEPLOYED,
-        url: 'https://landing-page.opendev.app',
-      },
-      {
-        id: 'dpl_lp_2',
-        commit: 'e4f5g6h - Fix: Mobile layout bug',
-        branch: 'main',
-        timestamp: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
-        status: DeploymentStatus.DEPLOYED,
-        url: 'https://landing-page.opendev.app',
-      },
-      {
-        id: 'dpl_lp_3',
-        commit: 'i7j8k9l - Chore: Update dependencies',
-        branch: 'dependabot',
-        timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-        status: DeploymentStatus.DEPLOYED,
-        url: 'https://landing-page-i7j8k9l.opendev.app',
-      },
-    ],
-    domains: [
-      { name: 'landing-page.opendev.app', isPrimary: true },
-      { name: 'landing-page-a1b2c3d.opendev.app', isPrimary: false, gitBranch: 'main' },
-    ],
-    envVars: {
-      'DATABASE_URL': 'postgres://user:pass@host:port/db',
-      'SECRET_KEY': '**********',
-      'REDIS_URL': 'redis://localhost:6379'
-    },
-    analytics: mockAnalyticsData,
-    functions: mockServerlessFunctions,
-    teamMembers: mockTeamMembers,
-    activityLog: mockActivityLog,
-    storage: mockDatabases,
-    integrations: mockConnectedIntegrations,
-  },
-  {
-    id: 'proj_2',
-    name: 'nova-landing-page',
-    framework: 'SvelteKit',
-    lastUpdated: '1 day ago',
-    gitProvider: 'GitLab',
-    deployments: [
-      {
-        id: 'dpl_4',
-        commit: 'm1n2o3p - Style: Update hero section',
-        branch: 'main',
-        timestamp: '2024-07-20T18:45:00Z',
-        status: DeploymentStatus.DEPLOYED,
-        url: 'https://nova-landing-page.opendev.app',
-      },
-      {
-        id: 'dpl_5',
-        commit: 'x4y5z6a - Refactor: Component logic',
-        branch: 'main',
-        timestamp: '2024-07-19T12:00:00Z',
-        status: DeploymentStatus.DEPLOYED,
-        url: 'https://nova-landing-page.opendev.app',
-      },
-    ],
-    domains: [
-      { name: 'nova-landing-page.opendev.app', isPrimary: true }
-    ],
-    envVars: {
-      'PUBLIC_API_ENDPOINT': 'https://api.nova.opendev.app/graphql'
-    }
-  },
-  {
-    id: 'proj_3',
-    name: 'quantum-analytics-db',
-    framework: 'PostgreSQL',
-    lastUpdated: '3 days ago',
-    gitProvider: 'Bitbucket',
-    deployments: [
-      {
-        id: 'dpl_6',
-        commit: 'q4r5s6t - Feat: Add new analytics table',
-        branch: 'schema-updates',
-        timestamp: '2024-07-18T11:20:00Z',
-        status: DeploymentStatus.ERROR,
-        url: 'https://quantum-analytics-db.opendev.app',
-      },
-      {
-        id: 'dpl_7',
-        commit: 'b7c8d9e - Fix: Indexing on user table',
-        branch: 'schema-updates',
-        timestamp: '2024-07-17T16:40:00Z',
-        status: DeploymentStatus.DEPLOYED,
-        url: 'https://quantum-analytics-db.opendev.app',
-      }
-    ],
-    domains: [],
-    envVars: {
-      'POSTGRES_USER': 'quantum_user',
-      'POSTGRES_PASSWORD': '**********'
-    }
-  },
-];
+export const mockProjects: Project[] = [];
 
 
 export const buildLogs = [

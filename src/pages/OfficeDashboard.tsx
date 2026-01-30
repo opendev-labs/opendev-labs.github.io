@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Terminal, Database, Box, Cpu, Activity, Shield, Zap, ArrowUpRight, Plus, Settings } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/Button';
 
 export const OfficeDashboard: React.FC = () => {
@@ -38,6 +38,8 @@ export const OfficeDashboard: React.FC = () => {
         }
     ];
 
+    const navigate = useNavigate();
+
     return (
         <div className="min-h-screen bg-black text-white pt-24 pb-20 px-6 selection:bg-white selection:text-black">
             <div className="max-w-[1400px] mx-auto">
@@ -54,10 +56,10 @@ export const OfficeDashboard: React.FC = () => {
                     </div>
 
                     <div className="flex gap-4">
-                        <Button variant="secondary" size="lg" className="border-zinc-800">
+                        <Button variant="secondary" size="lg" className="border-zinc-800" onClick={() => navigate('/void/settings')}>
                             <Settings size={16} /> <span className="ml-2">Settings</span>
                         </Button>
-                        <Button size="lg" onClick={() => window.location.href = '/void/new'}>
+                        <Button size="lg" onClick={() => navigate('/void/new')}>
                             <Plus size={16} /> <span className="ml-2">Init Node</span>
                         </Button>
                     </div>
