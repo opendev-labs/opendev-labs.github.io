@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics, logEvent } from "firebase/analytics";
-import { getAuth, GoogleAuthProvider, GithubAuthProvider, signInWithPopup, signOut, onAuthStateChanged, User } from "firebase/auth";
+import { getAuth, GoogleAuthProvider, GithubAuthProvider, signInWithPopup, signOut, onAuthStateChanged, User, fetchSignInMethodsForEmail, linkWithCredential, OAuthProvider, linkWithPopup } from "firebase/auth";
 import { getFirestore, collection, addDoc, getDocs, query, where, doc, setDoc, updateDoc, deleteDoc } from "firebase/firestore";
 
 /**
@@ -51,7 +51,7 @@ export class LamaAuth {
     static async loginWithGoogle() {
         if (isSimulationMode) {
             console.log("SIMULATION: Authenticating mock user via Google protocol.");
-            return { user: { displayName: 'SOLO_FOUNDER', email: 'founder@opendev-labs.io' } } as any;
+            return { user: { displayName: 'opendev-labs', email: 'admin@opendev-labs.io', uid: 'odl_master_1', avatar: 'https://github.com/opendev-labs.png' } } as any;
         }
         if (!auth) throw new Error("Firebase Auth not initialized");
         const provider = new GoogleAuthProvider();
@@ -61,13 +61,84 @@ export class LamaAuth {
     static async loginWithGithub() {
         if (isSimulationMode) {
             console.log("SIMULATION: Authenticating mock user via GitHub protocol.");
-            return { user: { displayName: 'SOLO_FOUNDER', email: 'founder@opendev-labs.io' } } as any;
+            return { user: { displayName: 'opendev-labs', email: 'admin@opendev-labs.io', uid: 'odl_master_1', avatar: 'https://github.com/opendev-labs.png' } } as any;
         }
         if (!auth) throw new Error("LamaDB Auth not initialized.");
+
         const provider = new GithubAuthProvider();
         provider.addScope('repo');
         provider.addScope('user');
-        return signInWithPopup(auth, provider);
+
+        try {
+            const result = await signInWithPopup(auth, provider);
+            return result;
+        } catch (error: any) {
+            console.error("Nexus Registry: Auth Protocol Error:", error.code, error.message);
+
+            if (error.code === 'auth/account-exists-with-different-credential') {
+                console.log("Nexus Intelligence: Detected existing account collision. Initiating Smart Link protocol...");
+
+                const pendingCred = OAuthProvider.credentialFromError(error);
+                const email = error.customData?.email;
+
+                console.log("Collision Email:", email);
+
+                if (!email) {
+                    console.error("Nexus Registry: Cannot resolve collision without email.");
+                    throw new Error("This email is already associated with another account, but we couldn't verify which provider. Please sign in with your original method (e.g. Google).");
+                }
+
+                if (!pendingCred) throw error;
+
+                // Get existing providers
+                try {
+                    const methods = await fetchSignInMethodsForEmail(auth, email);
+                    console.log("Existing Identity Methods:", methods);
+
+                    if (methods.includes('google.com')) {
+                        console.log("Nexus Registry: Linking to Google Identity...");
+                        // Authenticate with Google to verify identity
+                        const googleProvider = new GoogleAuthProvider();
+                        googleProvider.setCustomParameters({ login_hint: email });
+
+                        const googleResult = await signInWithPopup(auth, googleProvider);
+
+                        // Link the pending GitHub credential
+                        await linkWithCredential(googleResult.user, pendingCred);
+                        console.log("Nexus Intelligence: Protocol linked. Identity converged.");
+
+                        return googleResult;
+                    }
+                } catch (linkError) {
+                    console.error("Nexus Registry: Smart Link Failed:", linkError);
+                    throw new Error("Failed to link accounts automatically. Please sign in with Google first, then link GitHub from Settings.");
+                }
+            }
+            throw error;
+        }
+    }
+
+    static async linkGithub() {
+        if (isSimulationMode) {
+            console.log("SIMULATION: Linking GitHub credentials.");
+            return;
+        }
+        if (!auth || !auth.currentUser) throw new Error("Firebase Auth not initialized or user not logged in");
+
+        const provider = new GithubAuthProvider();
+        provider.addScope('repo');
+        provider.addScope('user');
+
+        try {
+            const result = await linkWithPopup(auth.currentUser, provider);
+            console.log("Nexus Registry: Account linked successfully.");
+            return result;
+        } catch (error: any) {
+            if (error.code === 'auth/credential-already-in-use') {
+                throw new Error("This GitHub account is already connected to another user.");
+            }
+            throw error;
+        }
     }
 
     static async logout() {
