@@ -16,30 +16,22 @@ const MinimalSVGLogo = ({ size = 120 }: { size?: number }) => (
             xmlns="http://www.w3.org/2000/svg"
         >
             <motion.path
-                d="M10 25H90L50 90L10 25Z"
-                stroke="white"
-                strokeWidth="2"
-                initial={{ pathLength: 0, opacity: 0.2 }}
-                animate={{ pathLength: 1, opacity: 1 }}
-                transition={{ duration: 2, ease: "easeInOut" }}
-            />
-            <motion.path
                 d="M22.5 35H77.5L50 80L22.5 35Z"
                 stroke="white"
                 strokeWidth="1.5"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: [0, 0.4, 0.2] }}
-                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+                initial={{ pathLength: 0, opacity: 0 }}
+                animate={{ pathLength: 1, opacity: 0.8 }}
+                transition={{ duration: 2, ease: "easeInOut" }}
             />
             <motion.path
                 d="M35 45H65L50 70L35 45Z"
                 stroke="white"
-                strokeWidth="1.2"
+                strokeWidth="1"
                 initial={{ opacity: 0 }}
-                animate={{ opacity: [0, 0.6, 0.3] }}
+                animate={{ opacity: [0, 0.4, 0.2] }}
                 transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: 1 }}
             />
-            <circle cx="50" cy="55" r="2" fill="white" className="animate-pulse" />
+            <circle cx="50" cy="55" r="1.5" fill="white" className="animate-pulse" />
         </motion.svg>
     </motion.div>
 );
