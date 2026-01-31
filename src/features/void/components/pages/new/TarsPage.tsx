@@ -4,11 +4,13 @@ import {
     Sparkles, Send, Terminal, Box, Layers, Play,
     History, Plus, MessageSquare, MoreVertical,
     Trash2, Search, Cpu, Globe, Zap, Settings,
-    Layout, Code, CheckCircle2, AlertCircle
+    Layout, Code, CheckCircle2, AlertCircle, Rocket,
+    Download, ExternalLink, X
 } from 'lucide-react';
 import { streamChatResponse } from '../../../services/llmService';
 import type { Message } from '../../../types';
 import { useAuth } from '../../../contexts/AuthContext';
+import { huggingFaceService } from '../../../services/huggingFaceService';
 
 interface ChatSession {
     id: string;
@@ -26,6 +28,9 @@ export const TarsPage: React.FC = () => {
     const [messages, setMessages] = useState<Message[]>([]);
     const [constructedFiles, setConstructedFiles] = useState<{ path: string, content: string }[]>([]);
     const [showSidebar, setShowSidebar] = useState(true);
+    const [showDeployModal, setShowDeployModal] = useState(false);
+    const [isDeploying, setIsDeploying] = useState(false);
+    const [deploymentResult, setDeploymentResult] = useState<{ success: boolean; url?: string; error?: string } | null>(null);
 
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -118,7 +123,7 @@ export const TarsPage: React.FC = () => {
     };
 
     return (
-        <div className="flex bg-black text-white h-[calc(100vh-64px)] overflow-hidden border-t border-zinc-900">
+        <div className="flex bg-black text-white min-h-screen overflow-hidden border-t border-zinc-900">
             {/* Sidebar */}
             <AnimatePresence>
                 {showSidebar && (
@@ -287,9 +292,12 @@ export const TarsPage: React.FC = () => {
                                                             </div>
                                                         ))}
                                                     </div>
-                                                    <button className="mt-6 w-full bg-white text-black py-4 rounded-xl text-xs font-bold uppercase tracking-[0.2em] flex items-center justify-center gap-3 hover:bg-zinc-200 transition-all shadow-2xl shadow-white/5 active:scale-[0.98]">
-                                                        <Play size={16} fill="currentColor" />
-                                                        Initiate Deployment Cluster
+                                                    <button
+                                                        onClick={() => setShowDeployModal(true)}
+                                                        className="mt-6 w-full bg-white text-black py-4 rounded-xl text-xs font-bold uppercase tracking-[0.2em] flex items-center justify-center gap-3 hover:bg-zinc-200 transition-all shadow-2xl shadow-white/5 active:scale-[0.98]"
+                                                    >
+                                                        <Rocket size={16} />
+                                                        Deploy to Hosting
                                                     </button>
                                                 </div>
                                             )}
@@ -344,6 +352,193 @@ export const TarsPage: React.FC = () => {
                     </div>
                 </div>
             </div>
-        </div>
+
+            {/* Deployment Modal */}
+            <AnimatePresence>
+                {showDeployModal && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 bg-black/90 backdrop-blur-xl z-50 flex items-center justify-center p-6"
+                        onClick={() => !isDeploying && setShowDeployModal(false)}
+                    >
+                        <motion.div
+                            initial={{ scale: 0.9, y: 20 }}
+                            animate={{ scale: 1, y: 0 }}
+                            exit={{ scale: 0.9, y: 20 }}
+                            onClick={(e) => e.stopPropagation()}
+                            className="bg-zinc-950 border border-zinc-800 rounded-2xl max-w-2xl w-full max-h-[80vh] overflow-y-auto"
+                        >
+                            {/* Modal Header */}
+                            <div className="sticky top-0 bg-zinc-950 border-b border-zinc-900 p-6 flex items-center justify-between z-10">
+                                <div>
+                                    <h2 className="text-xl font-black text-white uppercase tracking-tight">Deploy Manifest</h2>
+                                    <p className="text-xs text-zinc-500 font-medium mt-1">Choose your hosting destination</p>
+                                </div>
+                                <button
+                                    onClick={() => !isDeploying && setShowDeployModal(false)}
+                                    className="p-2 hover:bg-zinc-900 rounded-lg transition-colors"
+                                    disabled={isDeploying}
+                                >
+                                    <X size={20} className="text-zinc-500" />
+                                </button>
+                            </div>
+
+                            {/* Deployment Result */}
+                            {deploymentResult && (
+                                <div className={`m-6 p-4 rounded-xl border ${deploymentResult.success ? 'bg-emerald-500/10 border-emerald-500/20' : 'bg-red-500/10 border-red-500/20'}`}>
+                                    <div className="flex items-start gap-3">
+                                        {deploymentResult.success ? (
+                                            <CheckCircle2 size={20} className="text-emerald-500  shrink-0 mt-0.5" />
+                                        ) : (
+                                            <AlertCircle size={20} className="text-red-500 shrink-0 mt-0.5" />
+                                        )}
+                                        <div className="flex-grow">
+                                            <p className={`text-sm font-bold ${deploymentResult.success ? 'text-emerald-500' : 'text-red-500'}`}>
+                                                {deploymentResult.success ? 'Deployment Successful!' : 'Deployment Failed'}
+                                            </p>
+                                            {deploymentResult.url && (
+                                                <a
+                                                    href={deploymentResult.url}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="text-xs text-zinc-400 hover:text-white mt-1 flex items-center gap-2 group"
+                                                >
+                                                    {deploymentResult.url}
+                                                    <ExternalLink size={12} className="group-hover:translate-x-0.5 transition-transform" />
+                                                </a>
+                                            )}
+                                            {deploymentResult.error && (
+                                                <p className="text-xs text-red-400 mt-1">{deploymentResult.error}</p>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Deployment Options */}
+                            <div className="p-6 space-y-4">
+                                {/* HuggingFace Space */}
+                                <DeploymentOption
+                                    title="HuggingFace Space"
+                                    description="Deploy as a public HF Space with instant CDN"
+                                    icon={<Globe size={20} className="text-yellow-500" />}
+                                    badge="Free"
+                                    badgeColor="emerald"
+                                    onClick={async () => {
+                                        setIsDeploying(true);
+                                        setDeploymentResult(null);
+                                        try {
+                                            const projectName = `tars-${Date.now()}`;
+                                            const result = await huggingFaceService.createSpace({
+                                                name: projectName,
+                                                files: constructedFiles,
+                                                sdk: 'static',
+                                            });
+                                            setDeploymentResult({ success: true, url: result.url });
+                                        } catch (error) {
+                                            setDeploymentResult({
+                                                success: false,
+                                                error: error instanceof Error ? error.message : 'Unknown error'
+                                            });
+                                        } finally {
+                                            setIsDeploying(false);
+                                        }
+                                    }}
+                                    isDeploying={isDeploying}
+                                />
+
+                                {/* HuggingFace Repository */}
+                                <DeploymentOption
+                                    title="HuggingFace Repository"
+                                    description="Create a new HF repository with your code"
+                                    icon={<Code size={20} className="text-orange-500" />}
+                                    badge="Free"
+                                    badgeColor="emerald"
+                                    onClick={async () => {
+                                        setIsDeploying(true);
+                                        setDeploymentResult(null);
+                                        try {
+                                            const projectName = `tars-repo-${Date.now()}`;
+                                            const result = await huggingFaceService.createRepo({
+                                                name: projectName,
+                                                files: constructedFiles,
+                                            });
+                                            setDeploymentResult({ success: true, url: result.url });
+                                        } catch (error) {
+                                            setDeploymentResult({
+                                                success: false,
+                                                error: error instanceof Error ? error.message : 'Unknown error'
+                                            });
+                                        } finally {
+                                            setIsDeploying(false);
+                                        }
+                                    }}
+                                    isDeploying={isDeploying}
+                                />
+
+                                {/* Download as ZIP */}
+                                <DeploymentOption
+                                    title="Download as ZIP"
+                                    description="Download all files as a compressed archive"
+                                    icon={<Download size={20} className="text-blue-500" />}
+                                    onClick={() => {
+                                        // Create ZIP and download
+                                        const zip = constructedFiles.map(f => `${f.path}:\n${f.content}`).join('\n\n---\n\n');
+                                        const blob = new Blob([zip], { type: 'text/plain' });
+                                        const url = URL.createObjectURL(blob);
+                                        const a = document.createElement('a');
+                                        a.href = url;
+                                        a.download = `tars-manifest-${Date.now()}.txt`;
+                                        a.click();
+                                        URL.revokeObjectURL(url);
+                                        setDeploymentResult({ success: true });
+                                    }}
+                                    isDeploying={false}
+                                />
+                            </div>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </div >
     );
 };
+
+// Deployment Option Component
+const DeploymentOption: React.FC<{
+    title: string;
+    description: string;
+    icon: React.ReactNode;
+    badge?: string;
+    badgeColor?: 'emerald' | 'orange' | 'blue';
+    onClick: () => void;
+    isDeploying: boolean;
+}> = ({ title, description, icon, badge, badgeColor = 'emerald', onClick, isDeploying }) => (
+    <button
+        onClick={onClick}
+        disabled={isDeploying}
+        className="w-full p-6 bg-zinc-900/50 border border-zinc-800 hover:border-zinc-700 rounded-xl transition-all text-left group disabled:opacity-50 disabled:cursor-not-allowed"
+    >
+        <div className="flex items-start gap-4">
+            <div className="p-3 bg-black border border-zinc-800 rounded-lg shrink-0">
+                {icon}
+            </div>
+            <div className="flex-grow">
+                <div className="flex items-center gap-2 mb-1">
+                    <h3 className="text-sm font-black text-white uppercase tracking-tight">{title}</h3>
+                    {badge && (
+                        <span className={`text-[8px] font-bold uppercase tracking-widest px-2 py-0.5 rounded ${badgeColor === 'emerald' ? 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20' : badgeColor === 'orange' ? 'bg-orange-500/10 text-orange-500 border border-orange-500/20' : 'bg-blue-500/10 text-blue-500 border border-blue-500/20'}`}>
+                            {badge}
+                        </span>
+                    )}
+                </div>
+                <p className="text-xs text-zinc-500 font-medium">{description}</p>
+            </div>
+            <div className="shrink-0">
+                <ExternalLink size={16} className="text-zinc-600 group-hover:text-white group-hover:translate-x-1 transition-all" />
+            </div>
+        </div>
+    </button>
+);
