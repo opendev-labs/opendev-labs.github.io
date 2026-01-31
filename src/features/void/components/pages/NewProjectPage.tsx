@@ -7,6 +7,7 @@ import { TemplatesPage } from './new/TemplatesPage';
 import { MeshPage } from './new/MeshPage';
 import { OpenURLPage } from './new/OpenURLPage';
 import { TarsPage } from './new/TarsPage';
+import { HostingPage } from './new/HostingPage';
 
 interface NewProjectPageProps {
     onDeployTemplate: (template: Template, projectName: string, createRepo?: boolean, isPrivate?: boolean) => void;
@@ -27,7 +28,7 @@ export const NewProjectPage: React.FC<NewProjectPageProps> = ({
                 <Route path="templates" element={<TemplatesPage onDeployTemplate={onDeployTemplate} />} />
                 <Route path="mesh" element={<MeshPage onDeployWorkflow={onDeployWorkflow} />} />
                 <Route path="tars" element={<TarsPage />} />
-                <Route path="hosting" element={<OpenURLPage />} />
+                <Route path="hosting" element={<HostingPage onDeployTemplate={onDeployTemplate} />} />
             </Routes>
             <Outlet />
         </div>
