@@ -69,60 +69,8 @@ const BioRainbowLogo = ({ size = 180 }: { size?: number }) => (
             <path d="M42.5 52.5H57.5L50 65L42.5 52.5Z" stroke="white" strokeWidth="1.5" className="opacity-100" />
         </motion.svg>
 
-        {/* Dynamic Static Stimuli Reflection (Bottom Pulse) */}
-        <motion.div
-            className="absolute -bottom-8 w-12 h-2 bg-cyan-500 blur-2xl opacity-100"
-            animate={{
-                width: [12, 64, 12],
-                opacity: [0.4, 0.8, 0.4],
-                backgroundColor: ["rgba(0, 242, 255, 0.8)", "rgba(188, 0, 255, 0.8)", "rgba(0, 242, 255, 0.8)"]
-            }}
-            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-        />
     </motion.div>
 );
-
-const ScanningText = () => {
-    const lines = [
-        "INITIALIZING_NEURAL_MESH...",
-        "SYNCING_LAMADB_CLUSTERS...",
-        "CALIBRATING_QUANTUM_UPLINK...",
-        "AUTHENTICATING_SOVEREIGN_ID...",
-        "BOOSTING_FIDELITY_TO_MAX..."
-    ];
-    const [index, setIndex] = useState(0);
-
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setIndex((prev) => (prev + 1) % lines.length);
-        }, 600);
-        return () => clearInterval(interval);
-    }, []);
-
-    return (
-        <div className="mt-20 flex flex-col items-center">
-            <AnimatePresence mode="wait">
-                <motion.p
-                    key={index}
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: 10 }}
-                    className="text-[11px] font-mono font-bold tracking-[0.5em] text-white/50 uppercase"
-                >
-                    {lines[index]}
-                </motion.p>
-            </AnimatePresence>
-            <div className="mt-6 w-64 h-[2px] bg-zinc-900 overflow-hidden relative">
-                <motion.div
-                    className="absolute inset-0 bg-gradient-to-r from-transparent via-blue-500 to-transparent"
-                    initial={{ x: "-100%" }}
-                    animate={{ x: "100%" }}
-                    transition={{ duration: 1.2, repeat: Infinity, ease: "linear" }}
-                />
-            </div>
-        </div>
-    );
-};
 
 export const Preloader: React.FC = () => {
     const [isVisible, setIsVisible] = useState(true);
@@ -154,13 +102,6 @@ export const Preloader: React.FC = () => {
 
                     <div className="relative z-10 flex flex-col items-center scale-110">
                         <BioRainbowLogo />
-                        <ScanningText />
-                    </div>
-
-                    {/* Metadata Overlays (No bulky frames) */}
-                    <div className="absolute bottom-8 left-8 flex flex-col gap-1">
-                        <div className="text-[9px] font-mono text-white/20 tracking-widest uppercase">NODE_STATUS: BOOTING</div>
-                        <div className="text-[9px] font-mono text-white/10 tracking-widest uppercase">ENCRYPTION: ARC-FORCE_MAX</div>
                     </div>
                 </motion.div>
             )}
