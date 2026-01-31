@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const MinimalSVGLogo = ({ size = 120 }: { size?: number }) => (
+import { DiamondLine } from './ui/DiamondLine';
+
+const MinimalSVGLogo = ({ size = 100 }: { size?: number }) => (
     <motion.div
-        className="relative flex items-center justify-center"
-        initial={{ opacity: 0, scale: 0.9 }}
+        className="relative flex flex-col items-center justify-center gap-12"
+        initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 1.5, ease: "easeOut" }}
     >
@@ -15,24 +17,33 @@ const MinimalSVGLogo = ({ size = 120 }: { size?: number }) => (
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
         >
+            {/* Outer Diamond */}
             <motion.path
-                d="M22.5 35H77.5L50 80L22.5 35Z"
+                d="M50 10 L85 50 L50 90 L15 50 Z"
                 stroke="white"
                 strokeWidth="1.5"
                 initial={{ pathLength: 0, opacity: 0 }}
-                animate={{ pathLength: 1, opacity: 0.8 }}
+                animate={{ pathLength: 1, opacity: 1 }}
                 transition={{ duration: 2, ease: "easeInOut" }}
             />
+            {/* Inner Diamond */}
             <motion.path
-                d="M35 45H65L50 70L35 45Z"
+                d="M50 30 L70 50 L50 70 L30 50 Z"
                 stroke="white"
                 strokeWidth="1"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: [0, 0.4, 0.2] }}
                 transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: 1 }}
             />
-            <circle cx="50" cy="55" r="1.5" fill="white" className="animate-pulse" />
+            <circle cx="50" cy="50" r="1.5" fill="white" className="animate-pulse" />
         </motion.svg>
+
+        <div className="w-64">
+            <DiamondLine />
+            <div className="mt-4 flex flex-col items-center">
+                <span className="text-[10px] font-bold text-zinc-600 uppercase tracking-[0.4em] animate-pulse">Initializing Neural Mesh</span>
+            </div>
+        </div>
     </motion.div>
 );
 
