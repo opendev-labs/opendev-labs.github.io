@@ -109,8 +109,8 @@ const AppContent: React.FC = () => {
             try {
                 await createRepository(projectName, `Deployed from ${template.name}`, !!isPrivate);
                 let templateKey = 'default';
-                if (template.id === 'tmpl_1' || template.name.toLowerCase().includes('next')) templateKey = 'nextjs-starter';
-                else if (template.id === 'tmpl_3' || template.name.toLowerCase().includes('vite') || template.framework.toLowerCase().includes('react')) templateKey = 'vite-react';
+                if (template.id === 'tmpl_nextjs' || template.name.toLowerCase().includes('next')) templateKey = 'nextjs-starter';
+                else if (template.id === 'tmpl_react_vite' || template.name.toLowerCase().includes('react') && template.name.toLowerCase().includes('vite')) templateKey = 'vite-react';
                 else if (template.name.toLowerCase().includes('landing')) templateKey = 'landing-page';
 
                 const filesToUpload = REAL_TEMPLATES[templateKey] || REAL_TEMPLATES['default'];

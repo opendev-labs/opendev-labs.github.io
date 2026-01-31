@@ -49,8 +49,10 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onDeploy }
             {/* Glossy Gradient Background */}
             <div className="absolute inset-0 bg-gradient-to-tr from-zinc-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
 
-            {/* Preview Image */}
-            <div className="relative h-48 w-full bg-zinc-950 overflow-hidden border-b border-zinc-900">
+            {/* Official Logo Preview */}
+            <div className="relative h-48 w-full bg-zinc-950 overflow-hidden border-b border-zinc-900 flex items-center justify-center">
+                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-white/3 via-black to-black" />
+
                 <AnimatePresence mode="wait">
                     {isInitializing ? (
                         <motion.div
@@ -71,23 +73,26 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onDeploy }
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
-                            className="h-full w-full"
+                            className="h-full w-full flex items-center justify-center"
                         >
                             {template.imageUrl ? (
-                                <img src={template.imageUrl} alt={template.name} className="w-full h-full object-cover opacity-40 group-hover:opacity-80 group-hover:scale-110 transition-all duration-[2000ms] ease-out grayscale hover:grayscale-0" />
+                                <img
+                                    src={template.imageUrl}
+                                    alt={template.name}
+                                    className="max-h-28 max-w-[85%] object-contain opacity-60 group-hover:opacity-100 transition-all duration-700 group-hover:scale-105"
+                                />
                             ) : (
-                                <div className="w-full h-full flex items-center justify-center text-zinc-800">
-                                    <span className="text-[10px] font-bold uppercase tracking-widest">No Preview</span>
+                                <div className="text-zinc-800">
+                                    <span className="text-[10px] font-bold uppercase tracking-widest">Official Template</span>
                                 </div>
                             )}
                         </motion.div>
                     )}
                 </AnimatePresence>
 
-                {/* Framework Badge */}
-                <div className="absolute top-4 left-4 flex items-center gap-2 px-2.5 py-1 bg-black/90 backdrop-blur-xl border border-zinc-800 rounded-none z-10">
-                    {template.logoUrl && <img src={template.logoUrl} className="w-3.5 h-3.5 grayscale invert brightness-200" alt="" />}
-                    <span className="text-[9px] font-black text-white uppercase tracking-[0.2em]">{template.framework}</span>
+                {/* Official Badge */}
+                <div className="absolute top-4 left-4 flex items-center gap-2 px-2.5 py-1 bg-black/90 backdrop-blur-xl border border-zinc-800 z-10">
+                    <span className="text-[8px] font-black text-zinc-500 uppercase tracking-[0.25em]">Official</span>
                 </div>
             </div>
 
