@@ -166,12 +166,20 @@ const AppContent: React.FC = () => {
             id: `proj_${repo.provider}_${repo.id}_${Date.now()}`,
             name: projectName,
             framework: 'Node.js',
-            lastUpdated: 'Just now',
+            lastUpdated: new Date().toISOString(),
             deployments: [newDeployment],
             domains: [{ name: `https://${urlFriendlyName}.void.app`, isPrimary: true }],
             envVars: {},
             ...generateInitialProjectData(),
         };
+
+        // Write to LamaDB (User Scoped)
+        if (isAuthenticated && user) {
+            const userContext = { uid: user.email, email: user.email };
+            LamaDB.store.collection('projects', userContext).add(newProject).catch(err => {
+                console.error("Failed to persist imported project:", err);
+            });
+        }
 
         setProjects(prev => [newProject, ...prev]);
         navigate(`/void/projects/${newProject.id}`);
@@ -226,6 +234,15 @@ const AppContent: React.FC = () => {
         });
 
         setProjects(prev => [newProject, ...prev]);
+
+        // Write to LamaDB (User Scoped)
+        if (isAuthenticated && user) {
+            const userContext = { uid: user.email, email: user.email };
+            LamaDB.store.collection('projects', userContext).add(newProject).catch(err => {
+                console.error("Failed to persist workflow project:", err);
+            });
+        }
+
         navigate(`/void/projects/${newProject.id}`);
     };
 

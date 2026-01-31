@@ -25,6 +25,7 @@ export const NewProjectPage: React.FC<NewProjectPageProps> = ({
                 <Route path="import" element={<ImportPage onImportRepository={onImportRepository} />} />
                 <Route path="templates" element={<TemplatesPage onDeployTemplate={onDeployTemplate} />} />
                 <Route path="mesh" element={<MeshPage onDeployWorkflow={onDeployWorkflow} />} />
+                <Route path="tars" element={<TarsPage />} />
                 <Route path="hosting" element={<OpenURLPage />} />
             </Routes>
             <Outlet />

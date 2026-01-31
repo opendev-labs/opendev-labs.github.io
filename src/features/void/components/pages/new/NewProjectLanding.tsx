@@ -73,6 +73,24 @@ const TemplateVisual = () => (
     </div>
 );
 
+const TarsVisual = () => (
+    <div className="h-40 w-full bg-black border-b border-zinc-900 relative overflow-hidden group-hover:bg-zinc-950 transition-colors duration-500 flex items-center justify-center">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white/5 via-black to-black"></div>
+        <div className="relative z-10">
+            <div className="w-16 h-16 border-2 border-white flex items-center justify-center relative">
+                <div className="w-12 h-12 border border-white/30 animate-pulse"></div>
+                <div className="absolute -top-1 -left-1 w-2 h-2 bg-white"></div>
+                <div className="absolute -bottom-1 -right-1 w-2 h-2 bg-white"></div>
+            </div>
+        </div>
+        <div className="absolute bottom-4 left-0 w-full flex justify-center gap-1">
+            {[...Array(5)].map((_, i) => (
+                <div key={i} className="w-1 h-1 bg-white/20" style={{ animation: `pulse 2s infinite ${i * 0.2}s` }}></div>
+            ))}
+        </div>
+    </div>
+);
+
 const WorkflowVisual = () => (
     <div className="h-40 w-full bg-black border-b border-zinc-900 relative overflow-hidden group-hover:bg-zinc-950 transition-colors duration-500 flex items-center justify-center">
         <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '24px 24px' }}></div>
@@ -131,7 +149,13 @@ export const NewProjectLanding: React.FC = () => {
                 </motion.div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-1 max-w-7xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-1 max-w-7xl mx-auto">
+                <PremiumCard
+                    title="TARS AI Agent"
+                    description="Manifest high-fidelity websites and autonomous nodes from pure thought."
+                    visual={<TarsVisual />}
+                    onClick={() => navigate('tars')}
+                />
                 <PremiumCard
                     title="Git Import"
                     description="Deploy an existing architecture directly from your VCS fleet."
