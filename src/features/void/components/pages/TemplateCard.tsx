@@ -90,9 +90,16 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onDeploy }
                     )}
                 </AnimatePresence>
 
-                {/* Official Badge */}
-                <div className="absolute top-4 left-4 flex items-center gap-2 px-2.5 py-1 bg-black/90 backdrop-blur-xl border border-zinc-800 z-10">
-                    <span className="text-[8px] font-black text-zinc-500 uppercase tracking-[0.25em]">Official</span>
+                {/* Category & Official Badge */}
+                <div className="absolute top-4 left-4 right-4 flex items-center justify-between z-10">
+                    {template.category && (
+                        <div className="px-2.5 py-1 bg-emerald-500/10 backdrop-blur-xl border border-emerald-500/20">
+                            <span className="text-[8px] font-black text-emerald-500 uppercase tracking-[0.25em]">{template.category}</span>
+                        </div>
+                    )}
+                    <div className="ml-auto px-2.5 py-1 bg-black/90 backdrop-blur-xl border border-zinc-800">
+                        <span className="text-[8px] font-black text-zinc-500 uppercase tracking-[0.25em]">Official</span>
+                    </div>
                 </div>
             </div>
 
@@ -103,11 +110,25 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onDeploy }
                 </div>
 
                 {/* Description */}
-                <div className="flex-grow mb-8">
+                <div className="flex-grow mb-6">
                     <p className="text-xs text-zinc-500 font-medium leading-relaxed tracking-tight group-hover:text-zinc-300 transition-colors duration-500">
                         {template.description}
                     </p>
                 </div>
+
+                {/* Features */}
+                {template.features && template.features.length > 0 && (
+                    <div className="mb-8">
+                        <div className="grid grid-cols-2 gap-2">
+                            {template.features.slice(0, 4).map((feature, idx) => (
+                                <div key={idx} className="flex items-center gap-1.5">
+                                    <div className="w-1 h-1 bg-emerald-500 rounded-full" />
+                                    <span className="text-[10px] text-zinc-600 font-medium">{feature}</span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
 
                 {/* Action Button/Form */}
                 <div className="mt-auto">

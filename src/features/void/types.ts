@@ -59,6 +59,8 @@ export interface Template {
     author: string;
     imageUrl?: string;
     logoUrl?: string;
+    features?: string[];
+    category?: string;
 }
 
 // New types for Git provider integration
