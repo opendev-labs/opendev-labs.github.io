@@ -127,24 +127,42 @@ export const successBuildLogs = [
 ];
 
 export const mockTemplates: Template[] = [
-  { id: 'tmpl_1', name: 'Next.js Boilerplate', framework: 'Next.js', description: 'A feature-rich Next.js starter with TypeScript, Tailwind, and more.', author: 'Vercel', imageUrl: '/home/cube/.gemini/antigravity/brain/cc5bde38-0827-48eb-8f24-237ce666c4a7/nextjs_template_preview_1769859627596.png', logoUrl: 'https://www.vectorlogo.zone/logos/nextjs/nextjs-icon.svg' },
-  { id: 'tmpl_3', name: 'Vite + React', framework: 'React', description: 'A minimal React starter with Vite for a fast development experience.', author: 'Vite', imageUrl: '/home/cube/.gemini/antigravity/brain/cc5bde38-0827-48eb-8f24-237ce666c4a7/react_template_preview_1769859643912.png', logoUrl: 'https://vitejs.dev/logo.svg' },
-  { id: 'tmpl_2', name: 'SvelteKit Starter', framework: 'SvelteKit', description: 'A barebones SvelteKit app, ready to deploy.', author: 'Svelte', imageUrl: '/home/cube/.gemini/antigravity/brain/cc5bde38-0827-48eb-8f24-237ce666c4a7/svelte_template_preview_1769859713440.png', logoUrl: 'https://svelte.dev/favicon.png' },
-  { id: 'tmpl_4', name: 'Nuxt Minimal Starter', framework: 'Nuxt', description: 'Get started with Nuxt 3 and experience the power of Vue.', author: 'NuxtLabs', imageUrl: '/home/cube/.gemini/antigravity/brain/cc5bde38-0827-48eb-8f24-237ce666c4a7/nuxt_template_preview_1769859700040.png', logoUrl: 'https://nuxt.com/icon.png' },
-  { id: 'tmpl_5', name: 'Vue + Vite', framework: 'Vue.js', description: 'A lightweight and fast Vue 3 starter kit powered by Vite.', author: 'Vue', imageUrl: 'https://v2.vuejs.org/images/logo.png', logoUrl: 'https://vuejs.org/logo.svg' },
-  { id: 'tmpl_6', name: 'Astro Blog', framework: 'Astro', description: 'Build a fast, content-focused blog with the Astro starter kit.', author: 'Astro', imageUrl: 'https://astro.build/assets/press/astro-logo-dark-gradient.png', logoUrl: 'https://astro.build/favicon.svg' },
-  { id: 'tmpl_7', name: 'Node.js Express API', framework: 'Node.js', description: 'A simple boilerplate for a REST API with Node.js and Express.', author: 'Community', imageUrl: '/home/cube/.gemini/antigravity/brain/cc5bde38-0827-48eb-8f24-237ce666c4a7/express_api_preview_template_1769859659211.png', logoUrl: 'https://cdn.worldvectorlogo.com/logos/nodejs-icon.svg' },
-  { id: 'tmpl_8', name: 'Static Site', framework: 'HTML', description: 'A basic HTML, CSS, and JS template for simple static websites.', author: 'Community', imageUrl: 'https://www.w3.org/html/logo/og-image.png', logoUrl: 'https://www.w3.org/html/logo/downloads/HTML5_Badge_32.png' },
-  { id: 'tmpl_9', name: 'Remix Starter', framework: 'Remix', description: 'Create modern, resilient web apps with the Remix framework.', author: 'Remix Team', imageUrl: 'https://remix.run/img/og.1.jpg', logoUrl: 'https://remix.run/favicon.ico' },
-  { id: 'tmpl_10', name: 'Gatsby Portfolio', framework: 'Gatsby', description: 'A starter portfolio site built with Gatsby and GraphQL.', author: 'Gatsby', imageUrl: 'https://www.gatsbyjs.com/images/gatsby-og.png', logoUrl: 'https://www.gatsbyjs.com/favicon-32x32.png' },
-  { id: 'tmpl_11', name: 'Eleventy Starter', framework: 'Eleventy', description: 'A simple, flexible static site generator.', author: '11ty', imageUrl: 'https://www.11ty.dev/images/11ty-og.png', logoUrl: 'https://www.11ty.dev/favicon.ico' },
-  { id: 'tmpl_12', name: 'Python Flask API', framework: 'Python', description: 'A minimal REST API built with Python and the Flask micro-framework.', author: 'Community', imageUrl: 'https://raw.githubusercontent.com/github/explore/80688e429a7d40f8dd3e8aF7415291ea77f07753/topics/flask/flask.png', logoUrl: 'https://cdn.worldvectorlogo.com/logos/flask.svg' },
-  { id: 'tmpl_13', name: 'Go Gin API', framework: 'Go', description: 'A high-performance API server using Go and the Gin framework.', author: 'Community', imageUrl: 'https://raw.githubusercontent.com/gin-gonic/logo/master/color.png', logoUrl: 'https://go.dev/favicon.ico' },
-  { id: 'tmpl_14', name: 'Docusaurus Site', framework: 'Docusaurus', description: 'Easily build optimized documentation websites with React.', author: 'Facebook', imageUrl: 'https://docusaurus.io/img/docusaurus-social-card.png', logoUrl: 'https://docusaurus.io/img/favicon.ico' },
-  { id: 'tmpl_15', name: 'SolidStart App', framework: 'SolidJS', description: 'A starter for building reactive web applications with SolidStart.', author: 'Solid Team', imageUrl: 'https://www.solidjs.com/assets/og-home.png', logoUrl: 'https://www.solidjs.com/favicon.ico' },
-  { id: 'tmpl_16', name: 'Qwik City Starter', framework: 'Qwik', description: 'Build resumable, instantly-interactive applications with Qwik.', author: 'Builder.io', imageUrl: 'https://qwik.builder.io/logos/social-card.png', logoUrl: 'https://qwik.builder.io/favicon.ico' },
-  { id: 'tmpl_17', name: 'Angular Universal', framework: 'Angular', description: 'A starter for server-side rendered (SSR) Angular applications.', author: 'Google', imageUrl: 'https://angular.io/assets/images/logos/angular/angular-social.png', logoUrl: 'https://angular.io/assets/images/favicons/favicon.ico' },
-  { id: 'tmpl_18', name: 'Rust Axum Server', framework: 'Rust', description: 'A boilerplate for a web server using Rust and the Axum framework.', author: 'Community', imageUrl: 'https://raw.githubusercontent.com/github/explore/80688e429a7d40f8dd3e8aF7415291ea77f07753/topics/rust/rust.png', logoUrl: 'https://www.rust-lang.org/static/images/favicon-32x32.png' },
+  {
+    id: 'tmpl_1',
+    name: 'Next.js Nexus Boilerplate',
+    framework: 'Next.js',
+    description: 'The ultimate enterprise-grade Next.js starter. Featured with TypeScript 5.x, Tailwind CSS dynamic design, and advanced server components architecture.',
+    author: 'opendev-labs',
+    imageUrl: '/assets/templates/nextjs_thumbnail.png',
+    logoUrl: 'https://www.vectorlogo.zone/logos/nextjs/nextjs-icon.svg'
+  },
+  {
+    id: 'tmpl_3',
+    name: 'Vite + React Elite',
+    framework: 'React',
+    description: 'A lightning-fast React development environment powered by Vite. Minimal, clean, and optimized for high-performance neural web experiences.',
+    author: 'opendev-labs',
+    imageUrl: '/assets/templates/vite_thumbnail.png',
+    logoUrl: 'https://vitejs.dev/logo.svg'
+  },
+  {
+    id: 'tmpl_12',
+    name: 'Python Flask Intelligence',
+    framework: 'Python',
+    description: 'High-performance REST API architecture using Flask. Perfect for integrating LLMs and complex computational logic into your stack.',
+    author: 'Community',
+    imageUrl: 'https://raw.githubusercontent.com/github/explore/80688e429a7d40f8dd3e8aF7415291ea77f07753/topics/flask/flask.png',
+    logoUrl: 'https://cdn.worldvectorlogo.com/logos/flask.svg'
+  },
+  {
+    id: 'tmpl_4',
+    name: 'Nuxt 3 Quantum',
+    framework: 'Nuxt',
+    description: 'Experience the hybrid rendering power of Nuxt 3. A zero-config architecture designed for SEO sovereignty and rapid scaling.',
+    author: 'NuxtLabs',
+    imageUrl: 'https://nuxt.com/icon.png',
+    logoUrl: 'https://nuxt.com/icon.png'
+  },
 ];
 
 export const mockWorkflows: Workflow[] = [
