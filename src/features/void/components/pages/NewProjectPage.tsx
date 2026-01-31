@@ -5,7 +5,7 @@ import { NewProjectLanding } from './new/NewProjectLanding';
 import { ImportPage } from './new/ImportPage';
 import { TemplatesPage } from './new/TemplatesPage';
 import { MeshPage } from './new/MeshPage';
-import { OpenURLPage } from './OpenURLPage';
+import { OpenURLPage } from './new/OpenURLPage';
 import { TarsPage } from './new/TarsPage';
 
 interface NewProjectPageProps {

@@ -1,6 +1,6 @@
 
 
-import type { Project, Deployment, Domain, Template, GitProvider, Repository, AnalyticsData, ServerlessFunction, TeamMember, ActivityEvent, UsageMetrics, Database, Integration, FileSystemNode, Workflow } from './types';
+import type { Project, Deployment, Domain, Template, GitProvider, Repository, AnalyticsData, ServerlessFunction, TeamMember, ActivityEvent, UsageMetrics, Database, Integration, FileSystemNode, Workflow, ModelConfig } from './types';
 import { DeploymentStatus, LogLevel, FunctionStatus, TeamMemberRole, DatabaseType, DatabaseStatus } from './types';
 
 export const mockDeployments: Deployment[] = [
