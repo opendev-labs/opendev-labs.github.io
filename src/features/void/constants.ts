@@ -127,41 +127,180 @@ export const successBuildLogs = [
 ];
 
 export const mockTemplates: Template[] = [
+  // Frontend Meta Frameworks
   {
-    id: 'tmpl_1',
-    name: 'Next.js Nexus Boilerplate',
+    id: 'tmpl_nextjs',
+    name: 'Next.js App Router',
     framework: 'Next.js',
-    description: 'The ultimate enterprise-grade Next.js starter. Featured with TypeScript 5.x, Tailwind CSS dynamic design, and advanced server components architecture.',
-    author: 'opendev-labs',
-    imageUrl: '/assets/templates/nextjs_thumbnail.png',
+    description: 'The React framework for production with App Router, Server Components, and TypeScript.',
+    author: 'Vercel',
+    imageUrl: 'https://skillicons.dev/icons?i=nextjs&theme=dark',
     logoUrl: 'https://www.vectorlogo.zone/logos/nextjs/nextjs-icon.svg'
   },
   {
-    id: 'tmpl_3',
-    name: 'Vite + React Elite',
+    id: 'tmpl_nuxt',
+    name: 'Nuxt 3 Starter',
+    framework: 'Nuxt',
+    description: 'The intuitive Vue framework with hybrid rendering and zero-config TypeScript support.',
+    author: 'NuxtLabs',
+    imageUrl: 'https://skillicons.dev/icons?i=nuxtjs&theme=dark',
+    logoUrl: 'https://nuxt.com/icon.png'
+  },
+  {
+    id: 'tmpl_remix',
+    name: 'Remix Full Stack',
+    framework: 'Remix',
+    description: 'Build better websites with modern web standards, server-side rendering, and React.',
+    author: 'Remix Team',
+    imageUrl: 'https://skillicons.dev/icons?i=remix&theme=dark',
+    logoUrl: 'https://remix.run/favicon.ico'
+  },
+  {
+    id: 'tmpl_astro',
+    name: 'Astro Static Site',
+    framework: 'Astro',
+    description: 'Build faster websites with less client-side JavaScript. The all-in-one web framework.',
+    author: 'Astro',
+    imageUrl: 'https://skillicons.dev/icons?i=astro&theme=dark',
+    logoUrl: 'https://astro.build/favicon.svg'
+  },
+
+  // Frontend Frameworks
+  {
+    id: 'tmpl_react_vite',
+    name: 'React + Vite',
     framework: 'React',
-    description: 'A lightning-fast React development environment powered by Vite. Minimal, clean, and optimized for high-performance neural web experiences.',
+    description: 'Lightning-fast React development with Vite, TypeScript, and modern build tooling.',
     author: 'opendev-labs',
-    imageUrl: '/assets/templates/vite_thumbnail.png',
+    imageUrl: 'https://skillicons.dev/icons?i=react,vite&theme=dark',
     logoUrl: 'https://vitejs.dev/logo.svg'
   },
   {
-    id: 'tmpl_12',
-    name: 'Python Flask Intelligence',
+    id: 'tmpl_vue',
+    name: 'Vue 3 + Vite',
+    framework: 'Vue',
+    description: 'The progressive JavaScript framework with Composition API and TypeScript support.',
+    author: 'Vue Team',
+    imageUrl: 'https://skillicons.dev/icons?i=vue,vite&theme=dark',
+    logoUrl: 'https://vuejs.org/logo.svg'
+  },
+  {
+    id: 'tmpl_svelte',
+    name: 'SvelteKit App',
+    framework: 'Svelte',
+    description: 'Cybernetically enhanced web apps with the fastest framework and minimal bundle size.',
+    author: 'Svelte Team',
+    imageUrl: 'https://skillicons.dev/icons?i=svelte&theme=dark',
+    logoUrl: 'https://svelte.dev/favicon.png'
+  },
+  {
+    id: 'tmpl_angular',
+    name: 'Angular Standalone',
+    framework: 'Angular',
+    description: 'Enterprise-grade framework with TypeScript, RxJS, and powerful CLI tooling.',
+    author: 'Google',
+    imageUrl: 'https://skillicons.dev/icons?i=angular&theme=dark',
+    logoUrl: 'https://angular.io/assets/images/favicons/favicon.ico'
+  },
+
+  // Backend & APIs
+  {
+    id: 'tmpl_nodejs',
+    name: 'Node.js + Express',
+    framework: 'Node.js',
+    description: 'Fast, scalable REST API with Express, TypeScript, and modern async patterns.',
+    author: 'opendev-labs',
+    imageUrl: 'https://skillicons.dev/icons?i=nodejs,express&theme=dark',
+    logoUrl: 'https://cdn.worldvectorlogo.com/logos/nodejs-icon.svg'
+  },
+  {
+    id: 'tmpl_python',
+    name: 'Python + Flask',
     framework: 'Python',
-    description: 'High-performance REST API architecture using Flask. Perfect for integrating LLMs and complex computational logic into your stack.',
-    author: 'Community',
-    imageUrl: '/assets/templates/python_thumbnail.png',
+    description: 'Lightweight Python API with Flask, perfect for AI/ML integrations and data processing.',
+    author: 'opendev-labs',
+    imageUrl: 'https://skillicons.dev/icons?i=python,flask&theme=dark',
     logoUrl: 'https://cdn.worldvectorlogo.com/logos/flask.svg'
   },
   {
-    id: 'tmpl_4',
-    name: 'Nuxt 3 Quantum',
-    framework: 'Nuxt',
-    description: 'Experience the hybrid rendering power of Nuxt 3. A zero-config architecture designed for SEO sovereignty and rapid scaling.',
-    author: 'NuxtLabs',
-    imageUrl: '/assets/templates/nuxt_thumbnail.png',
-    logoUrl: 'https://nuxt.com/icon.png'
+    id: 'tmpl_go',
+    name: 'Go + Gin',
+    framework: 'Go',
+    description: 'High-performance HTTP server with Go and Gin for blazing-fast APIs.',
+    author: 'opendev-labs',
+    imageUrl: 'https://skillicons.dev/icons?i=go&theme=dark',
+    logoUrl: 'https://go.dev/favicon.ico'
+  },
+  {
+    id: 'tmpl_rust',
+    name: 'Rust + Axum',
+    framework: 'Rust',
+    description: 'Memory-safe, ultra-fast web services with Rust and the Axum framework.',
+    author: 'opendev-labs',
+    imageUrl: 'https://skillicons.dev/icons?i=rust&theme=dark',
+    logoUrl: 'https://www.rust-lang.org/static/images/favicon-32x32.png'
+  },
+
+  // Full Stack with Database
+  {
+    id: 'tmpl_nextjs_postgres',
+    name: 'Next.js + PostgreSQL',
+    framework: 'Next.js',
+    description: 'Full-stack application with Next.js, Prisma ORM, and PostgreSQL database.',
+    author: 'opendev-labs',
+    imageUrl: 'https://skillicons.dev/icons?i=nextjs,postgres&theme=dark',
+    logoUrl: 'https://www.vectorlogo.zone/logos/postgresql/postgresql-icon.svg'
+  },
+  {
+    id: 'tmpl_nodejs_redis',
+    name: 'Node.js + Redis',
+    framework: 'Node.js',
+    description: 'Real-time API with Redis caching, pub/sub, and session management.',
+    author: 'opendev-labs',
+    imageUrl: 'https://skillicons.dev/icons?i=nodejs,redis&theme=dark',
+    logoUrl: 'https://www.vectorlogo.zone/logos/redis/redis-icon.svg'
+  },
+
+  // Styled Templates
+  {
+    id: 'tmpl_nextjs_tailwind',
+    name: 'Next.js + Tailwind',
+    framework: 'Next.js',
+    description: 'Beautiful UI-first starter with Tailwind CSS, shadcn/ui, and dark mode.',
+    author: 'opendev-labs',
+    imageUrl: 'https://skillicons.dev/icons?i=nextjs,tailwind&theme=dark',
+    logoUrl: 'https://tailwindcss.com/favicons/favicon-32x32.png'
+  },
+
+  // Infrastructure & DevOps
+  {
+    id: 'tmpl_docker',
+    name: 'Dockerized App',
+    framework: 'Docker',
+    description: 'Production-ready Docker setup with multi-stage builds and compose configuration.',
+    author: 'opendev-labs',
+    imageUrl: 'https://skillicons.dev/icons?i=docker&theme=dark',
+    logoUrl: 'https://www.docker.com/wp-content/uploads/2022/03/Moby-logo.png'
+  },
+  {
+    id: 'tmpl_firebase',
+    name: 'Firebase + React',
+    framework: 'Firebase',
+    description: 'Serverless React app with Firebase Auth, Firestore, and Cloud Functions.',
+    author: 'opendev-labs',
+    imageUrl: 'https://skillicons.dev/icons?i=firebase,react&theme=dark',
+    logoUrl: 'https://firebase.google.com/favicon.ico'
+  },
+
+  // TypeScript Focused
+  {
+    id: 'tmpl_typescript',
+    name: 'TypeScript Library',
+    framework: 'TypeScript',
+    description: 'TypeScript library starter with modern build tools, testing, and CI/CD.',
+    author: 'opendev-labs',
+    imageUrl: 'https://skillicons.dev/icons?i=ts&theme=dark',
+    logoUrl: 'https://www.typescriptlang.org/favicon-32x32.png'
   },
 ];
 
