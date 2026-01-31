@@ -4,7 +4,7 @@ import { Template } from '../../../types';
 import { hostingTemplates } from '../../../constants/hostingTemplates';
 import { TemplateCard } from '../TemplateCard';
 import { motion } from 'framer-motion';
-import { RocketLaunchIcon, ServerIcon } from '../../common/Icons';
+import { Server } from 'lucide-react';
 
 export const HostingPage: React.FC<{
     onDeployTemplate: (template: Template, projectName: string, createRepo?: boolean, isPrivate?: boolean) => void;
@@ -32,7 +32,7 @@ export const HostingPage: React.FC<{
                     <div className="max-w-2xl">
                         <div className="flex items-center gap-3 mb-6">
                             <div className="p-3 bg-emerald-500/10 border border-emerald-500/20">
-                                <ServerIcon className="w-6 h-6 text-emerald-500" />
+                                <Server className="w-6 h-6 text-emerald-500" />
                             </div>
                             <h2 className="text-5xl md:text-7xl font-black text-white tracking-tighter uppercase">
                                 Free <span className="text-emerald-500">Hosting.</span>
