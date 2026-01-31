@@ -1,18 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import officialLogo from '../assets/official-logo.png';
 
 const Logo = () => (
-    <svg width="24" height="24" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-            <linearGradient id="footer-rainbow" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#00f2ff" />
-                <stop offset="100%" stopColor="#bc00ff" />
-            </linearGradient>
-        </defs>
-        <path d="M10 25H90L50 90L10 25Z" stroke="url(#footer-rainbow)" strokeWidth="4" />
-        <path d="M30 40H70L50 72.5L30 40Z" stroke="url(#footer-rainbow)" strokeWidth="2" opacity="0.6" />
-        <path d="M42.5 50H57.5L50 62.5L42.5 50Z" stroke="white" strokeWidth="1.5" opacity="0.8" />
-    </svg>
+    <img
+        src={officialLogo}
+        alt="OpenDev-Labs Logo"
+        className="h-6 w-auto object-contain brightness-90 hover:brightness-100 transition-all opacity-80 hover:opacity-100"
+    />
 );
 
 export const Footer: React.FC = () => {
