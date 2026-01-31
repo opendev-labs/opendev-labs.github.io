@@ -17,31 +17,32 @@ const MinimalSVGLogo = ({ size = 100 }: { size?: number }) => (
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
         >
-            {/* Outer Diamond */}
+            {/* Outer Inverted Triangle Border (Loading) */}
             <motion.path
-                d="M50 10 L85 50 L50 90 L15 50 Z"
+                d="M10 20 H90 L50 90 Z"
                 stroke="white"
                 strokeWidth="1.5"
+                strokeLinejoin="round"
                 initial={{ pathLength: 0, opacity: 0 }}
                 animate={{ pathLength: 1, opacity: 1 }}
-                transition={{ duration: 2, ease: "easeInOut" }}
+                transition={{ duration: 2.5, ease: "easeInOut", repeat: Infinity }}
             />
-            {/* Inner Diamond */}
+            {/* Inner Inverted Triangle (Solid/Glow) */}
             <motion.path
-                d="M50 30 L70 50 L50 70 L30 50 Z"
-                stroke="white"
-                strokeWidth="1"
+                d="M30 35 H70 L50 70 Z"
+                fill="white"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: [0, 0.4, 0.2] }}
                 transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: 1 }}
             />
-            <circle cx="50" cy="50" r="1.5" fill="white" className="animate-pulse" />
+            {/* Center Core */}
+            <circle cx="50" cy="45" r="1.5" fill="white" className="animate-pulse" />
         </motion.svg>
 
         <div className="w-64">
             <DiamondLine />
             <div className="mt-4 flex flex-col items-center">
-                <span className="text-[10px] font-bold text-zinc-600 uppercase tracking-[0.4em] animate-pulse">Initializing Neural Mesh</span>
+                <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.4em] animate-pulse">Synchronizing Node</span>
             </div>
         </div>
     </motion.div>
