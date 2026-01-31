@@ -77,6 +77,6 @@ export async function* streamGeminiResponse(fullPrompt: string, history: Message
     });
 
     for await (const chunk of result) {
-        yield { text: chunk.text };
+        yield { text: chunk.text || "" };
     }
 }
