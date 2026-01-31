@@ -87,14 +87,15 @@ export async function getAIAssistance(logs: LogEntry[]): Promise<string> {
         return "Neural handshake offline. Configure API keys to enable log analysis.";
     }
     const ai = new GoogleGenAI({ apiKey: effectiveApiKey });
-    const model = ai.getGenerativeModel({ model: "gemini-1.5-flash" });
-
     const logText = logs.map(l => `[${l.level}] ${l.message}`).join('\n');
     const prompt = `You are an expert systems analyst. Analyze these error logs and provide a concise, actionable resolution. Focus on protocol failures and mesh sync errors:\n\n${logText}`;
 
     try {
-        const result = await model.generateContent(prompt);
-        return result.response.text();
+        const response = await ai.models.generateContent({
+            model: "gemini-1.5-flash",
+            contents: [{ role: 'user', parts: [{ text: prompt }] }]
+        });
+        return response.text?.trim() || "Neural analysis yielded no data.";
     } catch (e) {
         console.error("AI Assistance Error:", e);
         return "Neural analysis failed. Manual diagnostics recommended.";

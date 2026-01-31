@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, Send, Terminal, Box, Layers, Play } from 'lucide-react';
 import { streamChatResponse } from '../../../services/llmService';
+import type { Message } from '../../../types';
 
 export const TarsPage: React.FC = () => {
     const [prompt, setPrompt] = useState('');
     const [isGenerating, setIsGenerating] = useState(false);
-    const [messages, setMessages] = useState<{ role: 'user' | 'tars', content: string }[]>([]);
+    const [messages, setMessages] = useState<Message[]>([]);
     const [constructedFiles, setConstructedFiles] = useState<{ path: string, content: string }[]>([]);
 
     const handleGenerate = async (e: React.FormEvent) => {
@@ -16,7 +17,7 @@ export const TarsPage: React.FC = () => {
         const currentPrompt = prompt;
         setPrompt('');
         setIsGenerating(true);
-        setMessages(prev => [...prev, { role: 'user', content: currentPrompt }]);
+        setMessages(prev => [...prev, { id: Date.now(), role: 'user', content: currentPrompt }]);
 
         try {
             let fullResponse = '';
@@ -28,7 +29,7 @@ export const TarsPage: React.FC = () => {
                 undefined // Will use the env key
             );
 
-            setMessages(prev => [...prev, { role: 'tars', content: '' }]);
+            setMessages(prev => [...prev, { id: Date.now() + 1, role: 'tars', content: '' }]);
 
             for await (const chunk of generator) {
                 fullResponse += chunk.text;
@@ -52,7 +53,7 @@ export const TarsPage: React.FC = () => {
 
         } catch (error) {
             console.error("TARS Generation Error:", error);
-            setMessages(prev => [...prev, { role: 'tars', content: "Neural handshake failed. Error: " + (error instanceof Error ? error.message : "Unknown error") }]);
+            setMessages(prev => [...prev, { id: Date.now(), role: 'tars', content: "Neural handshake failed. Error: " + (error instanceof Error ? error.message : "Unknown error") }]);
         } finally {
             setIsGenerating(false);
         }
