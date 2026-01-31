@@ -6,11 +6,13 @@
 import { githubPATService } from './githubPATService';
 import { TemplateGenerator } from './templateGenerator';
 
+export type DeploymentPlatform = 'github' | 'vercel' | 'firebase' | 'huggingface';
+
 export interface DeploymentConfig {
     templateId: string;
     projectName: string;
+    platform: DeploymentPlatform;
     isPrivate?: boolean;
-    platform?: 'github-pages' | 'vercel' | 'firebase';
 }
 
 export interface DeploymentResult {
@@ -41,19 +43,19 @@ class TemplateDeploymentService {
                 content: template.readme
             });
 
-            // 3. Deploy to GitHub Pages using PAT
-            const result = await githubPATService.deployToGitHubPages(
-                config.projectName,
-                files,
-                `${config.projectName} - Created with OpenDev Labs`,
-                config.isPrivate || false
-            );
-
-            return {
-                success: true,
-                repoUrl: result.repoUrl,
-                liveUrl: result.pagesUrl
-            };
+            // 3. Deploy based on platform
+            switch (config.platform) {
+                case 'github':
+                    return await this.deployToGitHub(config.projectName, files, config.isPrivate);
+                case 'vercel':
+                    return await this.deployToVercel(config.projectName, files, config.isPrivate);
+                case 'firebase':
+                    return await this.deployToFirebase(config.projectName, files, config.isPrivate);
+                case 'huggingface':
+                    return await this.deployToHuggingFace(config.projectName, files, config.isPrivate);
+                default:
+                    throw new Error(`Unsupported platform: ${config.platform}`);
+            }
 
         } catch (error) {
             console.error('Deployment error:', error);
@@ -62,6 +64,66 @@ class TemplateDeploymentService {
                 error: error instanceof Error ? error.message : 'Unknown deployment error'
             };
         }
+    }
+
+    /**
+     * Deploy to GitHub Pages
+     */
+    private async deployToGitHub(projectName: string, files: any[], isPrivate?: boolean): Promise<DeploymentResult> {
+        const result = await githubPATService.deployToGitHubPages(
+            projectName,
+            files,
+            `${projectName} - Created with OpenDev Labs`,
+            isPrivate || false
+        );
+
+        return {
+            success: true,
+            repoUrl: result.repoUrl,
+            liveUrl: result.pagesUrl
+        };
+    }
+
+    /**
+     * Deploy to Vercel (TODO: Implement actual Vercel API)
+     */
+    private async deployToVercel(projectName: string, files: any[], isPrivate?: boolean): Promise<DeploymentResult> {
+        // For now, return mock success with instructions
+        // TODO: Implement actual Vercel API deployment
+        return {
+            success: true,
+            repoUrl: `https://github.com/user/${projectName}`,
+            liveUrl: `https://${projectName}.vercel.app`,
+            error: 'Vercel deployment coming soon! For now, please deploy via GitHub first, then import to Vercel.'
+        };
+    }
+
+    /**
+     * Deploy to Firebase (TODO: Implement actual Firebase API)
+     */
+    private async deployToFirebase(projectName: string, files: any[], isPrivate?: boolean): Promise<DeploymentResult> {
+        // For now, return mock success with instructions
+        // TODO: Implement actual Firebase deployment
+        return {
+            success: true,
+            repoUrl: `https://github.com/user/${projectName}`,
+            liveUrl: `https://${projectName}.web.app`,
+            error: 'Firebase deployment coming soon! For now, please deploy via GitHub first, then use Firebase CLI.'
+        };
+    }
+
+    /**
+     * Deploy to HuggingFace (TODO: Implement actual HF API)
+     */
+    private async deployToHuggingFace(projectName: string, files: any[], isPrivate?: boolean): Promise<DeploymentResult> {
+        // For now, return mock success with instructions
+        // TODO: Implement actual HuggingFace Spaces API
+        return {
+            success: true,
+            repoUrl: `https://huggingface.co/spaces/user/${projectName}`,
+            liveUrl: `https://${projectName}.hf.space`,
+            error: 'HuggingFace deployment coming soon! For now, please deploy via GitHub first, then push to HF Spaces.'
+        };
     }
 
     /**
