@@ -267,7 +267,7 @@ export async function generateSuggestions(context: string): Promise<string[]> {
         return [];
     }
     try {
-        const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+        const ai = new GoogleGenAI({ apiKey });
         const response = await ai.models.generateContent({
             model: 'gemini-2.5-flash',
             contents: context,
@@ -286,7 +286,7 @@ export async function generateSuggestions(context: string): Promise<string[]> {
                 }
             }
         });
-        const jsonStr = response.text.trim();
+        const jsonStr = response.text?.trim() || "{}";
         const parsed = JSON.parse(jsonStr);
         return parsed.suggestions && Array.isArray(parsed.suggestions) ? parsed.suggestions.slice(0, 4) : [];
     } catch (error) {
