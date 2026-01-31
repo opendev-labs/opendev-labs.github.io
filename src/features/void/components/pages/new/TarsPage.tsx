@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, Send, Terminal, Box, Layers, Play } from 'lucide-react';
-import { streamChatResponse } from '../../services/llmService';
+import { streamChatResponse } from '../../../services/llmService';
 
 export const TarsPage: React.FC = () => {
     const [prompt, setPrompt] = useState('');
@@ -87,8 +87,8 @@ export const TarsPage: React.FC = () => {
                                 className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
                             >
                                 <div className={`max-w-[85%] px-4 py-3 rounded-none text-xs font-medium leading-relaxed ${msg.role === 'user'
-                                        ? 'bg-white text-black font-bold'
-                                        : 'bg-zinc-950 border border-zinc-900 text-zinc-300'
+                                    ? 'bg-white text-black font-bold'
+                                    : 'bg-zinc-950 border border-zinc-900 text-zinc-300'
                                     }`}>
                                     <pre className="whitespace-pre-wrap font-sans">
                                         {msg.role === 'tars' && msg.content.startsWith('{') ? "Manifesting structural changes..." : msg.content}

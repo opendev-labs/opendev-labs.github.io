@@ -1,5 +1,5 @@
 import { GoogleGenAI, Type } from "@google/genai";
-import type { Message, ModelConfig } from '../types';
+import type { Message, ModelConfig, LogEntry } from '../types';
 
 const TARS_SYSTEM_INSTRUCTION_GEMINI = `You are TARS, an AI development assistant. When generating code:
 
@@ -78,5 +78,25 @@ export async function* streamGeminiResponse(fullPrompt: string, history: Message
 
     for await (const chunk of result) {
         yield { text: chunk.text || "" };
+    }
+}
+
+export async function getAIAssistance(logs: LogEntry[]): Promise<string> {
+    const effectiveApiKey = import.meta.env.VITE_FIREBASE_API_KEY;
+    if (!effectiveApiKey) {
+        return "Neural handshake offline. Configure API keys to enable log analysis.";
+    }
+    const ai = new GoogleGenAI({ apiKey: effectiveApiKey });
+    const model = ai.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+    const logText = logs.map(l => `[${l.level}] ${l.message}`).join('\n');
+    const prompt = `You are an expert systems analyst. Analyze these error logs and provide a concise, actionable resolution. Focus on protocol failures and mesh sync errors:\n\n${logText}`;
+
+    try {
+        const result = await model.generateContent(prompt);
+        return result.response.text();
+    } catch (e) {
+        console.error("AI Assistance Error:", e);
+        return "Neural analysis failed. Manual diagnostics recommended.";
     }
 }
