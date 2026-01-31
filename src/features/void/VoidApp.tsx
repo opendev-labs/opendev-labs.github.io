@@ -151,7 +151,7 @@ const AppContent: React.FC = () => {
         navigate(`/void/projects/${newProject.id}`);
     };
 
-    const handleImportRepository = (repo: Repository, projectName: string) => {
+    const handleImportRepository = async (repo: Repository, projectName: string) => {
         const urlFriendlyName = projectName.toLowerCase().replace(/\s+/g, '-');
         const newDeployment: Deployment = {
             id: `dpl_${repo.provider}_${repo.id}_${Date.now()}`,
@@ -176,9 +176,11 @@ const AppContent: React.FC = () => {
         // Write to LamaDB (User Scoped)
         if (isAuthenticated && user) {
             const userContext = { uid: user.email, email: user.email };
-            LamaDB.store.collection('projects', userContext).add(newProject).catch(err => {
+            try {
+                await LamaDB.store.collection('projects', userContext).add(newProject);
+            } catch (err) {
                 console.error("Failed to persist imported project:", err);
-            });
+            }
         }
 
         setProjects(prev => [newProject, ...prev]);
@@ -271,7 +273,7 @@ const AppContent: React.FC = () => {
                                     onDeployWorkflow={handleDeployWorkflow}
                                 />
                             } />
-                            <Route path="projects/:id" element={<ProjectDetailWrapper projects={projects} onUpdateProject={handleUpdateProject} />} />
+                            <Route path="projects/:id" element={<ProjectDetailWrapper projects={projects} isLoading={isLoading} onUpdateProject={handleUpdateProject} />} />
                             <Route path="deploy/:id" element={<DeploymentPage projectId="" />} />
                             <Route path="docs/*" element={<DocsPage />} />
                             <Route path="pricing" element={<PricingPage />} />
@@ -290,14 +292,17 @@ const AppContent: React.FC = () => {
     );
 };
 
-// Helper component to extract ID from params
 const ProjectDetailWrapper: React.FC<{
     projects: Project[],
+    isLoading: boolean,
     onUpdateProject: (p: Project) => void
-}> = ({ projects, onUpdateProject }) => {
+}> = ({ projects, isLoading, onUpdateProject }) => {
     const { id } = useParams<{ id: string }>();
     const project = projects.find(p => p.id === id);
+
+    if (isLoading) return <GlobalLoader />;
     if (!project) return <NotFoundPage />;
+
     return <ProjectDetailView project={project} onUpdateProject={onUpdateProject} />;
 };
 

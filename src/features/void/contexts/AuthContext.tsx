@@ -135,7 +135,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         localStorage.setItem('opendev_gh_token', credential.accessToken);
       }
 
-      safeNavigate('/');
+      // safeNavigate('/');
     } catch (error) {
       console.error("GitHub Login Error:", error);
       throw error;
@@ -145,7 +145,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const loginWithGoogle = useCallback(async () => {
     try {
       await LamaDB.auth.loginWithGoogle();
-      safeNavigate('/');
+      // safeNavigate('/');
     } catch (error) {
       console.error("Google Login Error:", error);
       throw error;
@@ -308,13 +308,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser(null);
     setToken(null);
     localStorage.removeItem('opendev_gh_token');
-    safeNavigate('/login');
+    // safeNavigate('/login');
   }, []);
 
   // Legacy manual login (e.g. for email/demo)
   const login = useCallback((user: User) => {
     setUser(user);
-    safeNavigate('/');
+    // safeNavigate('/');
   }, []);
 
   return (
