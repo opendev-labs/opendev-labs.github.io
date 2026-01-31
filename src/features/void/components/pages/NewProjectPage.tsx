@@ -5,7 +5,8 @@ import { NewProjectLanding } from './new/NewProjectLanding';
 import { ImportPage } from './new/ImportPage';
 import { TemplatesPage } from './new/TemplatesPage';
 import { MeshPage } from './new/MeshPage';
-import { OpenURLPage } from './new/OpenURLPage';
+import { OpenURLPage } from './OpenURLPage';
+import { TarsPage } from './new/TarsPage';
 
 interface NewProjectPageProps {
     onDeployTemplate: (template: Template, projectName: string, createRepo?: boolean, isPrivate?: boolean) => void;
