@@ -19,31 +19,31 @@
         </linearGradient>
     </defs>
 
-    {/* Infinite Layers */}
+    {/* Optimized Fill: Scale and centered to remove excess padding */}
     <path 
-        d="M10 25H90L50 90L10 25Z" 
+        d="M2 10H98L50 98L2 10Z" 
         stroke="url(#rainbow-1)" 
-        stroke-width="2.5" 
+        stroke-width="3" 
         filter="url(#hyper-glow)"
     />
     
     <path 
-        d="M22.5 35H77.5L50 80L22.5 35Z" 
+        d="M18 24H82L50 84L18 24Z" 
         stroke="url(#rainbow-2)" 
-        stroke-width="2.5" 
+        stroke-width="3" 
         filter="url(#hyper-glow)"
     />
     
     <path 
-        d="M35 45H65L50 70L35 45Z" 
+        d="M34 38H66L50 70L34 38Z" 
         stroke="url(#rainbow-3)" 
-        stroke-width="2.5" 
+        stroke-width="3" 
         filter="url(#hyper-glow)"
     />
     
     <path 
-        d="M42.5 52.5H57.5L50 65L42.5 52.5Z" 
+        d="M44 48H56L50 58L44 48Z" 
         stroke="white" 
-        stroke-width="1.5"
+        stroke-width="2"
     />
 </svg>

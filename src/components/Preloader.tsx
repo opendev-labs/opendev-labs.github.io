@@ -28,7 +28,15 @@ const MinimalSVGLogo = ({ size = 120 }: { size?: number }) => (
                 stroke="white"
                 strokeWidth="1.5"
                 initial={{ opacity: 0 }}
-                animate={{ opacity: [0, 0.5, 0.2] }}
+                animate={{ opacity: [0, 0.4, 0.2] }}
+                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+            />
+            <motion.path
+                d="M35 45H65L50 70L35 45Z"
+                stroke="white"
+                strokeWidth="1.2"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: [0, 0.6, 0.3] }}
                 transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: 1 }}
             />
             <circle cx="50" cy="55" r="2" fill="white" className="animate-pulse" />
