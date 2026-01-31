@@ -125,7 +125,7 @@ const BootLog = ({ onComplete }: { onComplete: () => void }) => {
     }, [lines]);
 
     return (
-        <div ref={logRef} className="w-full h-48 overflow-hidden font-mono text-[10px] text-zinc-500 text-left flex flex-col gap-1 p-4 bg-zinc-950/80 border border-zinc-800 rounded-none backdrop-blur-3xl shadow-2xl">
+        <div ref={logRef} className="w-full h-48 overflow-hidden font-mono text-[11px] text-zinc-500 text-left flex flex-col gap-1 p-6 bg-zinc-950/80 border border-zinc-800 rounded-none backdrop-blur-3xl shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)]">
             {lines.map((line, i) => {
                 if (!line) return null;
                 const parts = line.split(' ');

@@ -3,9 +3,12 @@
 
 <head>
   <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>OpenDev-Labs | Sovereign Intelligence Ecosystem</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <title>opendev-labs | Neural Infrastructure</title>
   <!-- Start Single Page Apps for GitHub Pages -->
   <script type="text/javascript">
     (function (l) {
@@ -120,10 +123,10 @@
       background: #000;
       overflow: hidden;
       color: #fff;
-      font-family: 'Courier New', Courier, monospace;
+      font-family: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Consolas', monospace;
     }
 
-    #root:empty {
+    #root {
       background: #000;
       width: 100vw;
       height: 100vh;
@@ -134,7 +137,7 @@
     }
 
     /* Precise Vercel Grid */
-    #root:empty::before {
+    #root::before {
       content: "";
       position: absolute;
       inset: 0;
@@ -146,7 +149,7 @@
     }
 
     /* Hero Glow */
-    #root:empty::after {
+    #root::after {
       content: "";
       position: absolute;
       top: 50%;
@@ -158,7 +161,7 @@
       pointer-events: none;
     }
 
-    #root:empty .tars-loader {
+    .tars-loader {
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -169,14 +172,14 @@
       z-index: 10;
     }
 
-    #root:empty .tars-logo-container {
+    .tars-logo-container {
       opacity: 0;
       transition: opacity 0.8s ease-in;
       margin-bottom: 3rem;
     }
 
-    #root:empty .status-text {
-      font-size: 10px;
+    .status-text {
+      font-size: 11px;
       line-height: 1.6;
       color: rgba(161, 161, 170, 0.4);
       /* zinc-400 */
@@ -193,6 +196,7 @@
       border: 1px solid rgba(39, 39, 42, 1);
       /* zinc-800 */
       backdrop-filter: blur(10px);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
     }
 
     .boot-line {
