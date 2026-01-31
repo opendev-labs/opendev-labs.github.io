@@ -209,3 +209,33 @@ export interface UsageMetrics {
     functionInvocations: { used: number; total: number; unit: '' };
     storage: { used: number; total: number; unit: 'GB' };
 }
+
+export interface GenerationFile {
+    path: string;
+    status: 'generating' | 'complete' | 'error';
+    action: 'created' | 'modified' | 'deleted';
+}
+
+export interface GenerationInfo {
+    status: 'generating' | 'complete';
+    files: GenerationFile[];
+}
+
+export interface Message {
+    id: number;
+    role: 'user' | 'tars';
+    content: string;
+    generationInfo?: GenerationInfo;
+}
+
+export interface FileNode {
+    path: string;
+    content: string;
+}
+
+export interface ModelConfig {
+    id: string;
+    name: string;
+    provider: 'Google' | 'OpenAI' | 'Anthropic' | 'DeepSeek' | 'Meta' | 'BigCode' | 'WizardLM' | 'Mistral AI' | 'OpenChat' | 'Phind' | 'Replit' | 'OpenRouter';
+    apiIdentifier: string;
+}
