@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Template } from '../../../types';
 import { hostingTemplates } from '../../../constants/hostingTemplates';
 import { TemplateCard } from '../TemplateCard';
 import { motion } from 'framer-motion';
 import { Server, Zap, Lock, Infinity } from 'lucide-react';
+import { templateDeploymentService } from '../../../services/templateDeploymentService';
 
 // Background component matching HomePage
 const AppBackground = () => (
@@ -69,6 +70,42 @@ export const HostingPage: React.FC<{
     onDeployTemplate: (template: Template, projectName: string, createRepo?: boolean, isPrivate?: boolean) => void;
 }> = ({ onDeployTemplate }) => {
     const navigate = useNavigate();
+    const [isDeploying, setIsDeploying] = useState(false);
+    const [deploymentStatus, setDeploymentStatus] = useState<string | null>(null);
+
+    // Handle template deployment with real code generation
+    const handleDeploy = async (template: Template, projectName: string, createRepo?: boolean, isPrivate?: boolean) => {
+        if (!templateDeploymentService.isPATConfigured()) {
+            alert('Please configure your GitHub PAT in the Import page first!');
+            navigate('/void/new/import');
+            return;
+        }
+
+        setIsDeploying(true);
+        setDeploymentStatus('Generating template code...');
+
+        try {
+            const result = await templateDeploymentService.deployTemplate({
+                templateId: template.id,
+                projectName,
+                isPrivate
+            });
+
+            if (result.success) {
+                setDeploymentStatus(`✅ Deployed! Live at: ${result.liveUrl}`);
+                setTimeout(() => {
+                    if (result.liveUrl) window.open(result.liveUrl, '_blank');
+                }, 2000);
+            } else {
+                setDeploymentStatus(`❌ Error: ${result.error}`);
+            }
+        } catch (error) {
+            setDeploymentStatus(`❌ Deployment failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        } finally {
+            setIsDeploying(false);
+            setTimeout(() => setDeploymentStatus(null), 5000);
+        }
+    };
 
     return (
         <div className="relative overflow-hidden bg-black -mx-4 -mt-8 pt-20">
@@ -144,19 +181,24 @@ export const HostingPage: React.FC<{
                         </p>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-4 max-w-[1400px] mx-auto">
-                        {hostingTemplates.map((template, index) => (
-                            <motion.div
+                    {/* Deployment Status Notification */}
+                    {deploymentStatus && (
+                        <motion.div
+                            initial={{ opacity: 0, y: -20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="mb-8 p-6 bg-zinc-950 border border-emerald-500/30 text-center"
+                        >
+                            <p className="text-sm font-bold text-white">{deploymentStatus}</p>
+                        </motion.div>
+                    )}
+
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {hostingTemplates.map(template => (
+                            <TemplateCard
                                 key={template.id}
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.5, delay: index * 0.05 }}
-                            >
-                                <TemplateCard
-                                    template={template}
-                                    onDeploy={onDeployTemplate}
-                                />
-                            </motion.div>
+                                template={template}
+                                onDeploy={handleDeploy}
+                            />
                         ))}
                     </div>
                 </div>
