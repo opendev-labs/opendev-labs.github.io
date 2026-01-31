@@ -163,6 +163,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           Accept: 'application/vnd.github.v3+json'
         }
       });
+      if (response.status === 401) {
+        setToken(null);
+        localStorage.removeItem('opendev_gh_token');
+        throw new Error('GitHub token expired or invalid. Please re-connect.');
+      }
       if (!response.ok) throw new Error('Failed to fetch repositories');
       const data = await response.json();
       return data.map((repo: any) => ({

@@ -1,71 +1,82 @@
+import { GoogleGenAI, Type } from "@google/genai";
+import type { Message, ModelConfig } from '../types';
 
-import { GoogleGenAI } from "@google/genai";
-import type { LogEntry } from '../types';
+const TARS_SYSTEM_INSTRUCTION_GEMINI = `You are TARS, an AI development assistant. When generating code:
 
-const API_KEY = process.env.API_KEY;
-
-let ai: GoogleGenAI | null = null;
-if (API_KEY) {
-  try {
-    ai = new GoogleGenAI({ apiKey: API_KEY });
-  } catch (error) {
-    console.error("Failed to initialize GoogleGenAI:", error);
-  }
+CRITICAL FORMATTING RULES:
+- Your response MUST be valid JSON with this exact structure:
+{
+  "conversation": "Your conversational response here",
+  "files": [
+    {
+      "path": "src/components/Button.tsx",
+      "content": "// file content here",
+      "action": "created"
+    }
+  ]
 }
 
-export const getAIAssistance = async (errorLogs: LogEntry[]): Promise<string> => {
-  const errorMessages = errorLogs
-    .filter(log => log.level === 'ERROR')
-    .map(log => log.message)
-    .join('\n');
+MODIFICATION GUIDELINES:
+1. For NEW files: Use "action": "created"
+2. For EXISTING files being changed: Use "action": "modified"  
+3. For files to REMOVE: Use "action": "deleted" (content can be empty)
+4. Always include the full file content, not just diffs
+5. Do not include files that are not changed.
+6. The 'content' value must be a single string with properly escaped newlines (\\n), tabs (\\t), and quotes (\\").
+7. If there are no file changes, return an empty array for the "files" key.
+`;
 
-  if (!errorMessages) {
-    return "No critical errors found in the logs. If you're still facing issues, please provide more context about the problem.";
-  }
+const toGeminiHistory = (messages: Message[]) => {
+    return messages
+        .filter(m => (m.role === 'user' || (m.role === 'tars' && m.content)))
+        .map(m => ({
+            role: m.role === 'tars' ? 'model' : 'user',
+            parts: [{ text: m.content }]
+        }));
+};
 
-  if (!ai) {
-    // Fallback to mock response if API key is not configured
-    console.warn("AI Assistant: API_KEY not found. Using mock response.");
-    if (errorMessages.includes("Module not found")) {
-      return "It seems like there's a problem with a file import. The log `Error: Module not found: Can't resolve './utils/helpers'` suggests that a file is trying to import from a path that doesn't exist or is incorrect. \n\n**Recommendation:**\n1. Check the import statement in the file that's causing the error.\n2. Verify that the file path `'./utils/helpers'` is correct and that the file exists.\n3. Ensure the file extension (e.g., `.ts`, `.js`) is correct if required by your bundler.";
+
+export async function* streamGeminiResponse(fullPrompt: string, history: Message[], modelConfig: ModelConfig, apiKey?: string): AsyncGenerator<{ text: string; }> {
+    const effectiveApiKey = apiKey || import.meta.env.VITE_FIREBASE_API_KEY;
+    if (!effectiveApiKey) {
+        throw new Error("API key not found for Google Gemini.");
     }
-    return "AI Assistant is not configured. Please ensure your API key is set up correctly to enable this feature.";
-  }
+    const ai = new GoogleGenAI({ apiKey: effectiveApiKey });
 
-  try {
-    const prompt = `
-      As an expert software developer and deployment specialist, analyze the following build error logs and provide a concise, actionable solution.
+    const contents = [
+        ...toGeminiHistory(history),
+        { role: 'user', parts: [{ text: fullPrompt }] }
+    ];
 
-      Error Logs:
-      ---
-      ${errorMessages}
-      ---
-
-      Your analysis should:
-      1. Identify the most likely root cause of the error.
-      2. Suggest a specific code or configuration change to fix it.
-      3. Provide a brief explanation of why this error occurred.
-      
-      Format your response in Markdown with clear headings and code snippets where appropriate.
-    `;
-
-    const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
-      contents: prompt,
+    const result = await ai.models.generateContentStream({
+        model: modelConfig.apiIdentifier,
+        contents: contents,
+        config: {
+            systemInstruction: TARS_SYSTEM_INSTRUCTION_GEMINI,
+            responseMimeType: "application/json",
+            responseSchema: {
+                type: Type.OBJECT,
+                properties: {
+                    conversation: { type: Type.STRING },
+                    files: {
+                        type: Type.ARRAY,
+                        items: {
+                            type: Type.OBJECT,
+                            properties: {
+                                path: { type: Type.STRING },
+                                content: { type: Type.STRING },
+                                action: { type: Type.STRING }
+                            },
+                            required: ['path', 'action']
+                        }
+                    }
+                },
+                required: ['conversation', 'files']
+            }
+        }
     });
 
-    return response.text ?? "No response from AI.";
-  } catch (error) {
-    console.error("Error calling Gemini API:", error);
-    let errorMessage = "An error occurred while contacting the AI assistant. ";
-    if (error instanceof Error) {
-      if (error.message.includes('API key not valid')) {
-        errorMessage += "Please check if your API key is correct. ";
-      } else if (error.message.includes('fetch')) {
-        errorMessage += "A network error occurred. Please check your connection. ";
-      }
+    for await (const chunk of result) {
+        yield { text: chunk.text };
     }
-    errorMessage += "See the browser console for more technical details.";
-    return errorMessage;
-  }
-};
+}
