@@ -119,14 +119,23 @@ const ConnectedRepoView: React.FC<{
             </div>
 
             {loading ? (
-                <div className="space-y-4 py-20 px-8 border border-zinc-900 bg-zinc-950/50">
-                    <div className="flex items-center gap-3">
-                        <div className="w-4 h-4 border-2 border-white/20 border-t-white animate-spin"></div>
-                        <span className="text-[10px] font-bold text-white tracking-[0.2em] uppercase">Loading repositories...</span>
-                    </div>
+                <div className="space-y-4 py-20 px-8 border border-zinc-900 bg-zinc-950/50 flex flex-col items-center justify-center text-center">
+                    <div className="w-8 h-8 border-2 border-white/20 border-t-white animate-spin mb-4"></div>
+                    <span className="text-[10px] font-bold text-white tracking-[0.2em] uppercase">Auditing Neural Mesh...</span>
+                    <p className="text-zinc-600 text-[9px] mt-2 uppercase tracking-widest">Fetching repositories from GitHub API</p>
                 </div>
-            ) : (
+            ) : repos.length > 0 ? (
                 <RepoList repos={repos} onImport={onImport} />
+            ) : (
+                <div className="text-center py-20 border border-zinc-900 bg-zinc-950/50">
+                    <p className="text-zinc-500 text-xs uppercase tracking-widest font-bold mb-4">No accessible repositories detected</p>
+                    <button
+                        onClick={() => window.location.reload()}
+                        className="text-[10px] font-bold text-white border border-zinc-800 px-6 py-2 hover:bg-zinc-900 transition-all uppercase tracking-widest"
+                    >
+                        Re-scan Repositories
+                    </button>
+                </div>
             )}
         </MotionDiv>
     );
@@ -221,7 +230,7 @@ export const ImportPage: React.FC<{
     onImportRepository: (repo: Repository, projectName: string) => void;
 }> = ({ onImportRepository }) => {
     const navigate = useNavigate();
-    const { loginWithGitHub, user, isGithubConnected, logout, loginWithGoogle } = useAuth();
+    const { loginWithGitHub, linkWithGitHub, user, isGithubConnected, logout, loginWithGoogle } = useAuth();
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [collisionCode, setCollisionCode] = useState<string | null>(null);
@@ -230,8 +239,13 @@ export const ImportPage: React.FC<{
         setIsLoading(true);
         setError(null);
         try {
-            // Simplified Login - No linking (it causes collisions if both accounts exist)
-            await loginWithGitHub();
+            if (user) {
+                // If already logged in (e.g. with Google), use linking to avoid collision
+                await linkWithGitHub();
+            } else {
+                // Standard login
+                await loginWithGitHub();
+            }
         } catch (e: any) {
             console.error("Connection Error:", e);
             if (e.code === 'auth/account-exists-with-different-credential' || e.code === 'auth/credential-already-in-use') {
