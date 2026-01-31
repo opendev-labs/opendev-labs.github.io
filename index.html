@@ -20,10 +20,106 @@
     }(window.location))
   </script>
   <!-- End Single Page Apps for GitHub Pages -->
+  <style>
+    body {
+      margin: 0;
+      background: #000;
+      overflow: hidden;
+    }
+
+    #root {
+      background: #000;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    #root::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px);
+      background-size: 40px 40px;
+      opacity: 0.03;
+      z-index: 0;
+    }
+
+    .disco-loader {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      scale: 1.1;
+      animation: disco-hue 2s linear infinite;
+    }
+
+    @keyframes disco-hue {
+      from {
+        filter: hue-rotate(0deg) brightness(1.2);
+      }
+
+      to {
+        filter: hue-rotate(360deg) brightness(1.2);
+      }
+    }
+
+    .animate-tunnel {
+      animation: tunnel 1s infinite linear;
+      transform-origin: 50px 65px;
+    }
+
+    @keyframes tunnel {
+      from {
+        transform: scale(0.5);
+        opacity: 0;
+      }
+
+      50% {
+        opacity: 0.8;
+      }
+
+      to {
+        transform: scale(3);
+        opacity: 0;
+      }
+    }
+  </style>
 </head>
 
 <body>
-  <div id="root"></div>
+  <div id="root">
+    <div class="disco-loader">
+      <svg width="180" height="180" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#ff00d4" />
+            <stop offset="100%" stop-color="#bc00ff" />
+          </linearGradient>
+          <linearGradient id="g2" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#00f2ff" />
+            <stop offset="100%" stop-color="#0062ff" />
+          </linearGradient>
+          <linearGradient id="g3" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#4CAF50" />
+            <stop offset="100%" stop-color="#00f2ff" />
+          </linearGradient>
+        </defs>
+        <path d="M10 25H90L50 90L10 25Z" stroke="url(#g1)" stroke-width="0.5" class="animate-tunnel"
+          style="animation-delay: 0s" />
+        <path d="M10 25H90L50 90L10 25Z" stroke="url(#g2)" stroke-width="0.5" class="animate-tunnel"
+          style="animation-delay: -0.2s" />
+        <path d="M10 25H90L50 90L10 25Z" stroke="url(#g3)" stroke-width="0.5" class="animate-tunnel"
+          style="animation-delay: -0.4s" />
+        <path d="M10 25H90L50 90L10 25Z" stroke="#ff00d4" stroke-width="3" opacity="0.8" />
+        <path d="M22.5 35H77.5L50 80L22.5 35Z" stroke="#00f2ff" stroke-width="2.5" opacity="0.6" />
+        <path d="M42.5 52.5H57.5L50 65L42.5 52.5Z" stroke="white" stroke-width="1.5" />
+      </svg>
+    </div>
+  </div>
   <script type="module" src="/src/main.tsx"></script>
 </body>
 
