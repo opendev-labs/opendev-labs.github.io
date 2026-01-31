@@ -3,9 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../../hooks/useAuth';
 import { Repository } from '../../../types';
-import { AlertCircle, ArrowRight, ShieldCheck, Zap, Globe, Github } from 'lucide-react';
+import { AlertCircle, ArrowRight, ShieldCheck, Zap, Globe, Github, Key, Check, X } from 'lucide-react';
 import { GitHubIcon, SearchIcon, GitBranchIcon } from '../../common/Icons';
 import { ConfigureProjectForm } from '../../common/ConfigureProjectForm';
+import { githubPATService } from '../../../services/githubPATService';
 
 const MotionDiv = motion.div;
 
@@ -235,6 +236,58 @@ export const ImportPage: React.FC<{
     const [error, setError] = useState<string | null>(null);
     const [collisionCode, setCollisionCode] = useState<string | null>(null);
 
+    // PAT Token State
+    const [patToken, setPatToken] = useState<string>('');
+    const [isPATConnected, setIsPATConnected] = useState(false);
+    const [patValidating, setPatValidating] = useState(false);
+    const [patUsername, setPatUsername] = useState<string | null>(null);
+    const [showPATSection, setShowPATSection] = useState(true);
+
+    // Check if PAT is already stored
+    useEffect(() => {
+        const storedPAT = githubPATService.getPAT();
+        if (storedPAT) {
+            validateStoredPAT(storedPAT);
+        }
+    }, []);
+
+    const validateStoredPAT = async (token: string) => {
+        const result = await githubPATService.validatePAT(token);
+        if (result.valid) {
+            setIsPATConnected(true);
+            setPatUsername(result.username || null);
+        }
+    };
+
+    const handlePATConnect = async () => {
+        if (!patToken.trim()) {
+            setError('Please enter a GitHub Personal Access Token');
+            return;
+        }
+
+        setPatValidating(true);
+        setError(null);
+
+        const result = await githubPATService.validatePAT(patToken);
+
+        if (result.valid) {
+            githubPATService.setPAT(patToken);
+            setIsPATConnected(true);
+            setPatUsername(result.username || null);
+            setPatToken(''); // Clear input for security
+        } else {
+            setError(result.error || 'Invalid PAT token');
+        }
+
+        setPatValidating(false);
+    };
+
+    const handlePATDisconnect = () => {
+        githubPATService.clearPAT();
+        setIsPATConnected(false);
+        setPatUsername(null);
+    };
+
     const handleConnect = async () => {
         setIsLoading(true);
         setError(null);
@@ -298,14 +351,101 @@ export const ImportPage: React.FC<{
                                 exit={{ opacity: 0, y: -10 }}
                                 className="space-y-8"
                             >
+                                {/* GitHub PAT Token Section (Recommended) */}
+                                <div className="bg-zinc-950 border border-emerald-500/30 p-8 relative overflow-hidden">
+                                    {/* Recommended Badge */}
+                                    <div className="absolute top-0 right-0 px-4 py-1.5 bg-emerald-500 text-black text-[9px] font-bold uppercase tracking-widest">
+                                        Recommended 2026
+                                    </div>
+
+                                    <div className="mb-6">
+                                        <div className="flex items-center gap-3 mb-4">
+                                            <div className="w-12 h-12 bg-black border border-emerald-500/30 flex items-center justify-center">
+                                                <Key className="text-emerald-500" size={20} />
+                                            </div>
+                                            <div>
+                                                <h3 className="text-xl font-bold text-white tracking-tighter">GitHub Personal Access Token</h3>
+                                                <p className="text-[10px] text-emerald-500 font-bold uppercase tracking-widest">Secure & Modern</p>
+                                            </div>
+                                        </div>
+                                        <p className="text-sm text-zinc-500 font-medium">
+                                            Use a PAT for secure, automated repository management. Get yours from{' '}
+                                            <a href="https://github.com/settings/tokens/new" target="_blank" rel="noopener noreferrer" className="text-emerald-500 hover:text-emerald-400 underline">
+                                                GitHub Settings → Tokens
+                                            </a>
+                                        </p>
+                                    </div>
+
+                                    {!isPATConnected ? (
+                                        <div className="space-y-4">
+                                            <div>
+                                                <input
+                                                    type="password"
+                                                    placeholder="ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+                                                    value={patToken}
+                                                    onChange={(e) => setPatToken(e.target.value)}
+                                                    onKeyDown={(e) => e.key === 'Enter' && handlePATConnect()}
+                                                    className="w-full bg-black border border-zinc-800 h-12 px-4 text-sm text-white font-mono focus:outline-none focus:border-emerald-500 transition-all placeholder:text-zinc-700"
+                                                />
+                                                <p className="text-[10px] text-zinc-600 mt-2 font-medium">
+                                                    Required permissions: <span className="text-zinc-500">repo, workflow, admin:repo_hook</span>
+                                                </p>
+                                            </div>
+                                            <button
+                                                onClick={handlePATConnect}
+                                                disabled={patValidating || !patToken.trim()}
+                                                className="h-12 px-8 bg-emerald-500 text-black text-[11px] font-bold uppercase tracking-widest hover:bg-emerald-400 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                                            >
+                                                {patValidating ? (
+                                                    <>
+                                                        <div className="w-4 h-4 border-2 border-black/20 border-t-black animate-spin"></div>
+                                                        Validating...
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <Check size={14} />
+                                                        Connect with PAT
+                                                    </>
+                                                )}
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <div className="flex items-center justify-between p-4 bg-emerald-500/10 border border-emerald-500/20">
+                                            <div className="flex items-center gap-3">
+                                                <Check className="text-emerald-500" size={20} />
+                                                <div>
+                                                    <p className="text-sm font-bold text-white">PAT Connected</p>
+                                                    <p className="text-[10px] text-emerald-500 font-mono">@{patUsername}</p>
+                                                </div>
+                                            </div>
+                                            <button
+                                                onClick={handlePATDisconnect}
+                                                className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 hover:text-white transition-colors"
+                                            >
+                                                Disconnect
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Divider */}
+                                <div className="relative">
+                                    <div className="absolute inset-0 flex items-center">
+                                        <div className="w-full border-t border-zinc-900"></div>
+                                    </div>
+                                    <div className="relative flex justify-center text-xs uppercase">
+                                        <span className="bg-black px-4 text-zinc-600 font-bold tracking-widest">OR USE OAUTH</span>
+                                    </div>
+                                </div>
+
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                     <div className="bg-zinc-950 border border-zinc-900 p-8 flex flex-col justify-between h-64 hover:border-zinc-700 transition-all group">
                                         <div>
                                             <div className="w-12 h-12 bg-black border border-zinc-800 flex items-center justify-center mb-6 group-hover:bg-zinc-900 transition-colors">
                                                 <GitHubIcon className="text-zinc-400 group-hover:text-white transition-colors" />
                                             </div>
-                                            <h3 className="text-xl font-bold text-white tracking-tighter mb-2">GitHub</h3>
-                                            <p className="text-sm text-zinc-500 font-medium">Connect your GitHub account to access your repositories.</p>
+                                            <h3 className="text-xl font-bold text-white tracking-tighter mb-2">GitHub OAuth</h3>
+                                            <p className="text-sm text-zinc-500 font-medium">Connect your GitHub account via OAuth to access your repositories.</p>
                                         </div>
                                         <button
                                             onClick={handleConnect}
