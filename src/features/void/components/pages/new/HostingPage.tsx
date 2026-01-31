@@ -4,7 +4,66 @@ import { Template } from '../../../types';
 import { hostingTemplates } from '../../../constants/hostingTemplates';
 import { TemplateCard } from '../TemplateCard';
 import { motion } from 'framer-motion';
-import { Server } from 'lucide-react';
+import { Server, Zap, Lock, Infinity } from 'lucide-react';
+
+// Background component matching HomePage
+const AppBackground = () => (
+    <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-emerald-500/5 blur-[120px] rounded-full" />
+    </div>
+);
+
+// Template Category Marquee
+const CategoryMarquee = () => {
+    const categories = [
+        { name: 'Portfolio', emoji: '🎨' },
+        { name: 'E-Commerce', emoji: '🛒' },
+        { name: 'SaaS', emoji: '💼' },
+        { name: 'Agency', emoji: '🏢' },
+        { name: 'Restaurant', emoji: '🍽️' },
+        { name: 'Real Estate', emoji: '🏘️' },
+        { name: 'Blog', emoji: '📝' },
+        { name: 'Startup', emoji: '🚀' },
+        { name: 'Personal', emoji: '👤' },
+        { name: 'Custom', emoji: '⚡' },
+    ];
+
+    return (
+        <div className="py-24 border-y border-zinc-900 overflow-hidden bg-zinc-950/20 backdrop-blur-3xl">
+            <p className="text-[10px] font-bold tracking-[0.4em] text-zinc-600 mb-16 uppercase text-center">Professional Templates for Every Business</p>
+            <div className="relative flex overflow-x-hidden">
+                <div className="py-12 animate-marquee flex whitespace-nowrap gap-20">
+                    {categories.concat(categories).map((cat, i) => (
+                        <div key={`${cat.name}-${i}`} className="flex items-center gap-4 group">
+                            <span className="text-3xl grayscale group-hover:grayscale-0 transition-all duration-500 scale-100 group-hover:scale-110">
+                                {cat.emoji}
+                            </span>
+                            <span className="text-zinc-600 group-hover:text-white font-bold text-xs uppercase tracking-[0.2em] transition-colors">
+                                {cat.name}
+                            </span>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </div>
+    );
+};
+
+// Benefit Card Component matching HomePage FeatureCard
+const BenefitCard: React.FC<{ icon: React.ReactNode; title: string; children: React.ReactNode }> = ({ icon, title, children }) => (
+    <motion.div
+        whileHover={{ scale: 1.02 }}
+        className="group p-8 border border-zinc-900 transition-all hover:bg-zinc-950 duration-500 relative overflow-hidden h-full"
+    >
+        <div className="relative z-10">
+            <div className="w-10 h-10 flex items-center justify-center bg-zinc-900 border border-zinc-800 text-emerald-500 rounded mb-6 group-hover:border-emerald-500/30 transition-colors">
+                {icon}
+            </div>
+            <h3 className="text-lg font-bold text-white mb-3 tracking-tight">{title}</h3>
+            <p className="text-zinc-500 text-sm font-medium leading-relaxed">{children}</p>
+        </div>
+    </motion.div>
+);
 
 export const HostingPage: React.FC<{
     onDeployTemplate: (template: Template, projectName: string, createRepo?: boolean, isPrivate?: boolean) => void;
@@ -12,80 +71,108 @@ export const HostingPage: React.FC<{
     const navigate = useNavigate();
 
     return (
-        <div className="max-w-7xl mx-auto py-20 px-4">
-            {/* Header Section */}
-            <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8 }}
-                className="mb-20"
-            >
-                <button
+        <div className="relative overflow-hidden bg-black -mx-4 -mt-8 pt-20">
+            <AppBackground />
+
+            <div className="relative z-10 container mx-auto px-6">
+                {/* Back Navigation */}
+                <motion.button
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
                     onClick={() => navigate('/void/new')}
                     className="group flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.3em] text-zinc-600 hover:text-white mb-10 transition-all duration-300"
                 >
                     <span className="group-hover:-translate-x-2 transition-transform duration-300">&larr;</span>
                     Neural Genesis Options
-                </button>
+                </motion.button>
 
-                <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-12">
-                    <div className="max-w-2xl">
-                        <div className="flex items-center gap-3 mb-6">
-                            <div className="p-3 bg-emerald-500/10 border border-emerald-500/20">
-                                <Server className="w-6 h-6 text-emerald-500" />
-                            </div>
-                            <h2 className="text-5xl md:text-7xl font-black text-white tracking-tighter uppercase">
-                                Free <span className="text-emerald-500">Hosting.</span>
-                            </h2>
-                        </div>
-                        <p className="text-zinc-500 text-lg font-medium leading-relaxed">
-                            Deploy any template to OpenDev's high-performance static hosting. Zero configuration. Instant global CDN.
-                            <span className="text-emerald-500 font-bold"> 100% Free.</span>
-                        </p>
-                    </div>
-                </div>
-
-                {/* Benefits Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-1 mb-12">
-                    <div className="bg-zinc-950/50 border border-zinc-900 p-6">
-                        <div className="text-emerald-500 font-black text-2xl mb-2">⚡</div>
-                        <h3 className="text-white font-black text-sm uppercase tracking-wider mb-2">Lightning Fast</h3>
-                        <p className="text-zinc-600 text-xs font-medium">Global CDN with edge caching for instant load times worldwide.</p>
-                    </div>
-                    <div className="bg-zinc-950/50 border border-zinc-900 p-6">
-                        <div className="text-emerald-500 font-black text-2xl mb-2">🔒</div>
-                        <h3 className="text-white font-black text-sm uppercase tracking-wider mb-2">Secure by Default</h3>
-                        <p className="text-zinc-600 text-xs font-medium">Free SSL certificates and automatic HTTPS for all deployments.</p>
-                    </div>
-                    <div className="bg-zinc-950/50 border border-zinc-900 p-6">
-                        <div className="text-emerald-500 font-black text-2xl mb-2">∞</div>
-                        <h3 className="text-white font-black text-sm uppercase tracking-wider mb-2">Unlimited Sites</h3>
-                        <p className="text-zinc-600 text-xs font-medium">Deploy as many projects as you want. No limits, no hidden fees.</p>
-                    </div>
-                </div>
-
-                <div className="border-l-2 border-emerald-500/30 pl-6">
-                    <p className="text-zinc-400 text-sm font-medium">
-                        Select a template below to deploy to OpenDev Hosting. Each template will be configured for optimal static hosting performance.
-                    </p>
-                </div>
-            </motion.div>
-
-            {/* Templates Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-4">
-                {hostingTemplates.map((template, index) => (
+                {/* Hero Section */}
+                <div className="min-h-[60vh] flex flex-col justify-center py-20">
                     <motion.div
-                        key={template.id}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5, delay: index * 0.05 }}
+                        transition={{ duration: 0.8 }}
+                        className="max-w-4xl mx-auto text-center"
                     >
-                        <TemplateCard
-                            template={template}
-                            onDeploy={onDeployTemplate}
-                        />
+                        <span className="inline-flex items-center gap-2 px-3 py-1 rounded-none bg-zinc-900 border border-zinc-800 text-[10px] font-bold tracking-[0.2em] uppercase text-zinc-400 mb-8 select-none">
+                            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                            Global Edge Infrastructure
+                        </span>
+
+                        <h1 className="text-6xl md:text-8xl lg:text-9xl font-bold tracking-tighter text-white leading-[0.85] mb-10">
+                            Free <br />
+                            <span className="text-emerald-500 italic font-serif">Hosting.</span>
+                        </h1>
+
+                        <p className="max-w-xl mx-auto text-lg text-zinc-500 leading-relaxed font-medium mb-12">
+                            Deploy any template to OpenDev's high-performance static hosting. Zero configuration. Instant global CDN. <span className="text-emerald-500 font-bold">100% Free.</span>
+                        </p>
                     </motion.div>
-                ))}
+                </div>
+
+                {/* Category Marquee */}
+                <CategoryMarquee />
+
+                {/* Benefits Section */}
+                <div className="py-32 max-w-[1200px] mx-auto">
+                    <p className="text-[10px] font-bold tracking-[0.4em] text-zinc-600 mb-16 uppercase text-center">Production-Grade Infrastructure</p>
+                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-1">
+                        <BenefitCard icon={<Zap size={20} />} title="Lightning Fast">
+                            Global CDN with edge caching for instant load times worldwide. Sub-100ms response times.
+                        </BenefitCard>
+                        <BenefitCard icon={<Lock size={20} />} title="Secure by Default">
+                            Free SSL certificates and automatic HTTPS for all deployments. Enterprise-grade security.
+                        </BenefitCard>
+                        <BenefitCard icon={<Infinity size={20} />} title="Unlimited Sites">
+                            Deploy as many projects as you want. No limits, no hidden fees, no credit card required.
+                        </BenefitCard>
+                        <BenefitCard icon={<Server size={20} />} title="99.9% Uptime">
+                            Powered by multi-region architecture with automatic failover and redundancy.
+                        </BenefitCard>
+                    </div>
+                </div>
+
+                {/* Templates Section */}
+                <div className="py-20">
+                    <div className="mb-16 text-center">
+                        <p className="text-[10px] font-bold tracking-[0.4em] text-zinc-600 mb-4 uppercase">Choose Your Template</p>
+                        <h2 className="text-4xl md:text-6xl font-black text-white tracking-tighter uppercase mb-6">
+                            Production-Ready <span className="text-emerald-500">Starting Points.</span>
+                        </h2>
+                        <p className="max-w-2xl mx-auto text-zinc-500 text-sm font-medium">
+                            Select a template below to deploy to OpenDev Hosting. Each template is optimized for performance and configured for instant deployment.
+                        </p>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-4 max-w-[1400px] mx-auto">
+                        {hostingTemplates.map((template, index) => (
+                            <motion.div
+                                key={template.id}
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.5, delay: index * 0.05 }}
+                            >
+                                <TemplateCard
+                                    template={template}
+                                    onDeploy={onDeployTemplate}
+                                />
+                            </motion.div>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Bottom CTA */}
+                <div className="py-32 text-center border-t border-zinc-900">
+                    <p className="text-zinc-600 text-sm font-medium mb-6">
+                        Need a custom solution? Our agents can build anything.
+                    </p>
+                    <button
+                        onClick={() => navigate('/void/new/tars')}
+                        className="h-12 px-10 rounded-none bg-white text-black text-sm font-bold hover:bg-zinc-200 transition-all hover:scale-105 active:scale-95 inline-flex items-center justify-center gap-2"
+                    >
+                        Talk to TARS
+                    </button>
+                </div>
             </div>
         </div>
     );
