@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
+import officialLogo from '../assets/official-logo.png';
 import { useAuth } from '../features/void/hooks/useAuth';
 import {
     ChevronDownIcon, MenuIcon, XIcon, TerminalIcon,
@@ -15,75 +16,15 @@ import { motion } from 'framer-motion';
 const Logo = () => (
     <motion.div
         className="relative flex items-center justify-center cursor-pointer"
-        whileHover="hover"
-        whileTap="tap"
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
     >
-        <motion.svg
-            width="34" height="34" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"
-            className="transition-all duration-700"
-            variants={{
-                hover: { filter: "hue-rotate(360deg)", transition: { duration: 1, repeat: Infinity, ease: "linear" } }
-            }}
-        >
-            <defs>
-                <filter id="hyper-glow" x="-100%" y="-100%" width="300%" height="300%">
-                    <feGaussianBlur stdDeviation="4" result="blur" />
-                    <feComposite in="SourceGraphic" in2="blur" operator="over" />
-                </filter>
-
-                <linearGradient id="rainbow-1" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stopColor="#ff00d4" />
-                    <stop offset="100%" stopColor="#bc00ff" />
-                </linearGradient>
-                <linearGradient id="rainbow-2" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stopColor="#00f2ff" />
-                    <stop offset="100%" stopColor="#0062ff" />
-                </linearGradient>
-                <linearGradient id="rainbow-3" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stopColor="#4CAF50" />
-                    <stop offset="100%" stopColor="#00f2ff" />
-                </linearGradient>
-            </defs>
-
-            {/* Static Base Content */}
-            <path d="M10 25H90L50 90L10 25Z" stroke="url(#rainbow-1)" strokeWidth="2" filter="url(#hyper-glow)" className="opacity-20" />
-
-            {/* Bio-Rainbow Tunnel Effect (Stimuli Response) */}
-            <motion.g
-                initial={{ opacity: 0 }}
-                variants={{ hover: { opacity: 1 } }}
-                transition={{ duration: 0.3 }}
-            >
-                <path d="M10 25H90L50 90L10 25Z" stroke="url(#rainbow-1)" strokeWidth="0.5" className="animate-tunnel [animation-delay:-0s]" />
-                <path d="M10 25H90L50 90L10 25Z" stroke="url(#rainbow-2)" strokeWidth="0.5" className="animate-tunnel [animation-delay:-0.5s]" />
-                <path d="M10 25H90L50 90L10 25Z" stroke="url(#rainbow-3)" strokeWidth="0.5" className="animate-tunnel [animation-delay:-1s]" />
-            </motion.g>
-
-            {/* Core Reactive Layers */}
-            <motion.path
-                d="M10 25H90L50 90L10 25Z"
-                stroke="url(#rainbow-1)"
-                strokeWidth="2"
-                filter="url(#hyper-glow)"
-                variants={{ hover: { strokeWidth: 3, transition: { duration: 0.2 } } }}
-            />
-            <path d="M22.5 35H77.5L50 80L22.5 35Z" stroke="url(#rainbow-2)" strokeWidth="2" filter="url(#hyper-glow)" />
-            <path d="M35 45H65L50 70L35 45Z" stroke="url(#rainbow-3)" strokeWidth="2" filter="url(#hyper-glow)" />
-
-            {/* Perfect Central Hole */}
-            <path d="M42.5 52.5H57.5L50 65L42.5 52.5Z" stroke="white" strokeWidth="1.5" className="opacity-80" />
-        </motion.svg>
-
-        {/* Dynamic Stimuli Reflection */}
-        <motion.div
-            className="absolute -bottom-2 w-4 h-1 bg-cyan-500/0 blur-xl"
-            variants={{
-                hover: {
-                    width: 24,
-                    backgroundColor: "rgba(0, 242, 255, 0.8)",
-                    opacity: 1,
-                    transition: { duration: 0.3 }
-                }
+        <img
+            src={officialLogo}
+            alt="OpenDev-Labs Logo"
+            className="h-8 w-auto object-contain"
+            style={{
+                filter: "drop-shadow(0 0 8px rgba(255, 255, 255, 0.2))"
             }}
         />
     </motion.div>
@@ -158,7 +99,7 @@ export const Header: React.FC = () => {
                 <div className="flex items-center gap-10">
                     <Link to="/" className="flex items-center gap-3 group">
                         <Logo />
-                        <span className="font-bold tracking-tighter text-sm uppercase tracking-[0.2em] group-hover:opacity-80 transition-opacity">opendev-labs</span>
+                        <span className="font-bold tracking-tighter text-sm tracking-[0.2em] group-hover:opacity-80 transition-opacity">opendev-labs</span>
                     </Link>
 
                     {/* Desktop Navigation */}
