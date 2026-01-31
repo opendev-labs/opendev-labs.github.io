@@ -127,7 +127,7 @@ export const TarsPage: React.FC = () => {
                         </div>
                         <div className="flex gap-2">
                             <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
-                            <span className="text-[10px] font-bold text-emerald-500 uppercase tracking-widest">Neutral Live</span>
+                            <span className="text-[10px] font-bold text-emerald-500 uppercase tracking-widest">Local Handshake: qvenv</span>
                         </div>
                     </div>
 

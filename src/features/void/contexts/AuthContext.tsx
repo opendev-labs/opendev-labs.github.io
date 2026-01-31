@@ -23,6 +23,7 @@ interface AuthState {
 
 interface AuthContextType extends AuthState {
   loginWithGitHub: () => Promise<void>;
+  linkWithGitHub: () => Promise<void>;
   loginWithGoogle: () => Promise<void>;
   logout: () => Promise<void>;
   fetchRepositories: () => Promise<any[]>;
@@ -118,26 +119,28 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const loginWithGitHub = useCallback(async () => {
     try {
-      // LamaDB wrapper usage
       const result = await LamaDB.auth.loginWithGithub();
-
-      // We need to get the credential to acccess the token
-      // Since LamaAuth.loginWithGithub returns AuthResult (compatible with UserCredential)
-      // We can use GithubAuthProvider.credentialFromResult logic if imported,
-      // OR just access result.providerId? result.user.accessToken is not the GH token.
-      // We need the OAuthCredential.
-
       const credential = GithubAuthProvider.credentialFromResult(result as any);
-
-
       if (credential?.accessToken) {
         setToken(credential.accessToken);
         localStorage.setItem('opendev_gh_token', credential.accessToken);
       }
-
-      // safeNavigate('/');
     } catch (error) {
       console.error("GitHub Login Error:", error);
+      throw error;
+    }
+  }, []);
+
+  const linkWithGitHub = useCallback(async () => {
+    try {
+      const result = await LamaDB.auth.linkGithub();
+      const credential = GithubAuthProvider.credentialFromResult(result as any);
+      if (credential?.accessToken) {
+        setToken(credential.accessToken);
+        localStorage.setItem('opendev_gh_token', credential.accessToken);
+      }
+    } catch (error) {
+      console.error("GitHub Link Error:", error);
       throw error;
     }
   }, []);
@@ -328,6 +331,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       githubUser,
       isGithubConnected,
       loginWithGitHub,
+      linkWithGitHub,
       loginWithGoogle,
       logout,
       fetchRepositories,
