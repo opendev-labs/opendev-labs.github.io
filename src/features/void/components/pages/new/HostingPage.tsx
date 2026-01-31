@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Template } from '../../../types';
-import { mockTemplates } from '../../../constants';
+import { hostingTemplates } from '../../../constants/hostingTemplates';
 import { TemplateCard } from '../TemplateCard';
 import { motion } from 'framer-motion';
 import { RocketLaunchIcon, ServerIcon } from '../../common/Icons';
@@ -73,7 +73,7 @@ export const HostingPage: React.FC<{
 
             {/* Templates Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-4">
-                {mockTemplates.map((template, index) => (
+                {hostingTemplates.map((template, index) => (
                     <motion.div
                         key={template.id}
                         initial={{ opacity: 0, y: 20 }}
