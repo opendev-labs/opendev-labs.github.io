@@ -151,7 +151,7 @@ export const mockTemplates: Template[] = [
     framework: 'Python',
     description: 'High-performance REST API architecture using Flask. Perfect for integrating LLMs and complex computational logic into your stack.',
     author: 'Community',
-    imageUrl: 'https://raw.githubusercontent.com/github/explore/80688e429a7d40f8dd3e8aF7415291ea77f07753/topics/flask/flask.png',
+    imageUrl: '/assets/templates/python_thumbnail.png',
     logoUrl: 'https://cdn.worldvectorlogo.com/logos/flask.svg'
   },
   {
@@ -160,7 +160,7 @@ export const mockTemplates: Template[] = [
     framework: 'Nuxt',
     description: 'Experience the hybrid rendering power of Nuxt 3. A zero-config architecture designed for SEO sovereignty and rapid scaling.',
     author: 'NuxtLabs',
-    imageUrl: 'https://nuxt.com/icon.png',
+    imageUrl: '/assets/templates/nuxt_thumbnail.png',
     logoUrl: 'https://nuxt.com/icon.png'
   },
 ];
