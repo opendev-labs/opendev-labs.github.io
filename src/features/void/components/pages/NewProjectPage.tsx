@@ -8,9 +8,10 @@ import { MeshPage } from './new/MeshPage';
 import { OpenURLPage } from './new/OpenURLPage';
 import { TarsPage } from './new/TarsPage';
 import { HostingPage } from './new/HostingPage';
+import { DeploymentPlatform } from './DeploymentConfigForm';
 
 interface NewProjectPageProps {
-    onDeployTemplate: (template: Template, projectName: string, createRepo?: boolean, isPrivate?: boolean) => void;
+    onDeployTemplate: (template: Template, projectName: string, platform: DeploymentPlatform, isPrivate?: boolean) => void;
     onImportRepository: (repo: Repository, projectName: string) => void;
     onDeployWorkflow: (workflow: Workflow, projectName: string) => void;
 }

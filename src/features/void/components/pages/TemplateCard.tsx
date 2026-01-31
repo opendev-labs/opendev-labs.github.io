@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
 import type { Template } from '../../types';
-import { ConfigureProjectForm } from '../common/ConfigureProjectForm';
+import { DeploymentConfigForm, DeploymentPlatform } from './DeploymentConfigForm';
 import { motion } from 'framer-motion';
 
 interface TemplateCardProps {
     template: Template;
-    onDeploy: (template: Template, projectName: string, createRepo?: boolean, isPrivate?: boolean) => void;
+    onDeploy: (template: Template, projectName: string, platform: DeploymentPlatform, isPrivate?: boolean) => void;
 }
 
 export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onDeploy }) => {
     const [isConfiguring, setIsConfiguring] = useState(false);
 
-    const handleLaunch = (projectName: string, createRepo?: boolean, isPrivate?: boolean) => {
-        onDeploy(template, projectName, createRepo, isPrivate);
+    const handleLaunch = (projectName: string, platform: DeploymentPlatform, isPrivate?: boolean) => {
+        onDeploy(template, projectName, platform, isPrivate);
         setIsConfiguring(false);
     };
 
@@ -61,8 +61,8 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onDeploy }
                         Deploy
                     </button>
                 ) : (
-                    <ConfigureProjectForm
-                        defaultName={template.name}
+                    <DeploymentConfigForm
+                        templateName={template.name}
                         onDeploy={handleLaunch}
                         onCancel={() => setIsConfiguring(false)}
                     />

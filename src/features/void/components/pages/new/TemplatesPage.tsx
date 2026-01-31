@@ -1,14 +1,17 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Template } from '../../../types';
-import { mockTemplates } from '../../../constants';
+import { DeploymentPlatform } from '../DeploymentConfigForm';
 import { TemplateCard } from '../TemplateCard';
 import { RazorpayButton } from '../../common/RazorpayButton';
 import { motion } from 'framer-motion';
 
-export const TemplatesPage: React.FC<{
-    onDeployTemplate: (template: Template, projectName: string, createRepo?: boolean, isPrivate?: boolean) => void;
-}> = ({ onDeployTemplate }) => {
+// Example templates  for demonstration
+const mockTemplates: Template[] = [
+    // Add your templates here
+];
+
+export const TemplatesPage: React.FC<{ onDeployTemplate: (template: Template, projectName: string, platform: DeploymentPlatform, isPrivate?: boolean) => void }> = ({ onDeployTemplate }) => {
     const navigate = useNavigate();
 
     return (

@@ -102,25 +102,8 @@ const AppContent: React.FC = () => {
         setProjects(prevProjects => prevProjects.map(p => p.id === updatedProject.id ? updatedProject : p));
     };
 
-    const handleDeployTemplate = async (template: Template, projectName: string, createRepo?: boolean, isPrivate?: boolean) => {
+    const handleDeployTemplate = async (template: Template, projectName: string, platform: 'github' | 'vercel' | 'firebase' | 'huggingface', isPrivate?: boolean) => {
         const urlFriendlyName = projectName.toLowerCase().replace(/\s+/g, '-');
-
-        if (createRepo && createRepository && uploadFile) {
-            try {
-                await createRepository(projectName, `Deployed from ${template.name}`, !!isPrivate);
-                let templateKey = 'default';
-                if (template.id === 'tmpl_nextjs' || template.name.toLowerCase().includes('next')) templateKey = 'nextjs-starter';
-                else if (template.id === 'tmpl_react_vite' || template.name.toLowerCase().includes('react') && template.name.toLowerCase().includes('vite')) templateKey = 'vite-react';
-                else if (template.name.toLowerCase().includes('landing')) templateKey = 'landing-page';
-
-                const filesToUpload = REAL_TEMPLATES[templateKey] || REAL_TEMPLATES['default'];
-                for (const [path, content] of Object.entries(filesToUpload)) {
-                    await uploadFile(projectName, path, content, `Initial commit: Add ${path}`);
-                }
-            } catch (err) {
-                console.error("Failed to create repo or upload files", err);
-            }
-        }
 
         const newDeployment: Deployment = {
             id: `dpl_${Date.now()}`,
@@ -128,16 +111,16 @@ const AppContent: React.FC = () => {
             branch: 'main',
             timestamp: new Date().toISOString(),
             status: DeploymentStatus.QUEUED,
-            url: `https://${urlFriendlyName}.void.app`,
+            url: `https://${urlFriendlyName}.${platform === 'github' ? 'github.io' : platform + '.app'}`,
         };
 
         const newProject: Project = {
             id: `proj_${Date.now()}`,
             name: projectName,
             framework: template.framework,
-            lastUpdated: new Date().toISOString(), // Standardize
+            lastUpdated: new Date().toISOString(),
             deployments: [newDeployment],
-            domains: [{ name: `https://${urlFriendlyName}.void.app`, isPrimary: true }],
+            domains: [{ name: `https://${urlFriendlyName}.${platform === 'github' ? 'github.io' : platform + '.app'}`, isPrimary: true }],
             envVars: {},
             ...generateInitialProjectData(),
         };

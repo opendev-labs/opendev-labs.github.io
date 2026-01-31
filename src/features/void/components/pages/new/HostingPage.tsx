@@ -6,6 +6,7 @@ import { TemplateCard } from '../TemplateCard';
 import { motion } from 'framer-motion';
 import { Server, Zap, Lock, Infinity } from 'lucide-react';
 import { templateDeploymentService } from '../../../services/templateDeploymentService';
+import { DeploymentPlatform } from '../DeploymentConfigForm';
 
 // Background component matching HomePage
 const AppBackground = () => (
@@ -67,32 +68,33 @@ const BenefitCard: React.FC<{ icon: React.ReactNode; title: string; children: Re
 );
 
 export const HostingPage: React.FC<{
-    onDeployTemplate: (template: Template, projectName: string, createRepo?: boolean, isPrivate?: boolean) => void;
+    onDeployTemplate: (template: Template, projectName: string, platform: DeploymentPlatform, isPrivate?: boolean) => void;
 }> = ({ onDeployTemplate }) => {
     const navigate = useNavigate();
     const [isDeploying, setIsDeploying] = useState(false);
     const [deploymentStatus, setDeploymentStatus] = useState<string | null>(null);
 
     // Handle template deployment with real code generation
-    const handleDeploy = async (template: Template, projectName: string, createRepo?: boolean, isPrivate?: boolean) => {
-        if (!templateDeploymentService.isPATConfigured()) {
+    const handleDeploy = async (template: Template, projectName: string, platform: DeploymentPlatform, isPrivate?: boolean) => {
+        if (platform === 'github' && !templateDeploymentService.isPATConfigured()) {
             alert('Please configure your GitHub PAT in the Import page first!');
             navigate('/void/new/import');
             return;
         }
 
         setIsDeploying(true);
-        setDeploymentStatus('Generating template code...');
+        setDeploymentStatus(`Generating ${template.name} code...`);
 
         try {
             const result = await templateDeploymentService.deployTemplate({
                 templateId: template.id,
                 projectName,
+                platform,
                 isPrivate
             });
 
             if (result.success) {
-                setDeploymentStatus(`✅ Deployed! Live at: ${result.liveUrl}`);
+                setDeploymentStatus(`✅ Deployed to ${platform.toUpperCase()}! Live at: ${result.liveUrl}`);
                 setTimeout(() => {
                     if (result.liveUrl) window.open(result.liveUrl, '_blank');
                 }, 2000);
