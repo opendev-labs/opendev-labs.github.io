@@ -166,67 +166,69 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      width: 100%;
-      max-width: 800px;
-      padding: 2rem;
       z-index: 10;
     }
 
     .tars-logo-container {
-      opacity: 0;
-      transition: opacity 0.8s ease-in;
-      margin-bottom: 3rem;
+      margin-bottom: 2.5rem;
+      position: relative;
     }
 
-    .status-text {
-      font-size: 11px;
-      line-height: 1.6;
-      color: rgba(161, 161, 170, 0.4);
-      /* zinc-400 */
-      text-align: left;
-      width: 100%;
-      height: 300px;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-      padding: 1.5rem;
-      background: rgba(9, 9, 11, 0.8);
-      /* zinc-950 */
-      border: 1px solid rgba(39, 39, 42, 1);
-      /* zinc-800 */
-      backdrop-filter: blur(10px);
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    .tars-logo-container svg {
+      filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.1));
     }
 
-    .boot-line {
-      white-space: nowrap;
-      opacity: 0;
-      animation: line-fade 0.05s forwards;
+    .reactor-core {
+      animation: core-pulse 2s ease-in-out infinite;
     }
 
-    @keyframes line-fade {
-      from {
-        opacity: 0;
-        transform: translateX(-5px);
+    @keyframes core-pulse {
+
+      0%,
+      100% {
+        opacity: 0.4;
+        transform: scale(1);
+        filter: brightness(1);
       }
 
-      to {
+      50% {
         opacity: 1;
-        transform: translateX(0);
+        transform: scale(1.1);
+        filter: brightness(1.5);
       }
     }
 
-    .ok {
-      color: #fff;
-      font-weight: bold;
-      margin-right: 12px;
+    .initializing-text {
+      font-size: 12px;
+      letter-spacing: 0.5em;
+      color: rgba(255, 255, 255, 0.4);
+      text-transform: uppercase;
+      font-weight: 700;
+      display: flex;
+      gap: 0.5em;
     }
 
-    .addr {
-      color: rgba(161, 161, 170, 0.3);
-      margin-right: 8px;
-      font-family: monospace;
+    .char {
+      opacity: 0;
+      animation: char-fade 1.5s ease-in-out forwards infinite;
+    }
+
+    @keyframes char-fade {
+      0% {
+        opacity: 0;
+        transform: translateY(5px);
+      }
+
+      20%,
+      80% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      100% {
+        opacity: 0;
+        transform: translateY(-5px);
+      }
     }
   </style>
 </head>
@@ -234,42 +236,29 @@
 <body>
   <div id="root">
     <div class="tars-loader">
-      <div class="tars-logo-container" id="tars-logo">
-        <svg width="180" height="180" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M10 25H90L50 90L10 25Z" stroke="#fff" stroke-width="1.5" style="opacity: 0.2;" />
-          <path d="M22.5 35H77.5L50 80L22.5 35Z" stroke="#fff" stroke-width="1" style="opacity: 0.4;" />
+      <div class="tars-logo-container">
+        <svg width="120" height="120" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M10 25H90L50 90L10 25Z" stroke="#fff" stroke-width="1" style="opacity: 0.15;" />
+          <path d="M22.5 35H77.5L50 80L22.5 35Z" stroke="#fff" stroke-width="1" style="opacity: 0.3;" />
           <path class="reactor-core" d="M42.5 52.5H57.5L50 65L42.5 52.5Z" fill="#fff" stroke="#fff" stroke-width="2" />
         </svg>
       </div>
-      <div class="status-text" id="boot-log"></div>
+      <div class="initializing-text">
+        <span class="char" style="animation-delay: 0.1s">I</span>
+        <span class="char" style="animation-delay: 0.2s">N</span>
+        <span class="char" style="animation-delay: 0.3s">I</span>
+        <span class="char" style="animation-delay: 0.4s">T</span>
+        <span class="char" style="animation-delay: 0.5s">I</span>
+        <span class="char" style="animation-delay: 0.6s">A</span>
+        <span class="char" style="animation-delay: 0.7s">L</span>
+        <span class="char" style="animation-delay: 0.8s">I</span>
+        <span class="char" style="animation-delay: 0.9s">Z</span>
+        <span class="char" style="animation-delay: 1.0s">I</span>
+        <span class="char" style="animation-delay: 1.1s">N</span>
+        <span class="char" style="animation-delay: 1.2s">G</span>
+      </div>
     </div>
   </div>
-  <script type="text/javascript">
-    const lines = [
-      "0x7f4e2 [ OK ] SYSTEM_PREINIT: LOAD_TITAN_KERNEL",
-      "0x7f4e5 [ OK ] MEMORY_MAP: NEURAL_RESERVATION_COMPLETE",
-      "0x7f4e9 [ OK ] ENCLAVE_INIT: SECURE_ENVIRONMENT_READY",
-      "0x8a2d1 [ OK ] QUANTUM_STABILIZER: 1.02e-9_VARIANCE",
-      "0x8a2d4 [ OK ] NETWORK_MESH: GLOBAL_NODE_HANDSHAKE",
-      "0x8a2d7 [ OK ] SOVEREIGN_PROTOCOL: VERSION_2026_ACTIVE",
-      "0x9b1f2 [ OK ] DATA_INTEGRITY: LAMADB_REPLICATION_SYNC"
-    ];
-    const log = document.getElementById('boot-log');
-    let i = 0;
-    function addLine() {
-      if (i < lines.length) {
-        const div = document.createElement('div');
-        div.className = 'boot-line';
-        const parts = lines[i].split(' ');
-        div.innerHTML = `<span class="addr">${parts[0]}</span> <span class="ok">${parts[2]}</span> ${parts.slice(3).join(' ')}`;
-        log.appendChild(div);
-        log.scrollTop = log.scrollHeight;
-        i++;
-        setTimeout(addLine, 30);
-      }
-    }
-    addLine();
-  </script>
   <script type="module" src="/src/main.tsx"></script>
 </body>
 
