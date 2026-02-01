@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { Github, Rocket, Flame, Box, Check } from 'lucide-react';
 import { AnimatedLoaderIcon } from '../common/AnimatedLoaderIcon';
-
-export type DeploymentPlatform = 'github' | 'vercel' | 'firebase' | 'huggingface' | 'syncstack';
+import { DeploymentPlatform } from '../../types';
 
 interface DeploymentConfigFormProps {
     templateName: string;

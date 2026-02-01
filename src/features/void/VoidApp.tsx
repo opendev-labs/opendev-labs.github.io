@@ -4,7 +4,7 @@ import { Header } from '../../components/Header';
 import { Footer } from '../../components/Footer';
 import { Dashboard } from './components/Dashboard';
 import { ProjectDetailView } from './components/ProjectDetailView';
-import type { Project, Template, Deployment, GitProvider, Repository, Workflow } from './types';
+import type { Project, Template, Deployment, GitProvider, Repository, Workflow, DeploymentPlatform } from './types';
 import { DeploymentStatus, DatabaseType, DatabaseStatus } from './types';
 import { mockProjects, generateInitialProjectData, availableIntegrations } from './constants';
 import { DocsPage } from './components/pages/DocsPage';
@@ -102,7 +102,7 @@ const AppContent: React.FC = () => {
         setProjects(prevProjects => prevProjects.map(p => p.id === updatedProject.id ? updatedProject : p));
     };
 
-    const handleDeployTemplate = async (template: Template, projectName: string, platform: 'github' | 'vercel' | 'firebase' | 'huggingface', isPrivate?: boolean) => {
+    const handleDeployTemplate = async (template: Template, projectName: string, platform: DeploymentPlatform, isPrivate?: boolean) => {
         const urlFriendlyName = projectName.toLowerCase().replace(/\s+/g, '-');
 
         const newDeployment: Deployment = {
@@ -233,6 +233,7 @@ const AppContent: React.FC = () => {
     };
 
     const isTars = location.pathname.includes('/new/tars');
+    const isProjectDetail = location.pathname.includes('/projects/');
 
     return (
         <div className="min-h-screen bg-black font-sans flex flex-col selection:bg-white selection:text-black">

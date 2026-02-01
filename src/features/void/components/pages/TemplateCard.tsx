@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import type { Template } from '../../types';
-import { DeploymentConfigForm, DeploymentPlatform } from './DeploymentConfigForm';
+import { DeploymentConfigForm } from './DeploymentConfigForm';
+import { DeploymentPlatform } from '../../types';
 import { motion } from 'framer-motion';
 
 interface TemplateCardProps {

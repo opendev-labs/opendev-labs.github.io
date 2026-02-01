@@ -1,6 +1,6 @@
 import React from 'react';
 import { Routes, Route, Outlet } from 'react-router-dom';
-import { Template, Repository, Workflow } from '../../types';
+import { Template, Repository, Workflow, DeploymentPlatform } from '../../types';
 import { NewProjectLanding } from './new/NewProjectLanding';
 import { ImportPage } from './new/ImportPage';
 import { TemplatesPage } from './new/TemplatesPage';
@@ -8,10 +8,10 @@ import { MeshPage } from './new/MeshPage';
 import { OpenURLPage } from './new/OpenURLPage';
 import { TarsPage } from './new/TarsPage';
 import { HostingPage } from './new/HostingPage';
-import { DeploymentPlatform } from './DeploymentConfigForm';
+import { DeploymentConfigForm } from './DeploymentConfigForm';
 
 interface NewProjectPageProps {
-    onDeployTemplate: (template: Template, projectName: string, platform: DeploymentPlatform, isPrivate?: boolean) => void;
+    onDeployTemplate: (template: Template, projectName: string, platform: DeploymentPlatform, isPrivate?: boolean) => void | Promise<void>;
     onImportRepository: (repo: Repository, projectName: string) => void;
     onDeployWorkflow: (workflow: Workflow, projectName: string) => void;
 }

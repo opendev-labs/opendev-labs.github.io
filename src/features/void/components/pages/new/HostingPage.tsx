@@ -6,7 +6,7 @@ import { TemplateCard } from '../TemplateCard';
 import { motion } from 'framer-motion';
 import { Server, Zap, Lock, Infinity } from 'lucide-react';
 import { templateDeploymentService } from '../../../services/templateDeploymentService';
-import { DeploymentPlatform } from '../DeploymentConfigForm';
+import { DeploymentPlatform } from '../../../types';
 
 // Background component matching HomePage
 const AppBackground = () => (

@@ -36,6 +36,7 @@ export const TarsPage: React.FC = () => {
     const [lastSyncTime, setLastSyncTime] = useState<string | null>(null);
 
     const messagesEndRef = useRef<HTMLDivElement>(null);
+    const scrollRef = useRef<HTMLDivElement>(null);
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Template } from '../../../types';
-import { DeploymentPlatform } from '../DeploymentConfigForm';
+import { DeploymentPlatform } from '../../../types';
 import { TemplateCard } from '../TemplateCard';
 import { RazorpayButton } from '../../common/RazorpayButton';
 import { motion } from 'framer-motion';

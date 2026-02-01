@@ -66,6 +66,7 @@ export interface Template {
 
 // New types for Git provider integration
 export type GitProvider = 'GitHub' | 'GitLab' | 'Bitbucket';
+export type DeploymentPlatform = 'github' | 'vercel' | 'firebase' | 'huggingface' | 'syncstack';
 
 export interface Repository {
     id: string;
