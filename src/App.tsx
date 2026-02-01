@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
 import Layout from './components/Layout';
 import Home from './pages/Home';
@@ -16,9 +16,10 @@ import Changelog from './pages/Changelog';
 import Spoon from './pages/Spoon';
 import Product from './pages/Product';
 import NexusDashboard from './pages/NexusDashboard';
-import { Navigate } from 'react-router-dom';
 import { Preloader } from './components/Preloader';
 import { DocsPage } from './features/void/components/pages/DocsPage';
+import { MissionControl } from './pages/MissionControl';
+import { VoidOfficeCockpit, LamaDBOfficeCockpit } from './pages/OfficeSubappWrappers';
 
 const VoidApp = lazy(() => import('./features/void/VoidApp'));
 const OfficeDashboard = lazy(() => import('./pages/OfficeDashboard').then(m => ({ default: m.OfficeDashboard })));
@@ -51,17 +52,22 @@ const AppRoutes = () => {
         {/* Main Website (Shared Layout) */}
         <Route element={<Layout />}>
           <Route index element={<Home />} />
-          <Route path="office/*" element={
+          <Route path="office" element={
             <Suspense fallback={<div className="min-h-screen bg-black flex items-center justify-center text-white font-bold uppercase tracking-[0.3em]">Opening Office...</div>}>
               <OfficeDashboard />
             </Suspense>
-          } />
+          }>
+            <Route index element={<MissionControl />} />
+            <Route path="syncstack" element={<SyncStack />} />
+            <Route path="void" element={<VoidOfficeCockpit />} />
+            <Route path="lamadb" element={<LamaDBOfficeCockpit />} />
+          </Route>
           <Route path="dashboard" element={<Navigate to="/office" replace />} />
 
           {/* Product Pages */}
           <Route path="lamadb" element={<LamaDB />} />
           <Route path="q-cloud" element={<QCloud />} />
-          <Route path="syncstack" element={<SyncStack />} />
+          <Route path="syncstack" element={<Navigate to="/office/syncstack" replace />} />
           <Route path="spoon" element={<Spoon />} />
           <Route path="products" element={<Products />} />
           <Route path="changelog" element={<Changelog />} />

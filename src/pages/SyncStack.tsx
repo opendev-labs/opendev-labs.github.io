@@ -2,8 +2,11 @@ import { Box, Layers, Zap, Shield, GitBranch, Cpu, Network, Download, Monitor, H
 import { ProductPageTemplate } from '../components/ProductPageTemplate';
 import { motion } from 'framer-motion';
 import { githubPATService } from '../features/void/services/githubPATService';
+import { useNavigate } from 'react-router-dom';
+import syncstackLogo from '../assets/syncstack-logo.svg';
 
 export default function SyncStack() {
+    const navigate = useNavigate();
     const features = [
         {
             title: "Quantum Sharding",
@@ -86,6 +89,36 @@ export default function SyncStack() {
                 </div>
             </div>
 
+            {/* Multi-Platform Connection Matrix */}
+            <div className="grid grid-cols-2 gap-4 mt-8">
+                {[
+                    { name: 'GitHub', icon: GitBranch, connected: isConnected, path: '/void/new/import' },
+                    { name: 'Vercel', icon: Zap, connected: false, path: '#' },
+                    { name: 'Firebase', icon: Shield, connected: false, path: '#' },
+                    { name: 'HuggingFace', icon: Cpu, connected: false, path: '#' }
+                ].map((platform) => (
+                    <div key={platform.name} className="p-4 bg-zinc-900 border border-zinc-800 flex flex-col justify-between group hover:border-zinc-600 transition-colors">
+                        <div className="flex justify-between items-start mb-4">
+                            <platform.icon size={16} className={platform.connected ? 'text-emerald-500' : 'text-zinc-600'} />
+                            <div className={`w-1.5 h-1.5 rounded-full ${platform.connected ? 'bg-emerald-500 animate-pulse' : 'bg-zinc-800'}`} />
+                        </div>
+                        <div>
+                            <p className="text-[10px] font-bold uppercase tracking-widest text-white mb-2">{platform.name}</p>
+                            {platform.connected ? (
+                                <p className="text-[9px] text-emerald-500/60 uppercase font-bold">Synchronized</p>
+                            ) : (
+                                <button
+                                    onClick={() => navigate(platform.path)}
+                                    className="text-[9px] text-zinc-500 hover:text-white uppercase font-bold transition-colors"
+                                >
+                                    Connect Node &rarr;
+                                </button>
+                            )}
+                        </div>
+                    </div>
+                ))}
+            </div>
+
             {/* Desktop Link CTA */}
             <div className="mt-8 p-6 bg-blue-500/5 border border-blue-500/10 rounded-none group hover:bg-blue-500/10 transition-all cursor-default">
                 <p className="text-[10px] font-bold text-blue-400 uppercase tracking-widest mb-3 font-mono flex items-center gap-2">
@@ -108,14 +141,16 @@ export default function SyncStack() {
 
     return (
         <ProductPageTemplate
-            badge="Distributed Protocol Ready"
-            badgeIcon={Box}
+            badge="SyncStack Official Protocol"
+            badgeIcon={() => <img src={syncstackLogo} className="w-4 h-4 grayscale opacity-50" alt="" />}
             title="SyncStack"
             description="The distributed synchronization layer for modern nexus clusters. Zero-latency state propagation with cryptographic integrity across sovereign nodes."
             features={features}
             performanceTitle="Seamless Synchronization."
             performanceMetrics={performanceMetrics}
             codeSnippet={clusterStatus}
+            primaryActionLabel="Connect Now"
+            onPrimaryAction={() => navigate('/void/new/import')}
         />
     );
 }

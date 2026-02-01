@@ -59,7 +59,7 @@ const MENU_DATA = [
     {
         title: "Compute & State",
         items: [
-            { name: "Office Dashboard", desc: "High-fidelity terminal for sovereign nodes", icon: CommandLineIcon, path: "/office" },
+            { name: "System Office", desc: "High-fidelity terminal for sovereign nodes", icon: CommandLineIcon, path: "/office" },
             { name: "LamaDB", desc: "Native browser database for high-velocity state", icon: CubeIcon, path: "/lamadb" },
             { name: "Q-Cloud", desc: "Quantum-ready serverless infrastructure", icon: RocketLaunchIcon, path: "/q-cloud" },
         ]

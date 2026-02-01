@@ -137,7 +137,7 @@ export default function Home() {
                             onClick={() => navigate(isAuthenticated ? '/office' : '/auth')}
                             className="min-w-[200px]"
                         >
-                            {isAuthenticated ? 'Dashboard' : 'Login / Signup'}
+                            {isAuthenticated ? 'Office' : 'Login / Signup'}
                         </Button>
                     </motion.div>
                 </div>

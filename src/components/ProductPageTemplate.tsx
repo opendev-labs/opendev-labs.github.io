@@ -22,10 +22,12 @@ interface ProductPageProps {
     badgeIcon: React.FC<{ size?: number; className?: string }>;
     title: string;
     description: string;
-    features: Feature[];
     performanceTitle: string;
     performanceMetrics: PerformanceMetric[];
+    features: Feature[];
     codeSnippet?: React.ReactNode;
+    primaryActionLabel?: string;
+    onPrimaryAction?: () => void;
 }
 
 export const ProductPageTemplate: React.FC<ProductPageProps> = ({
@@ -36,7 +38,9 @@ export const ProductPageTemplate: React.FC<ProductPageProps> = ({
     features,
     performanceTitle,
     performanceMetrics,
-    codeSnippet
+    codeSnippet,
+    primaryActionLabel = "Deploy Now",
+    onPrimaryAction = () => window.location.href = '/void/new'
 }) => {
     return (
         <div className="flex flex-col w-full bg-black text-white selection:bg-white selection:text-black">
@@ -80,8 +84,8 @@ export const ProductPageTemplate: React.FC<ProductPageProps> = ({
                         transition={{ delay: 0.3 }}
                         className="flex flex-col sm:flex-row items-center justify-center gap-4"
                     >
-                        <Button size="lg" onClick={() => window.location.href = '/void/new'} icon={<ArrowRight size={16} />}>
-                            Deploy Now
+                        <Button size="lg" onClick={onPrimaryAction} icon={<ArrowRight size={16} />}>
+                            {primaryActionLabel}
                         </Button>
                         <Button variant="outline" size="lg" onClick={() => window.location.href = '/docs'}>
                             Documentation
