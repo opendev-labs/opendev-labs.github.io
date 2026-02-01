@@ -4,7 +4,7 @@ import { Link, useNavigate, useLocation, Outlet } from 'react-router-dom';
 import { Button } from '../components/ui/Button';
 import { useAuth } from '../features/void/hooks/useAuth';
 
-export const OfficeDashboard: React.FC = () => {
+const OfficeDashboard: React.FC = () => {
     const [isCollapsed, setIsCollapsed] = useState(false);
     const nodes = [
         {
@@ -115,3 +115,5 @@ export const OfficeDashboard: React.FC = () => {
         </div>
     );
 };
+
+export default OfficeDashboard;

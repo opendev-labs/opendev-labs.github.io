@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, Component } from 'react';
 import Layout from './components/Layout';
 import Home from './pages/Home';
 import Products from './pages/Products';
@@ -21,10 +21,30 @@ import { DocsPage } from './features/void/components/pages/DocsPage';
 import { MissionControl } from './pages/MissionControl';
 import { VoidOfficeCockpit, LamaDBOfficeCockpit, SyncStackOfficeCockpit } from './pages/OfficeSubappWrappers';
 
-const VoidApp = lazy(() => import('./features/void/VoidApp'));
-const OfficeDashboard = lazy(() => import('./pages/OfficeDashboard').then(m => ({ default: m.OfficeDashboard })));
-const LazyAuthPage = lazy(() => import('./features/void/components/pages/AuthPage').then(m => ({ default: m.AuthPage })));
-const LazyVerifyEmailPage = lazy(() => import('./features/void/components/pages/VerifyEmailPage').then(m => ({ default: m.VerifyEmailPage })));
+const lazyWithRetry = (componentImport: () => Promise<any>) =>
+  lazy(async () => {
+    const pageHasAlreadyBeenForceRefreshed = JSON.parse(
+      window.localStorage.getItem('page-has-been-force-refreshed') || 'false'
+    );
+
+    try {
+      const component = await componentImport();
+      window.localStorage.setItem('page-has-been-force-refreshed', 'false');
+      return component;
+    } catch (error) {
+      if (!pageHasAlreadyBeenForceRefreshed) {
+        window.localStorage.setItem('page-has-been-force-refreshed', 'true');
+        window.location.reload();
+        return { default: () => null }; // Return dummy while reloading
+      }
+      throw error;
+    }
+  });
+
+const VoidApp = lazyWithRetry(() => import('./features/void/VoidApp'));
+const OfficeDashboard = lazyWithRetry(() => import('./pages/OfficeDashboard'));
+const LazyAuthPage = lazyWithRetry(() => import('./features/void/components/pages/AuthPage').then(m => ({ default: m.AuthPage })));
+const LazyVerifyEmailPage = lazyWithRetry(() => import('./features/void/components/pages/VerifyEmailPage').then(m => ({ default: m.VerifyEmailPage })));
 
 // Wrapper to handle scroll on route change
 const AppRoutes = () => {
