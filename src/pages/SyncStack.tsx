@@ -150,7 +150,7 @@ export default function SyncStack() {
             performanceMetrics={performanceMetrics}
             codeSnippet={clusterStatus}
             primaryActionLabel="Connect Now"
-            onPrimaryAction={() => navigate('/void/new/import')}
+            onPrimaryAction={() => navigate('/office/syncstack')}
         />
     );
 }

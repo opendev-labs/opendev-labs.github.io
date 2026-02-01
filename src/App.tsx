@@ -19,7 +19,7 @@ import NexusDashboard from './pages/NexusDashboard';
 import { Preloader } from './components/Preloader';
 import { DocsPage } from './features/void/components/pages/DocsPage';
 import { MissionControl } from './pages/MissionControl';
-import { VoidOfficeCockpit, LamaDBOfficeCockpit } from './pages/OfficeSubappWrappers';
+import { VoidOfficeCockpit, LamaDBOfficeCockpit, SyncStackOfficeCockpit } from './pages/OfficeSubappWrappers';
 
 const VoidApp = lazy(() => import('./features/void/VoidApp'));
 const OfficeDashboard = lazy(() => import('./pages/OfficeDashboard').then(m => ({ default: m.OfficeDashboard })));
@@ -58,7 +58,7 @@ const AppRoutes = () => {
             </Suspense>
           }>
             <Route index element={<MissionControl />} />
-            <Route path="syncstack" element={<SyncStack />} />
+            <Route path="syncstack" element={<SyncStackOfficeCockpit />} />
             <Route path="void" element={<VoidOfficeCockpit />} />
             <Route path="lamadb" element={<LamaDBOfficeCockpit />} />
           </Route>
@@ -67,7 +67,7 @@ const AppRoutes = () => {
           {/* Product Pages */}
           <Route path="lamadb" element={<LamaDB />} />
           <Route path="q-cloud" element={<QCloud />} />
-          <Route path="syncstack" element={<Navigate to="/office/syncstack" replace />} />
+          <Route path="syncstack" element={<SyncStack />} />
           <Route path="spoon" element={<Spoon />} />
           <Route path="products" element={<Products />} />
           <Route path="changelog" element={<Changelog />} />

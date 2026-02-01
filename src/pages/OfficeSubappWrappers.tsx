@@ -5,6 +5,7 @@ import { useAuth } from '../features/void/hooks/useAuth';
 import { LamaDB } from '../lib/lamaDB';
 import { Project } from '../features/void/types';
 import { GlobalLoader } from '../features/void/components/common/GlobalLoader';
+import { SyncStackConsole } from './SyncStackConsole';
 
 export const VoidOfficeCockpit: React.FC = () => {
     const { isAuthenticated, user } = useAuth();
@@ -40,6 +41,14 @@ export const LamaDBOfficeCockpit: React.FC = () => {
     return (
         <div className="-mt-24">
             <LamaDBConsole />
+        </div>
+    );
+};
+
+export const SyncStackOfficeCockpit: React.FC = () => {
+    return (
+        <div className="pt-0 h-screen bg-black overflow-hidden">
+            <SyncStackConsole />
         </div>
     );
 };
