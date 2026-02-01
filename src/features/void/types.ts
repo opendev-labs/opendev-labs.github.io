@@ -142,6 +142,10 @@ export interface ActivityEvent {
 export enum DatabaseType {
     POSTGRES = 'PostgreSQL',
     REDIS = 'Redis',
+    SUPABASE = 'Supabase',
+    NEON = 'Neon',
+    MONGODB = 'MongoDB',
+    LAMADB = 'LamaDB',
 }
 
 export enum DatabaseStatus {

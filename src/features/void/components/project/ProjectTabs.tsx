@@ -6,8 +6,8 @@ export const TABS = [
     { id: 'analytics', label: 'Telemetry' },
     { id: 'logs', label: 'Console' },
     { id: 'functions', label: 'Logic' },
-    { id: 'storage', label: 'Edge' },
-    { id: 'integrations', label: 'Links' },
+    { id: 'storage', label: 'Storage' },
+    { id: 'integrations', label: 'Integrations' },
     { id: 'domains', label: 'Nexus' },
     { id: 'environment', label: 'Secrets' },
     { id: 'team', label: 'Registry' },
@@ -27,8 +27,8 @@ const TabButton: React.FC<{
     <button
         onClick={() => onClick(tabName)}
         className={`px-0 py-4 text-[10px] font-bold uppercase tracking-[0.2em] transition-all border-b-2 whitespace-nowrap ${isActive
-                ? 'border-white text-white'
-                : 'border-transparent text-zinc-600 hover:text-zinc-400'
+            ? 'border-white text-white'
+            : 'border-transparent text-zinc-600 hover:text-zinc-400'
             }`}
         aria-current={isActive ? 'page' : undefined}
     >

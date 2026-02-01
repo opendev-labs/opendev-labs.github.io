@@ -14,8 +14,8 @@ const IntegrationCard: React.FC<{ integration: Integration, onToggle: (id: strin
                     <button
                         onClick={() => onToggle(integration.id)}
                         className={`h-10 px-6 text-[10px] font-bold uppercase tracking-widest transition-all ${integration.isConnected
-                                ? 'border border-zinc-800 text-zinc-500 hover:border-white hover:text-white'
-                                : 'bg-white text-black hover:bg-zinc-200'
+                            ? 'border border-zinc-800 text-zinc-500 hover:border-white hover:text-white'
+                            : 'bg-white text-black hover:bg-zinc-200'
                             }`}
                     >
                         {integration.isConnected ? 'Configure' : 'Initialize'}
@@ -45,10 +45,12 @@ export const IntegrationsTab: React.FC<{ integrations: Integration[] }> = ({ int
         });
     };
 
-    const allIntegrationsWithStatus = availableIntegrations.map(int => ({
-        ...int,
-        isConnected: connectedIds.has(int.id)
-    }));
+    const allIntegrationsWithStatus = availableIntegrations
+        .filter(int => int.category !== 'Database')
+        .map(int => ({
+            ...int,
+            isConnected: connectedIds.has(int.id)
+        }));
 
     return (
         <div className="border border-zinc-900 bg-black overflow-hidden">

@@ -75,8 +75,12 @@ export const mockDatabases: Database[] = [
 ];
 
 export const availableIntegrations: Omit<Integration, 'isConnected'>[] = [
+  { id: 'int_lamadb', name: 'LamaDB', description: 'Enterprise-grade, real-time database protocol with offline-first synchronization.', category: 'Database', logoUrl: '/syncstack-logo.svg' },
+  { id: 'int_supabase', name: 'Supabase', description: 'The open source Firebase alternative. Build in a weekend, scale to millions.', category: 'Database', logoUrl: 'https://skillicons.dev/icons?i=supabase' },
+  { id: 'int_neon', name: 'Neon', description: 'Serverless PostgreSQL with a free tier. High performance, zero management.', category: 'Database', logoUrl: 'https://neon.tech/favicon/favicon-32x32.png' },
+  { id: 'int_mongodb', name: 'MongoDB Atlas', description: 'Multi-cloud developer data platform with flexible document schema.', category: 'Database', logoUrl: 'https://skillicons.dev/icons?i=mongodb' },
+  { id: 'int_upstash', name: 'Upstash', description: 'Serverless Redis, Kafka and QStash for developers.', category: 'Database', logoUrl: 'https://upstash.com/favicon.png' },
   { id: 'int_sentry', name: 'Sentry', description: 'Real-time error tracking and performance monitoring.', category: 'Monitoring', logoUrl: 'https://raw.githubusercontent.com/getsentry/sentry-art/master/sentry-glyph-black.svg' },
-  { id: 'int_neon', name: 'Neon', description: 'Serverless PostgreSQL with a free tier.', category: 'Database', logoUrl: 'https://neon.tech/favicon/favicon-32x32.png' },
   { id: 'int_logdna', name: 'LogDNA', description: 'Centralized log management and analysis.', category: 'Logging', logoUrl: 'https://www.mezmo.com/wp-content/uploads/2022/01/mezmo-logo-1.svg' },
   { id: 'int_clerk', name: 'Clerk', description: 'Complete user management for your apps.', category: 'Auth', logoUrl: 'https://clerk.com/favicon/favicon-32x32.png' },
   { id: 'int_shopify', name: 'Shopify', description: 'Power your storefront with Shopify\'s backend.', category: 'Commerce', logoUrl: 'https://cdn.worldvectorlogo.com/logos/shopify.svg' },
