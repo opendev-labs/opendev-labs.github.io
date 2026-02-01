@@ -139,12 +139,12 @@ export const HostingPage: React.FC<{
                         </span>
 
                         <h1 className="text-6xl md:text-8xl lg:text-9xl font-bold tracking-tighter text-white leading-[0.85] mb-10">
-                            Free <br />
+                            Sync <br />
                             <span className="text-emerald-500 italic font-serif">Hosting.</span>
                         </h1>
 
                         <p className="max-w-xl mx-auto text-lg text-zinc-500 leading-relaxed font-medium mb-12">
-                            Deploy any template to OpenDev's high-performance static hosting. Zero configuration. Instant global CDN. <span className="text-emerald-500 font-bold">100% Free.</span>
+                            Deploy any template to OpenDev's high-performance static hosting via SyncStack. Zero configuration. Instant global CDN. <span className="text-emerald-500 font-bold">100% Free.</span>
                         </p>
                     </motion.div>
                 </div>
@@ -176,10 +176,10 @@ export const HostingPage: React.FC<{
                     <div className="mb-16 text-center">
                         <p className="text-[10px] font-bold tracking-[0.4em] text-zinc-600 mb-4 uppercase">Choose Your Template</p>
                         <h2 className="text-4xl md:text-6xl font-black text-white tracking-tighter uppercase mb-6">
-                            Production-Ready <span className="text-emerald-500">Starting Points.</span>
+                            SyncStack <span className="text-emerald-500">Managed Nodes.</span>
                         </h2>
                         <p className="max-w-2xl mx-auto text-zinc-500 text-sm font-medium">
-                            Select a template below to deploy to OpenDev Hosting. Each template is optimized for performance and configured for instant deployment.
+                            Select a template below. SyncStack will automatically provision a GitHub repository and deploy it to our global edge mesh. These repositories are managed locally and synced in real-time.
                         </p>
                     </div>
 

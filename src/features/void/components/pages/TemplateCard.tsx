@@ -52,20 +52,31 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onDeploy }
                     {template.description}
                 </p>
 
-                {/* Deploy Button or Form */}
+                {/* Action Buttons */}
                 {!isConfiguring ? (
-                    <button
-                        onClick={() => setIsConfiguring(true)}
-                        className="w-full h-10 bg-white text-black text-xs font-bold uppercase tracking-wider hover:bg-zinc-200 transition-all"
-                    >
-                        Deploy
-                    </button>
+                    <div className="grid grid-cols-2 gap-2 mt-auto">
+                        <button
+                            onClick={() => setIsConfiguring(true)}
+                            className="h-10 bg-white text-black text-[10px] font-bold uppercase tracking-wider hover:bg-zinc-200 transition-all"
+                        >
+                            Deploy
+                        </button>
+                        <button
+                            onClick={() => template.previewUrl && window.open(template.previewUrl, '_blank')}
+                            disabled={!template.previewUrl}
+                            className="h-10 border border-zinc-800 text-white text-[10px] font-bold uppercase tracking-wider hover:bg-zinc-900 transition-all flex items-center justify-center gap-2 disabled:opacity-30 disabled:cursor-not-allowed"
+                        >
+                            Preview
+                        </button>
+                    </div>
                 ) : (
-                    <DeploymentConfigForm
-                        templateName={template.name}
-                        onDeploy={handleLaunch}
-                        onCancel={() => setIsConfiguring(false)}
-                    />
+                    <div className="mt-auto">
+                        <DeploymentConfigForm
+                            templateName={template.name}
+                            onDeploy={handleLaunch}
+                            onCancel={() => setIsConfiguring(false)}
+                        />
+                    </div>
                 )}
             </div>
         </div>

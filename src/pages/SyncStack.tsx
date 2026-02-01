@@ -1,6 +1,7 @@
-import React from 'react';
-import { Box, Layers, Zap, Shield, GitBranch, Cpu, Network } from 'lucide-react';
+import { Box, Layers, Zap, Shield, GitBranch, Cpu, Network, Download, Monitor, HardDrive, Smartphone, Check, ExternalLink, Key, User } from 'lucide-react';
 import { ProductPageTemplate } from '../components/ProductPageTemplate';
+import { motion } from 'framer-motion';
+import { githubPATService } from '../features/void/services/githubPATService';
 
 export default function SyncStack() {
     const features = [
@@ -39,29 +40,68 @@ export default function SyncStack() {
         }
     ];
 
+    const patUsername = githubPATService.getUsername();
+    const isConnected = !!githubPATService.getPAT();
+
     const clusterStatus = (
-        <div className="space-y-6 font-mono text-[13px]">
-            <div className="flex justify-between items-center border-b border-zinc-900 pb-3">
-                <span className="text-zinc-600 uppercase tracking-widest text-[10px] font-bold">Cluster ID</span>
-                <span className="text-zinc-400 font-bold">NEXUS-STACK-091</span>
+        <div className="space-y-8 font-mono text-[13px]">
+            {/* Connection Status Badge */}
+            <div className="flex justify-between items-center border-b border-zinc-900 pb-4">
+                <span className="text-zinc-600 uppercase tracking-widest text-[10px] font-bold">Protocol Link</span>
+                <div className="flex items-center gap-2">
+                    <div className={`w-1.5 h-1.5 rounded-full ${isConnected ? 'bg-emerald-500 animate-pulse' : 'bg-red-500'}`} />
+                    <span className={`text-[11px] font-bold uppercase ${isConnected ? 'text-emerald-500' : 'text-red-500'}`}>
+                        {isConnected ? 'Linked' : 'Offline'}
+                    </span>
+                </div>
             </div>
-            <div className="space-y-4 pt-4">
+
+            {/* Account Info */}
+            {isConnected && (
+                <div className="p-4 bg-zinc-900/50 border border-zinc-800 space-y-2">
+                    <div className="flex items-center gap-3">
+                        <User size={14} className="text-zinc-500" />
+                        <span className="text-zinc-400 capitalize">@{patUsername}</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                        <Key size={14} className="text-zinc-500" />
+                        <span className="text-zinc-600">••••••••••••••••</span>
+                    </div>
+                </div>
+            )}
+
+            {/* Telemetry */}
+            <div className="space-y-4 pt-2">
                 <div className="flex items-center gap-4">
                     <div className="w-2 h-2 rounded-none bg-blue-500 animate-pulse" />
-                    <span className="text-zinc-500 text-[11px] uppercase tracking-widest">Sharding protocol: active</span>
+                    <span className="text-zinc-500 text-[11px] uppercase tracking-widest">Sharding protocol: {isConnected ? 'active' : 'idle'}</span>
                 </div>
                 <div className="flex items-center gap-4">
                     <div className="w-2 h-2 rounded-none bg-blue-500 animate-pulse delay-75" />
-                    <span className="text-zinc-500 text-[11px] uppercase tracking-widest">Global replication: 99.9%</span>
+                    <span className="text-zinc-500 text-[11px] uppercase tracking-widest">State Reconciliation: {isConnected ? '99.9%' : '0%'}</span>
                 </div>
                 <div className="flex items-center gap-4">
                     <div className="w-2 h-2 rounded-none bg-blue-500 animate-pulse delay-150" />
                     <span className="text-zinc-500 text-[11px] uppercase tracking-widest">Node consensus: established</span>
                 </div>
             </div>
-            <div className="mt-8 p-4 bg-blue-500/5 border border-blue-500/10 rounded-none">
-                <p className="text-[10px] font-bold text-blue-400 uppercase tracking-widest mb-1 font-mono">Synchronization Delta</p>
-                <p className="text-xs text-blue-200 font-mono">PROG: [||||||||||||||||||||||] 100%</p>
+
+            {/* Desktop Link CTA */}
+            <div className="mt-8 p-6 bg-blue-500/5 border border-blue-500/10 rounded-none group hover:bg-blue-500/10 transition-all cursor-default">
+                <p className="text-[10px] font-bold text-blue-400 uppercase tracking-widest mb-3 font-mono flex items-center gap-2">
+                    <Monitor size={12} /> Desktop Core Synchronization
+                </p>
+                <p className="text-[11px] text-blue-200/60 leading-relaxed mb-4">
+                    SyncStack Desktop connects your local workspace directly to the OpenDev Nexus. Download the client to begin hardware-level orchestration.
+                </p>
+                <div className="grid grid-cols-2 gap-2">
+                    <button className="h-9 bg-white text-black text-[9px] font-bold uppercase tracking-widest hover:bg-zinc-200 flex items-center justify-center gap-2">
+                        <Download size={12} /> Windows
+                    </button>
+                    <button className="h-9 border border-zinc-800 text-white text-[9px] font-bold uppercase tracking-widest hover:bg-zinc-900 flex items-center justify-center gap-2">
+                        <Download size={12} /> Linux
+                    </button>
+                </div>
             </div>
         </div>
     );

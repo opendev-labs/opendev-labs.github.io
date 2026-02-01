@@ -28,14 +28,35 @@ interface PushCodeOptions {
 
 class GitHubPATService {
     private pat: string | null = null;
+    private username: string | null = null;
 
     /**
      * Set the GitHub Personal Access Token
      */
     setPAT(token: string) {
         this.pat = token;
-        // Store in localStorage for persistence (encrypted in production)
         localStorage.setItem('github_pat', token);
+    }
+
+    /**
+     * Set the GitHub Username
+     */
+    setUsername(username: string) {
+        this.username = username;
+        localStorage.setItem('github_username', username);
+    }
+
+    /**
+     * Get the stored Username
+     */
+    getUsername(): string | null {
+        if (this.username) return this.username;
+        const stored = localStorage.getItem('github_username');
+        if (stored) {
+            this.username = stored;
+            return stored;
+        }
+        return null;
     }
 
     /**
@@ -59,7 +80,9 @@ class GitHubPATService {
      */
     clearPAT() {
         this.pat = null;
+        this.username = null;
         localStorage.removeItem('github_pat');
+        localStorage.removeItem('github_username');
     }
 
     /**

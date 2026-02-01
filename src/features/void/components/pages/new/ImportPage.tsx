@@ -238,6 +238,7 @@ export const ImportPage: React.FC<{
 
     // PAT Token State
     const [patToken, setPatToken] = useState<string>('');
+    const [patUsernameInput, setPatUsernameInput] = useState<string>('');
     const [isPATConnected, setIsPATConnected] = useState(false);
     const [patValidating, setPatValidating] = useState(false);
     const [patUsername, setPatUsername] = useState<string | null>(null);
@@ -246,8 +247,12 @@ export const ImportPage: React.FC<{
     // Check if PAT is already stored
     useEffect(() => {
         const storedPAT = githubPATService.getPAT();
+        const storedUsername = githubPATService.getUsername();
         if (storedPAT) {
             validateStoredPAT(storedPAT);
+        }
+        if (storedUsername) {
+            setPatUsernameInput(storedUsername);
         }
     }, []);
 
@@ -260,6 +265,10 @@ export const ImportPage: React.FC<{
     };
 
     const handlePATConnect = async () => {
+        if (!patUsernameInput.trim()) {
+            setError('Please enter your GitHub Username');
+            return;
+        }
         if (!patToken.trim()) {
             setError('Please enter a GitHub Personal Access Token');
             return;
@@ -271,7 +280,15 @@ export const ImportPage: React.FC<{
         const result = await githubPATService.validatePAT(patToken);
 
         if (result.valid) {
+            // Check if username matches
+            if (result.username?.toLowerCase() !== patUsernameInput.toLowerCase()) {
+                setError(`The token belong to @${result.username}, but you entered @${patUsernameInput}. Please match your identity.`);
+                setPatValidating(false);
+                return;
+            }
+
             githubPATService.setPAT(patToken);
+            githubPATService.setUsername(patUsernameInput);
             setIsPATConnected(true);
             setPatUsername(result.username || null);
             setPatToken(''); // Clear input for security
@@ -377,23 +394,36 @@ export const ImportPage: React.FC<{
                                     </div>
 
                                     {!isPATConnected ? (
-                                        <div className="space-y-4">
-                                            <div>
-                                                <input
-                                                    type="password"
-                                                    placeholder="ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-                                                    value={patToken}
-                                                    onChange={(e) => setPatToken(e.target.value)}
-                                                    onKeyDown={(e) => e.key === 'Enter' && handlePATConnect()}
-                                                    className="w-full bg-black border border-zinc-800 h-12 px-4 text-sm text-white font-mono focus:outline-none focus:border-emerald-500 transition-all placeholder:text-zinc-700"
-                                                />
-                                                <p className="text-[10px] text-zinc-600 mt-2 font-medium">
-                                                    Required permissions: <span className="text-zinc-500">repo, workflow, admin:repo_hook</span>
-                                                </p>
+                                        <div className="space-y-6">
+                                            <div className="space-y-4">
+                                                <div>
+                                                    <label className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest mb-2 block">GitHub Username</label>
+                                                    <input
+                                                        type="text"
+                                                        placeholder="e.g. opendev-labs"
+                                                        value={patUsernameInput}
+                                                        onChange={(e) => setPatUsernameInput(e.target.value)}
+                                                        className="w-full bg-black border border-zinc-800 h-12 px-4 text-sm text-white font-mono focus:outline-none focus:border-emerald-500 transition-all placeholder:text-zinc-700"
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest mb-2 block">Personal Access Token</label>
+                                                    <input
+                                                        type="password"
+                                                        placeholder="ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+                                                        value={patToken}
+                                                        onChange={(e) => setPatToken(e.target.value)}
+                                                        onKeyDown={(e) => e.key === 'Enter' && handlePATConnect()}
+                                                        className="w-full bg-black border border-zinc-800 h-12 px-4 text-sm text-white font-mono focus:outline-none focus:border-emerald-500 transition-all placeholder:text-zinc-700"
+                                                    />
+                                                    <p className="text-[10px] text-zinc-600 mt-2 font-medium">
+                                                        Required permissions: <span className="text-zinc-500">repo, workflow, admin:repo_hook</span>
+                                                    </p>
+                                                </div>
                                             </div>
                                             <button
                                                 onClick={handlePATConnect}
-                                                disabled={patValidating || !patToken.trim()}
+                                                disabled={patValidating || !patToken.trim() || !patUsernameInput.trim()}
                                                 className="h-12 px-8 bg-emerald-500 text-black text-[11px] font-bold uppercase tracking-widest hover:bg-emerald-400 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                                             >
                                                 {patValidating ? (
@@ -404,7 +434,7 @@ export const ImportPage: React.FC<{
                                                 ) : (
                                                     <>
                                                         <Check size={14} />
-                                                        Connect with PAT
+                                                        Connect with Credentials
                                                     </>
                                                 )}
                                             </button>

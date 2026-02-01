@@ -1,0 +1,17 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- SyncStack Layered Icon -->
+  <!-- Top Layer -->
+  <path d="M256 120L416 200L256 280L96 200L256 120Z" fill="#00A3FF" fill-opacity="0.9"/>
+  <path d="M256 120L416 200L256 280L96 200L256 120Z" stroke="#00A3FF" stroke-width="8" stroke-linejoin="round"/>
+  
+  <!-- Middle Layer -->
+  <path d="M96 260L256 340L416 260V220L256 300L96 220V260Z" fill="#00A3FF" fill-opacity="0.6"/>
+  <path d="M96 260L256 340L416 260V220L256 300L96 220V260Z" stroke="#00A3FF" stroke-width="8" stroke-linejoin="round"/>
+  
+  <!-- Bottom Layer -->
+  <path d="M96 340L256 420L416 340V300L256 380L96 300V340Z" fill="#00A3FF" fill-opacity="0.3"/>
+  <path d="M96 340L256 420L416 340V300L256 380L96 300V340Z" stroke="#00A3FF" stroke-width="8" stroke-linejoin="round"/>
+  
+  <!-- Sync Arrow Accent -->
+  <path d="M380 280L410 310L380 340" stroke="#00A3FF" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

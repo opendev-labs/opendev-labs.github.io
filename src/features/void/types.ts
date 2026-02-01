@@ -59,6 +59,7 @@ export interface Template {
     author: string;
     imageUrl?: string;
     logoUrl?: string;
+    previewUrl?: string;
     features?: string[];
     category?: string;
 }

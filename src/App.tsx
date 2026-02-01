@@ -18,6 +18,7 @@ import Product from './pages/Product';
 import NexusDashboard from './pages/NexusDashboard';
 import { Navigate } from 'react-router-dom';
 import { Preloader } from './components/Preloader';
+import { DocsPage } from './features/void/components/pages/DocsPage';
 
 const VoidApp = lazy(() => import('./features/void/VoidApp'));
 const OfficeDashboard = lazy(() => import('./pages/OfficeDashboard').then(m => ({ default: m.OfficeDashboard })));
@@ -64,6 +65,7 @@ const AppRoutes = () => {
           <Route path="spoon" element={<Spoon />} />
           <Route path="products" element={<Products />} />
           <Route path="changelog" element={<Changelog />} />
+          <Route path="docs" element={<DocsPage />} />
           <Route path="product/:slug" element={<Product />} />
         </Route>
       </Routes>
