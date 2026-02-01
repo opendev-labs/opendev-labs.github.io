@@ -1,0 +1,3 @@
+[submodule "core/syncstack"]
+	path = core/syncstack
+	url = https://github.com/opendev-labs/syncstack.git
