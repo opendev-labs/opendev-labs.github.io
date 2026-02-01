@@ -147,7 +147,6 @@ const RepoList: React.FC<{
     onImport: (repo: Repository, projectName: string) => void
 }> = ({ repos, onImport }) => {
     const [searchTerm, setSearchTerm] = useState('');
-    const [configuringRepoId, setConfiguringRepoId] = useState<string | null>(null);
 
     const filteredRepos = useMemo(() =>
         repos.filter(repo => repo.name.toLowerCase().includes(searchTerm.toLowerCase())),
@@ -155,71 +154,46 @@ const RepoList: React.FC<{
     );
 
     return (
-        <div className="space-y-8">
-            <div className="relative group">
-                <SearchIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-600 group-focus-within:text-white transition-colors" />
+        <div className="space-y-6">
+            <div className="relative">
+                <SearchIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
                 <input
                     type="text"
                     placeholder="Search repositories..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full bg-zinc-950 border border-zinc-900 h-14 pl-12 pr-6 text-sm text-white font-medium focus:outline-none focus:border-white transition-all placeholder:text-zinc-700"
+                    className="w-full bg-zinc-950 border border-zinc-900 h-12 pl-12 pr-6 text-sm text-white focus:outline-none focus:border-white transition-all placeholder:text-zinc-700"
                 />
-                <div className="absolute right-4 top-1/2 -translate-y-1/2 hidden md:block">
-                    <span className="text-[9px] font-bold text-zinc-700 tracking-widest uppercase bg-zinc-900 px-2 py-1">Type to filter</span>
-                </div>
             </div>
 
-            <div className="grid grid-cols-1 gap-4">
+            <div className="border border-zinc-900 bg-zinc-950 divide-y divide-zinc-900">
                 {filteredRepos.map(repo => (
-                    <div key={repo.id} className="group relative bg-zinc-950 border border-zinc-900 p-8 transition-all hover:border-zinc-700">
-                        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-                            <div className="flex items-center gap-6">
-                                <div className="w-12 h-12 bg-black border border-zinc-800 flex items-center justify-center group-hover:bg-zinc-900 transition-colors">
-                                    <GitBranchIcon className="w-6 h-6 text-zinc-600 group-hover:text-white transition-colors" />
-                                </div>
-                                <div>
-                                    <div className="flex items-center gap-2 mb-2">
-                                        <h4 className="text-lg font-bold text-white tracking-tighter">{repo.name}</h4>
-                                        <span className="text-[9px] font-bold text-zinc-600 uppercase tracking-widest border border-zinc-900 px-2">PUBLIC</span>
-                                    </div>
-                                    <div className="flex items-center gap-4 text-zinc-500 text-[10px] font-bold uppercase tracking-widest">
-                                        <span className="flex items-center gap-1.5"><Zap size={10} /> Active</span>
-                                        <span className="opacity-40">Last Updated {repo.updatedAt}</span>
-                                    </div>
+                    <div key={repo.id} className="flex items-center justify-between p-4 hover:bg-zinc-900/50 transition-colors group">
+                        <div className="flex items-center gap-4">
+                            <div className="w-8 h-8 bg-black border border-zinc-900 flex items-center justify-center shrink-0">
+                                <GitBranchIcon className="w-4 h-4 text-zinc-600 group-hover:text-white transition-colors" />
+                            </div>
+                            <div>
+                                <h4 className="text-sm font-bold text-white tracking-tight">{repo.name}</h4>
+                                <div className="flex items-center gap-2 mt-0.5">
+                                    <span className="text-[10px] text-zinc-600 font-medium">{repo.updatedAt}</span>
+                                    <span className="w-1 h-1 rounded-full bg-zinc-800" />
+                                    <span className="text-[10px] text-zinc-600 font-medium">main</span>
                                 </div>
                             </div>
-                            {configuringRepoId !== repo.id && (
-                                <button
-                                    onClick={() => setConfiguringRepoId(repo.id)}
-                                    className="h-10 px-8 bg-white text-black text-[11px] font-bold uppercase tracking-widest hover:bg-zinc-200 transition-all hover:translate-x-1 active:translate-x-0"
-                                >
-                                    Import Node
-                                </button>
-                            )}
                         </div>
-                        {configuringRepoId === repo.id && (
-                            <div className="mt-8 pt-8 border-t border-zinc-900 animate-in fade-in slide-in-from-top-4">
-                                <ConfigureProjectForm
-                                    defaultName={repo.name}
-                                    onDeploy={(projectName) => {
-                                        onImport(repo, projectName);
-                                        setConfiguringRepoId(null);
-                                    }}
-                                    onCancel={() => setConfiguringRepoId(null)}
-                                />
-                            </div>
-                        )}
+                        <button
+                            onClick={() => onImport(repo, repo.name)}
+                            className="h-9 px-6 bg-white text-black text-[11px] font-bold uppercase tracking-widest hover:bg-zinc-200 transition-all opacity-0 group-hover:opacity-100"
+                        >
+                            Import
+                        </button>
                     </div>
                 ))}
 
                 {filteredRepos.length === 0 && (
-                    <div className="text-center py-32 border border-zinc-900 border-dashed">
-                        <div className="inline-flex items-center justify-center w-12 h-12 bg-zinc-900 rounded-none mb-6">
-                            <SearchIcon className="text-zinc-600" />
-                        </div>
-                        <h3 className="text-white font-bold uppercase tracking-widest text-xs mb-2">No repositories found</h3>
-                        <p className="text-zinc-600 text-xs">Try adjusting your search terms.</p>
+                    <div className="p-12 text-center">
+                        <p className="text-zinc-600 text-xs font-bold uppercase tracking-widest">No matching repositories</p>
                     </div>
                 )}
             </div>
@@ -231,295 +205,222 @@ export const ImportPage: React.FC<{
     onImportRepository: (repo: Repository, projectName: string) => void;
 }> = ({ onImportRepository }) => {
     const navigate = useNavigate();
-    const { loginWithGitHub, linkWithGitHub, user, isGithubConnected, logout, loginWithGoogle } = useAuth();
+    const { loginWithGitHub, linkWithGitHub, user, isGithubConnected, logout, githubUser } = useAuth();
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [collisionCode, setCollisionCode] = useState<string | null>(null);
+    const [selectedRepo, setSelectedRepo] = useState<Repository | null>(null);
 
-    // PAT Token State
-    const [patToken, setPatToken] = useState<string>('');
-    const [patUsernameInput, setPatUsernameInput] = useState<string>('');
-    const [isPATConnected, setIsPATConnected] = useState(false);
-    const [patValidating, setPatValidating] = useState(false);
-    const [patUsername, setPatUsername] = useState<string | null>(null);
-    const [showPATSection, setShowPATSection] = useState(true);
+    // Configuration state for Step 2
+    const [projectName, setProjectName] = useState('');
+    const [framework, setFramework] = useState('nextjs');
+    const [isDeploying, setIsDeploying] = useState(false);
 
-    // Check if PAT is already stored
-    useEffect(() => {
-        const storedPAT = githubPATService.getPAT();
-        const storedUsername = githubPATService.getUsername();
-        if (storedPAT) {
-            validateStoredPAT(storedPAT);
-        }
-        if (storedUsername) {
-            setPatUsernameInput(storedUsername);
-        }
-    }, []);
-
-    const validateStoredPAT = async (token: string) => {
-        const result = await githubPATService.validatePAT(token);
-        if (result.valid) {
-            setIsPATConnected(true);
-            setPatUsername(result.username || null);
-        }
+    const handleInitialImport = (repo: Repository) => {
+        setSelectedRepo(repo);
+        setProjectName(repo.name);
     };
 
-    const handlePATConnect = async () => {
-        if (!patUsernameInput.trim()) {
-            setError('Please enter your GitHub Username');
-            return;
-        }
-        if (!patToken.trim()) {
-            setError('Please enter a GitHub Personal Access Token');
-            return;
-        }
-
-        setPatValidating(true);
-        setError(null);
-
-        const result = await githubPATService.validatePAT(patToken);
-
-        if (result.valid) {
-            // Check if username matches
-            if (result.username?.toLowerCase() !== patUsernameInput.toLowerCase()) {
-                setError(`The token belong to @${result.username}, but you entered @${patUsernameInput}. Please match your identity.`);
-                setPatValidating(false);
-                return;
-            }
-
-            githubPATService.setPAT(patToken);
-            githubPATService.setUsername(patUsernameInput);
-            setIsPATConnected(true);
-            setPatUsername(result.username || null);
-            setPatToken(''); // Clear input for security
-        } else {
-            setError(result.error || 'Invalid PAT token');
-        }
-
-        setPatValidating(false);
-    };
-
-    const handlePATDisconnect = () => {
-        githubPATService.clearPAT();
-        setIsPATConnected(false);
-        setPatUsername(null);
+    const handleFinalDeploy = async () => {
+        if (!selectedRepo || !projectName.trim()) return;
+        setIsDeploying(true);
+        setTimeout(() => {
+            onImportRepository(selectedRepo, projectName);
+            setIsDeploying(false);
+        }, 1500);
     };
 
     const handleConnect = async () => {
         setIsLoading(true);
         setError(null);
         try {
-            if (user) {
-                // If already logged in (e.g. with Google), use linking to avoid collision
-                await linkWithGitHub();
-            } else {
-                // Standard login
-                await loginWithGitHub();
-            }
+            if (user) await linkWithGitHub();
+            else await loginWithGitHub();
         } catch (e: any) {
-            console.error("Connection Error:", e);
-            if (e.code === 'auth/account-exists-with-different-credential' || e.code === 'auth/credential-already-in-use') {
-                setError('Your email is already registered with another provider (likely Google). Please switch accounts to continue.');
-            } else {
-                setError(e.message || 'Authentication failed.');
-            }
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    const handleSwitchAccount = async () => {
-        setIsLoading(true);
-        try {
-            await logout();
-            await loginWithGitHub();
-        } catch (e: any) {
-            console.error("Switch Error:", e);
-            setError('Failed to switch accounts.');
+            setError(e.message || 'Authentication failed.');
         } finally {
             setIsLoading(false);
         }
     };
 
     return (
-        <MotionDiv initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="max-w-4xl mx-auto py-20 px-6">
-            <button onClick={() => navigate('/void/new')} className="group flex items-center gap-3 text-[10px] font-bold uppercase tracking-widest text-zinc-600 hover:text-white mb-16 transition-all">
-                <span className="group-hover:-translate-x-1 transition-transform tracking-normal">&larr; [ ESC ]</span>
-                Return to Nexus
-            </button>
+        <div className="max-w-6xl mx-auto py-12 md:py-24 px-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
+            {/* Nav Context */}
+            <div className="flex items-center justify-between mb-16">
+                <button onClick={() => navigate('/void/new')} className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 hover:text-white transition-colors">
+                    &larr; Back to Selection
+                </button>
+            </div>
 
-            <div className="space-y-16">
-                <div>
-                    <div className="flex items-center gap-3 mb-6">
-                        <div className="h-[1px] w-12 bg-white/20"></div>
-                        <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-zinc-500">Import Projects</span>
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
+                {/* Left Column: UI Context */}
+                <div className="lg:col-span-5">
+                    <div className="sticky top-24">
+                        <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/5 border border-white/10 text-[9px] font-bold text-zinc-500 mb-8 uppercase tracking-[0.3em]">
+                            <Zap size={12} className="text-emerald-500" />
+                            <span>Vercel-Grade // Import Protocol</span>
+                        </div>
+                        <h1 className="text-6xl font-bold tracking-tighter mb-6 lowercase leading-[0.9]">
+                            {selectedRepo ? "finalize" : "import"}<br /><span className="text-zinc-600">project.</span>
+                        </h1>
+                        <p className="text-zinc-500 text-lg leading-relaxed max-w-sm mb-12">
+                            {selectedRepo
+                                ? "Configure your project settings before we manifest the infrastructure nodes."
+                                : "Connect your source provider to synchronize your existing repositories with the OpenDev Mesh."}
+                        </p>
+
+                        {!isGithubConnected && (
+                            <div className="space-y-4">
+                                <button
+                                    onClick={handleConnect}
+                                    disabled={isLoading}
+                                    className="h-14 w-full bg-white text-black text-xs font-bold uppercase tracking-[0.2em] hover:bg-zinc-200 transition-all flex items-center justify-center gap-3"
+                                >
+                                    <Github size={18} />
+                                    {isLoading ? "Synchronizing..." : "Continue with GitHub"}
+                                </button>
+                                {error && <p className="text-[10px] text-red-500 font-bold uppercase tracking-widest text-center mt-4">{error}</p>}
+                            </div>
+                        )}
+
+                        {isGithubConnected && !selectedRepo && (
+                            <div className="flex items-center gap-4 p-4 bg-zinc-950 border border-zinc-900 mb-8">
+                                <div className="w-10 h-10 bg-black border border-zinc-800 flex items-center justify-center overflow-hidden">
+                                    <img src={githubUser?.avatar_url} alt="Profile" className="w-full h-full opacity-80" />
+                                </div>
+                                <div className="flex-1">
+                                    <h4 className="text-sm font-bold text-white">@{githubUser?.login}</h4>
+                                    <p className="text-[10px] text-zinc-600 font-bold uppercase tracking-widest">GitHub Connected (Auth OK)</p>
+                                </div>
+                                <button onClick={logout} className="text-[9px] font-bold text-zinc-700 hover:text-white uppercase tracking-widest transition-colors">Disconnect</button>
+                            </div>
+                        )}
                     </div>
-                    <h1 className="text-5xl md:text-6xl font-bold text-white tracking-tighter mb-4">Select projects <br /><span className="text-zinc-600 italic font-serif">to synchronize.</span></h1>
-                    <p className="text-zinc-500 text-lg max-w-xl font-medium leading-relaxed"> Connect your GitHub account to import and manage your projects on OpenDev. </p>
                 </div>
 
-                <div className="relative">
-                    <AnimatePresence mode='wait'>
+                {/* Right Column: Interaction Surface */}
+                <div className="lg:col-span-7">
+                    <AnimatePresence mode="wait">
                         {!isGithubConnected ? (
-                            <MotionDiv
-                                key="guest"
-                                initial={{ opacity: 0, y: 10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, y: -10 }}
-                                className="space-y-8"
-                            >
-                                {/* GitHub PAT Token Section (Recommended) */}
-                                <div className="bg-zinc-950 border border-emerald-500/30 p-8 relative overflow-hidden">
-                                    {/* Recommended Badge */}
-                                    <div className="absolute top-0 right-0 px-4 py-1.5 bg-emerald-500 text-black text-[9px] font-bold uppercase tracking-widest">
-                                        Recommended 2026
-                                    </div>
-
-                                    <div className="mb-6">
-                                        <div className="flex items-center gap-3 mb-4">
-                                            <div className="w-12 h-12 bg-black border border-emerald-500/30 flex items-center justify-center">
-                                                <Key className="text-emerald-500" size={20} />
-                                            </div>
-                                            <div>
-                                                <h3 className="text-xl font-bold text-white tracking-tighter">GitHub Personal Access Token</h3>
-                                                <p className="text-[10px] text-emerald-500 font-bold uppercase tracking-widest">Secure & Modern</p>
-                                            </div>
-                                        </div>
-                                        <p className="text-sm text-zinc-500 font-medium">
-                                            Use a PAT for secure, automated repository management. Get yours from{' '}
-                                            <a href="https://github.com/settings/tokens/new" target="_blank" rel="noopener noreferrer" className="text-emerald-500 hover:text-emerald-400 underline">
-                                                GitHub Settings → Tokens
-                                            </a>
-                                        </p>
-                                    </div>
-
-                                    {!isPATConnected ? (
-                                        <div className="space-y-6">
-                                            <div className="space-y-4">
-                                                <div>
-                                                    <label className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest mb-2 block">GitHub Username</label>
-                                                    <input
-                                                        type="text"
-                                                        placeholder="e.g. opendev-labs"
-                                                        value={patUsernameInput}
-                                                        onChange={(e) => setPatUsernameInput(e.target.value)}
-                                                        className="w-full bg-black border border-zinc-800 h-12 px-4 text-sm text-white font-mono focus:outline-none focus:border-emerald-500 transition-all placeholder:text-zinc-700"
-                                                    />
-                                                </div>
-                                                <div>
-                                                    <label className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest mb-2 block">Personal Access Token</label>
-                                                    <input
-                                                        type="password"
-                                                        placeholder="ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-                                                        value={patToken}
-                                                        onChange={(e) => setPatToken(e.target.value)}
-                                                        onKeyDown={(e) => e.key === 'Enter' && handlePATConnect()}
-                                                        className="w-full bg-black border border-zinc-800 h-12 px-4 text-sm text-white font-mono focus:outline-none focus:border-emerald-500 transition-all placeholder:text-zinc-700"
-                                                    />
-                                                    <p className="text-[10px] text-zinc-600 mt-2 font-medium">
-                                                        Required permissions: <span className="text-zinc-500">repo, workflow, admin:repo_hook</span>
-                                                    </p>
-                                                </div>
-                                            </div>
-                                            <button
-                                                onClick={handlePATConnect}
-                                                disabled={patValidating || !patToken.trim() || !patUsernameInput.trim()}
-                                                className="h-12 px-8 bg-emerald-500 text-black text-[11px] font-bold uppercase tracking-widest hover:bg-emerald-400 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                                            >
-                                                {patValidating ? (
-                                                    <>
-                                                        <div className="w-4 h-4 border-2 border-black/20 border-t-black animate-spin"></div>
-                                                        Validating...
-                                                    </>
-                                                ) : (
-                                                    <>
-                                                        <Check size={14} />
-                                                        Connect with Credentials
-                                                    </>
-                                                )}
-                                            </button>
-                                        </div>
-                                    ) : (
-                                        <div className="flex items-center justify-between p-4 bg-emerald-500/10 border border-emerald-500/20">
-                                            <div className="flex items-center gap-3">
-                                                <Check className="text-emerald-500" size={20} />
-                                                <div>
-                                                    <p className="text-sm font-bold text-white">PAT Connected</p>
-                                                    <p className="text-[10px] text-emerald-500 font-mono">@{patUsername}</p>
-                                                </div>
-                                            </div>
-                                            <button
-                                                onClick={handlePATDisconnect}
-                                                className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 hover:text-white transition-colors"
-                                            >
-                                                Disconnect
-                                            </button>
-                                        </div>
-                                    )}
+                            <MotionDiv key="guest" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="p-12 border border-zinc-900 bg-zinc-950/50 flex flex-col items-center justify-center text-center">
+                                <div className="w-16 h-16 border border-zinc-800 flex items-center justify-center mb-8 bg-black">
+                                    <Github className="text-zinc-700" size={32} />
                                 </div>
-
-                                {/* Divider */}
-                                <div className="relative">
-                                    <div className="absolute inset-0 flex items-center">
-                                        <div className="w-full border-t border-zinc-900"></div>
-                                    </div>
-                                    <div className="relative flex justify-center text-xs uppercase">
-                                        <span className="bg-black px-4 text-zinc-600 font-bold tracking-widest">OR USE OAUTH</span>
-                                    </div>
-                                </div>
-
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                    <div className="bg-zinc-950 border border-zinc-900 p-8 flex flex-col justify-between h-64 hover:border-zinc-700 transition-all group">
+                                <h3 className="text-sm font-bold text-white uppercase tracking-widest mb-2">Awaiting Authentication</h3>
+                                <p className="text-zinc-600 text-[11px] leading-relaxed max-w-xs mb-8 uppercase tracking-widest opacity-60">Please connect your git provider to access the neural project registry.</p>
+                            </MotionDiv>
+                        ) : !selectedRepo ? (
+                            <MotionDiv key="repo-list" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
+                                <ConnectedRepoViewWrapper onImport={handleInitialImport} />
+                            </MotionDiv>
+                        ) : (
+                            <MotionDiv key="config" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-12">
+                                <div className="p-8 border border-zinc-900 bg-zinc-950">
+                                    <div className="flex items-center gap-4 mb-8">
+                                        <div className="w-12 h-12 bg-black border border-zinc-800 flex items-center justify-center">
+                                            <GitBranchIcon className="w-6 h-6 text-white" />
+                                        </div>
                                         <div>
-                                            <div className="w-12 h-12 bg-black border border-zinc-800 flex items-center justify-center mb-6 group-hover:bg-zinc-900 transition-colors">
-                                                <GitHubIcon className="text-zinc-400 group-hover:text-white transition-colors" />
-                                            </div>
-                                            <h3 className="text-xl font-bold text-white tracking-tighter mb-2">GitHub OAuth</h3>
-                                            <p className="text-sm text-zinc-500 font-medium">Connect your GitHub account via OAuth to access your repositories.</p>
+                                            <h4 className="text-lg font-bold text-white tracking-tight">{selectedRepo.name}</h4>
+                                            <p className="text-xs text-zinc-600 uppercase tracking-widest font-bold">Selected Repository</p>
                                         </div>
+                                        <button onClick={() => setSelectedRepo(null)} className="ml-auto text-[10px] font-bold text-zinc-700 hover:text-white uppercase tracking-widest">Switch</button>
+                                    </div>
+
+                                    <div className="space-y-8">
+                                        <div className="space-y-3">
+                                            <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest block">Project Name</label>
+                                            <input
+                                                type="text"
+                                                value={projectName}
+                                                onChange={(e) => setProjectName(e.target.value)}
+                                                className="w-full bg-black border border-zinc-900 h-12 px-4 text-sm text-white focus:outline-none focus:border-white transition-all"
+                                            />
+                                        </div>
+
+                                        <div className="space-y-3">
+                                            <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest block">Framework Preset</label>
+                                            <select
+                                                value={framework}
+                                                onChange={(e) => setFramework(e.target.value)}
+                                                className="w-full bg-black border border-zinc-900 h-12 px-4 text-sm text-white focus:outline-none focus:border-white transition-all appearance-none"
+                                            >
+                                                <option value="nextjs">Next.js</option>
+                                                <option value="vite">Vite (React)</option>
+                                                <option value="node">Node.js</option>
+                                                <option value="remix">Remix</option>
+                                                <option value="astro">Astro</option>
+                                            </select>
+                                        </div>
+
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div className="space-y-3 opacity-30 cursor-not-allowed">
+                                                <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest block">Build Command</label>
+                                                <div className="bg-zinc-900/50 border border-zinc-900 h-12 px-4 flex items-center text-sm text-zinc-700">npm run build</div>
+                                            </div>
+                                            <div className="space-y-3 opacity-30 cursor-not-allowed">
+                                                <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest block">Output Dir</label>
+                                                <div className="bg-zinc-900/50 border border-zinc-900 h-12 px-4 flex items-center text-sm text-zinc-700">dist / .next</div>
+                                            </div>
+                                        </div>
+
                                         <button
-                                            onClick={handleConnect}
-                                            disabled={isLoading}
-                                            className="h-12 w-full bg-white text-black text-[11px] font-bold uppercase tracking-widest hover:bg-zinc-200 transition-all flex items-center justify-center gap-2 group/btn"
+                                            onClick={handleFinalDeploy}
+                                            disabled={isDeploying || !projectName.trim()}
+                                            className="h-14 w-full bg-emerald-500 text-black text-xs font-bold uppercase tracking-[0.2em] hover:bg-emerald-400 transition-all flex items-center justify-center gap-3 mt-8 disabled:bg-zinc-900 disabled:text-zinc-600"
                                         >
-                                            {isLoading ? (
-                                                <div className="w-4 h-4 border-2 border-zinc-300 border-t-black animate-spin"></div>
+                                            {isDeploying ? (
+                                                <>
+                                                    <div className="w-4 h-4 border-2 border-black/20 border-t-black animate-spin" />
+                                                    Initializing Nodes...
+                                                </>
                                             ) : (
-                                                <>Connect GitHub <ArrowRight size={14} className="group-hover/btn:translate-x-1 transition-transform" /></>
+                                                <>Manifest Project</>
                                             )}
                                         </button>
                                     </div>
-
-                                    <div className="bg-zinc-950 border border-zinc-900 p-8 flex flex-col justify-center items-center text-center h-64 opacity-40">
-                                        <AlertCircle size={32} className="text-zinc-700 mb-4" />
-                                        <h3 className="text-sm font-bold text-zinc-500 uppercase tracking-widest mb-1">Other Carriers</h3>
-                                        <p className="text-[10px] text-zinc-700 uppercase tracking-widest font-bold">Encrypted / Off-Grid</p>
-                                    </div>
                                 </div>
-
-                                {error && (
-                                    <SimpleAuthAlert
-                                        message={error}
-                                        onRetry={handleConnect}
-                                        onSwitchAccount={handleSwitchAccount}
-                                    />
-                                )}
-                            </MotionDiv>
-                        ) : (
-                            <MotionDiv
-                                key="auth"
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                            >
-                                <ConnectedRepoView
-                                    onDisconnect={logout}
-                                    onImport={onImportRepository}
-                                />
                             </MotionDiv>
                         )}
                     </AnimatePresence>
                 </div>
             </div>
-        </MotionDiv>
+        </div>
     );
+};
+
+const ConnectedRepoViewWrapper: React.FC<{
+    onImport: (repo: Repository) => void
+}> = ({ onImport }) => {
+    const { fetchRepositories, user } = useAuth();
+    const [repos, setRepos] = useState<Repository[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        let isMounted = true;
+        const loadRepos = async () => {
+            if (!user?.uid) return;
+            setLoading(true);
+            try {
+                const data = await fetchRepositories();
+                if (isMounted) setRepos(data);
+            } catch (e) {
+                console.error("Repo fetch error", e);
+            } finally {
+                if (isMounted) setLoading(false);
+            }
+        };
+        loadRepos();
+        return () => { isMounted = false; };
+    }, [fetchRepositories, user?.uid]);
+
+    if (loading) {
+        return (
+            <div className="p-20 border border-zinc-900 bg-zinc-950/50 flex flex-col items-center justify-center">
+                <div className="w-10 h-10 border-2 border-white/20 border-t-white animate-spin mb-4" />
+                <span className="text-[10px] font-bold text-zinc-600 uppercase tracking-[0.3em]">Synchronizing Registry...</span>
+            </div>
+        );
+    }
+
+    return <RepoList repos={repos} onImport={(repo) => onImport(repo)} />;
 };

@@ -19,7 +19,7 @@ import NexusDashboard from './pages/NexusDashboard';
 import { Preloader } from './components/Preloader';
 import { DocsPage } from './features/void/components/pages/DocsPage';
 import { MissionControl } from './pages/MissionControl';
-import { VoidOfficeCockpit, LamaDBOfficeCockpit, SyncStackOfficeCockpit } from './pages/OfficeSubappWrappers';
+import { UnifiedOfficeCockpit, LamaDBOfficeCockpit, SyncStackOfficeCockpit } from './pages/OfficeSubappWrappers';
 
 const lazyWithRetry = (componentImport: () => Promise<any>) =>
   lazy(async () => {
@@ -77,9 +77,9 @@ const AppRoutes = () => {
               <OfficeDashboard />
             </Suspense>
           }>
-            <Route index element={<MissionControl />} />
+            <Route index element={<UnifiedOfficeCockpit />} />
             <Route path="syncstack" element={<SyncStackOfficeCockpit />} />
-            <Route path="void" element={<VoidOfficeCockpit />} />
+            <Route path="void" element={<UnifiedOfficeCockpit />} />
             <Route path="lamadb" element={<LamaDBOfficeCockpit />} />
           </Route>
           <Route path="dashboard" element={<Navigate to="/office" replace />} />

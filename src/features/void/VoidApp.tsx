@@ -1,29 +1,29 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { Routes, Route, useNavigate, useParams, useLocation } from 'react-router-dom';
 import { Header } from '../../components/Header';
 import { Footer } from '../../components/Footer';
-import { Dashboard } from './components/Dashboard';
-import { ProjectDetailView } from './components/ProjectDetailView';
+const Dashboard = React.lazy(() => import('./components/Dashboard').then(m => ({ default: m.Dashboard })));
+const ProjectDetailView = React.lazy(() => import('./components/ProjectDetailView').then(m => ({ default: m.ProjectDetailView })));
+const DocsPage = React.lazy(() => import('./components/pages/DocsPage').then(m => ({ default: m.DocsPage })));
+const NewProjectPage = React.lazy(() => import('./components/pages/NewProjectPage').then(m => ({ default: m.NewProjectPage })));
+const PricingPage = React.lazy(() => import('./components/pages/PricingPage').then(m => ({ default: m.PricingPage })));
+const UpgradePage = React.lazy(() => import('./components/pages/UpgradePage').then(m => ({ default: m.UpgradePage })));
+const VerifyEmailPage = React.lazy(() => import('./components/pages/VerifyEmailPage').then(m => ({ default: m.VerifyEmailPage })));
+const AuthPage = React.lazy(() => import('./components/pages/AuthPage').then(m => ({ default: m.AuthPage })));
+const HomePage = React.lazy(() => import('./components/pages/HomePage').then(m => ({ default: m.HomePage })));
+const UsagePage = React.lazy(() => import('./components/pages/UsagePage').then(m => ({ default: m.UsagePage })));
+const NotFoundPage = React.lazy(() => import('./components/pages/NotFoundPage').then(m => ({ default: m.NotFoundPage })));
+const CLIPage = React.lazy(() => import('./components/pages/CLIPage').then(m => ({ default: m.CLIPage })));
+const SettingsPage = React.lazy(() => import('./components/pages/SettingsPage').then(m => ({ default: m.SettingsPage })));
+const DeploymentPage = React.lazy(() => import('./components/pages/DeploymentPage').then(m => ({ default: m.DeploymentPage })));
 import type { Project, Template, Deployment, GitProvider, Repository, Workflow, DeploymentPlatform } from './types';
 import { DeploymentStatus, DatabaseType, DatabaseStatus } from './types';
 import { mockProjects, generateInitialProjectData, availableIntegrations } from './constants';
-import { DocsPage } from './components/pages/DocsPage';
-import { NewProjectPage } from './components/pages/NewProjectPage';
-import { PricingPage } from './components/pages/PricingPage';
-import { UpgradePage } from './components/pages/UpgradePage';
-import { VerifyEmailPage } from './components/pages/VerifyEmailPage';
-import { AuthPage } from './components/pages/AuthPage';
-import { HomePage } from './components/pages/HomePage';
-import { UsagePage } from './components/pages/UsagePage';
-import { NotFoundPage } from './components/pages/NotFoundPage';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import { useAuth } from './hooks/useAuth';
 import { GlobalLoader } from './components/common/GlobalLoader';
 import { StatusFooter } from './components/common/StatusFooter';
-import { CLIPage } from './components/pages/CLIPage';
-import { SettingsPage } from './components/pages/SettingsPage';
 import { GitHubCallbackHandler } from './components/auth/GitHubCallbackHandler';
-import { DeploymentPage } from './components/pages/DeploymentPage';
 import { REAL_TEMPLATES } from './real_templates';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -239,37 +239,39 @@ const AppContent: React.FC = () => {
         <div className="min-h-screen bg-black font-sans flex flex-col selection:bg-white selection:text-black">
             {!isTars && <Header />}
             <main className={`flex-grow relative z-10 flex flex-col ${isTars ? 'h-screen' : 'container mx-auto px-4 py-8'}`}>
-                <AnimatePresence mode="wait">
-                    <MotionDiv
-                        key={location.pathname}
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
-                        transition={{ duration: 0.15 }}
-                        className="flex-grow flex flex-col"
-                    >
-                        <Routes>
-                            <Route index element={isAuthenticated ? <Dashboard projects={projects} onUpdateProject={handleUpdateProject} /> : <HomePage />} />
-                            <Route path="dashboard" element={<Dashboard projects={projects} onUpdateProject={handleUpdateProject} />} />
-                            <Route path="new/*" element={
-                                <NewProjectPage
-                                    onDeployTemplate={handleDeployTemplate}
-                                    onImportRepository={handleImportRepository}
-                                    onDeployWorkflow={handleDeployWorkflow}
-                                />
-                            } />
-                            <Route path="projects/:id" element={<ProjectDetailWrapper projects={projects} isLoading={isLoading} onUpdateProject={handleUpdateProject} />} />
-                            <Route path="deploy/:id" element={<DeploymentPage projectId="" />} />
-                            <Route path="docs/*" element={<DocsPage />} />
-                            <Route path="pricing" element={<PricingPage />} />
-                            <Route path="upgrade" element={<UpgradePage />} />
-                            <Route path="usage" element={<UsagePage />} />
-                            <Route path="settings" element={<SettingsPage />} />
-                            <Route path="cli" element={<CLIPage projects={projects} onUpdateProject={handleUpdateProject} />} />
-                            <Route path="*" element={<NotFoundPage />} />
-                        </Routes>
-                    </MotionDiv>
-                </AnimatePresence>
+                <Suspense fallback={<GlobalLoader />}>
+                    <AnimatePresence mode="wait">
+                        <MotionDiv
+                            key={location.pathname}
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -10 }}
+                            transition={{ duration: 0.15 }}
+                            className="flex-grow flex flex-col"
+                        >
+                            <Routes>
+                                <Route index element={isAuthenticated ? <Dashboard projects={projects} onUpdateProject={handleUpdateProject} /> : <HomePage />} />
+                                <Route path="dashboard" element={<Dashboard projects={projects} onUpdateProject={handleUpdateProject} />} />
+                                <Route path="new/*" element={
+                                    <NewProjectPage
+                                        onDeployTemplate={handleDeployTemplate}
+                                        onImportRepository={handleImportRepository}
+                                        onDeployWorkflow={handleDeployWorkflow}
+                                    />
+                                } />
+                                <Route path="projects/:id" element={<ProjectDetailWrapper projects={projects} isLoading={isLoading} onUpdateProject={handleUpdateProject} />} />
+                                <Route path="deploy/:id" element={<DeploymentPage projectId="" />} />
+                                <Route path="docs/*" element={<DocsPage />} />
+                                <Route path="pricing" element={<PricingPage />} />
+                                <Route path="upgrade" element={<UpgradePage />} />
+                                <Route path="usage" element={<UsagePage />} />
+                                <Route path="settings" element={<SettingsPage />} />
+                                <Route path="cli" element={<CLIPage projects={projects} onUpdateProject={handleUpdateProject} />} />
+                                <Route path="*" element={<NotFoundPage />} />
+                            </Routes>
+                        </MotionDiv>
+                    </AnimatePresence>
+                </Suspense>
             </main>
             {!isTars && <Footer />}
             {isProjectDetail && <StatusFooter />}
