@@ -6,7 +6,7 @@
 import { githubPATService } from './githubPATService';
 import { TemplateGenerator } from './templateGenerator';
 
-export type DeploymentPlatform = 'github' | 'vercel' | 'firebase' | 'huggingface';
+export type DeploymentPlatform = 'github' | 'vercel' | 'firebase' | 'huggingface' | 'syncstack';
 
 export interface DeploymentConfig {
     templateId: string;
@@ -53,6 +53,8 @@ class TemplateDeploymentService {
                     return await this.deployToFirebase(config.projectName, files, config.isPrivate);
                 case 'huggingface':
                     return await this.deployToHuggingFace(config.projectName, files, config.isPrivate);
+                case 'syncstack':
+                    return await this.deployToSyncStack(config.projectName, files, config.isPrivate);
                 default:
                     throw new Error(`Unsupported platform: ${config.platform}`);
             }
@@ -131,6 +133,42 @@ class TemplateDeploymentService {
      */
     isPATConfigured(): boolean {
         return !!githubPATService.getPAT();
+    }
+
+    /**
+     * Deploy to SyncStack + LamaDB
+     */
+    private async deployToSyncStack(projectName: string, files: any[], isPrivate?: boolean): Promise<DeploymentResult> {
+        try {
+            // In a real scenario, this would send files to the local SyncStack agent
+            // OR upload them directly to LamaDB Storage/Hosting.
+            console.log(`SyncStack: Deploying ${projectName} to OpenDev Mesh...`);
+            await new Promise(resolve => setTimeout(resolve, 3000));
+
+            return {
+                success: true,
+                liveUrl: `https://${projectName.toLowerCase().replace(/[^a-z0-9-]/g, '-')}.opendev.app`,
+            };
+        } catch (error) {
+            return {
+                success: false,
+                error: error instanceof Error ? error.message : 'SyncStack deployment failed'
+            };
+        }
+    }
+
+    /**
+     * Convert SyncStack Key to Void/LamaDB session keys
+     */
+    async convertSyncStackKey(syncStackKey: string): Promise<{ voidKey: string, lamaDBKey: string }> {
+        // Simulate derivation of service keys from a master SyncStack key
+        console.log('Converting SyncStack key to service-specific keys...');
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
+        return {
+            voidKey: `void_${syncStackKey.substring(0, 8)}_${Math.random().toString(36).substring(7)}`,
+            lamaDBKey: `lamadb_${syncStackKey.substring(0, 8)}_${Math.random().toString(36).substring(7)}`
+        };
     }
 }
 

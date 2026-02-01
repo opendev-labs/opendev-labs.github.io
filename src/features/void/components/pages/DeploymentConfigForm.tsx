@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Github, Rocket, Flame, Box, Check } from 'lucide-react';
 import { AnimatedLoaderIcon } from '../common/AnimatedLoaderIcon';
 
-export type DeploymentPlatform = 'github' | 'vercel' | 'firebase' | 'huggingface';
+export type DeploymentPlatform = 'github' | 'vercel' | 'firebase' | 'huggingface' | 'syncstack';
 
 interface DeploymentConfigFormProps {
     templateName: string;
@@ -42,6 +42,14 @@ const platforms = [
         description: 'ML-powered hosting',
         recommended: false,
         color: 'text-yellow-500'
+    },
+    {
+        id: 'syncstack' as DeploymentPlatform,
+        name: 'SyncStack',
+        icon: Rocket,
+        description: 'Native OpenDev Cloud',
+        recommended: true,
+        color: 'text-emerald-500'
     }
 ];
 
@@ -68,6 +76,8 @@ export const DeploymentConfigForm: React.FC<DeploymentConfigFormProps> = ({
                 return `${urlFriendlyName}.web.app`;
             case 'huggingface':
                 return `${urlFriendlyName}.hf.space`;
+            case 'syncstack':
+                return `${urlFriendlyName}.opendev.app`;
             default:
                 return `${urlFriendlyName}.opendev.app`;
         }

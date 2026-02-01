@@ -21,8 +21,10 @@ export const NewProjectPage: React.FC<NewProjectPageProps> = ({
     onImportRepository,
     onDeployWorkflow
 }) => {
+    const isTars = window.location.pathname.includes('/tars');
+
     return (
-        <div className="pb-32 px-6">
+        <div className={isTars ? "h-full" : "pb-32 px-6"}>
             <Routes>
                 <Route index element={<NewProjectLanding />} />
                 <Route path="import" element={<ImportPage onImportRepository={onImportRepository} />} />

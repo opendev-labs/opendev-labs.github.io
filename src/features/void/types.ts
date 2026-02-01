@@ -228,6 +228,8 @@ export interface Message {
     id: number;
     role: 'user' | 'tars';
     content: string;
+    intentAnalysis?: string;
+    commands?: string[];
     generationInfo?: GenerationInfo;
 }
 

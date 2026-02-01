@@ -101,7 +101,7 @@ export default function Home() {
                         transition={{ delay: 0.1 }}
                         className="text-5xl md:text-8xl lg:text-9xl font-bold tracking-tighter mb-10 text-white leading-[0.8] lowercase"
                     >
-                        intelligent<br />ecosystem.
+                        gh-face.<br />protocol.
                     </motion.h1>
 
                     <motion.p
@@ -110,7 +110,7 @@ export default function Home() {
                         transition={{ delay: 0.2 }}
                         className="text-lg md:text-xl text-zinc-400 max-w-2xl mx-auto mb-14 font-medium leading-relaxed uppercase tracking-widest opacity-80"
                     >
-                        opendev-labs builds the sovereign primitives for high-fidelity autonomy and distributed state.
+                        Unified state machine for high-fidelity autonomy and distributed sovereign clusters.
                     </motion.p>
 
                     <motion.div
@@ -161,10 +161,10 @@ export default function Home() {
                 <div className="max-w-[1400px] mx-auto px-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-1 ring-1 ring-zinc-900 rounded-none overflow-hidden">
                         {[
-                            { title: "Void Hub", desc: "High-performance environment for neural orchestration.", icon: Terminal, path: "/void" },
-                            { title: "LamaDB", desc: "Native browser database for high-velocity local state.", icon: Database, path: "/lamadb" },
-                            { title: "Q-Cloud", desc: "Quantum-ready serverless infra with sub-atomic latency.", icon: Globe, path: "/q-cloud" },
-                            { title: "SyncStack", desc: "Distributed synchronization layer for sovereign clusters.", icon: Box, path: "/syncstack" }
+                            { title: "TARS Workspace", desc: "Agentic full-screen workspace for code materialization.", icon: Cpu, path: "/void/new/tars" },
+                            { title: "Void Hub", desc: "Neural orchestration and project lifecycle management.", icon: Terminal, path: "/void" },
+                            { title: "LamaDB", desc: "Native browser database for local-first state persistence.", icon: Database, path: "/lamadb" },
+                            { title: "SyncStack", desc: "0ms latency tunnel for web-to-desktop synchronization.", icon: Box, path: "/syncstack" }
                         ].map((item, i) => (
                             <motion.button
                                 key={i}

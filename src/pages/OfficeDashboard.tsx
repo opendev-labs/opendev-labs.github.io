@@ -42,20 +42,55 @@ const OfficeDashboard: React.FC = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const { user, logout } = useAuth();
+    const [localAgentOnline, setLocalAgentOnline] = useState(false);
 
-    const SidebarItem = ({ icon: Icon, label, path, active }: any) => (
-        <button
-            onClick={() => navigate(path)}
-            className={`w-full flex items-center gap-3 px-4 py-3 text-[11px] font-bold uppercase tracking-widest transition-colors ${active
-                ? 'bg-zinc-900 text-white border-r-2 border-white'
-                : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-900/50'
-                } ${isCollapsed ? 'justify-center' : ''}`}
-            title={isCollapsed ? label : ''}
-        >
-            <Icon size={16} />
-            {!isCollapsed && <span>{label}</span>}
-        </button>
-    );
+    // Initial agent handshake
+    useState(() => {
+        const checkAgent = async () => {
+            try {
+                const res = await fetch('http://localhost:8080/health').catch(() => ({ ok: false }));
+                setLocalAgentOnline(res.ok);
+            } catch (e) {
+                setLocalAgentOnline(false);
+            }
+        };
+        checkAgent();
+        const interval = setInterval(checkAgent, 30000);
+        return () => clearInterval(interval);
+    });
+
+    const SidebarItem = ({ icon: Icon, label, path, active, id }: any) => {
+        const handleClick = () => {
+            if (id === 'syncstack' && localAgentOnline) {
+                // Trigger local app focus/open via a custom protocol or just inform the user
+                // For now, we still navigate normally but could provide a deep link
+                window.location.href = 'syncstack://open';
+                // Fallback to normal navigation after a delay if protocol fails
+                setTimeout(() => navigate(path), 500);
+            } else {
+                navigate(path);
+            }
+        };
+
+        return (
+            <button
+                onClick={handleClick}
+                className={`w-full flex items-center gap-3 px-4 py-3 text-[11px] font-bold uppercase tracking-widest transition-colors ${active
+                    ? 'bg-zinc-900 text-white border-r-2 border-white'
+                    : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-900/50'
+                    } ${isCollapsed ? 'justify-center' : ''}`}
+                title={isCollapsed ? label : ''}
+            >
+                <div className="relative">
+                    <Icon size={16} />
+                    {id === 'syncstack' && localAgentOnline && (
+                        <div className="absolute -top-1 -right-1 w-2 h-2 bg-emerald-500 rounded-full border border-black animate-pulse" />
+                    )}
+                </div>
+                {!isCollapsed && <span>{label}</span>}
+            </button>
+        );
+    };
 
     return (
         <div className="flex min-h-screen bg-black text-white selection:bg-white selection:text-black font-sans">
@@ -67,10 +102,10 @@ const OfficeDashboard: React.FC = () => {
                 </div>
 
                 <div className="flex-1 py-8 space-y-1">
-                    <SidebarItem icon={LayoutGrid} label="Office Cockpit" path="/office" active={location.pathname === '/office'} />
-                    <SidebarItem icon={Box} label="SyncStack" path="/office/syncstack" active={location.pathname === '/office/syncstack'} />
-                    <SidebarItem icon={Terminal} label="Void Engine" path="/office/void" active={location.pathname === '/office/void'} />
-                    <SidebarItem icon={Database} label="LamaDB" path="/office/lamadb" active={location.pathname === '/office/lamadb'} />
+                    <SidebarItem icon={LayoutGrid} label="Office Cockpit" path="/office" active={location.pathname === '/office'} id="cockpit" />
+                    <SidebarItem icon={Box} label="SyncStack" path="/office/syncstack" active={location.pathname === '/office/syncstack'} id="syncstack" />
+                    <SidebarItem icon={Terminal} label="Void Engine" path="/office/void" active={location.pathname === '/office/void'} id="void" />
+                    <SidebarItem icon={Database} label="LamaDB" path="/office/lamadb" active={location.pathname === '/office/lamadb'} id="lamadb" />
                 </div>
 
                 <div className="border-t border-zinc-900 pt-1">

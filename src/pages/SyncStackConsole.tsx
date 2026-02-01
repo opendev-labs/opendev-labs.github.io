@@ -9,6 +9,8 @@ export const SyncStackConsole: React.FC = () => {
     const [logs, setLogs] = useState<{ id: string; text: string; type: 'info' | 'success' | 'warn' | 'error'; timestamp: string }[]>([]);
     const [status, setStatus] = useState<'IDLE' | 'CONNECTING' | 'SYNCED' | 'ERROR'>('IDLE');
     const [isSaving, setIsSaving] = useState(false);
+    const [localAgentOnline, setLocalAgentOnline] = useState(false);
+    const [lastLamaDBSync, setLastLamaDBSync] = useState<string | null>(null);
     const scrollRef = useRef<HTMLDivElement>(null);
 
     const addLog = (text: string, type: 'info' | 'success' | 'warn' | 'error' = 'info') => {
@@ -34,6 +36,27 @@ export const SyncStackConsole: React.FC = () => {
         } else {
             addLog('Waiting for authentication credentials...', 'warn');
         }
+
+        // Check local agent
+        const checkAgent = async () => {
+            try {
+                // Simulate handshake with local Flutter app (SyncStack desktop)
+                const res = await fetch('http://localhost:8080/health').catch(() => ({ ok: false }));
+                if (res.ok) {
+                    setLocalAgentOnline(true);
+                    addLog('Local SyncStack Desktop agent detected', 'success');
+                } else {
+                    setLocalAgentOnline(false);
+                    addLog('Local agent not found. Ensure SyncStack Desktop is running.', 'warn');
+                }
+            } catch (e) {
+                setLocalAgentOnline(false);
+            }
+        };
+
+        checkAgent();
+        const interval = setInterval(checkAgent, 10000);
+        return () => clearInterval(interval);
     }, []);
 
     const handleSave = async () => {
@@ -155,7 +178,15 @@ export const SyncStackConsole: React.FC = () => {
                             <div className="p-4 bg-zinc-900/30 border border-zinc-900 space-y-3">
                                 <div className="flex justify-between items-center">
                                     <span className="text-[9px] font-bold text-zinc-600 uppercase">Local Mesh</span>
-                                    <span className="text-[9px] font-bold text-emerald-500 uppercase">ACTIVE</span>
+                                    <span className={`text-[9px] font-bold ${localAgentOnline ? 'text-emerald-500' : 'text-amber-500'} uppercase`}>
+                                        {localAgentOnline ? 'ACTIVE' : 'OFFLINE'}
+                                    </span>
+                                </div>
+                                <div className="flex justify-between items-center">
+                                    <span className="text-[9px] font-bold text-zinc-600 uppercase">LamaDB Node</span>
+                                    <span className={`text-[9px] font-bold ${status === 'SYNCED' ? 'text-emerald-500' : 'text-zinc-400'} uppercase`}>
+                                        {status === 'SYNCED' ? 'SYNCHRONIZED' : 'WAITING'}
+                                    </span>
                                 </div>
                                 <div className="flex justify-between items-center">
                                     <span className="text-[9px] font-bold text-zinc-600 uppercase">Hardware Key</span>
@@ -187,9 +218,9 @@ export const SyncStackConsole: React.FC = () => {
                                     <span className="text-[10px] text-zinc-700 font-bold shrink-0">[{log.timestamp}]</span>
                                     <span className="text-[11px] font-bold text-zinc-800 shrink-0 select-none">▸</span>
                                     <p className={`text-[11px] font-medium leading-relaxed tracking-tight ${log.type === 'success' ? 'text-emerald-500' :
-                                            log.type === 'error' ? 'text-red-500' :
-                                                log.type === 'warn' ? 'text-amber-500' :
-                                                    'text-zinc-500'
+                                        log.type === 'error' ? 'text-red-500' :
+                                            log.type === 'warn' ? 'text-amber-500' :
+                                                'text-zinc-500'
                                         }`}>
                                         {log.text}
                                     </p>

@@ -232,12 +232,12 @@ const AppContent: React.FC = () => {
         navigate(`/void/projects/${newProject.id}`);
     };
 
-    const isProjectDetail = location.pathname.includes('/projects/');
+    const isTars = location.pathname.includes('/new/tars');
 
     return (
         <div className="min-h-screen bg-black font-sans flex flex-col selection:bg-white selection:text-black">
-            <Header />
-            <main className="flex-grow container mx-auto px-4 py-8 relative z-10 flex flex-col">
+            {!isTars && <Header />}
+            <main className={`flex-grow relative z-10 flex flex-col ${isTars ? 'h-screen' : 'container mx-auto px-4 py-8'}`}>
                 <AnimatePresence mode="wait">
                     <MotionDiv
                         key={location.pathname}
@@ -270,7 +270,7 @@ const AppContent: React.FC = () => {
                     </MotionDiv>
                 </AnimatePresence>
             </main>
-            <Footer />
+            {!isTars && <Footer />}
             {isProjectDetail && <StatusFooter />}
         </div>
     );
