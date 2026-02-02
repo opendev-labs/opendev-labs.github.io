@@ -12,14 +12,14 @@ import VoidLanding from './pages/VoidLanding';
 import LamaDB from './pages/LamaDB';
 import QCloud from './pages/QCloud';
 import SyncStack from './pages/SyncStack';
-import Changelog from './pages/Changelog';
 import Spoon from './pages/Spoon';
 import Product from './pages/Product';
+import Changelog from './pages/Changelog';
 import NexusDashboard from './pages/NexusDashboard';
 import { Preloader } from './components/Preloader';
 import { DocsPage } from './features/void/components/pages/DocsPage';
 import { MissionControl } from './pages/MissionControl';
-import { UnifiedOfficeCockpit, LamaDBOfficeCockpit, SyncStackOfficeCockpit, LamaDBTelemetryCockpit } from './pages/OfficeSubappWrappers';
+import { UnifiedOfficeCockpit, LamaDBOfficeCockpit, SyncStackOfficeCockpit, LamaDBTelemetryCockpit, AgentsOfficeCockpit } from './pages/OfficeSubappWrappers';
 
 const lazyWithRetry = (componentImport: () => Promise<any>) =>
   lazy(async () => {
@@ -79,6 +79,7 @@ const AppRoutes = () => {
           }>
             <Route index element={<UnifiedOfficeCockpit />} />
             <Route path="syncstack" element={<SyncStackOfficeCockpit />} />
+            <Route path="agents" element={<AgentsOfficeCockpit />} />
             <Route path="void" element={<UnifiedOfficeCockpit />} />
             <Route path="lamadb" element={<LamaDBOfficeCockpit />} />
             <Route path="telemetry" element={<LamaDBTelemetryCockpit />} />

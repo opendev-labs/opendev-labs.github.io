@@ -7,8 +7,9 @@ import { Project } from '../features/void/types';
 import { GlobalLoader } from '../features/void/components/common/GlobalLoader';
 import { SyncStackConsole } from './SyncStackConsole';
 import { LamaDBTelemetry } from './LamaDBTelemetry';
+import AgentsDashboard from './AgentsDashboard';
 
-import { Activity, Cpu, Shield, Zap, Database, Terminal } from 'lucide-react';
+import { Activity, Cpu, Shield, Zap, Database, Terminal, Bot } from 'lucide-react';
 
 export const UnifiedOfficeCockpit: React.FC = () => {
     const { isAuthenticated, user } = useAuth();
@@ -119,6 +120,14 @@ export const LamaDBTelemetryCockpit: React.FC = () => {
     return (
         <div className="min-h-screen bg-black">
             <LamaDBTelemetry />
+        </div>
+    );
+};
+
+export const AgentsOfficeCockpit: React.FC = () => {
+    return (
+        <div className="min-h-screen bg-black">
+            <AgentsDashboard />
         </div>
     );
 };

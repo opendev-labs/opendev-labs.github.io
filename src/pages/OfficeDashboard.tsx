@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Terminal, Database, Box, Cpu, Activity, Shield, Zap, ArrowUpRight, Plus, Settings, LayoutGrid, LogOut, Search, ChevronLeft, ChevronRight, Menu } from 'lucide-react';
+import { Terminal, Database, Box, Cpu, Activity, Shield, Zap, ArrowUpRight, Plus, Settings, LayoutGrid, LogOut, Search, ChevronLeft, ChevronRight, Menu, Bot } from 'lucide-react';
 import { Link, useNavigate, useLocation, Outlet } from 'react-router-dom';
 import { Button } from '../components/ui/Button';
 import { useAuth } from '../features/void/hooks/useAuth';
@@ -103,6 +103,7 @@ const OfficeDashboard: React.FC = () => {
 
                 <div className="flex-1 py-8 space-y-1">
                     <SidebarItem icon={LayoutGrid} label="Office Cockpit" path="/office" active={location.pathname === '/office'} id="cockpit" />
+                    <SidebarItem icon={Bot} label="Agents" path="/office/agents" active={location.pathname === '/office/agents'} id="agents" />
                     <SidebarItem icon={Box} label="SyncStack" path="/office/syncstack" active={location.pathname === '/office/syncstack'} id="syncstack" />
                     <SidebarItem icon={Terminal} label="Void Engine" path="/office/void" active={location.pathname === '/office/void'} id="void" />
                     <SidebarItem icon={Database} label="LamaDB" path="/office/lamadb" active={location.pathname === '/office/lamadb'} id="lamadb" />
