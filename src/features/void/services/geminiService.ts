@@ -41,7 +41,7 @@ const toGeminiHistory = (messages: Message[]) => {
 
 
 export async function* streamGeminiResponse(fullPrompt: string, history: Message[], modelConfig: ModelConfig, apiKey?: string): AsyncGenerator<{ text: string; }> {
-    const effectiveApiKey = apiKey || import.meta.env.VITE_FIREBASE_API_KEY;
+    const effectiveApiKey = apiKey || import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.VITE_FIREBASE_API_KEY;
     if (!effectiveApiKey) {
         throw new Error("API key not found for Google Gemini.");
     }
@@ -86,7 +86,7 @@ export async function* streamGeminiResponse(fullPrompt: string, history: Message
 }
 
 export async function getAIAssistance(logs: LogEntry[]): Promise<string> {
-    const effectiveApiKey = import.meta.env.VITE_FIREBASE_API_KEY;
+    const effectiveApiKey = import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.VITE_FIREBASE_API_KEY;
     if (!effectiveApiKey) {
         return "Neural handshake offline. Configure API keys to enable log analysis.";
     }

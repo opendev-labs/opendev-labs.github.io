@@ -277,7 +277,7 @@ export async function* streamChatResponse(
 
 // --- Suggestions Service (Remains the same, uses Gemini) ---
 export async function generateSuggestions(context: string): Promise<string[]> {
-    const apiKey = import.meta.env.VITE_FIREBASE_API_KEY || import.meta.env.VITE_OPENROUTER_API_KEY;
+    const apiKey = import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.VITE_FIREBASE_API_KEY || import.meta.env.VITE_OPENROUTER_API_KEY;
     if (!apiKey) {
         console.warn("No API key set for suggestions.");
         return [];
