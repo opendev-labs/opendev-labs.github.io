@@ -19,11 +19,11 @@ const sortedProviderKeys = providerOrder.filter(p => groupedModels[p]);
 
 
 interface ModelDropdownProps {
-  isOpen: boolean;
-  onClose: () => void;
-  anchorRef: React.RefObject<HTMLButtonElement>;
-  selectedModelId: string;
-  onModelSelect: (modelId: string) => void;
+    isOpen: boolean;
+    onClose: () => void;
+    anchorRef: React.RefObject<HTMLButtonElement | null>;
+    selectedModelId: string;
+    onModelSelect: (modelId: string) => void;
 }
 
 export const ModelDropdown: React.FC<ModelDropdownProps> = ({ isOpen, onClose, anchorRef, selectedModelId, onModelSelect }) => {

@@ -58,7 +58,7 @@ async function* streamOpenAICompatibleResponse(fullPrompt: string, history: Mess
         'Authorization': `Bearer ${apiKey}`
     };
 
-    switch(modelConfig.provider) {
+    switch (modelConfig.provider) {
         case 'DeepSeek':
             apiBaseUrl = 'https://api.deepseek.com/v1';
             break;
@@ -67,7 +67,7 @@ async function* streamOpenAICompatibleResponse(fullPrompt: string, history: Mess
             break;
         case 'OpenRouter':
             apiBaseUrl = 'https://openrouter.ai/api/v1';
-            headers['HTTP-Referer'] = 'https://opendev-labs.ai'; 
+            headers['HTTP-Referer'] = 'https://opendev-labs.ai';
             headers['X-Title'] = 'opendev-labs';
             break;
         default:
@@ -144,7 +144,7 @@ async function* streamOpenAICompatibleResponse(fullPrompt: string, history: Mess
 
 async function* streamHuggingFaceResponse(fullPrompt: string, history: Message[], modelConfig: ModelConfig, apiKey: string): AsyncGenerator<{ text: string; }> {
     const hfPrompt = `${TARS_SYSTEM_INSTRUCTION_GENERIC}\n\n**Task:**\n${fullPrompt}`;
-    
+
     // NOTE: The free Hugging Face Inference API does not support streaming responses for text generation.
     // This function will wait for the full response before returning.
     const response = await fetch(
@@ -165,9 +165,9 @@ async function* streamHuggingFaceResponse(fullPrompt: string, history: Message[]
             const errorBody = await response.json();
             errorMessage = errorBody?.error || errorMessage;
             console.error("Hugging Face API Error:", errorBody);
-        } catch(e) {
+        } catch (e) {
             const errorText = await response.text();
-             console.error("Hugging Face API Error:", errorText);
+            console.error("Hugging Face API Error:", errorText);
         }
         throw new Error(errorMessage);
     }
@@ -184,11 +184,11 @@ async function* streamHuggingFaceResponse(fullPrompt: string, history: Message[]
         const jsonString = generatedText.substring(jsonStart);
         yield { text: jsonString };
     } else {
-       const fallback = {
-           conversation: `The model did not return the expected JSON format. Raw response:\n\n${generatedText}`,
-           files: []
-       };
-       yield { text: JSON.stringify(fallback) };
+        const fallback = {
+            conversation: `The model did not return the expected JSON format. Raw response:\n\n${generatedText}`,
+            files: []
+        };
+        yield { text: JSON.stringify(fallback) };
     }
 }
 
@@ -196,13 +196,13 @@ async function* streamHuggingFaceResponse(fullPrompt: string, history: Message[]
 // --- Main Dispatcher ---
 
 export async function* streamChatResponse(
-    prompt: string, 
-    history: Message[], 
+    prompt: string,
+    history: Message[],
     fileTree: FileNode[],
     modelId: string,
     apiKey: string | undefined
 ): AsyncGenerator<{ text: string; }> {
-    
+
     const modelConfig = SUPPORTED_MODELS.find(m => m.id === modelId);
 
     if (!modelConfig) {
@@ -224,12 +224,12 @@ export async function* streamChatResponse(
             case 'Google':
                 yield* streamGeminiResponse(fullPrompt, history, modelConfig, apiKey);
                 break;
-            
+
             case 'OpenAI':
             case 'DeepSeek':
             case 'OpenRouter':
-                 yield* streamOpenAICompatibleResponse(fullPrompt, history, modelConfig, apiKey!);
-                 break;
+                yield* streamOpenAICompatibleResponse(fullPrompt, history, modelConfig, apiKey!);
+                break;
 
             case 'Meta':
             case 'BigCode':
@@ -240,7 +240,7 @@ export async function* streamChatResponse(
             case 'Replit':
                 yield* streamHuggingFaceResponse(fullPrompt, history, modelConfig, apiKey!);
                 break;
-            
+
             case 'Anthropic':
                 const notImplementedAnthropic = { conversation: `The Anthropic provider is not yet fully implemented.`, files: [] };
                 yield { text: JSON.stringify(notImplementedAnthropic) };
@@ -284,7 +284,7 @@ export async function generateSuggestions(context: string): Promise<string[]> {
                 }
             }
         });
-        const jsonStr = response.text.trim();
+        const jsonStr = (response.text || "").trim();
         const parsed = JSON.parse(jsonStr);
         return parsed.suggestions && Array.isArray(parsed.suggestions) ? parsed.suggestions.slice(0, 4) : [];
     } catch (error) {
@@ -320,7 +320,7 @@ export async function validateApiKey(provider: ModelConfig['provider'], apiKey: 
 
                 if (!response.ok) {
                     if (response.status === 401) throw new Error('Authentication failed. The API key is invalid or has been revoked.');
-                    
+
                     let errorMsg = `API request failed with status ${response.status}.`;
                     try {
                         const errorBody = await response.json();
@@ -347,7 +347,7 @@ export async function validateApiKey(provider: ModelConfig['provider'], apiKey: 
                 return true;
             }
             case 'Anthropic':
-                 throw new Error("Validation for Anthropic is not yet implemented.");
+                throw new Error("Validation for Anthropic is not yet implemented.");
 
             default:
                 throw new Error(`API key validation is not implemented for the provider '${provider}'.`);

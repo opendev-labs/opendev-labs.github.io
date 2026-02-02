@@ -42,7 +42,7 @@ export async function* streamGeminiResponse(fullPrompt: string, history: Message
         throw new Error("API key not found for Google Gemini.");
     }
     const ai = new GoogleGenAI({ apiKey: effectiveApiKey });
-    
+
     const contents = [
         ...toGeminiHistory(history),
         { role: 'user', parts: [{ text: fullPrompt }] }
@@ -77,6 +77,6 @@ export async function* streamGeminiResponse(fullPrompt: string, history: Message
     });
 
     for await (const chunk of result) {
-        yield { text: chunk.text };
+        yield { text: chunk.text || '' };
     }
 }

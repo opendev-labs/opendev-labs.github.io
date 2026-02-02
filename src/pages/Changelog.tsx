@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Sparkles, Cpu, Globe, Zap, Shield, GitBranch, Terminal, ArrowRight } from 'lucide-react';
-import { Header } from '../features/void/components/Header';
+import { Header } from '../components/Header';
 import { Footer } from '../components/Footer';
 
 interface ChangeEntry {
