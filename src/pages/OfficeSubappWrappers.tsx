@@ -6,6 +6,7 @@ import { LamaDB } from '../lib/lamaDB';
 import { Project } from '../features/void/types';
 import { GlobalLoader } from '../features/void/components/common/GlobalLoader';
 import { SyncStackConsole } from './SyncStackConsole';
+import { LamaDBTelemetry } from './LamaDBTelemetry';
 
 import { Activity, Cpu, Shield, Zap, Database, Terminal } from 'lucide-react';
 
@@ -104,10 +105,20 @@ export const LamaDBOfficeCockpit: React.FC = () => {
     );
 };
 
+
+
 export const SyncStackOfficeCockpit: React.FC = () => {
     return (
         <div className="pt-0 h-screen bg-black overflow-hidden">
             <SyncStackConsole />
+        </div>
+    );
+};
+
+export const LamaDBTelemetryCockpit: React.FC = () => {
+    return (
+        <div className="min-h-screen bg-black">
+            <LamaDBTelemetry />
         </div>
     );
 };

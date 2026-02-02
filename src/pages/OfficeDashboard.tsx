@@ -106,6 +106,7 @@ const OfficeDashboard: React.FC = () => {
                     <SidebarItem icon={Box} label="SyncStack" path="/office/syncstack" active={location.pathname === '/office/syncstack'} id="syncstack" />
                     <SidebarItem icon={Terminal} label="Void Engine" path="/office/void" active={location.pathname === '/office/void'} id="void" />
                     <SidebarItem icon={Database} label="LamaDB" path="/office/lamadb" active={location.pathname === '/office/lamadb'} id="lamadb" />
+                    <SidebarItem icon={Activity} label="LamaDB Telemetry" path="/office/telemetry" active={location.pathname === '/office/telemetry'} id="telemetry" />
                 </div>
 
                 <div className="border-t border-zinc-900 pt-1">
