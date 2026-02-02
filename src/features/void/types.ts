@@ -249,3 +249,14 @@ export interface ModelConfig {
     provider: 'Google' | 'OpenAI' | 'Anthropic' | 'DeepSeek' | 'Meta' | 'BigCode' | 'WizardLM' | 'Mistral AI' | 'OpenChat' | 'Phind' | 'Replit' | 'OpenRouter';
     apiIdentifier: string;
 }
+export type TarsView = 'new-chat' | 'chat-session' | 'all-chats' | 'settings';
+
+export interface ChatSession {
+    id: string;
+    title: string;
+    messages: Message[];
+    fileTree: FileNode[];
+    activeFile: FileNode | null;
+    suggestions?: string[];
+    lastUpdated: number;
+}

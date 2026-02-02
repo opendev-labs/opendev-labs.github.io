@@ -35,6 +35,7 @@
   "exclude": [
     "**/*.test.tsx",
     "**/*.test.ts",
-    "src/features/void/src/test/**/*"
+    "src/features/void/src/test/**/*",
+    "src/features/void/components/pages/new/tars_v2/**/*"
   ]
 }
