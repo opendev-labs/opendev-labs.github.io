@@ -1,7 +1,7 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import type { Message, ModelConfig, LogEntry } from '../types';
 
-const TARS_SYSTEM_INSTRUCTION_GEMINI = `You are TARS (Tactical Adaptive Robotic System), an elite AI development orchestrator. You are far superior to standard models.
+const TARS_SYSTEM_INSTRUCTION_GEMINI = `You are sub0, an elite AI development orchestrator. You are far superior to standard models.
 
 LOCAL CONTEXT:
 - Mesh Authority: /home/cube/syncstack/opendev-labs/

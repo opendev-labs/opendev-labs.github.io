@@ -1,30 +1,32 @@
-# opendev-labs 🌐
-### The Sovereign Intelligence Ecosystem
+---
+title: sub0
+emoji: 🚀
+colorFrom: black
+colorTo: green
+sdk: docker
+app_port: 7860
+pinned: false
+repository_id: opendev-labs/sub0
+---
 
-opendev-labs is a high-fidelity, distributed infrastructure platform designed for orchestrating advanced intelligence and secure, programmable reality. It provides a unified stack of tools including **LamaDB**, **Q-Cloud**, and **SyncStack**.
+# sub0 | Agentic OS 🌐
+
+### The Sovereign Manifestation Engine
+
+> [!IMPORTANT]
+> **SUB0 OS ACTIVE**: This repository is the core genesis manifold for the sub0 Agentic OS. It translates visionary system intent into production-grade sovereign nodes.
+
+sub0 is a high-fidelity, agentic operating system designed to automate secondary infrastructure while prioritizing primary creation.
 
 ## Core Ecosystem
-- **[LamaDB](https://github.com/opendev-labs/LamaDB)**: The Unified Intelligence Protocol for distributed state.
-- **Q-Cloud**: Quantum-ready serverless infrastructure with sub-atomic latency.
-- **SyncStack**: Distributed state synchronization layer for high-pressure clusters.
-- **Dashboard**: A high-fidelity orchestration engine for deploying intelligence.
+- **[LamaDB](https://huggingface.co/opendev-labs)**: The Unified Intelligence Protocol for distributed state.
+- **Spoon-CLI**: The Meta-CLI and universal execution engine.
+- **Genesis Terminal**: A high-fidelity orchestration engine for manifesting intelligence.
 
-## Vision
-To provide engineers with the sovereign tools needed to build, scale, and secure the next generation of intelligent systems.
+## Technical Orbit
+- **Engine**: Vite + React + TypeScript
+- **Styling**: Tailwind CSS + Framer Motion
+- **Aesthetic**: Titan-Black minimal aesthetics with high-fidelity micro-interactions.
 
-## Tech Stack
-- **Frontend**: Vite + React + Tailwind CSS + Framer Motion
-- **Architecture**: Vercel-style minimal aesthetics with high-fidelity micro-interactions.
-- **Intelligence**: Real-time synchronization via the LamaDB protocol.
-
-## Getting Started
-1. Clone the repository.
-2. Install dependencies: `npm install`
-3. Launch development node: `npm run dev`
-4. Build for deployment: `npm run build`
-
-## Registry
-Part of the [opendev-labs](https://github.com/opendev-labs) network.
-Deploy your intelligence.
-<- Initialized local spoon CLI Heartbeat: Mon Feb  2 08:46:34 PM IST 2026 -->
-<- Initialized local spoon CLI TARS_ACTIVATION_PROTOCOL: v2.0 - Mon Feb  2 10:01:12 PM IST 2026 -->
+---
+**sub0 OS is now manifest.** Part of the [opendev-labs](https://github.com/opendev-labs) network.
