@@ -1,8 +1,8 @@
 ---
 title: sub0
 emoji: 🚀
-colorFrom: black
-colorTo: green
+colorFrom: gray
+colorTo: indigo
 sdk: docker
 app_port: 7860
 pinned: false
