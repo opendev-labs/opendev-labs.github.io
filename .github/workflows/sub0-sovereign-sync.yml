@@ -49,16 +49,19 @@ jobs:
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
-          # Manifesting clean sub0 state (No Binaries)
+          # Manifesting clean sub0 state (Excluding all Binaries)
           mkdir -p hf_manifest
           cp -r src public index.html package.json package-lock.json Dockerfile README.md hf_manifest/
           
           cd hf_manifest
+          # Purging binary assets for HF Space compatibility
+          find . -type f \( -name "*.png" -o -name "*.jpg" -o -name "*.jpeg" -o -name "*.svg" -o -name "*.ico" -o -name "*.gif" -o -name "*.webp" \) -delete
+          
           git init
           git config user.name "sub0-manifest"
           git config user.email "manifest@opendev-labs.ai"
           git checkout -b main
           git add .
-          git commit -m "feat: manifest sub0 genesis protocol"
+          git commit -m "feat: manifest sub0 genesis protocol [binary-free]"
           git remote add hf https://cube:${HF_TOKEN}@huggingface.co/spaces/opendev-labs/sub0
           git push hf main --force

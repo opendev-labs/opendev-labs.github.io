@@ -531,7 +531,7 @@ export const socialProofLogos = [
 ];
 
 export const SUPPORTED_MODELS: ModelConfig[] = [
-  { id: 'gemini-2.5-flash', name: 'Gemini 2.5 Flash', provider: 'Google', apiIdentifier: 'gemini-2.5-flash' },
+  { id: 'gemini-1.5-flash', name: 'Gemini 1.5 Flash', provider: 'Google', apiIdentifier: 'gemini-1.5-flash' },
 
   // Top Free Coding Models
   { id: 'deepseek-coder-v2', name: 'DeepSeek Coder V2', provider: 'DeepSeek', apiIdentifier: 'deepseek-coder' },
@@ -554,21 +554,21 @@ export const SUPPORTED_MODELS: ModelConfig[] = [
   { id: 'anthropic-claude-3-haiku', name: 'Claude 3 Haiku', provider: 'Anthropic', apiIdentifier: 'claude-3-haiku-20240307' },
 ];
 export const DatabaseTypeInfo: Record<DatabaseType, { description: string }> = {
-    [DatabaseType.POSTGRES]: { description: 'Standard relational powerhouse.' },
-    [DatabaseType.REDIS]: { description: 'In-memory performance layer.' },
-    [DatabaseType.SUPABASE]: { description: 'Open-source Firebase alternative.' },
-    [DatabaseType.NEON]: { description: 'Serverless PostgreSQL.' },
-    [DatabaseType.MONGODB]: { description: 'Scalable document store.' },
-    [DatabaseType.LAMADB]: { description: 'Native, real-time enterprise protocol.' },
+  [DatabaseType.POSTGRES]: { description: 'Standard relational powerhouse.' },
+  [DatabaseType.REDIS]: { description: 'In-memory performance layer.' },
+  [DatabaseType.SUPABASE]: { description: 'Open-source Firebase alternative.' },
+  [DatabaseType.NEON]: { description: 'Serverless PostgreSQL.' },
+  [DatabaseType.MONGODB]: { description: 'Scalable document store.' },
+  [DatabaseType.LAMADB]: { description: 'Native, real-time enterprise protocol.' },
 };
 
 export const SUGGESTED_PROMPTS = [
-    'Create an administrative dashboard with real-time LamaDB telemetry',
-    'Initialize a Next.js mesh with SyncStack edge deployment',
-    'Build a secure auth flow with MFA and audit logging via Spoon',
-    'Generate a high-fidelity landing page for a neural node',
-    'Implement a multi-tenant SaaS architecture with Supabase',
-    'Create a real-time collaborative workspace using Quantum-Sync',
-    'Design a minimalist Titan-Black finance interface',
-    'Orchestrate a distributed microservice layer via Spoon-CLI'
+  'Create an administrative dashboard with real-time LamaDB telemetry',
+  'Initialize a Next.js mesh with SyncStack edge deployment',
+  'Build a secure auth flow with MFA and audit logging via Spoon',
+  'Generate a high-fidelity landing page for a neural node',
+  'Implement a multi-tenant SaaS architecture with Supabase',
+  'Create a real-time collaborative workspace using Quantum-Sync',
+  'Design a minimalist Titan-Black finance interface',
+  'Orchestrate a distributed microservice layer via Spoon-CLI'
 ];
