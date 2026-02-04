@@ -1,4 +1,4 @@
-name: sub0 Sovereign Sync (Vite)
+name: sub0 Sovereign Sync (Ultimate)
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  manifest:
+  sovereign-manifest:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -35,33 +35,54 @@ jobs:
           VITE_OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           VITE_GEMINI_API_KEY: ${{ secrets.VITE_GEMINI_API_KEY }}
 
-      - name: Deploy to GitHub Pages
+      - name: 🚀 Deploy to Vercel (The Void Engine)
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          working-directory: ./
+          vercel-args: '--prod'
+
+      - name: 📦 Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: dist
           branch: gh-pages
           token: ${{ secrets.GH_PAT_OFFICE }}
 
-      - name: Deploy to Firebase
+      - name: 🔥 Deploy to Firebase (The Database Hub)
         run: npx firebase-tools deploy --only hosting --token ${{ secrets.FIREBASE_TOKEN }} --project opendev-office
 
-      - name: Sync to Hugging Face
+      - name: 🤗 Sync with Hugging Face (The Compute Engine)
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
-          # Manifesting clean sub0 state (Excluding all Binaries)
+          # Create clean manifest directory
           mkdir -p hf_manifest
           cp -r src public index.html package.json package-lock.json Dockerfile README.md hf_manifest/
           
           cd hf_manifest
-          # Purging binary assets for HF Space compatibility
-          find . -type f \( -name "*.png" -o -name "*.jpg" -o -name "*.jpeg" -o -name "*.svg" -o -name "*.ico" -o -name "*.gif" -o -name "*.webp" \) -delete
+          
+          # HARDCORE PURGE: Remove all non-text assets to satisfy Hugging Face Space limits
+          # We keep only the source code and configuration.
+          find . -type f -not -name "*.ts" \
+                         -not -name "*.tsx" \
+                         -not -name "*.js" \
+                         -not -name "*.jsx" \
+                         -not -name "*.json" \
+                         -not -name "*.html" \
+                         -not -name "*.css" \
+                         -not -name "*.md" \
+                         -not -name "Dockerfile" \
+                         -not -name ".gitignore" \
+                         -delete
           
           git init
           git config user.name "sub0-manifest"
           git config user.email "manifest@opendev-labs.ai"
           git checkout -b main
           git add .
-          git commit -m "feat: manifest sub0 genesis protocol [binary-free]"
+          git commit -m "feat: manifest sub0 genesis protocol [text-only-sync]"
           git remote add hf https://cube:${HF_TOKEN}@huggingface.co/spaces/opendev-labs/sub0
           git push hf main --force

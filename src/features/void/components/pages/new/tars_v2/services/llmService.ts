@@ -267,7 +267,7 @@ export async function generateSuggestions(context: string): Promise<string[]> {
     try {
         const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
         const response = await ai.models.generateContent({
-            model: 'gemini-2.5-flash',
+            model: 'gemini-1.5-flash',
             contents: context,
             config: {
                 systemInstruction: `You are an expert developer assistant. Based on the user's last request and the files that were generated, provide 3-4 short, actionable follow-up prompts. Return a JSON object with a single key "suggestions" which is an array of strings. Example: {"suggestions": ["Make it responsive", "Add a loading state"]}`,
@@ -303,7 +303,7 @@ export async function validateApiKey(provider: ModelConfig['provider'], apiKey: 
         switch (provider) {
             case 'Google': {
                 const ai = new GoogleGenAI({ apiKey });
-                await ai.models.generateContent({ model: 'gemini-2.5-flash', contents: 'test' });
+                await ai.models.generateContent({ model: 'gemini-1.5-flash', contents: 'test' });
                 return true;
             }
             case 'OpenAI':

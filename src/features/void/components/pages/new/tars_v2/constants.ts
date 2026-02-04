@@ -13,8 +13,8 @@ export const SUGGESTED_PROMPTS = [
 ];
 
 export const SUPPORTED_MODELS: ModelConfig[] = [
-    { id: 'gemini-2.5-flash', name: 'Gemini 2.5 Flash', provider: 'Google', apiIdentifier: 'gemini-2.5-flash' },
-    
+    { id: 'gemini-1.5-flash', name: 'Gemini 1.5 Flash', provider: 'Google', apiIdentifier: 'gemini-1.5-flash' },
+
     // Top Free Coding Models
     { id: 'deepseek-coder-v2', name: 'DeepSeek Coder V2', provider: 'DeepSeek', apiIdentifier: 'deepseek-coder' },
     { id: 'openrouter-nous-hermes-2-mixtral', name: 'Nous Hermes 2 (OpenRouter)', provider: 'OpenRouter', apiIdentifier: 'nousresearch/nous-hermes-2-mixtral-8x7b-dpo' },
@@ -27,7 +27,7 @@ export const SUPPORTED_MODELS: ModelConfig[] = [
     { id: 'openchat-openchat-3.5', name: 'OpenChat 3.5', provider: 'OpenChat', apiIdentifier: 'openchat/openchat-3.5' },
     { id: 'phind-codellama-v2', name: 'Phind CodeLlama V2', provider: 'Phind', apiIdentifier: 'phind/Phind-CodeLlama-34B-v2' },
     { id: 'replit-code-v1.5', name: 'Replit Code V1.5', provider: 'Replit', apiIdentifier: 'replit/replit-code-v1-3b' },
-    
+
     // Existing Models
     { id: 'openai-gpt-4o', name: 'GPT-4o', provider: 'OpenAI', apiIdentifier: 'gpt-4o' },
     { id: 'openai-gpt-4-turbo', name: 'GPT-4 Turbo', provider: 'OpenAI', apiIdentifier: 'gpt-4-turbo' },
