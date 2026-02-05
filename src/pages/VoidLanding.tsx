@@ -30,8 +30,8 @@ export default function VoidLanding() {
                         <Link to="/sub0" className="h-12 px-8 rounded-none bg-orange-600 text-white font-bold hover:bg-orange-500 transition-colors flex items-center gap-2 shadow-lg shadow-orange-500/20 uppercase tracking-widest text-xs">
                             Launch sub0 IDE <ArrowRight size={16} />
                         </Link>
-                        <Link to="/pricing" className="h-12 px-8 rounded-none bg-black border border-[#333] text-white hover:bg-[#111] transition-colors flex items-center justify-center">
-                            View Pricing
+                        <Link to="/void/dashboard" className="h-12 px-8 rounded-none bg-black border border-[#333] text-white hover:bg-zinc-900 transition-colors flex items-center justify-center uppercase tracking-widest text-[10px] font-bold">
+                            Manage Platform
                         </Link>
                     </div>
                 </div>

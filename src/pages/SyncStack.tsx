@@ -149,8 +149,8 @@ export default function SyncStack() {
             performanceTitle="Seamless Synchronization."
             performanceMetrics={performanceMetrics}
             codeSnippet={clusterStatus}
-            primaryActionLabel="Connect Now"
-            onPrimaryAction={() => navigate('/office/syncstack')}
+            primaryActionLabel="Launch Hub"
+            onPrimaryAction={() => navigate('/syncstack/console')}
         />
     );
 }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { useLocation } from "react-router-dom"
+import { useLocation, Link } from "react-router-dom"
 import { motion } from "framer-motion"
 import { Plus, Bot, Sparkles, Brain, Zap, Globe, Search, MessageSquare, Loader2 } from "lucide-react"
 import { LamaDB } from "../lib/lamaDB"
@@ -198,13 +198,23 @@ export default function AgentsDashboard() {
     return (
         <div className="p-8 md:p-12 animate-in fade-in duration-700 max-w-[1400px] mx-auto">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6">
-                <div>
-                    <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/5 border border-white/10 text-[9px] font-bold text-zinc-500 mb-6 uppercase tracking-[0.3em]">
+                <div className="flex flex-col">
+                    <div className="inline-flex items-center gap-4 mb-8">
+                        <Link to="/" className="text-[10px] font-bold text-zinc-600 hover:text-orange-500 transition-colors uppercase tracking-[0.4em]">
+                            &larr; Return to Mesh
+                        </Link>
+                        <div className="w-1 h-1 rounded-full bg-zinc-800" />
+                        <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.3em]">
+                            Product: <span className="text-white">Agents // Architect</span>
+                        </div>
+                    </div>
+
+                    <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/5 border border-white/10 text-[9px] font-bold text-zinc-500 mb-6 uppercase tracking-[0.3em] w-fit">
                         <Bot size={12} />
                         <span>Autonomous // Agentic Node</span>
                     </div>
                     <h1 className="text-5xl font-bold tracking-tighter lowercase leading-none">
-                        agent<br /><span className="text-zinc-600">dashboard.</span>
+                        agent<br /><span className="text-zinc-600">architect.</span>
                     </h1>
                 </div>
                 <Dialog open={isCreating} onOpenChange={setIsCreating}>

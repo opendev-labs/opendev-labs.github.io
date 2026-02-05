@@ -92,8 +92,8 @@ export const NewProjectLanding: React.FC = () => {
             {/* Header Area */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-20">
                 <div className="space-y-4">
-                    <button onClick={() => navigate('/office')} className="text-[11px] font-bold text-zinc-600 uppercase tracking-widest flex items-center gap-2 hover:text-white transition-colors">
-                        <ArrowRight size={14} className="rotate-180" /> Back
+                    <button onClick={() => navigate('/void/dashboard')} className="text-[11px] font-bold text-zinc-600 uppercase tracking-widest flex items-center gap-2 hover:text-white transition-colors">
+                        <ArrowRight size={14} className="rotate-180" /> Back to Platform
                     </button>
                     <h1 className="text-5xl md:text-6xl font-black tracking-tighter text-white">
                         Let's build something <span className="text-zinc-600 italic">new.</span>

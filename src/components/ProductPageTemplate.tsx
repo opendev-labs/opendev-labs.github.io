@@ -28,6 +28,8 @@ interface ProductPageProps {
     codeSnippet?: React.ReactNode;
     primaryActionLabel?: string;
     onPrimaryAction?: () => void;
+    secondaryActionLabel?: string;
+    onSecondaryAction?: () => void;
 }
 
 export const ProductPageTemplate: React.FC<ProductPageProps> = ({
@@ -40,7 +42,9 @@ export const ProductPageTemplate: React.FC<ProductPageProps> = ({
     performanceMetrics,
     codeSnippet,
     primaryActionLabel = "Deploy Now",
-    onPrimaryAction = () => window.location.href = '/void/new'
+    onPrimaryAction = () => window.location.href = '/void/new',
+    secondaryActionLabel = "Documentation",
+    onSecondaryAction = () => window.location.href = '/docs'
 }) => {
     return (
         <div className="flex flex-col w-full bg-black text-white selection:bg-white selection:text-black">
@@ -87,8 +91,8 @@ export const ProductPageTemplate: React.FC<ProductPageProps> = ({
                         <Button size="lg" onClick={onPrimaryAction} icon={<ArrowRight size={16} />}>
                             {primaryActionLabel}
                         </Button>
-                        <Button variant="outline" size="lg" onClick={() => window.location.href = '/docs'}>
-                            Documentation
+                        <Button variant="outline" size="lg" onClick={onSecondaryAction}>
+                            {secondaryActionLabel}
                         </Button>
                     </motion.div>
                 </div>

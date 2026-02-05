@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { Terminal, Database, Globe, ArrowRight, ShieldCheck, Zap, Box, Cpu } from 'lucide-react';
+import { Terminal, Database, Globe, ArrowRight, ShieldCheck, Zap, Box, Cpu, Bot } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import HeroBg from '../assets/bg.png';
@@ -134,10 +134,10 @@ export default function Home() {
                         <Button
                             variant="primary"
                             size="xl"
-                            onClick={() => navigate(isAuthenticated ? '/office' : '/auth')}
+                            onClick={() => navigate(isAuthenticated ? '/void/dashboard' : '/auth')}
                             className="min-w-[200px]"
                         >
-                            {isAuthenticated ? 'Office' : 'Login / Signup'}
+                            {isAuthenticated ? 'Launch Nexus' : 'Identity Protocol // Link'}
                         </Button>
                     </motion.div>
                 </div>
@@ -161,9 +161,10 @@ export default function Home() {
                 <div className="max-w-[1400px] mx-auto px-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-1 ring-1 ring-zinc-900 rounded-none overflow-hidden">
                         {[
-                            { title: "sub0 Workspace", desc: "Agentic full-screen workspace for code materialization.", icon: Cpu, path: "/void/new/sub0" },
-                            { title: "Void Hub", desc: "Neural orchestration and project lifecycle management.", icon: Terminal, path: "/void" },
-                            { title: "LamaDB", desc: "Native browser database for local-first state persistence.", icon: Database, path: "/lamadb" },
+                            { title: "sub0 IDE", desc: "Agentic full-screen workspace for code materialization.", icon: Cpu, path: "/sub0" },
+                            { title: "Agents Hub", desc: "Autonomous node orchestration and agent builder.", icon: Bot, path: "/agents" },
+                            { title: "Void Platform", desc: "Neural orchestration and project lifecycle management.", icon: Terminal, path: "/void" },
+                            { title: "LamaDB Mesh", desc: "Native browser database for local-first state persistence.", icon: Database, path: "/lamadb" },
                             { title: "SyncStack", desc: "0ms latency tunnel for web-to-desktop synchronization.", icon: Box, path: "/syncstack" }
                         ].map((item, i) => (
                             <motion.button

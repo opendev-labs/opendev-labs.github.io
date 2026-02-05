@@ -59,9 +59,9 @@ const MENU_DATA = [
     {
         title: "Compute & State",
         items: [
-            { name: "System Office", desc: "High-fidelity terminal for sovereign nodes", icon: CommandLineIcon, path: "/office" },
-            { name: "LamaDB", desc: "Native browser database for high-velocity state", icon: CubeIcon, path: "/lamadb" },
-            { name: "Q-Cloud", desc: "Quantum-ready serverless infrastructure", icon: RocketLaunchIcon, path: "/q-cloud" },
+            { name: "Agents Hub", desc: "Autonomous agentic node orchestration", icon: SparklesIcon, path: "/agents" },
+            { name: "LamaDB Mesh", desc: "Native browser database for high-velocity state", icon: CubeIcon, path: "/lamadb" },
+            { name: "Void Platform", desc: "High-fidelity terminal for sovereign nodes", icon: CommandLineIcon, path: "/void" },
         ]
     },
     {
@@ -170,11 +170,14 @@ export const Header: React.FC = () => {
                                         <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest leading-none mb-1">Authenticated Node</p>
                                         <p className="text-[11px] text-zinc-200 font-bold truncate">{user?.email}</p>
                                     </div>
-                                    <Link to="/office" className="flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-zinc-400 hover:text-white hover:bg-zinc-900/50 transition-all">
-                                        Mission Control
+                                    <Link to="/void/dashboard" className="flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-zinc-400 hover:text-white hover:bg-zinc-900/50 transition-all">
+                                        Void Platform
                                     </Link>
-                                    <Link to="/office/settings" className="flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-zinc-400 hover:text-white hover:bg-zinc-900/50 transition-all">
-                                        Node Settings
+                                    <Link to="/agents/dashboard" className="flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-zinc-400 hover:text-white hover:bg-zinc-900/50 transition-all">
+                                        Agents Architect
+                                    </Link>
+                                    <Link to="/lamadb/console" className="flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-zinc-400 hover:text-white hover:bg-zinc-900/50 transition-all">
+                                        LamaDB Registry
                                     </Link>
                                     <div className="h-px bg-zinc-900 my-1 mx-2" />
                                     <button

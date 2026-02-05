@@ -12,6 +12,7 @@ import VoidLanding from './pages/VoidLanding';
 import LamaDB from './pages/LamaDB';
 import QCloud from './pages/QCloud';
 import SyncStack from './pages/SyncStack';
+import AgentsLanding from './pages/AgentsLanding';
 import Spoon from './pages/Spoon';
 import Product from './pages/Product';
 import Changelog from './pages/Changelog';
@@ -74,27 +75,30 @@ const AppRoutes = () => {
         {/* Main Website (Shared Layout) */}
         <Route element={<Layout />}>
           <Route index element={<Home />} />
-          <Route path="office" element={
-            <Suspense fallback={<div className="min-h-screen bg-black flex items-center justify-center text-white font-bold uppercase tracking-[0.3em]">Opening Office...</div>}>
-              <OfficeDashboard />
-            </Suspense>
-          }>
-            <Route index element={<UnifiedOfficeCockpit />} />
-            <Route path="syncstack" element={<SyncStackOfficeCockpit />} />
-            <Route path="agents" element={<AgentsOfficeCockpit />} />
-            <Route path="agents/new" element={<AgentsOfficeCockpit />} />
-            <Route path="void" element={<UnifiedOfficeCockpit />} />
-            <Route path="void/new" element={<Navigate to="/void/new" replace />} />
-            <Route path="lamadb" element={<LamaDBOfficeCockpit />} />
-            <Route path="lamadb/new" element={<LamaDBOfficeCockpit />} />
-            <Route path="telemetry" element={<LamaDBTelemetryCockpit />} />
-          </Route>
-          <Route path="dashboard" element={<Navigate to="/office" replace />} />
+
+          {/* Decoupled Product Flow: Landing -> Workspace */}
+          <Route path="agents" element={<AgentsLanding />} />
+          <Route path="agents/dashboard" element={<AgentsOfficeCockpit />} />
+          <Route path="agents/new" element={<AgentsOfficeCockpit />} />
+
+          <Route path="lamadb" element={<LamaDB />} />
+          <Route path="lamadb/console" element={<LamaDBOfficeCockpit />} />
+          <Route path="lamadb/new" element={<LamaDBOfficeCockpit />} />
+          <Route path="lamadb/telemetry" element={<LamaDBTelemetryCockpit />} />
+
+          <Route path="syncstack" element={<SyncStack />} />
+          <Route path="syncstack/console" element={<SyncStackOfficeCockpit />} />
+
+          <Route path="void" element={<VoidLanding />} />
+          <Route path="void/dashboard" element={<UnifiedOfficeCockpit />} />
+          <Route path="void/new" element={<Navigate to="/sub0" replace />} />
+
+          {/* Legacy/Hub Redirects */}
+          <Route path="office/*" element={<UnifiedOfficeCockpit />} />
+          <Route path="dashboard" element={<Navigate to="/void/dashboard" replace />} />
 
           {/* Product Pages */}
-          <Route path="lamadb" element={<LamaDB />} />
           <Route path="q-cloud" element={<QCloud />} />
-          <Route path="syncstack" element={<SyncStack />} />
           <Route path="spoon" element={<Spoon />} />
           <Route path="products" element={<Products />} />
           <Route path="changelog" element={<Changelog />} />
