@@ -494,7 +494,7 @@ function App() {
   }
 
   return (
-    <div className="flex h-screen text-gray-200">
+    <div className="flex h-screen bg-black text-zinc-400 selection:bg-white selection:text-black">
       {isSidebarOpen && (
         <Sidebar
           onNavigate={handleNavigate}
@@ -510,13 +510,13 @@ function App() {
         {!isSidebarOpen && view !== 'new-chat' && (
           <button
             onClick={() => setIsSidebarOpen(true)}
-            className="absolute top-3 left-3 z-20 p-2 rounded-md bg-neutral-800/50 hover:bg-neutral-700/80 backdrop-blur-sm transition-colors"
+            className="absolute top-6 left-6 z-20 p-2 border border-zinc-900 bg-black hover:border-zinc-700 transition-colors rounded-none shadow-2xl"
             aria-label="Open sidebar"
           >
-            <SidebarIcon className="h-5 w-5 text-white" />
+            <SidebarIcon className="h-4 w-4 text-zinc-500" />
           </button>
         )}
-        <div key={view + activeSessionId} className="view-container h-full">
+        <div key={view + activeSessionId} className="h-full">
           {view === 'chat-session' && activeSession && (
             <ChatSessionView
               session={activeSession}
@@ -533,10 +533,13 @@ function App() {
           )}
           {view === 'chat-session' && !activeSession && !isInitialLoad && (
             <div className="p-8 text-white flex flex-col items-center justify-center h-full text-center">
-              <h1 className="text-2xl font-bold mb-2">Chat session not found</h1>
-              <p className="text-gray-400 mb-6">The chat you are looking for does not exist or has not been loaded.</p>
-              <button onClick={() => handleNavigate('new-chat')} className="px-4 py-2 text-sm font-medium bg-white text-black rounded-lg hover:bg-gray-200 transition-colors">
-                Start New Chat
+              <h1 className="text-xl font-bold mb-2 lowercase tracking-tighter">node not materialized</h1>
+              <p className="text-zinc-600 mb-8 max-w-sm uppercase text-[10px] font-bold tracking-[0.2em] leading-relaxed">the session you are attempting to uplink with is currently void or offline in this mesh.</p>
+              <button
+                onClick={() => handleNavigate('new-chat')}
+                className="px-6 py-2.5 text-[10px] font-bold uppercase tracking-widest bg-white text-black hover:bg-orange-500 hover:text-white transition-all duration-300 rounded-none"
+              >
+                Materialize New Node
               </button>
             </div>
           )}

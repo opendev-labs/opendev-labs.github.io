@@ -49,7 +49,7 @@ export const UnifiedOfficeCockpit: React.FC = () => {
                     </Link>
                     <div className="w-1 h-1 rounded-full bg-zinc-800" />
                     <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.3em]">
-                        Product: <span className="text-white">Void // Platform Hub</span>
+                        Product: <span className="text-white">Void // Fleet Control</span>
                     </div>
                 </div>
 
@@ -57,17 +57,17 @@ export const UnifiedOfficeCockpit: React.FC = () => {
                     <div>
                         <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/5 border border-white/10 text-[9px] font-bold text-zinc-500 mb-6 uppercase tracking-[0.3em]">
                             <Terminal size={12} />
-                            <span>Unified // Void-Office Cockpit</span>
+                            <span>Void-Control // Operations Hub</span>
                         </div>
                         <h1 className="text-5xl font-bold tracking-tighter lowercase leading-none">
-                            system<br /><span className="text-zinc-600">office.</span>
+                            fleet<br /><span className="text-zinc-600">manager.</span>
                         </h1>
                     </div>
 
-                    <div className="flex items-center gap-4 bg-zinc-900/50 border border-zinc-800 p-4 rounded-none">
+                    <div className="flex items-center gap-4 bg-zinc-950 border border-zinc-900 p-4 rounded-none">
                         <div className="w-2 h-2 rounded-none bg-orange-500 animate-pulse" />
                         <div className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest leading-none">
-                            Mesh Handshake: <span className="text-orange-500">Synchronized</span>
+                            Mesh Connectivity: <span className="text-orange-500">Optimized</span>
                         </div>
                     </div>
                 </div>

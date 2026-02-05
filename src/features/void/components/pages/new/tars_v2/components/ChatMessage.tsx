@@ -17,26 +17,43 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
 
 
   return (
-    <div className={`flex items-start gap-4 w-full max-w-4xl mx-auto ${isUser ? 'flex-row-reverse' : ''} mb-8`}>
-      <div className={`flex-shrink-0 h-10 w-10 rounded-xl flex items-center justify-center ${isUser ? 'bg-white/10' : 'bg-black border border-white/5 shadow-2xl'}`}>
-        {isUser ? <UserIcon className="h-6 w-6 text-white" /> : <Sub0Icon className="h-6 w-6 text-orange-500" />}
+    <div className={`flex items-start gap-6 w-full max-w-5xl mx-auto ${isUser ? 'flex-row-reverse' : ''} mb-12 animate-in fade-in slide-in-from-bottom-4 duration-500`}>
+      <div className={`flex-shrink-0 h-10 w-10 flex items-center justify-center rounded-none border ${isUser ? 'bg-white border-white text-black' : 'bg-black border-zinc-900 shadow-2xl'}`}>
+        {isUser ? <UserIcon className="h-5 w-5" /> : <Sub0Icon className="h-5 w-5 text-orange-500" />}
       </div>
 
       <div className={`flex flex-col w-full ${isUser ? 'items-end' : 'items-start'}`}>
-        <div className={`px-5 py-4 rounded-2xl max-w-2xl ${isUser ? 'bg-zinc-900/50 border border-white/5 text-gray-100 rounded-tr-none shadow-xl backdrop-blur-md' : 'bg-transparent text-gray-200 border-none'}`}>
-          {isThinkingPhase ? (
-            <div className="flex items-center gap-3 py-2">
-              <SpinnerIcon className="h-5 w-5 animate-spin text-orange-500" />
-              <p className="text-sm font-bold tracking-widest text-zinc-500 uppercase">Neural Handshake in Progress...</p>
-            </div>
-          ) : (
-            <p className="whitespace-pre-wrap text-[15px] leading-relaxed font-medium">{content}</p>
-          )}
-          {message.generationInfo && message.generationInfo.files.length > 0 && (
-            <div className="mt-4 pt-4 border-t border-white/5">
-              <GenerationStatusView info={message.generationInfo} />
-            </div>
-          )}
+        <div className={`w-full max-w-3xl ${isUser ? 'text-right' : 'text-left'}`}>
+          <div className="flex items-center gap-2 mb-2 opacity-30">
+            <span className="text-[9px] font-bold uppercase tracking-[0.3em] text-zinc-500">
+              {isUser ? 'Materializer // User' : 'Architect // sub0'}
+            </span>
+          </div>
+
+          <div className={`px-0 py-2 ${isUser ? 'text-zinc-200' : 'text-white'}`}>
+            {isThinkingPhase ? (
+              <div className="flex items-center gap-4 py-4 bg-zinc-950/50 border border-zinc-900 px-6">
+                <SpinnerIcon className="h-4 w-4 animate-spin text-orange-500" />
+                <p className="text-[10px] font-bold tracking-[0.4em] text-zinc-500 uppercase">Synchronizing Neural Mesh...</p>
+              </div>
+            ) : (
+              <div className={`text-[15px] leading-relaxed font-medium ${isUser ? 'bg-zinc-900/30 p-6 border border-zinc-800' : ''}`}>
+                {content}
+              </div>
+            )}
+
+            {message.generationInfo && message.generationInfo.files.length > 0 && (
+              <div className="mt-8">
+                <div className="flex items-center gap-2 mb-4 opacity-50">
+                  <div className="w-1.5 h-1.5 rounded-none bg-emerald-500" />
+                  <span className="text-[9px] font-bold uppercase tracking-[0.3em] text-zinc-500">Nodes Materializing</span>
+                </div>
+                <div className="bg-zinc-950 border border-zinc-900 p-6">
+                  <GenerationStatusView info={message.generationInfo} />
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

@@ -33,51 +33,56 @@ export function AllChatsView({ sessions, onSelectChat, onDeleteSession, onNaviga
     const filteredSessions = useMemo(() => {
         return sessions
             .filter(session => session.title.toLowerCase().includes(searchTerm.toLowerCase()))
-            .sort((a, b) => b.lastUpdated - a.lastUpdated); // Sort by most recent
+            .sort((a, b) => b.lastUpdated - a.lastUpdated);
     }, [sessions, searchTerm]);
 
     return (
-        <div className="h-full overflow-y-auto bg-[#0A0A0A] text-white">
-            <div className="max-w-4xl mx-auto p-8">
-                <header className="flex items-center justify-between mb-8">
+        <div className="h-full overflow-y-auto bg-black text-white selection:bg-white selection:text-black">
+            <div className="max-w-4xl mx-auto p-12">
+                <header className="flex items-center justify-between mb-16">
                     <div>
-                        <h1 className="text-3xl font-bold">Chats</h1>
-                        <p className="text-gray-400 mt-1">
-                            {sessions.length > 0 ? `You have ${sessions.length} conversations.` : 'Start a new conversation.'}
-                        </p>
+                        <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/5 border border-white/10 text-[9px] font-bold text-zinc-500 mb-6 uppercase tracking-[0.3em]">
+                            Archives // Neural Repository
+                        </div>
+                        <h1 className="text-6xl font-bold tracking-tighter lowercase leading-none">
+                            node<br /><span className="text-zinc-600">archives.</span>
+                        </h1>
                     </div>
                     <button
                         onClick={() => onNavigate('new-chat')}
-                        className="flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg bg-white text-black hover:bg-gray-200 transition-colors"
+                        className="flex items-center gap-3 px-6 py-3 text-[10px] font-bold uppercase tracking-widest bg-white text-black hover:bg-orange-500 hover:text-white transition-all duration-300 rounded-none shadow-2xl"
                     >
-                        <NewChatIcon className="h-5 w-5" />
-                        Start New Chat
+                        <NewChatIcon className="h-4 w-4" />
+                        Materialize Node
                     </button>
                 </header>
 
-                <div className="relative mb-6">
-                    <SearchIcon className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-500" />
+                <div className="relative mb-12">
+                    <SearchIcon className="absolute left-6 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-600" />
                     <input
                         type="text"
-                        placeholder="Search chats..."
+                        placeholder="Search archives by project name or purpose..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full bg-neutral-900 border border-neutral-800 rounded-lg pl-11 pr-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white/20"
+                        className="w-full bg-zinc-950 border border-zinc-900 rounded-none pl-14 pr-6 py-4 text-[11px] font-mono text-zinc-300 placeholder-zinc-800 focus:outline-none focus:border-zinc-700 transition-colors"
                     />
                 </div>
 
-                <div className="space-y-3">
+                <div className="space-y-4">
                     {filteredSessions.length > 0 ? (
                         filteredSessions.map(session => (
                             <div key={session.id} className="group relative">
                                 <button
                                     onClick={() => onSelectChat(session.id)}
-                                    className="w-full text-left p-4 bg-neutral-900/70 border border-neutral-800 rounded-lg hover:bg-neutral-800 transition-colors duration-200 flex items-center justify-between"
+                                    className="w-full text-left p-8 bg-zinc-950/50 border border-zinc-900 rounded-none hover:border-zinc-700 transition-all duration-300 flex items-center justify-between"
                                 >
                                     <div>
-                                        <h2 className="font-semibold text-white truncate">{session.title}</h2>
-                                        <p className="text-sm text-gray-500 mt-1">
-                                            Last updated: {timeAgo(session.lastUpdated)}
+                                        <div className="flex items-center gap-4 mb-2">
+                                            <div className="w-1.5 h-1.5 rounded-none bg-zinc-800 group-hover:bg-orange-500 transition-colors" />
+                                            <h2 className="text-[12px] font-bold text-white uppercase tracking-widest truncate">{session.title}</h2>
+                                        </div>
+                                        <p className="text-[9px] font-bold text-zinc-600 uppercase tracking-[0.2em] mt-1 ml-5">
+                                            Handshake: {timeAgo(session.lastUpdated)}
                                         </p>
                                     </div>
                                 </button>
@@ -88,7 +93,7 @@ export function AllChatsView({ sessions, onSelectChat, onDeleteSession, onNaviga
                                             onDeleteSession(session.id);
                                         }
                                     }}
-                                    className="absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-md text-gray-500 opacity-0 group-hover:opacity-100 bg-neutral-800/50 hover:bg-neutral-700 hover:text-red-500 transition-all"
+                                    className="absolute right-8 top-1/2 -translate-y-1/2 p-3 rounded-none text-zinc-700 opacity-0 group-hover:opacity-100 hover:bg-zinc-900 hover:text-red-500 transition-all border border-zinc-900"
                                     aria-label={`Delete chat ${session.title}`}
                                 >
                                     <TrashIcon className="h-4 w-4" />
@@ -96,10 +101,10 @@ export function AllChatsView({ sessions, onSelectChat, onDeleteSession, onNaviga
                             </div>
                         ))
                     ) : (
-                        <div className="text-center py-16 px-4 border-2 border-dashed border-neutral-800 rounded-lg">
-                            <h3 className="text-lg font-medium text-gray-300">No chats found</h3>
-                            <p className="text-gray-500 mt-2">
-                                {searchTerm ? 'Try a different search term or start a new chat.' : 'Your conversations will appear here.'}
+                        <div className="text-center py-24 px-8 border border-dashed border-zinc-900 rounded-none">
+                            <h3 className="text-[10px] font-bold uppercase tracking-[0.4em] text-zinc-500">Node records void</h3>
+                            <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-zinc-700 mt-4 leading-relaxed max-w-xs mx-auto">
+                                {searchTerm ? 'The requested identifier does not exist in the current neural history.' : 'Initialize your first node to populate the system archives.'}
                             </p>
                         </div>
                     )}

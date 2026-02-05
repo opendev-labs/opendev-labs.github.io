@@ -36,7 +36,7 @@ export function PromptInput({ onSendMessage, disabled, selectedModelId, apiKeys,
       setPrompt('');
     }
   };
-  
+
   const handleModelSelect = (modelId: string) => {
     onModelChange(modelId);
     setIsModelDropdownOpen(false);
@@ -47,8 +47,8 @@ export function PromptInput({ onSendMessage, disabled, selectedModelId, apiKeys,
   const currentModel = SUPPORTED_MODELS.find(m => m.id === selectedModelId);
 
   return (
-    <form onSubmit={handleSubmit} className="w-full max-w-3xl mx-auto relative">
-      <div className="bg-[#212121] border border-white/10 rounded-2xl px-4 py-2 flex flex-col justify-between transition-shadow focus-within:ring-1 focus-within:ring-white/20">
+    <form onSubmit={handleSubmit} className="w-full max-w-3xl mx-auto relative group">
+      <div className="bg-zinc-950 border border-zinc-900 rounded-none px-6 py-4 flex flex-col justify-between transition-all duration-300 focus-within:border-orange-500/50 shadow-2xl">
         <textarea
           ref={textareaRef}
           value={prompt}
@@ -59,52 +59,60 @@ export function PromptInput({ onSendMessage, disabled, selectedModelId, apiKeys,
               handleSubmit(e);
             }
           }}
-          placeholder="Create a pricing page..."
-          className="w-full bg-transparent text-gray-200 text-base placeholder-gray-500 resize-none focus:outline-none"
+          placeholder="What shall we materialize today?"
+          className="w-full bg-transparent text-zinc-200 text-base placeholder-zinc-700 resize-none focus:outline-none font-medium mb-4"
           rows={1}
           disabled={disabled}
           style={{ maxHeight: '200px' }}
         />
-        <div className="flex items-center justify-between mt-2">
-            <div className="flex items-center gap-1 text-gray-500">
-                <button type="button" className="hover:text-white transition-colors p-1" aria-label="Add image">
-                    <ImageIcon className="h-5 w-5"/>
-                </button>
-                <button type="button" className="hover:text-white transition-colors p-1" aria-label="Surprise me">
-                    <StarIcon className="h-5 w-5"/>
-                </button>
-                <button type="button" className="hover:text-white transition-colors p-1" aria-label="Use template">
-                    <GridIcon className="h-5 w-5"/>
-                </button>
-                <div className="h-5 border-l border-white/20 mx-2"></div>
-                <div className="relative">
-                     <button 
-                        ref={modelSelectorButtonRef}
-                        type="button" 
-                        className="flex items-center gap-2 hover:text-white transition-colors text-xs px-2 py-1 rounded-md hover:bg-white/10" 
-                        aria-label="Select model"
-                        onClick={() => setIsModelDropdownOpen(prev => !prev)}
-                    >
-                        <BrainCircuitIcon className="h-4 w-4"/>
-                        <span className="truncate max-w-[120px]">{currentModel?.name || 'Select Model'}</span>
-                    </button>
-                    <ModelDropdown
-                        isOpen={isModelDropdownOpen}
-                        onClose={() => setIsModelDropdownOpen(false)}
-                        anchorRef={modelSelectorButtonRef}
-                        selectedModelId={selectedModelId}
-                        onModelSelect={handleModelSelect}
-                    />
-                </div>
+        <div className="flex items-center justify-between border-t border-zinc-900 pt-4">
+          <div className="flex items-center gap-2 text-zinc-600">
+            {[
+              { icon: ImageIcon, label: 'Visual Context' },
+              { icon: StarIcon, label: 'Materialize' },
+              { icon: GridIcon, label: 'Node Templates' }
+            ].map((action, i) => (
+              <button
+                key={i}
+                type="button"
+                className="hover:text-white transition-colors p-1.5 hover:bg-zinc-900"
+                aria-label={action.label}
+                title={action.label}
+              >
+                <action.icon className="h-4 w-4" />
+              </button>
+            ))}
+
+            <div className="h-4 border-l border-zinc-900 mx-1"></div>
+
+            <div className="relative">
+              <button
+                ref={modelSelectorButtonRef}
+                type="button"
+                className="flex items-center gap-2 hover:text-white transition-colors text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 hover:bg-zinc-900"
+                aria-label="Select model"
+                onClick={() => setIsModelDropdownOpen(prev => !prev)}
+              >
+                <BrainCircuitIcon className="h-4 w-4 text-orange-500" />
+                <span className="truncate max-w-[120px]">{currentModel?.name || 'Select Node'}</span>
+              </button>
+              <ModelDropdown
+                isOpen={isModelDropdownOpen}
+                onClose={() => setIsModelDropdownOpen(false)}
+                anchorRef={modelSelectorButtonRef}
+                selectedModelId={selectedModelId}
+                onModelSelect={handleModelSelect}
+              />
             </div>
-            <button
-              type="submit"
-              disabled={disabled || !hasContent}
-              className={`h-8 w-8 rounded-full flex items-center justify-center transition-all disabled:cursor-not-allowed ${hasContent ? 'bg-neutral-600 hover:bg-neutral-500' : 'bg-neutral-800'}`}
-              aria-label="Send message"
-            >
-              <ArrowUpIcon className={`h-5 w-5 transition-colors ${hasContent ? 'text-white' : 'text-neutral-500'}`} />
-            </button>
+          </div>
+          <button
+            type="submit"
+            disabled={disabled || !hasContent}
+            className={`h-9 w-9 flex items-center justify-center transition-all duration-300 rounded-none ${hasContent ? 'bg-white text-black hover:bg-orange-500 hover:text-white' : 'bg-zinc-900 text-zinc-700 cursor-not-allowed'}`}
+            aria-label="Send message"
+          >
+            <ArrowUpIcon className={`h-5 w-5 transition-colors`} />
+          </button>
         </div>
       </div>
       <ApiKeyModal

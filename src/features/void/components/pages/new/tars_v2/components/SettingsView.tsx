@@ -4,110 +4,115 @@ import { UserIcon, BuildingIcon, CreditCardIcon, KeyIcon, ShieldIcon } from './i
 
 // Reusable component for a setting card
 const SettingsCard: React.FC<{ icon: React.ReactNode; title: string; description: string; children: React.ReactNode }> = ({ icon, title, description, children }) => (
-    <div className="bg-neutral-900 border border-neutral-800 rounded-lg overflow-hidden">
-        <div className="p-6 border-b border-neutral-800">
-            <div className="flex items-start gap-4">
-                <div className="bg-neutral-800 p-2 rounded-md">{icon}</div>
+    <div className="bg-zinc-950 border border-zinc-900 rounded-none overflow-hidden mb-8">
+        <div className="p-8 border-b border-zinc-900">
+            <div className="flex items-start gap-6">
+                <div className="text-zinc-500">{icon}</div>
                 <div>
-                    <h2 className="text-lg font-semibold text-white">{title}</h2>
-                    <p className="text-sm text-gray-400 mt-1">{description}</p>
+                    <h2 className="text-[11px] font-bold text-white uppercase tracking-[0.3em] mb-1">{title}</h2>
+                    <p className="text-[10px] text-zinc-600 uppercase font-bold tracking-widest">{description}</p>
                 </div>
             </div>
         </div>
-        <div className="p-6 bg-black/20">
+        <div className="p-8 bg-black">
             {children}
         </div>
     </div>
 );
 
-// Reusable component for a form-like row
 const SettingsRow: React.FC<{ label: string; children: React.ReactNode; }> = ({ label, children }) => (
-    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between py-3 border-b border-neutral-800 last:border-b-0">
-        <label className="text-sm text-gray-300 mb-2 sm:mb-0">{label}</label>
+    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between py-4 border-b border-zinc-900 last:border-b-0">
+        <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-4 sm:mb-0">{label}</label>
         <div className="w-full sm:w-auto">{children}</div>
     </div>
 );
 
 export function SettingsView() {
-  return (
-    <div className="h-full overflow-y-auto bg-[#0A0A0A] text-white">
-      <div className="max-w-4xl mx-auto p-8">
-        <h1 className="text-3xl font-bold mb-2">Settings</h1>
-        <p className="text-gray-400 mb-8">Manage your account, organization, and platform settings.</p>
-
-        <div className="space-y-8">
-            <SettingsCard
-                icon={<UserIcon className="w-5 h-5 text-gray-300" />}
-                title="Profile"
-                description="Manage your personal information and preferences."
-            >
-                <div className="space-y-2">
-                    <SettingsRow label="Full Name">
-                        <input type="text" disabled value="John Doe" className="bg-neutral-700/50 border border-neutral-700 rounded-md px-3 py-1.5 text-sm w-full sm:w-64 text-gray-300 cursor-not-allowed" />
-                    </SettingsRow>
-                    <SettingsRow label="Email Address">
-                         <input type="email" disabled value="john.doe@example.com" className="bg-neutral-700/50 border border-neutral-700 rounded-md px-3 py-1.5 text-sm w-full sm:w-64 text-gray-300 cursor-not-allowed" />
-                    </SettingsRow>
-                     <SettingsRow label="Theme">
-                        <select disabled className="bg-neutral-700/50 border border-neutral-700 rounded-md px-3 py-1.5 text-sm w-full sm:w-64 text-gray-300 cursor-not-allowed appearance-none">
-                            <option>Dark</option>
-                        </select>
-                    </SettingsRow>
-                </div>
-            </SettingsCard>
-
-             <SettingsCard
-                icon={<BuildingIcon className="w-5 h-5 text-gray-300" />}
-                title="Organization"
-                description="Manage your organization settings, members, and roles."
-            >
-                <div className="space-y-2">
-                    <SettingsRow label="Organization Name">
-                        <input type="text" disabled value="Acme Corporation" className="bg-neutral-700/50 border border-neutral-700 rounded-md px-3 py-1.5 text-sm w-full sm:w-64 text-gray-300 cursor-not-allowed" />
-                    </SettingsRow>
-                    <SettingsRow label="Members">
-                        <button disabled className="px-4 py-1.5 text-sm font-medium bg-neutral-700 text-gray-400 rounded-md cursor-not-allowed">Invite Members</button>
-                    </SettingsRow>
-                </div>
-            </SettingsCard>
-            
-            <SettingsCard
-                icon={<CreditCardIcon className="w-5 h-5 text-gray-300" />}
-                title="Billing"
-                description="Manage your subscription, payment methods, and view invoices."
-            >
-                 <SettingsRow label="Current Plan">
-                    <div className="flex items-center gap-4">
-                        <span className="text-sm font-semibold bg-green-500/10 text-green-400 px-2 py-0.5 rounded-full">Enterprise</span>
-                        <button disabled className="px-4 py-1.5 text-sm font-medium bg-neutral-700 text-gray-400 rounded-md cursor-not-allowed">Manage Subscription</button>
+    return (
+        <div className="h-full overflow-y-auto bg-black text-white selection:bg-white selection:text-black">
+            <div className="max-w-4xl mx-auto p-12">
+                <header className="mb-16">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/5 border border-white/10 text-[9px] font-bold text-zinc-500 mb-6 uppercase tracking-[0.3em]">
+                        System // Core Configuration
                     </div>
-                 </SettingsRow>
-            </SettingsCard>
-            
-            <SettingsCard
-                icon={<KeyIcon className="w-5 h-5 text-gray-300" />}
-                title="API Keys"
-                description="Manage API keys for integrations and external services."
-            >
-                 <SettingsRow label="Your API Keys">
-                    <button disabled className="px-4 py-1.5 text-sm font-medium bg-neutral-700 text-gray-400 rounded-md cursor-not-allowed">Create New Key</button>
-                 </SettingsRow>
-            </SettingsCard>
-            
-             <SettingsCard
-                icon={<ShieldIcon className="w-5 h-5 text-gray-300" />}
-                title="Security"
-                description="Manage your organization's security settings."
-            >
-                 <SettingsRow label="Single Sign-On (SSO)">
-                    <button disabled className="px-4 py-1.5 text-sm font-medium bg-neutral-700 text-gray-400 rounded-md cursor-not-allowed">Configure SSO</button>
-                 </SettingsRow>
-                  <SettingsRow label="Audit Logs">
-                    <button disabled className="px-4 py-1.5 text-sm font-medium bg-neutral-700 text-gray-400 rounded-md cursor-not-allowed">View Logs</button>
-                 </SettingsRow>
-            </SettingsCard>
+                    <h1 className="text-6xl font-bold tracking-tighter lowercase leading-none">
+                        uplink<br /><span className="text-zinc-600">parameters.</span>
+                    </h1>
+                </header>
+
+                <div className="space-y-4">
+                    <SettingsCard
+                        icon={<UserIcon className="w-5 h-5" />}
+                        title="Neural Profile"
+                        description="Identity parameters and handshake preferences."
+                    >
+                        <div className="space-y-2">
+                            <SettingsRow label="Full Name">
+                                <input type="text" disabled value="Sovereign User" className="bg-zinc-900/50 border border-zinc-800 rounded-none px-4 py-2 text-[11px] font-mono w-full sm:w-80 text-zinc-500 cursor-not-allowed focus:outline-none" />
+                            </SettingsRow>
+                            <SettingsRow label="Uplink ID">
+                                <input type="email" disabled value="uplink@sub0.io" className="bg-zinc-900/50 border border-zinc-800 rounded-none px-4 py-2 text-[11px] font-mono w-full sm:w-80 text-zinc-500 cursor-not-allowed focus:outline-none" />
+                            </SettingsRow>
+                            <SettingsRow label="System Theme">
+                                <select disabled className="bg-zinc-900/50 border border-zinc-800 rounded-none px-4 py-2 text-[11px] font-mono w-full sm:w-80 text-zinc-500 cursor-not-allowed appearance-none focus:outline-none">
+                                    <option>Titan // Black</option>
+                                </select>
+                            </SettingsRow>
+                        </div>
+                    </SettingsCard>
+
+                    <SettingsCard
+                        icon={<BuildingIcon className="w-5 h-5" />}
+                        title="Consortium"
+                        description="Cluster management and role distribution."
+                    >
+                        <div className="space-y-2">
+                            <SettingsRow label="Consortium Name">
+                                <input type="text" disabled value="OpenDev Labs" className="bg-zinc-900/50 border border-zinc-800 rounded-none px-4 py-2 text-[11px] font-mono w-full sm:w-80 text-zinc-500 cursor-not-allowed focus:outline-none" />
+                            </SettingsRow>
+                            <SettingsRow label="Active Nodes">
+                                <button disabled className="px-6 py-2 text-[10px] font-bold uppercase tracking-widest bg-zinc-900 text-zinc-700 cursor-not-allowed border border-zinc-800">Invite Architects</button>
+                            </SettingsRow>
+                        </div>
+                    </SettingsCard>
+
+                    <SettingsCard
+                        icon={<CreditCardIcon className="w-5 h-5" />}
+                        title="Compute Credits"
+                        description="Resource allocation and usage history."
+                    >
+                        <SettingsRow label="Resource Plan">
+                            <div className="flex items-center gap-6">
+                                <span className="text-[10px] font-bold uppercase tracking-widest text-orange-500 border border-orange-500/30 px-3 py-1 bg-orange-500/5">Unlimited Compute</span>
+                                <button disabled className="px-6 py-2 text-[10px] font-bold uppercase tracking-widest bg-zinc-900 text-zinc-700 cursor-not-allowed border border-zinc-800">Manage Allocation</button>
+                            </div>
+                        </SettingsRow>
+                    </SettingsCard>
+
+                    <SettingsCard
+                        icon={<KeyIcon className="w-5 h-5" />}
+                        title="Encryption Keys"
+                        description="Model authentication and external mesh handshakes."
+                    >
+                        <SettingsRow label="Uplink Keys">
+                            <button disabled className="px-6 py-2 text-[10px] font-bold uppercase tracking-widest bg-white text-black cursor-not-allowed">Generate New Key</button>
+                        </SettingsRow>
+                    </SettingsCard>
+
+                    <SettingsCard
+                        icon={<ShieldIcon className="w-5 h-5" />}
+                        title="Audit & Security"
+                        description="System hardening and access logs."
+                    >
+                        <SettingsRow label="Mesh SSO">
+                            <button disabled className="px-6 py-2 text-[10px] font-bold uppercase tracking-widest bg-zinc-900 text-zinc-700 cursor-not-allowed border border-zinc-800">Configure Protocol</button>
+                        </SettingsRow>
+                        <SettingsRow label="Uplink Logs">
+                            <button disabled className="px-6 py-2 text-[10px] font-bold uppercase tracking-widest bg-zinc-900 text-zinc-700 cursor-not-allowed border border-zinc-800">View Transactions</button>
+                        </SettingsRow>
+                    </SettingsCard>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  );
+    );
 }

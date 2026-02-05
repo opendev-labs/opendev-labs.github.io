@@ -5,15 +5,15 @@ import { FileIcon, FolderIcon, SpinnerIcon, FilePlusIcon, FolderPlusIcon, TrashI
 
 // Configure monaco-editor loader to fetch assets from a CDN
 loader.config({
-  paths: {
-    vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.49.0/min/vs',
-  },
+    paths: {
+        vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.49.0/min/vs',
+    },
 });
 
 declare global {
-  interface Window {
-    Babel: any;
-  }
+    interface Window {
+        Babel: any;
+    }
 }
 
 interface CodeViewProps {
@@ -123,60 +123,60 @@ const FileTreeView: React.FC<{
                     return aIsFile ? 1 : -1;
                 })
                 .map(([name, node]) => {
-                const isFile = !!(node as FileNode).path;
-                const currentPath = parentPath ? `${parentPath}/${name}` : name;
+                    const isFile = !!(node as FileNode).path;
+                    const currentPath = parentPath ? `${parentPath}/${name}` : name;
 
-                if (renaming === currentPath) {
+                    if (renaming === currentPath) {
+                        return (
+                            <li key={currentPath}>
+                                <EntryInput
+                                    defaultValue={name}
+                                    onSubmit={(e) => handleRenameSubmit(e, currentPath, isFile)}
+                                    onBlur={() => setRenaming(null)}
+                                    icon={isFile ? <FileIcon className="h-4 w-4 flex-shrink-0" /> : <FolderIcon className="h-4 w-4 flex-shrink-0" />}
+                                />
+                            </li>
+                        );
+                    }
+
                     return (
                         <li key={currentPath}>
-                            <EntryInput
-                                defaultValue={name}
-                                onSubmit={(e) => handleRenameSubmit(e, currentPath, isFile)}
-                                onBlur={() => setRenaming(null)}
-                                icon={isFile ? <FileIcon className="h-4 w-4 flex-shrink-0" /> : <FolderIcon className="h-4 w-4 flex-shrink-0" />}
-                            />
+                            <div className="group relative">
+                                <button
+                                    onClick={() => isFile && onSelectFile(node as FileNode)}
+                                    style={{ paddingLeft: `${level * 1.25}rem` }}
+                                    className={`w-full text-left text-sm flex items-center justify-between gap-2 px-2 py-1 rounded-md ${activeFile?.path === currentPath ? 'bg-white/10 text-white' : 'text-gray-400 hover:bg-white/5 hover:text-white'}`}
+                                >
+                                    <div className="flex items-center gap-2 truncate">
+                                        {isFile ? <FileIcon className="h-4 w-4 flex-shrink-0" /> : <FolderIcon className="h-4 w-4 flex-shrink-0" />}
+                                        <span className="truncate">{name}</span>
+                                    </div>
+                                    <div className="flex items-center gap-2 flex-shrink-0">
+                                        {generationStatusMap.get(currentPath)?.status === 'generating' && <SpinnerIcon className="w-3.5 h-3.5 animate-spin text-gray-500" />}
+                                    </div>
+                                </button>
+                                <div className="absolute top-1/2 -translate-y-1/2 right-1 flex items-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/30 rounded-md">
+                                    <button onClick={() => setRenaming(currentPath)} className="p-1 text-gray-400 hover:text-white" title="Rename"><PencilIcon className="w-3.5 h-3.5" /></button>
+                                    <button onClick={() => onDeleteFileOrFolder(currentPath, isFile)} className="p-1 text-gray-400 hover:text-red-500" title="Delete"><TrashIcon className="w-3.5 h-3.5" /></button>
+                                </div>
+                            </div>
+                            {!isFile && (
+                                <FileTreeView
+                                    tree={node as TreeNode}
+                                    onSelectFile={onSelectFile}
+                                    activeFile={activeFile}
+                                    generationStatusMap={generationStatusMap}
+                                    onAddFileOrFolder={onAddFileOrFolder}
+                                    onDeleteFileOrFolder={onDeleteFileOrFolder}
+                                    onRenameFileOrFolder={onRenameFileOrFolder}
+                                    level={level + 1}
+                                    parentPath={currentPath}
+                                />
+                            )}
                         </li>
                     );
-                }
-
-                return (
-                    <li key={currentPath}>
-                        <div className="group relative">
-                            <button
-                                onClick={() => isFile && onSelectFile(node as FileNode)}
-                                style={{ paddingLeft: `${level * 1.25}rem` }}
-                                className={`w-full text-left text-sm flex items-center justify-between gap-2 px-2 py-1 rounded-md ${activeFile?.path === currentPath ? 'bg-white/10 text-white' : 'text-gray-400 hover:bg-white/5 hover:text-white'}`}
-                            >
-                                <div className="flex items-center gap-2 truncate">
-                                    {isFile ? <FileIcon className="h-4 w-4 flex-shrink-0" /> : <FolderIcon className="h-4 w-4 flex-shrink-0" />}
-                                    <span className="truncate">{name}</span>
-                                </div>
-                                <div className="flex items-center gap-2 flex-shrink-0">
-                                    {generationStatusMap.get(currentPath)?.status === 'generating' && <SpinnerIcon className="w-3.5 h-3.5 animate-spin text-gray-500" />}
-                                </div>
-                            </button>
-                            <div className="absolute top-1/2 -translate-y-1/2 right-1 flex items-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/30 rounded-md">
-                                <button onClick={() => setRenaming(currentPath)} className="p-1 text-gray-400 hover:text-white" title="Rename"><PencilIcon className="w-3.5 h-3.5" /></button>
-                                <button onClick={() => onDeleteFileOrFolder(currentPath, isFile)} className="p-1 text-gray-400 hover:text-red-500" title="Delete"><TrashIcon className="w-3.5 h-3.5" /></button>
-                            </div>
-                        </div>
-                        {!isFile && (
-                            <FileTreeView
-                                tree={node as TreeNode}
-                                onSelectFile={onSelectFile}
-                                activeFile={activeFile}
-                                generationStatusMap={generationStatusMap}
-                                onAddFileOrFolder={onAddFileOrFolder}
-                                onDeleteFileOrFolder={onDeleteFileOrFolder}
-                                onRenameFileOrFolder={onRenameFileOrFolder}
-                                level={level + 1}
-                                parentPath={currentPath}
-                            />
-                        )}
-                    </li>
-                );
-            })}
-             {creating && (
+                })}
+            {creating && (
                 <li>
                     <EntryInput
                         onSubmit={handleCreateSubmit}
@@ -244,7 +244,7 @@ const PreviewPane: React.FC<{ files: FileNode[] }> = ({ files }) => {
 
                     let processedCode = file.content;
                     const importRegex = /import\s+(?:[\w\s{},*]+ as \w+\s*)?([\w\s{},*]+)?\s+from\s+['"](\.\.?\/.*?)['"]/g;
-                    
+
                     processedCode = processedCode.replace(importRegex, (match, _, relativePath) => {
                         const pathSegments = file.path.split('/');
                         pathSegments.pop();
@@ -266,7 +266,7 @@ const PreviewPane: React.FC<{ files: FileNode[] }> = ({ files }) => {
                         if (fileMap.has(resolvedBasePath)) {
                             absolutePath = resolvedBasePath;
                         } else {
-                        // Case 2: Extensionless match (e.g., './Button')
+                            // Case 2: Extensionless match (e.g., './Button')
                             for (const ext of extensionsToTry) {
                                 const potentialPath = resolvedBasePath + ext;
                                 if (fileMap.has(potentialPath)) {
@@ -275,22 +275,22 @@ const PreviewPane: React.FC<{ files: FileNode[] }> = ({ files }) => {
                                 }
                             }
                         }
-                        
+
                         if (absolutePath) {
                             return match.replace(relativePath, pathToModuleId(absolutePath));
                         }
                         return match;
                     });
-                    
+
                     const transformed = window.Babel.transform(processedCode, {
                         presets: ['react', 'typescript'],
                         filename: file.path,
                     }).code;
-                    
+
                     importMap.imports[moduleId] = `data:text/javascript,${encodeURIComponent(transformed)}`;
                 }
             }
-            
+
             const errorDisplayScript = `
               document.body.innerHTML = \`<div style="background-color: #0A0A0A; color: #e5e7eb; font-family: Inter, sans-serif; height: 100vh; display: flex; align-items: center; justify-content: center; padding: 2rem; box-sizing: border-box;">
                 <div style="border: 1px solid #27272A; background-color: #171717; padding: 1.5rem; border-radius: 0.5rem; max-width: 80%;">
@@ -382,7 +382,7 @@ export function CodeView({ session, setActiveFile, onFileContentChange, generati
 
         // Add React type definitions
         const addExtraLibs = async () => {
-             try {
+            try {
                 const reactVersion = "18";
                 const [reactTypes, reactGlobalTypes, reactDomTypes] = await Promise.all([
                     fetch(`https://unpkg.com/@types/react@${reactVersion}/index.d.ts`).then(res => res.text()),
@@ -394,16 +394,16 @@ export function CodeView({ session, setActiveFile, onFileContentChange, generati
                 monaco.languages.typescript.typescriptDefaults.addExtraLib(reactGlobalTypes, `file:///node_modules/@types/react/global.d.ts`);
                 monaco.languages.typescript.typescriptDefaults.addExtraLib(reactDomTypes, `file:///node_modules/@types/react-dom/index.d.ts`);
                 console.log("Monaco TypeScript environment configured for React.");
-             } catch (error) {
-                 console.error("Could not fetch React type definitions for Monaco:", error);
-             }
+            } catch (error) {
+                console.error("Could not fetch React type definitions for Monaco:", error);
+            }
         };
 
         addExtraLibs();
     };
 
     const fileTreeData = useMemo(() => buildFileTree(fileTree), [fileTree]);
-    
+
     const generationStatusMap = useMemo(() => {
         const map = new Map<string, GenerationFile>();
         if (generationInfo) {
@@ -429,70 +429,75 @@ export function CodeView({ session, setActiveFile, onFileContentChange, generati
     );
 
     return (
-        <div className="flex flex-col h-full bg-[#121212]">
+        <div className="flex flex-col h-full bg-[#0A0A0A]">
             {activeTab === 'code' ? (
                 <div className="flex-1 flex overflow-hidden">
                     {isFileTreeVisible && (
-                        <aside className="w-56 bg-black/30 p-2 overflow-y-auto border-r border-neutral-800">
-                            <header className="flex items-center justify-between pb-2">
-                                 <h3 className="px-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">Files</h3>
-                                 <div className="flex items-center gap-1">
-                                     <button onClick={() => setRootCreating('folder')} className="p-1 rounded hover:bg-white/10" title="New Folder">
-                                         <FolderPlusIcon className="w-4 h-4 text-gray-400"/>
-                                     </button>
-                                     <button onClick={() => setRootCreating('file')} className="p-1 rounded hover:bg-white/10" title="New File">
-                                         <FilePlusIcon className="w-4 h-4 text-gray-400"/>
-                                     </button>
-                                     <button onClick={() => setIsFileTreeVisible(false)} className="p-1 rounded hover:bg-white/10" title="Hide File Manager">
-                                         <PanelLeftCloseIcon className="w-4 h-4 text-gray-400"/>
-                                     </button>
-                                 </div>
+                        <aside className="w-56 bg-zinc-950 p-4 overflow-y-auto border-r border-zinc-900">
+                            <header className="flex items-center justify-between pb-4 border-b border-zinc-900 mb-4">
+                                <h3 className="text-[9px] font-bold text-zinc-600 uppercase tracking-[0.3em]">Node Files</h3>
+                                <div className="flex items-center gap-1">
+                                    <button onClick={() => setRootCreating('folder')} className="p-1.5 hover:bg-zinc-900 text-zinc-600 hover:text-white transition-colors" title="New Folder">
+                                        <FolderPlusIcon className="w-4 h-4" />
+                                    </button>
+                                    <button onClick={() => setRootCreating('file')} className="p-1.5 hover:bg-zinc-900 text-zinc-600 hover:text-white transition-colors" title="New File">
+                                        <FilePlusIcon className="w-4 h-4" />
+                                    </button>
+                                </div>
                             </header>
-                            
+
                             {rootCreating && (
-                                 <form onSubmit={handleCreateSubmit} className="w-full text-left text-sm flex items-center gap-2 px-2 py-1 rounded-md bg-white/10 mb-1">
-                                    {rootCreating === 'file' ? <FileIcon className="h-4 w-4 flex-shrink-0" /> : <FolderIcon className="h-4 w-4 flex-shrink-0" />}
+                                <form onSubmit={handleCreateSubmit} className="w-full text-left text-sm flex items-center gap-2 px-2 py-1.5 bg-zinc-900 border border-zinc-800 mb-2">
+                                    {rootCreating === 'file' ? <FileIcon className="h-4 w-4 text-zinc-500" /> : <FolderIcon className="h-4 w-4 text-zinc-500" />}
                                     <input
                                         ref={inputRef}
                                         type="text"
                                         name="name"
                                         onBlur={() => setRootCreating(null)}
-                                        className="bg-transparent text-white w-full focus:outline-none"
+                                        className="bg-transparent text-white text-xs w-full focus:outline-none placeholder-zinc-700"
                                         autoComplete="off"
+                                        placeholder="Name..."
                                     />
                                 </form>
                             )}
 
                             {Object.keys(fileTreeData).length > 0 || rootCreating ? (
-                                <FileTreeView 
-                                    tree={fileTreeData} 
-                                    onSelectFile={setActiveFile} 
-                                    activeFile={activeFile} 
+                                <FileTreeView
+                                    tree={fileTreeData}
+                                    onSelectFile={setActiveFile}
+                                    activeFile={activeFile}
                                     generationStatusMap={generationStatusMap}
                                     onAddFileOrFolder={onAddFileOrFolder}
                                     onDeleteFileOrFolder={onDeleteFileOrFolder}
                                     onRenameFileOrFolder={onRenameFileOrFolder}
                                 />
                             ) : (
-                                <p className="px-2 text-xs text-gray-500">No files generated yet.</p>
+                                <p className="text-[9px] font-bold text-zinc-800 uppercase tracking-widest text-center mt-10">Neural void</p>
                             )}
                         </aside>
                     )}
 
                     <main className="flex-1 flex flex-col overflow-hidden relative">
-                         {!isFileTreeVisible && (
+                        {!isFileTreeVisible && (
                             <button
                                 onClick={() => setIsFileTreeVisible(true)}
-                                className="absolute top-2 left-2 z-10 p-1.5 rounded-md bg-black/30 hover:bg-white/20"
+                                className="absolute top-4 left-4 z-10 p-2 bg-zinc-950 border border-zinc-900 hover:border-zinc-700 transition-colors"
                                 title="Show File Manager"
                             >
-                                <SidebarIcon className="w-4 h-4 text-gray-300"/>
+                                <SidebarIcon className="w-4 h-4 text-zinc-500" />
                             </button>
                         )}
                         {activeFile ? (
                             <>
-                                <div className="flex-shrink-0 bg-[#121212] px-4 py-2 text-sm text-gray-400 border-b border-neutral-800">
-                                    {activeFile.path}
+                                <div className="flex-shrink-0 bg-black px-6 py-3 flex items-center justify-between border-b border-zinc-900">
+                                    <div className="flex items-center gap-3">
+                                        <FileIcon className="h-3.5 w-3.5 text-zinc-600" />
+                                        <span className="text-[10px] font-bold text-zinc-300 uppercase tracking-widest">{activeFile.path}</span>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <div className="w-1.5 h-1.5 rounded-none bg-orange-500/50" />
+                                        <span className="text-[9px] font-bold text-zinc-600 uppercase tracking-[0.2em]">Materializing...</span>
+                                    </div>
                                 </div>
                                 <div className="flex-1 relative">
                                     <Editor
@@ -504,23 +509,30 @@ export function CodeView({ session, setActiveFile, onFileContentChange, generati
                                         onMount={handleEditorDidMount}
                                         options={{
                                             minimap: { enabled: false },
-                                            fontSize: 14,
+                                            fontSize: 13,
                                             fontFamily: "'JetBrains Mono', monospace",
                                             wordWrap: 'on',
+                                            lineNumbers: 'on',
+                                            glyphMargin: false,
+                                            folding: true,
+                                            lineDecorationsWidth: 10,
+                                            lineNumbersMinChars: 3,
                                             scrollBeyondLastLine: false,
                                             automaticLayout: true,
                                             tabSize: 2,
                                             insertSpaces: true,
-                                            padding: { top: 16, bottom: 16 },
+                                            padding: { top: 20, bottom: 20 },
                                         }}
                                     />
                                 </div>
                             </>
                         ) : (
-                            <div className="flex flex-col items-center justify-center h-full text-neutral-600">
-                                <FileIcon className="h-12 w-12 mb-4" />
-                                <p className="text-sm font-medium">Select a file to view and edit</p>
-                                <p className="text-xs text-neutral-700 mt-1">Or ask TARS to generate one for you</p>
+                            <div className="flex flex-col items-center justify-center h-full text-zinc-800">
+                                <div className="w-12 h-12 bg-zinc-950 border border-zinc-900 flex items-center justify-center mb-6">
+                                    <FileIcon className="h-6 w-6 opacity-20" />
+                                </div>
+                                <p className="text-[10px] font-bold uppercase tracking-[0.4em]">Select Node Segment</p>
+                                <p className="text-[9px] font-bold uppercase tracking-[0.2em] mt-2 opacity-50">Or ask the Architect to materialize one</p>
                             </div>
                         )}
                     </main>

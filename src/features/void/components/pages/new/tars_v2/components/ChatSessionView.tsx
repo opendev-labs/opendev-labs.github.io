@@ -91,44 +91,56 @@ export function ChatSessionView({
   }, [chatPanelWidth]);
 
   return (
-    <div className="flex flex-col h-full">
-      <header className="flex-shrink-0 flex items-center justify-between p-3 border-b border-neutral-800">
-        <div className="flex items-center gap-3">
-          <h2 className="font-semibold text-white truncate">{session.title}</h2>
+    <div className="flex flex-col h-full bg-black selection:bg-white selection:text-black">
+      <header className="flex-shrink-0 flex items-center justify-between px-6 py-4 border-b border-zinc-900 bg-black">
+        <div className="flex items-center gap-6">
+          <button
+            onClick={() => window.location.hash = '/'}
+            className="text-[10px] font-bold text-zinc-600 hover:text-orange-500 transition-colors uppercase tracking-[0.4em]"
+          >
+            &larr; Return to Fleet
+          </button>
+          <div className="w-[1px] h-4 bg-zinc-900" />
+          <div className="flex flex-col">
+            <div className="text-[9px] font-bold text-zinc-500 uppercase tracking-[0.3em] mb-0.5">
+              Node: <span className="text-white">{session.title}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse" />
+              <span className="text-[10px] font-bold text-orange-500 uppercase tracking-widest">Neural Uplink // Active</span>
+            </div>
+          </div>
         </div>
-        <div className="flex items-center gap-2">
+
+        <div className="flex items-center gap-4">
           {isCodeViewVisible && (
-            <div className="relative flex items-center bg-black/30 p-1 rounded-lg">
-              <div
-                className="absolute top-1 bottom-1 w-8 bg-neutral-700 rounded-md transition-transform duration-300 ease-in-out"
-                style={{ transform: activeTab === 'preview' ? 'translateX(36px)' : 'translateX(0px)' }}
-              />
+            <div className="flex items-center bg-zinc-950 border border-zinc-900 p-1 rounded-none">
               <button
                 onClick={() => setActiveTab('code')}
-                aria-pressed={activeTab === 'code'}
-                className="relative z-10 p-1.5 h-8 w-8 rounded-md"
-                aria-label="Code view"
-                title="Code view"
+                className={`px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest transition-all ${activeTab === 'code' ? 'bg-zinc-800 text-white' : 'text-zinc-600 hover:text-zinc-400'}`}
               >
-                <CodeIcon className={`h-4 w-4 mx-auto transition-colors ${activeTab === 'code' ? 'text-white' : 'text-gray-400 hover:text-white'}`} />
+                Code
               </button>
               <button
                 onClick={() => setActiveTab('preview')}
-                aria-pressed={activeTab === 'preview'}
-                className="relative z-10 p-1.5 h-8 w-8 rounded-md ml-1"
-                aria-label="Preview"
-                title="Preview"
+                className={`px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest transition-all ${activeTab === 'preview' ? 'bg-zinc-800 text-white' : 'text-zinc-600 hover:text-zinc-400'}`}
               >
-                <PlayIcon className={`h-4 w-4 mx-auto transition-colors ${activeTab === 'preview' ? 'text-white' : 'text-gray-400 hover:text-white'}`} />
+                Live Preview
               </button>
             </div>
           )}
-          <button onClick={() => setIsCodeViewVisible(!isCodeViewVisible)} className="p-1.5 rounded-md hover:bg-white/10 hidden lg:block" aria-label={isCodeViewVisible ? "Collapse Code Panel" : "Expand Code Panel"}>
-            {isCodeViewVisible ? <PanelLeftCloseIcon className="h-4 w-4 text-gray-300" /> : <PanelRightCloseIcon className="h-4 w-4 text-gray-300" />}
+
+          <button
+            onClick={() => setIsCodeViewVisible(!isCodeViewVisible)}
+            className="p-2 border border-zinc-900 hover:border-zinc-700 transition-colors rounded-none group"
+            title={isCodeViewVisible ? "Collapse Node" : "Expand Node"}
+          >
+            {isCodeViewVisible ? <PanelLeftCloseIcon className="h-4 w-4 text-zinc-500 group-hover:text-white" /> : <PanelRightCloseIcon className="h-4 w-4 text-zinc-500 group-hover:text-white" />}
           </button>
-          <button className="px-4 py-1.5 text-sm font-semibold rounded-md bg-white text-black flex items-center gap-2 hover:bg-gray-200 transition-colors">
+
+          <button className="px-5 py-2 text-[10px] font-bold uppercase tracking-widest bg-white text-black hover:bg-orange-500 hover:text-white transition-all duration-300 flex items-center gap-2 rounded-none">
             <DeployIcon className="h-4 w-4" />
-            Deploy
+            Materialize Node
           </button>
         </div>
       </header>
