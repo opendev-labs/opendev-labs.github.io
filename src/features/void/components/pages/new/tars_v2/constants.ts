@@ -13,6 +13,7 @@ export const SUGGESTED_PROMPTS = [
 ];
 
 export const SUPPORTED_MODELS: ModelConfig[] = [
+    { id: 'gemini-1.5-pro', name: 'Gemini 1.5 Pro', provider: 'Google', apiIdentifier: 'gemini-1.5-pro' },
     { id: 'gemini-1.5-flash', name: 'Gemini 1.5 Flash', provider: 'Google', apiIdentifier: 'gemini-1.5-flash' },
 
     // Top Free Coding Models
@@ -21,8 +22,6 @@ export const SUPPORTED_MODELS: ModelConfig[] = [
     { id: 'meta-codellama-70b', name: 'CodeLlama 70B', provider: 'Meta', apiIdentifier: 'codellama/CodeLlama-70b-hf' },
     { id: 'bigcode-starcoder', name: 'StarCoder', provider: 'BigCode', apiIdentifier: 'bigcode/starcoder' },
     { id: 'wizardlm-wizardcoder-python', name: 'WizardCoder', provider: 'WizardLM', apiIdentifier: 'WizardLM/WizardCoder-Python-34B-V1.0' },
-    { id: 'anthropic-claude-instant', name: 'Claude Instant', provider: 'Anthropic', apiIdentifier: 'claude-instant-1.2' },
-    { id: 'google-gemma-7b', name: 'Gemma 7B', provider: 'Google', apiIdentifier: 'gemma-7b' }, // This is a generic ID, as Gemma is often self-hosted or accessed via specific platforms.
     { id: 'mistral-ai-mistral-7b', name: 'Mistral 7B', provider: 'Mistral AI', apiIdentifier: 'mistralai/Mistral-7B-v0.1' },
     { id: 'openchat-openchat-3.5', name: 'OpenChat 3.5', provider: 'OpenChat', apiIdentifier: 'openchat/openchat-3.5' },
     { id: 'phind-codellama-v2', name: 'Phind CodeLlama V2', provider: 'Phind', apiIdentifier: 'phind/Phind-CodeLlama-34B-v2' },
@@ -31,7 +30,7 @@ export const SUPPORTED_MODELS: ModelConfig[] = [
     // Existing Models
     { id: 'openai-gpt-4o', name: 'GPT-4o', provider: 'OpenAI', apiIdentifier: 'gpt-4o' },
     { id: 'openai-gpt-4-turbo', name: 'GPT-4 Turbo', provider: 'OpenAI', apiIdentifier: 'gpt-4-turbo' },
+    { id: 'anthropic-claude-3-5-sonnet', name: 'Claude 3.5 Sonnet', provider: 'Anthropic', apiIdentifier: 'claude-3-5-sonnet-20240620' },
     { id: 'anthropic-claude-3-opus', name: 'Claude 3 Opus', provider: 'Anthropic', apiIdentifier: 'claude-3-opus-20240229' },
-    { id: 'anthropic-claude-3-sonnet', name: 'Claude 3 Sonnet', provider: 'Anthropic', apiIdentifier: 'claude-3-sonnet-20240229' },
     { id: 'anthropic-claude-3-haiku', name: 'Claude 3 Haiku', provider: 'Anthropic', apiIdentifier: 'claude-3-haiku-20240307' },
 ];
