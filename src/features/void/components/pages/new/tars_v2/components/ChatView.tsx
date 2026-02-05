@@ -11,12 +11,10 @@ interface ChatViewProps {
   suggestions: string[] | undefined;
   // Model props
   selectedModelId: string;
-  apiKeys: Record<string, string>;
   onModelChange: (modelId: string) => void;
-  onApiKeySave: (provider: string, key: string) => void;
 }
 
-export function ChatView({ messages, isThinking, onSendMessage, suggestions, selectedModelId, apiKeys, onModelChange, onApiKeySave }: ChatViewProps) {
+export function ChatView({ messages, isThinking, onSendMessage, suggestions, selectedModelId, onModelChange }: ChatViewProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -41,9 +39,7 @@ export function ChatView({ messages, isThinking, onSendMessage, suggestions, sel
           onSendMessage={onSendMessage}
           disabled={isThinking}
           selectedModelId={selectedModelId}
-          apiKeys={apiKeys}
           onModelChange={onModelChange}
-          onApiKeySave={onApiKeySave}
         />
       </div>
     </div>

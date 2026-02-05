@@ -7,12 +7,10 @@ interface WelcomeScreenProps {
     isThinking: boolean;
     // Model props
     selectedModelId: string;
-    apiKeys: Record<string, string>;
     onModelChange: (modelId: string) => void;
-    onApiKeySave: (provider: string, key: string) => void;
 }
 
-export function WelcomeScreen({ onSendMessage, isThinking, selectedModelId, apiKeys, onModelChange, onApiKeySave }: WelcomeScreenProps) {
+export function WelcomeScreen({ onSendMessage, isThinking, selectedModelId, onModelChange }: WelcomeScreenProps) {
     const renderPromptButton = (prompt: string) => (
         <button
             key={prompt}
@@ -47,9 +45,7 @@ export function WelcomeScreen({ onSendMessage, isThinking, selectedModelId, apiK
                             onSendMessage={onSendMessage}
                             disabled={isThinking}
                             selectedModelId={selectedModelId}
-                            apiKeys={apiKeys}
                             onModelChange={onModelChange}
-                            onApiKeySave={onApiKeySave}
                         />
                     </div>
 

@@ -16,9 +16,7 @@ interface ChatSessionViewProps {
   onRenameFileOrFolder: (oldPath: string, newPath: string, isFile: boolean) => void;
   // Model props
   selectedModelId: string;
-  apiKeys: Record<string, string>;
   onModelChange: (modelId: string) => void;
-  onApiKeySave: (provider: string, key: string) => void;
 }
 
 export function ChatSessionView({
@@ -31,9 +29,7 @@ export function ChatSessionView({
   onDeleteFileOrFolder,
   onRenameFileOrFolder,
   selectedModelId,
-  apiKeys,
   onModelChange,
-  onApiKeySave
 }: ChatSessionViewProps) {
   const lastMessage = session.messages[session.messages.length - 1];
   const generationInfo: GenerationInfo | null = (lastMessage?.role === 'sub0' && lastMessage.generationInfo)
@@ -158,9 +154,7 @@ export function ChatSessionView({
             onSendMessage={onSendMessage}
             suggestions={session.suggestions}
             selectedModelId={selectedModelId}
-            apiKeys={apiKeys}
             onModelChange={onModelChange}
-            onApiKeySave={onApiKeySave}
           />
         </motion.div>
         <AnimatePresence>

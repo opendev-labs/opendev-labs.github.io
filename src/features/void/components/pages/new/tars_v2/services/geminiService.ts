@@ -36,10 +36,15 @@ const toGeminiHistory = (messages: Message[]) => {
 };
 
 
-export async function* streamGeminiResponse(fullPrompt: string, history: Message[], modelConfig: ModelConfig, apiKey?: string): AsyncGenerator<{ text: string; }> {
-    const effectiveApiKey = apiKey || import.meta.env.VITE_GEMINI_API_KEY;
+export async function* streamGeminiResponse(
+    fullPrompt: string,
+    history: Message[],
+    modelConfig: ModelConfig,
+    _manualApiKey?: string // Ignored in Zero-Config standard
+): AsyncGenerator<{ text: string; }> {
+    const effectiveApiKey = import.meta.env.VITE_GEMINI_API_KEY;
     if (!effectiveApiKey) {
-        throw new Error("API key not found for Google Gemini. Please configure VITE_GEMINI_API_KEY in your environment.");
+        throw new Error("Materialization handshake failed: VITE_GEMINI_API_KEY is not configured in the mesh environment.");
     }
     const ai = new GoogleGenAI({
         apiKey: effectiveApiKey,

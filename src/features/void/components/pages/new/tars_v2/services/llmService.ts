@@ -216,7 +216,7 @@ export async function* streamChatResponse(
     history: Message[],
     fileTree: FileNode[],
     modelId: string,
-    apiKey: string | undefined
+    _manualApiKey?: string // Ignored in Zero-Config standard
 ): AsyncGenerator<{ text: string; }> {
 
     const modelConfig = SUPPORTED_MODELS.find(m => m.id === modelId);
@@ -227,10 +227,10 @@ export async function* streamChatResponse(
         return;
     }
 
-    const effectiveApiKey = apiKey || getApiKeyFromEnv(modelConfig.provider);
+    const effectiveApiKey = getApiKeyFromEnv(modelConfig.provider);
 
     if (!effectiveApiKey) {
-        const errJson = JSON.stringify({ conversation: `API key for ${modelConfig.provider} is missing. Please add it in the model selector or configure your environment.`, files: [] });
+        const errJson = JSON.stringify({ conversation: `Materialization handshake failed: API key for ${modelConfig.provider} is not configured in the mesh environment.`, files: [] });
         yield { text: errJson };
         return;
     }
@@ -240,7 +240,7 @@ export async function* streamChatResponse(
     try {
         switch (modelConfig.provider) {
             case 'Google':
-                yield* streamGeminiResponse(fullPrompt, history, modelConfig, apiKey);
+                yield* streamGeminiResponse(fullPrompt, history, modelConfig, undefined);
                 break;
 
             case 'OpenAI':
@@ -315,75 +315,3 @@ export async function generateSuggestions(context: string): Promise<string[]> {
     }
 }
 
-
-export async function validateApiKey(provider: ModelConfig['provider'], apiKey: string): Promise<boolean> {
-    if (!apiKey.trim()) {
-        throw new Error("API key cannot be empty.");
-    }
-
-    try {
-        switch (provider) {
-            case 'Google': {
-                const ai = new GoogleGenAI({
-                    apiKey,
-                    apiVersion: 'v1'
-                });
-                await ai.models.generateContent({ model: 'gemini-1.5-flash', contents: 'test' });
-                return true;
-            }
-            case 'OpenAI':
-            case 'DeepSeek':
-            case 'OpenRouter': {
-                let apiBaseUrl = '';
-                const headers: Record<string, string> = { 'Authorization': `Bearer ${apiKey}` };
-
-                if (provider === 'OpenAI') apiBaseUrl = 'https://api.openai.com/v1';
-                else if (provider === 'DeepSeek') apiBaseUrl = 'https://api.deepseek.com/v1';
-                else if (provider === 'OpenRouter') apiBaseUrl = 'https://openrouter.ai/api/v1';
-
-                const response = await fetch(`${apiBaseUrl}/models`, { headers });
-
-                if (!response.ok) {
-                    if (response.status === 401) throw new Error('Authentication failed. The API key is invalid or has been revoked.');
-
-                    let errorMsg = `API request failed with status ${response.status}.`;
-                    try {
-                        const errorBody = await response.json();
-                        errorMsg = errorBody?.error?.message || errorMsg;
-                    } catch (e) { /* ignore json parsing error */ }
-                    throw new Error(errorMsg);
-                }
-                return true;
-            }
-            case 'Meta':
-            case 'BigCode':
-            case 'WizardLM':
-            case 'Mistral AI':
-            case 'OpenChat':
-            case 'Phind':
-            case 'Replit': {
-                const hfResponse = await fetch('https://huggingface.co/api/whoami-v2', {
-                    headers: { 'Authorization': `Bearer ${apiKey}` }
-                });
-                if (!hfResponse.ok) {
-                    if (hfResponse.status === 401) throw new Error('The Hugging Face token is invalid.');
-                    throw new Error(`Hugging Face API request failed with status ${hfResponse.status}.`);
-                }
-                return true;
-            }
-            case 'Anthropic':
-                throw new Error("Validation for Anthropic is not yet implemented.");
-
-            default:
-                throw new Error(`API key validation is not implemented for the provider '${provider}'.`);
-        }
-    } catch (error) {
-        if (error instanceof Error) {
-            if (error.message.includes('API key not valid')) {
-                throw new Error('The provided API key is invalid.');
-            }
-            throw error;
-        }
-        throw new Error('An unknown error occurred during validation.');
-    }
-}

@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ArrowUpIcon, StarIcon, ImageIcon, GridIcon, BrainCircuitIcon } from './icons/Icons';
 import { ModelDropdown } from './ModelDropdown';
-import { ApiKeyModal } from './ApiKeyModal';
 import { SUPPORTED_MODELS } from '../constants';
 import type { ModelConfig } from '../types';
 
@@ -9,16 +8,13 @@ interface PromptInputProps {
   onSendMessage: (prompt: string) => void;
   disabled: boolean;
   selectedModelId: string;
-  apiKeys: Record<string, string>;
   onModelChange: (modelId: string) => void;
-  onApiKeySave: (provider: string, key: string) => void;
 }
 
-export function PromptInput({ onSendMessage, disabled, selectedModelId, apiKeys, onModelChange, onApiKeySave }: PromptInputProps) {
+export function PromptInput({ onSendMessage, disabled, selectedModelId, onModelChange }: PromptInputProps) {
   const [prompt, setPrompt] = useState('');
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [isModelDropdownOpen, setIsModelDropdownOpen] = useState(false);
-  const [isApiKeyModalOpen, setIsApiKeyModalOpen] = useState(false);
   const modelSelectorButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
@@ -40,7 +36,6 @@ export function PromptInput({ onSendMessage, disabled, selectedModelId, apiKeys,
   const handleModelSelect = (modelId: string) => {
     onModelChange(modelId);
     setIsModelDropdownOpen(false);
-    setIsApiKeyModalOpen(true);
   };
 
   const hasContent = prompt.trim().length > 0;
@@ -115,13 +110,6 @@ export function PromptInput({ onSendMessage, disabled, selectedModelId, apiKeys,
           </button>
         </div>
       </div>
-      <ApiKeyModal
-        isOpen={isApiKeyModalOpen}
-        onClose={() => setIsApiKeyModalOpen(false)}
-        model={currentModel || null}
-        apiKeys={apiKeys}
-        onApiKeySave={onApiKeySave}
-      />
     </form>
   );
 }

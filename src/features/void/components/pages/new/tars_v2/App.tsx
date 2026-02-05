@@ -22,16 +22,11 @@ function App() {
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
-  // Model and API Key State
+  // Model State
   const [selectedModelId, setSelectedModelId] = useState<string>(SUPPORTED_MODELS[0].id);
-  const [apiKeys, setApiKeys] = useState<Record<string, string>>({});
 
   useEffect(() => {
     try {
-      const savedKeys = localStorage.getItem('opendev-apiKeys');
-      if (savedKeys) {
-        setApiKeys(JSON.parse(savedKeys));
-      }
       const savedModel = localStorage.getItem('opendev-selectedModelId');
       if (savedModel) {
         setSelectedModelId(savedModel);
@@ -45,12 +40,6 @@ function App() {
     setSelectedModelId(modelId);
     localStorage.setItem('opendev-selectedModelId', modelId);
   }, []);
-
-  const handleApiKeySave = useCallback((provider: string, key: string) => {
-    const newKeys = { ...apiKeys, [provider]: key };
-    setApiKeys(newKeys);
-    localStorage.setItem('opendev-apiKeys', JSON.stringify(newKeys));
-  }, [apiKeys]);
 
 
   useEffect(() => {
@@ -292,12 +281,10 @@ function App() {
     }
 
     try {
-      const currentModel = SUPPORTED_MODELS.find(m => m.id === selectedModelId);
-      const apiKey = currentModel ? apiKeys[currentModel.provider] : undefined;
       let fullResponse = '';
       let conversationText = '';
 
-      const stream = streamChatResponse(prompt, history, currentFileTree, selectedModelId, apiKey);
+      const stream = streamChatResponse(prompt, history, currentFileTree, selectedModelId, undefined);
 
       for await (const chunk of stream) {
         fullResponse += chunk.text;
@@ -484,9 +471,7 @@ function App() {
     isThinking,
     onSendMessage: handleSendMessage,
     selectedModelId,
-    apiKeys,
     onModelChange: handleModelChange,
-    onApiKeySave: handleApiKeySave,
   };
 
   if (view === 'new-chat' && !activeSessionId) {
