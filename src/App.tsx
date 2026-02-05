@@ -21,6 +21,7 @@ import { Preloader } from './components/Preloader';
 import { DocsPage } from './features/void/components/pages/DocsPage';
 import { MissionControl } from './pages/MissionControl';
 import { UnifiedOfficeCockpit, LamaDBOfficeCockpit, SyncStackOfficeCockpit, LamaDBTelemetryCockpit, AgentsOfficeCockpit } from './pages/OfficeSubappWrappers';
+import { Header } from './components/Header';
 
 const lazyWithRetry = (componentImport: () => Promise<any>) =>
   lazy(async () => {
@@ -46,6 +47,9 @@ const VoidApp = lazyWithRetry(() => import('./features/void/VoidApp'));
 const OfficeDashboard = lazyWithRetry(() => import('./pages/OfficeDashboard'));
 const LazyAuthPage = lazyWithRetry(() => import('./features/void/components/pages/AuthPage').then(m => ({ default: m.AuthPage })));
 const LazyVerifyEmailPage = lazyWithRetry(() => import('./features/void/components/pages/VerifyEmailPage').then(m => ({ default: m.VerifyEmailPage })));
+const Sub0App = lazyWithRetry(() => import('./features/void/components/pages/new/tars_v2/App'));
+
+import { ProtectedRoute } from './components/ProtectedRoute';
 
 // Wrapper to handle scroll on route change
 const AppRoutes = () => {
@@ -56,9 +60,16 @@ const AppRoutes = () => {
         {/* Standalone Applications & Pages (No Shared Layout) */}
         {/* sub0: Hyper-intelligent Agentic IDE */}
         <Route path="sub0/*" element={
-          <Suspense fallback={<div className="min-h-screen bg-black flex items-center justify-center text-white">Loading sub0...</div>}>
-            <VoidApp />
-          </Suspense>
+          <ProtectedRoute>
+            <Suspense fallback={<div className="min-h-screen bg-black flex items-center justify-center text-white">Loading sub0...</div>}>
+              <div className="flex flex-col h-screen overflow-hidden">
+                <Header />
+                <div className="flex-1 overflow-hidden mt-14">
+                  <Sub0App />
+                </div>
+              </div>
+            </Suspense>
+          </ProtectedRoute>
         } />
         <Route path="void-ide/*" element={<Navigate to="/sub0" replace />} />
         <Route path="auth" element={

@@ -232,13 +232,10 @@ const AppContent: React.FC = () => {
         navigate(`/sub0/projects/${newProject.id}`);
     };
 
-    const isSub0 = location.pathname.includes('/new/sub0');
-    const isProjectDetail = location.pathname.includes('/projects/');
-
     return (
         <div className="min-h-screen bg-black font-sans flex flex-col selection:bg-white selection:text-black">
-            {!isSub0 && <Header />}
-            <main className={`flex-grow relative z-10 flex flex-col ${isSub0 ? 'h-screen' : 'container mx-auto px-4 py-8'}`}>
+            <Header />
+            <main className="flex-grow relative z-10 flex flex-col container mx-auto px-4 py-8">
                 <Suspense fallback={<GlobalLoader />}>
                     <AnimatePresence mode="wait">
                         <MotionDiv
@@ -273,8 +270,8 @@ const AppContent: React.FC = () => {
                     </AnimatePresence>
                 </Suspense>
             </main>
-            {!isSub0 && <Footer />}
-            {isProjectDetail && <StatusFooter />}
+            <Footer />
+            <StatusFooter />
         </div>
     );
 };
