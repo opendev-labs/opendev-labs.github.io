@@ -41,7 +41,10 @@ export async function* streamGeminiResponse(fullPrompt: string, history: Message
     if (!effectiveApiKey) {
         throw new Error("API key not found for Google Gemini. Please configure VITE_GEMINI_API_KEY in your environment.");
     }
-    const ai = new GoogleGenAI({ apiKey: effectiveApiKey });
+    const ai = new GoogleGenAI({
+        apiKey: effectiveApiKey,
+        apiVersion: 'v1'
+    });
 
     const contents = [
         ...toGeminiHistory(history),

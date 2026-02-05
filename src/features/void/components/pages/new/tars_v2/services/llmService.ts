@@ -284,7 +284,10 @@ export async function generateSuggestions(context: string): Promise<string[]> {
         return [];
     }
     try {
-        const ai = new GoogleGenAI({ apiKey: envKey });
+        const ai = new GoogleGenAI({
+            apiKey: envKey,
+            apiVersion: 'v1'
+        });
         const response = await ai.models.generateContent({
             model: 'gemini-1.5-flash',
             contents: context,
@@ -321,7 +324,10 @@ export async function validateApiKey(provider: ModelConfig['provider'], apiKey: 
     try {
         switch (provider) {
             case 'Google': {
-                const ai = new GoogleGenAI({ apiKey });
+                const ai = new GoogleGenAI({
+                    apiKey,
+                    apiVersion: 'v1'
+                });
                 await ai.models.generateContent({ model: 'gemini-1.5-flash', contents: 'test' });
                 return true;
             }
