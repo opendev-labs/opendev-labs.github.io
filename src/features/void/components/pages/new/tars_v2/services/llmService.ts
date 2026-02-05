@@ -3,6 +3,22 @@ import type { Message, FileNode, ModelConfig } from '../types';
 import { SUPPORTED_MODELS } from '../constants';
 import { streamGeminiResponse } from "./geminiService";
 
+// Helper to get API key from manual input or Vite environment variables
+const getApiKeyFromEnv = (provider: string): string | undefined => {
+    switch (provider) {
+        case 'Google':
+            return import.meta.env.VITE_GEMINI_API_KEY;
+        case 'OpenRouter':
+            return import.meta.env.VITE_OPENROUTER_API_KEY;
+        case 'OpenAI':
+            return import.meta.env.VITE_OPENAI_API_KEY;
+        case 'DeepSeek':
+            return import.meta.env.VITE_DEEPSEEK_API_KEY;
+        default:
+            return undefined;
+    }
+};
+
 const TARS_SYSTEM_INSTRUCTION_GENERIC = `You are TARS, an AI development assistant. Your response MUST be a single, valid JSON object and nothing else.
 DO NOT wrap the JSON in markdown backticks like \`\`\`json.
 DO NOT add any text before or after the JSON object.
@@ -211,8 +227,10 @@ export async function* streamChatResponse(
         return;
     }
 
-    if (!apiKey && !(modelConfig.provider === 'Google' && process.env.API_KEY)) {
-        const errJson = JSON.stringify({ conversation: `API key for ${modelConfig.provider} is missing. Please add it in the model selector.`, files: [] });
+    const effectiveApiKey = apiKey || getApiKeyFromEnv(modelConfig.provider);
+
+    if (!effectiveApiKey) {
+        const errJson = JSON.stringify({ conversation: `API key for ${modelConfig.provider} is missing. Please add it in the model selector or configure your environment.`, files: [] });
         yield { text: errJson };
         return;
     }
@@ -228,7 +246,7 @@ export async function* streamChatResponse(
             case 'OpenAI':
             case 'DeepSeek':
             case 'OpenRouter':
-                yield* streamOpenAICompatibleResponse(fullPrompt, history, modelConfig, apiKey!);
+                yield* streamOpenAICompatibleResponse(fullPrompt, history, modelConfig, effectiveApiKey);
                 break;
 
             case 'Meta':
@@ -238,7 +256,7 @@ export async function* streamChatResponse(
             case 'OpenChat':
             case 'Phind':
             case 'Replit':
-                yield* streamHuggingFaceResponse(fullPrompt, history, modelConfig, apiKey!);
+                yield* streamHuggingFaceResponse(fullPrompt, history, modelConfig, effectiveApiKey);
                 break;
 
             case 'Anthropic':
@@ -260,12 +278,13 @@ export async function* streamChatResponse(
 
 // --- Suggestions Service (Remains the same, uses Gemini) ---
 export async function generateSuggestions(context: string): Promise<string[]> {
-    if (!process.env.API_KEY) {
-        console.warn("process.env.API_KEY not set, cannot generate suggestions.");
+    const envKey = import.meta.env.VITE_GEMINI_API_KEY;
+    if (!envKey) {
+        console.warn("VITE_GEMINI_API_KEY not set, cannot generate suggestions.");
         return [];
     }
     try {
-        const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+        const ai = new GoogleGenAI({ apiKey: envKey });
         const response = await ai.models.generateContent({
             model: 'gemini-1.5-flash',
             contents: context,

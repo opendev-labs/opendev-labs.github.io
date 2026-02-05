@@ -37,9 +37,9 @@ const toGeminiHistory = (messages: Message[]) => {
 
 
 export async function* streamGeminiResponse(fullPrompt: string, history: Message[], modelConfig: ModelConfig, apiKey?: string): AsyncGenerator<{ text: string; }> {
-    const effectiveApiKey = apiKey || process.env.API_KEY;
+    const effectiveApiKey = apiKey || import.meta.env.VITE_GEMINI_API_KEY;
     if (!effectiveApiKey) {
-        throw new Error("API key not found for Google Gemini.");
+        throw new Error("API key not found for Google Gemini. Please configure VITE_GEMINI_API_KEY in your environment.");
     }
     const ai = new GoogleGenAI({ apiKey: effectiveApiKey });
 

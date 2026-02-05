@@ -15,11 +15,19 @@ interface ModelSelectorProps {
 
 export const ModelSelector: React.FC<ModelSelectorProps> = ({ isOpen, onClose, anchorRef, selectedModelId, apiKeys, onModelChange, onApiKeySave }) => {
   const popoverRef = useRef<HTMLDivElement>(null);
-
   const selectedModel = useMemo(() => SUPPORTED_MODELS.find(m => m.id === selectedModelId) || SUPPORTED_MODELS[0], [selectedModelId]);
-  
   const [currentApiKey, setCurrentApiKey] = useState(apiKeys[selectedModel.provider] || '');
-  
+
+  const hasEnvKey = useMemo(() => {
+    switch (selectedModel.provider) {
+      case 'Google': return !!import.meta.env.VITE_GEMINI_API_KEY;
+      case 'OpenRouter': return !!import.meta.env.VITE_OPENROUTER_API_KEY;
+      case 'OpenAI': return !!import.meta.env.VITE_OPENAI_API_KEY;
+      case 'DeepSeek': return !!import.meta.env.VITE_DEEPSEEK_API_KEY;
+      default: return false;
+    }
+  }, [selectedModel]);
+
   useEffect(() => {
     setCurrentApiKey(apiKeys[selectedModel.provider] || '');
   }, [selectedModel, apiKeys]);
@@ -46,16 +54,16 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({ isOpen, onClose, a
   if (!isOpen) {
     return null;
   }
-  
+
   const handleSaveKey = () => {
     onApiKeySave(selectedModel.provider, currentApiKey);
   };
 
   const popoverStyle: React.CSSProperties = {
-      position: 'absolute',
-      bottom: '120%', // Position above the anchor
-      left: '0',
-      zIndex: 50
+    position: 'absolute',
+    bottom: '120%', // Position above the anchor
+    left: '0',
+    zIndex: 50
   };
 
   return (
@@ -82,7 +90,7 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({ isOpen, onClose, a
             ))}
           </select>
         </div>
-        
+
         <div>
           <label htmlFor="api-key-input" className="block text-xs font-medium text-gray-400 mb-1">
             {selectedModel.provider} API Key
@@ -99,13 +107,22 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({ isOpen, onClose, a
             />
           </div>
         </div>
-        
+
         <button
           onClick={handleSaveKey}
           className="w-full bg-white/10 text-white font-semibold py-2 rounded-md hover:bg-white/20 transition-colors text-sm"
         >
-          Save Key
+          {hasEnvKey ? 'Override Env Key' : 'Save Key'}
         </button>
+
+        {hasEnvKey && !currentApiKey && (
+          <div className="pt-2">
+            <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-md p-2 flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="text-[10px] font-bold text-emerald-500 uppercase tracking-widest">Environment Linked</span>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
