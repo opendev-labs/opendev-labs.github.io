@@ -231,7 +231,7 @@ export interface GenerationInfo {
 
 export interface Message {
     id: number;
-    role: 'user' | 'tars';
+    role: 'user' | 'sub0';
     content: string;
     intentAnalysis?: string;
     commands?: string[];
@@ -249,7 +249,7 @@ export interface ModelConfig {
     provider: 'Google' | 'OpenAI' | 'Anthropic' | 'DeepSeek' | 'Meta' | 'BigCode' | 'WizardLM' | 'Mistral AI' | 'OpenChat' | 'Phind' | 'Replit' | 'OpenRouter';
     apiIdentifier: string;
 }
-export type TarsView = 'new-chat' | 'chat-session' | 'all-chats' | 'settings';
+export type Sub0View = 'new-chat' | 'chat-session' | 'all-chats' | 'settings';
 
 export interface ChatSession {
     id: string;

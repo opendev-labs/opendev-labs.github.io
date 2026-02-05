@@ -4,7 +4,7 @@ import { WelcomeScreen } from './components/WelcomeScreen';
 import { ChatSessionView } from './components/ChatSessionView';
 import { SettingsView } from './components/SettingsView';
 import { AllChatsView } from './components/AllChatsView';
-import type { Message, FileNode, TarsView as View, ChatSession, GenerationInfo, GenerationFile } from '../../../../types';
+import type { Message, FileNode, Sub0View as View, ChatSession, GenerationInfo, GenerationFile } from '../../../../types';
 import { streamChatResponse, generateSuggestions } from '../../../../services/llmService';
 import { SidebarIcon } from './components/icons/Icons';
 import { SUPPORTED_MODELS } from '../../../../constants';
@@ -13,7 +13,7 @@ const generateId = () => Date.now().toString() + Math.random().toString(36).subs
 
 type GeneratedFileObject = { path: string; content?: string; action: 'created' | 'modified' | 'deleted' };
 
-export default function TarsView() {
+export default function Sub0View() {
     const [view, setView] = useState<View>('new-chat');
     const [sessions, setSessions] = useState<ChatSession[]>([]);
     const [activeSessionId, setActiveSessionId] = useState<string | null>(null);
@@ -174,10 +174,10 @@ export default function TarsView() {
         let history: Message[] = [];
         let currentFileTree: FileNode[] = [];
         const userMessage: Message = { id: Date.now(), role: 'user', content: prompt };
-        const tarsMessageId = Date.now() + 1;
-        const tarsPlaceholder: Message = {
-            id: tarsMessageId,
-            role: 'tars',
+        const sub0MessageId = Date.now() + 1;
+        const sub0Placeholder: Message = {
+            id: sub0MessageId,
+            role: 'sub0',
             content: '',
             generationInfo: { status: 'generating', files: [] },
         };
@@ -188,7 +188,7 @@ export default function TarsView() {
             const newSession: ChatSession = {
                 id: newId,
                 title: prompt.length > 30 ? prompt.substring(0, 27) + '...' : prompt,
-                messages: [userMessage, tarsPlaceholder],
+                messages: [userMessage, sub0Placeholder],
                 fileTree: [],
                 activeFile: null,
                 lastUpdated: Date.now(),
@@ -204,7 +204,7 @@ export default function TarsView() {
             }
             setSessions(prev => prev.map(s => {
                 if (s.id === currentSessionId) {
-                    return { ...s, messages: [...s.messages, userMessage, tarsPlaceholder], lastUpdated: Date.now() };
+                    return { ...s, messages: [...s.messages, userMessage, sub0Placeholder], lastUpdated: Date.now() };
                 }
                 return s;
             }));
@@ -227,10 +227,10 @@ export default function TarsView() {
                     const newConversationText = conversationMatch[1].replace(/\\n/g, '\n').replace(/\\"/g, '"').replace(/\\\\/g, '\\');
                     if (newConversationText !== conversationText) {
                         conversationText = newConversationText;
-                        setSessions(prev => prev.map(s => s.id === currentSessionId ? { ...s, messages: s.messages.map(m => m.id === tarsMessageId ? { ...m, content: conversationText } : m) } : s));
+                        setSessions(prev => prev.map(s => s.id === currentSessionId ? { ...s, messages: s.messages.map(m => m.id === sub0MessageId ? { ...m, content: conversationText } : m) } : s));
                     }
                 } else if (!conversationText && !fullResponse.includes('"conversation"')) {
-                    setSessions(prev => prev.map(s => s.id === currentSessionId ? { ...s, messages: s.messages.map(m => m.id === tarsMessageId ? { ...m, content: fullResponse } : m) } : s));
+                    setSessions(prev => prev.map(s => s.id === currentSessionId ? { ...s, messages: s.messages.map(m => m.id === sub0MessageId ? { ...m, content: fullResponse } : m) } : s));
                 }
             }
 
@@ -271,7 +271,7 @@ export default function TarsView() {
                 if (s.id !== currentSessionId) return s;
                 const finalGenerationFiles: GenerationFile[] = generatedFileObjects.map(f => ({ path: f.path, action: f.action, status: 'generating' }));
                 const messages = s.messages.map(msg => {
-                    if (msg.id === tarsMessageId) {
+                    if (msg.id === sub0MessageId) {
                         return { ...msg, content: finalConversationalPart, intentAnalysis: finalIntentAnalysis, commands: finalCommands, generationInfo: { status: 'generating' as const, files: finalGenerationFiles } };
                     }
                     return msg;
@@ -301,7 +301,7 @@ export default function TarsView() {
                 setSessions(prev => prev.map(s => {
                     if (s.id !== currentSessionId) return s;
                     const messages = s.messages.map(msg => {
-                        if (msg.id === tarsMessageId && msg.generationInfo) {
+                        if (msg.id === sub0MessageId && msg.generationInfo) {
                             const files = msg.generationInfo.files.map(f => f.path === file.path ? { ...f, status: 'complete' as const } : f);
                             return { ...msg, generationInfo: { ...msg.generationInfo, files } };
                         }
@@ -317,7 +317,7 @@ export default function TarsView() {
                 }
                 if (s.id === currentSessionId) {
                     const messages = s.messages.map(msg => {
-                        if (msg.id === tarsMessageId && msg.generationInfo) {
+                        if (msg.id === sub0MessageId && msg.generationInfo) {
                             return { ...msg, generationInfo: { ...msg.generationInfo, status: 'complete' as const } };
                         }
                         return msg;
@@ -334,7 +334,7 @@ export default function TarsView() {
 
         } catch (error) {
             console.error("Neural stream failure:", error);
-            setSessions(prev => prev.map(s => s.id === currentSessionId ? { ...s, messages: s.messages.map(m => m.id === tarsMessageId ? { ...m, content: `Protocol Error: ${error instanceof Error ? error.message : 'Unknown'}` } : m) } : s));
+            setSessions(prev => prev.map(s => s.id === currentSessionId ? { ...s, messages: s.messages.map(m => m.id === sub0MessageId ? { ...m, content: `Protocol Error: ${error instanceof Error ? error.message : 'Unknown'}` } : m) } : s));
         } finally {
             setIsThinking(false);
         }

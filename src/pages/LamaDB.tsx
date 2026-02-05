@@ -39,18 +39,18 @@ export const ConsoleView = () => {
                     <div>
                         <div className="flex items-center gap-3 mb-4">
                             <div className="w-10 h-10 bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
-                                <Database size={20} className="text-emerald-500" />
+                                <Database size={20} className="text-orange-500" />
                             </div>
-                            <h1 className="text-3xl font-bold text-white tracking-tighter">LamaDB Console</h1>
+                            <h1 className="text-3xl font-bold text-white tracking-tighter">LamaDB // Registry</h1>
                         </div>
                         <p className="text-zinc-500 font-mono text-sm">Authenticated as <span className="text-white">{user?.email}</span></p>
                     </div>
                     <div className="flex gap-4">
                         <div className="text-right">
-                            <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">Node Status</p>
+                            <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">Protocol Status</p>
                             <div className="flex items-center justify-end gap-2 mt-1">
-                                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                                <span className="text-emerald-500 font-bold text-sm">ONLINE</span>
+                                <span className="w-2 h-2 rounded-full bg-orange-500 animate-pulse" />
+                                <span className="text-orange-500 font-bold text-sm">SYNCHRONIZED</span>
                             </div>
                         </div>
                     </div>
@@ -109,7 +109,7 @@ export const ConsoleView = () => {
                         <div className="space-y-4">
                             {[1, 2, 3, 4].map((i) => (
                                 <div key={i} className="flex items-center gap-3">
-                                    <div className="w-2 h-2 rounded-full bg-emerald-500/50" />
+                                    <div className="w-2 h-2 rounded-full bg-orange-500/50" />
                                     <div className="flex-1">
                                         <div className="h-1.5 w-24 bg-zinc-800 rounded-full mb-1" />
                                         <div className="h-1.5 w-16 bg-zinc-900 rounded-full" />
@@ -190,8 +190,8 @@ export default function LamaDB() {
         <ProductPageTemplate
             badge="The Browser Native Database"
             badgeIcon={Database}
-            title="LamaDB"
-            description="A high-performance, edge-first database designed to run everywhere. Store, sync, and secure data directly in the browser with zero infrastructure setup."
+            title="LamaDB Mesh"
+            description="A high-fidelity, edge-first database designed for decentralized intelligence. Store, sync, and secure data directly in the browser with zero-latency recovery."
             features={features}
             performanceTitle="Engineered for Performance."
             performanceMetrics={performanceMetrics}

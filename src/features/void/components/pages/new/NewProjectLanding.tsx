@@ -242,14 +242,14 @@ export const NewProjectLanding: React.FC = () => {
 
                     <div className="p-8 border border-zinc-900 bg-zinc-950/20 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-8 group">
                         <div className="space-y-2 text-center md:text-left">
-                            <h4 className="text-sm font-bold text-white uppercase tracking-widest">TARS v2 // Neural Genesis</h4>
-                            <p className="text-[11px] text-zinc-600 uppercase tracking-widest leading-relaxed">Manifest entire architectures from pure thought using the upgraded TARS agent.</p>
+                            <h4 className="text-sm font-bold text-white uppercase tracking-widest">sub0 v2 // Neural Genesis</h4>
+                            <p className="text-[11px] text-zinc-600 uppercase tracking-widest leading-relaxed">Manifest entire architectures from pure thought using the upgraded sub0 orchestrator.</p>
                         </div>
                         <button
-                            onClick={() => navigate('tars')}
+                            onClick={() => navigate('sub0')}
                             className="h-12 px-10 bg-white text-black text-[10px] font-bold uppercase tracking-widest rounded-xl hover:bg-zinc-200 transition-all flex items-center gap-3 shrink-0"
                         >
-                            Initiate TARS <Sparkles size={14} className="text-black" />
+                            Initiate sub0 <Sparkles size={14} className="text-black" />
                         </button>
                     </div>
                 </div>

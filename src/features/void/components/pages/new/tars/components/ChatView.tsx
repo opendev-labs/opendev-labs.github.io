@@ -28,7 +28,7 @@ export function ChatView({ messages, isThinking, onSendMessage, suggestions, sel
             <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8 space-y-6 scrollbar-hide">
                 {messages.map((msg) => <ChatMessage key={msg.id} message={msg} />)}
                 {isThinking && messages.length > 0 && messages[messages.length - 1].role === 'user' && (
-                    <ChatMessage message={{ id: Date.now(), role: 'tars', content: 'Thinking...' }} />
+                    <ChatMessage message={{ id: Date.now(), role: 'sub0', content: 'Thinking...' }} />
                 )}
             </div>
             <div className="px-4 md:px-6 lg:px-8 pb-6 bg-gradient-to-t from-black via-black/80 to-transparent">

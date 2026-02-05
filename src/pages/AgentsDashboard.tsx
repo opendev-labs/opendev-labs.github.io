@@ -1,160 +1,387 @@
-import React, { useState } from 'react';
-import { Bot, Github, Zap, Shield, Sparkles, Plus, ExternalLink, ChevronRight, Search, Activity, Cpu, Globe } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from "react"
+import { useLocation } from "react-router-dom"
+import { motion } from "framer-motion"
+import { Plus, Bot, Sparkles, Brain, Zap, Globe, Search, MessageSquare, Loader2 } from "lucide-react"
+import { LamaDB } from "../lib/lamaDB"
+import { useAuth } from "../features/void/hooks/useAuth"
 
-const AgentsDashboard: React.FC = () => {
-    const navigate = useNavigate();
-    const [searchQuery, setSearchQuery] = useState('');
+// Ported Shadcn-like components
+import { Badge } from "../components/ui/shadcn/badge"
+import { Button } from "../components/ui/shadcn/button"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../components/ui/shadcn/card"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/shadcn/tabs"
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "../components/ui/shadcn/dialog"
+import { Input } from "../components/ui/shadcn/input"
+import { Label } from "../components/ui/shadcn/label"
+import { Textarea } from "../components/ui/shadcn/textarea"
 
-    const agents = [
-        {
-            id: 'tars',
-            name: 'TARS',
-            role: 'Neural Architect & Superagent',
-            status: 'ONLINE',
-            description: 'Hyperintelligent agent specialized in building full-stack infrastructure from natural language.',
-            icon: Sparkles,
-            color: 'text-orange-500',
-            bg: 'bg-orange-500/10'
-        },
-        {
-            id: 'smith',
-            name: 'SMITH',
-            role: 'Nexus Orchestrator',
-            status: 'STANDBY',
-            description: 'Advanced CLI agent for universal hardware-level orchestration and task delegation.',
-            icon: Cpu,
-            color: 'text-blue-500',
-            bg: 'bg-blue-500/10'
+// Ported Agents components
+import { AgentBuilder } from "../components/agents/agent-builder"
+import { AgentCard } from "../components/agents/agent-card"
+
+// Sample agent templates
+const agentTemplates = [
+    {
+        id: "customer-service",
+        name: "Customer Service Agent",
+        description: "Handle customer inquiries and support requests",
+        icon: <MessageSquare className="h-10 w-10 text-blue-500" />,
+        skills: ["FAQ answering", "Issue resolution", "Ticket creation"],
+        color: "blue",
+    },
+    {
+        id: "data-analyst",
+        name: "Data Analysis Agent",
+        description: "Process and analyze data, generate insights",
+        icon: <Brain className="h-10 w-10 text-purple-500" />,
+        skills: ["Data processing", "Data visualization", "Report generation"],
+        color: "purple",
+    },
+    {
+        id: "content-creator",
+        name: "Content Creation Agent",
+        description: "Generate blog posts, social media content, and marketing copy",
+        icon: <Sparkles className="h-10 w-10 text-pink-500" />,
+        skills: ["Blog writing", "Social media posts", "SEO optimization"],
+        color: "pink",
+    },
+    {
+        id: "translation",
+        name: "Translation Agent",
+        description: "Translate content between multiple languages",
+        icon: <Globe className="h-10 w-10 text-green-500" />,
+        skills: ["Multi-language support", "Context preservation", "Technical terminology"],
+        color: "green",
+    },
+    {
+        id: "research",
+        name: "Research Assistant",
+        description: "Find information and summarize research findings",
+        icon: <Search className="h-10 w-10 text-amber-500" />,
+        skills: ["Web search", "Information synthesis", "Citation management"],
+        color: "amber",
+    },
+]
+
+// Sample user agents
+const initialAgents = [
+    {
+        id: "1",
+        name: "Support Bot",
+        description: "Handles customer support inquiries for our product",
+        lastModified: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+        status: "active",
+        type: "customer-service",
+    },
+    {
+        id: "2",
+        name: "Data Processor",
+        description: "Analyzes CSV files and generates reports",
+        lastModified: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
+        status: "active",
+        type: "data-analyst",
+    },
+]
+
+export default function AgentsDashboard() {
+    const location = useLocation()
+    const { user, isAuthenticated } = useAuth()
+    const [agents, setAgents] = useState<any[]>([])
+    const [isLoading, setIsLoading] = useState(true)
+    const [isCreating, setIsCreating] = useState(false)
+    const [newAgentName, setNewAgentName] = useState("")
+    const [newAgentDescription, setNewAgentDescription] = useState("")
+    const [activeTab, setActiveTab] = useState(location.pathname.endsWith('/new') ? "builder" : "my-agents")
+    const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null)
+
+    useEffect(() => {
+        const fetchAgents = async () => {
+            if (!isAuthenticated || !user) {
+                setAgents(initialAgents)
+                setIsLoading(false)
+                return
+            }
+
+            try {
+                const userContext = { uid: user.email, email: user.email }
+                const storedAgents = await LamaDB.store.collection('agents', userContext).get()
+                if (storedAgents.length > 0) {
+                    setAgents(storedAgents)
+                } else {
+                    setAgents(initialAgents)
+                }
+            } catch (err) {
+                console.error("Failed to fetch agents from LamaDB:", err)
+                setAgents(initialAgents)
+            } finally {
+                setIsLoading(false)
+            }
         }
-    ];
 
-    const connections = [
-        { id: 'github', name: 'GitHub', status: 'Connected', icon: Github, color: 'text-white' },
-        { id: 'vercel', name: 'Vercel', status: 'Link Ready', icon: Zap, color: 'text-emerald-500' },
-        { id: 'firebase', name: 'Firebase', status: 'Link Ready', icon: Shield, color: 'text-amber-500' }
-    ];
+        fetchAgents()
+    }, [isAuthenticated, user])
+
+    useEffect(() => {
+        if (location.pathname.endsWith('/new')) {
+            setActiveTab("builder")
+        }
+    }, [location.pathname])
+
+    const handleCreateAgent = async () => {
+        if (!newAgentName) return
+
+        const newAgent = {
+            id: Date.now().toString(),
+            name: newAgentName,
+            description: newAgentDescription || "No description provided",
+            lastModified: new Date(),
+            status: "draft",
+            type: selectedTemplate || "custom",
+        }
+
+        if (isAuthenticated && user) {
+            const userContext = { uid: user.email, email: user.email }
+            await LamaDB.store.collection('agents', userContext).add(newAgent)
+        }
+
+        setAgents([...agents, newAgent])
+        setNewAgentName("")
+        setNewAgentDescription("")
+        setSelectedTemplate(null)
+        setIsCreating(false)
+    }
+
+    const handleDeleteAgent = async (id: string) => {
+        if (isAuthenticated && user) {
+            // Logic for deleting from LamaDB if available
+        }
+        setAgents(agents.filter((agent) => agent.id !== id))
+    }
+
+    const handleUseTemplate = (templateId: string) => {
+        const template = agentTemplates.find((t) => t.id === templateId)
+        if (template) {
+            setNewAgentName(template.name)
+            setNewAgentDescription(template.description)
+            setSelectedTemplate(templateId)
+            setIsCreating(true)
+        }
+    }
+
+    const fadeInUp = {
+        hidden: { opacity: 0, y: 20 },
+        visible: {
+            opacity: 1,
+            y: 0,
+            transition: { duration: 0.3 },
+        },
+    }
+
+    const staggerContainer = {
+        hidden: { opacity: 0 },
+        visible: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.1,
+            },
+        },
+    }
 
     return (
-        <div className="p-8 max-w-7xl mx-auto space-y-12">
-            {/* Header */}
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-zinc-900 pb-8">
-                <div className="space-y-2">
-                    <div className="flex items-center gap-2 text-zinc-500 text-[10px] font-bold uppercase tracking-[0.3em]">
-                        <Bot size={14} /> Neural Nexus Registry
+        <div className="p-8 md:p-12 animate-in fade-in duration-700 max-w-[1400px] mx-auto">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6">
+                <div>
+                    <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/5 border border-white/10 text-[9px] font-bold text-zinc-500 mb-6 uppercase tracking-[0.3em]">
+                        <Bot size={12} />
+                        <span>Autonomous // Agentic Node</span>
                     </div>
-                    <h1 className="text-4xl font-black tracking-tighter text-white">AGENTS <span className="text-zinc-700 italic">CORE</span></h1>
+                    <h1 className="text-5xl font-bold tracking-tighter lowercase leading-none">
+                        agent<br /><span className="text-zinc-600">dashboard.</span>
+                    </h1>
                 </div>
-                <div className="flex items-center gap-4">
-                    <div className="relative">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-600" size={14} />
-                        <input
-                            type="text"
-                            placeholder="FIND AGENT..."
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            className="bg-zinc-950 border border-zinc-800 rounded-lg pl-10 pr-4 h-10 text-[11px] font-bold text-white focus:outline-none focus:border-zinc-500 transition-colors w-64 uppercase tracking-widest placeholder:text-zinc-800"
-                        />
-                    </div>
-                    <button className="h-10 px-6 bg-white text-black text-[10px] font-bold uppercase tracking-widest rounded-lg hover:bg-zinc-200 transition-all flex items-center gap-2">
-                        <Plus size={14} /> Initialize Agent
-                    </button>
-                </div>
-            </div>
-
-            {/* SyncStack Connection Strip */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {connections.map((conn) => (
-                    <div key={conn.id} className="p-6 bg-zinc-950 border border-zinc-900 rounded-xl flex items-center justify-between group hover:border-zinc-700 transition-all">
-                        <div className="flex items-center gap-4">
-                            <div className={`w-10 h-10 rounded-lg bg-black border border-zinc-800 flex items-center justify-center ${conn.color}`}>
-                                <conn.icon size={20} />
-                            </div>
-                            <div>
-                                <h4 className="text-[11px] font-bold text-white uppercase tracking-widest">{conn.name}</h4>
-                                <p className="text-[9px] font-bold text-zinc-600 uppercase tracking-tighter mt-0.5">{conn.status}</p>
-                            </div>
-                        </div>
-                        <button className="p-2 text-zinc-600 hover:text-white transition-colors">
-                            <ExternalLink size={14} />
-                        </button>
-                    </div>
-                ))}
-            </div>
-
-            {/* Agents Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                {agents.map((agent) => (
-                    <motion.div
-                        key={agent.id}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="group relative bg-[#0D0D0D] border border-zinc-900 rounded-2xl overflow-hidden hover:border-zinc-700 transition-all"
-                    >
-                        <div className="absolute top-0 right-0 p-6">
-                            <div className="flex items-center gap-2 px-2 py-1 rounded bg-black border border-emerald-500/20">
-                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                                <span className="text-[9px] font-bold text-emerald-500 uppercase tracking-widest">{agent.status}</span>
-                            </div>
-                        </div>
-
-                        <div className="p-10 space-y-6">
-                            <div className={`w-16 h-16 rounded-2xl ${agent.bg} flex items-center justify-center ${agent.color}`}>
-                                <agent.icon size={32} />
-                            </div>
-
+                <Dialog open={isCreating} onOpenChange={setIsCreating}>
+                    <DialogTrigger asChild>
+                        <Button size="lg" className="bg-orange-600 text-white font-bold hover:bg-orange-500 transition-colors uppercase tracking-[0.2em] text-[10px] h-12 px-8">
+                            <Plus className="mr-2 h-4 w-4" />
+                            Build Agent
+                        </Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[500px] bg-zinc-950 border-zinc-900 text-white">
+                        <DialogHeader>
+                            <DialogTitle className="text-2xl tracking-tighter font-bold">Create New Agent</DialogTitle>
+                            <DialogDescription className="text-zinc-500">
+                                {selectedTemplate
+                                    ? "Customize this template to create your agent."
+                                    : "Give your agent a name and description to get started."}
+                            </DialogDescription>
+                        </DialogHeader>
+                        <div className="space-y-4 py-4">
+                            {selectedTemplate && (
+                                <div className="flex items-center gap-4 p-4 bg-zinc-900 border border-zinc-800 rounded-none">
+                                    {agentTemplates.find((t) => t.id === selectedTemplate)?.icon}
+                                    <div>
+                                        <h4 className="font-bold text-sm">
+                                            Template: {agentTemplates.find((t) => t.id === selectedTemplate)?.name}
+                                        </h4>
+                                        <p className="text-xs text-zinc-500 uppercase tracking-widest mt-1">Ready for initialization</p>
+                                    </div>
+                                </div>
+                            )}
                             <div className="space-y-2">
-                                <h3 className="text-2xl font-black tracking-tighter text-white">{agent.name}</h3>
-                                <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em]">{agent.role}</p>
+                                <Label htmlFor="name" className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">Name</Label>
+                                <Input
+                                    id="name"
+                                    placeholder="e.g. Customer Support Bot"
+                                    value={newAgentName}
+                                    onChange={(e) => setNewAgentName(e.target.value)}
+                                    className="bg-black border-zinc-900 rounded-none focus:border-orange-500 transition-colors"
+                                />
                             </div>
-
-                            <p className="text-sm text-zinc-400 leading-relaxed font-medium">
-                                {agent.description}
-                            </p>
-
-                            <div className="pt-6 flex items-center gap-4">
-                                <button
-                                    onClick={() => agent.id === 'tars' ? navigate('/void/new/tars') : null}
-                                    className="h-11 px-8 bg-white text-black text-[10px] font-bold uppercase tracking-widest rounded-xl hover:bg-zinc-200 transition-all flex items-center gap-2"
-                                >
-                                    Initiate Prototype <ChevronRight size={14} />
-                                </button>
-                                <button className="h-11 px-6 border border-zinc-800 text-zinc-500 text-[10px] font-bold uppercase tracking-widest rounded-xl hover:border-zinc-600 hover:text-white transition-all">
-                                    Configure
-                                </button>
+                            <div className="space-y-2">
+                                <Label htmlFor="description" className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">Description</Label>
+                                <Textarea
+                                    id="description"
+                                    placeholder="What does this agent do?"
+                                    value={newAgentDescription}
+                                    onChange={(e) => setNewAgentDescription(e.target.value)}
+                                    className="bg-black border-zinc-900 rounded-none focus:border-orange-500 transition-colors min-h-[100px]"
+                                />
                             </div>
                         </div>
-
-                        <div className="border-t border-zinc-900/50 p-6 bg-black/50 flex items-center justify-between">
-                            <div className="flex items-center gap-6">
-                                <div className="flex items-center gap-2">
-                                    <Activity size={12} className="text-zinc-700" />
-                                    <span className="text-[9px] font-bold text-zinc-600 uppercase">99.2% Uptime</span>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <Globe size={12} className="text-zinc-700" />
-                                    <span className="text-[9px] font-bold text-zinc-600 uppercase">Global Edge</span>
-                                </div>
-                            </div>
-                            <span className="text-[9px] font-bold text-zinc-800 uppercase tabular-nums">ID: 0x{Math.random().toString(16).substring(2, 8)}</span>
-                        </div>
-                    </motion.div>
-                ))}
-
-                {/* Create New Agent Placeholder */}
-                <div className="border-2 border-dashed border-zinc-900 rounded-2xl p-10 flex flex-col items-center justify-center text-center space-y-4 hover:border-zinc-800 hover:bg-zinc-950/20 transition-all cursor-pointer group">
-                    <div className="w-16 h-16 rounded-2xl bg-zinc-950 border border-zinc-900 flex items-center justify-center text-zinc-700 group-hover:text-zinc-400 transition-colors">
-                        <Plus size={32} />
-                    </div>
-                    <div className="space-y-1">
-                        <h4 className="text-sm font-bold text-zinc-600 uppercase tracking-widest group-hover:text-zinc-400 transition-colors">Forge New Agent</h4>
-                        <p className="text-[10px] text-zinc-800 font-bold uppercase tracking-tighter">Initialize custom neural baseline</p>
-                    </div>
-                </div>
+                        <DialogFooter>
+                            <Button
+                                variant="outline"
+                                onClick={() => {
+                                    setIsCreating(false)
+                                    setSelectedTemplate(null)
+                                }}
+                                className="border-zinc-800 text-zinc-400 hover:text-white"
+                            >
+                                Cancel
+                            </Button>
+                            <Button
+                                onClick={handleCreateAgent}
+                                disabled={!newAgentName}
+                                className="bg-orange-600 hover:bg-orange-500 text-white font-bold uppercase tracking-widest text-[10px]"
+                            >
+                                Initialize Agent
+                            </Button>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
             </div>
-        </div>
-    );
-};
 
-export default AgentsDashboard;
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
+                <TabsList className="grid w-full grid-cols-3 bg-zinc-950 border border-zinc-900 rounded-none h-12 p-1">
+                    <TabsTrigger value="my-agents" className="rounded-none data-[state=active]:bg-zinc-900 data-[state=active]:text-white text-zinc-500 font-bold uppercase tracking-[0.2em] text-[10px]">My Agents</TabsTrigger>
+                    <TabsTrigger value="templates" className="rounded-none data-[state=active]:bg-zinc-900 data-[state=active]:text-white text-zinc-500 font-bold uppercase tracking-[0.2em] text-[10px]">Templates</TabsTrigger>
+                    <TabsTrigger value="builder" className="rounded-none data-[state=active]:bg-zinc-900 data-[state=active]:text-white text-zinc-500 font-bold uppercase tracking-[0.2em] text-[10px]">Architect</TabsTrigger>
+                </TabsList>
+
+                <TabsContent value="my-agents" className="space-y-4">
+                    {isLoading ? (
+                        <div className="py-20 flex flex-col items-center justify-center">
+                            <Loader2 className="h-12 w-12 text-orange-500 animate-spin mb-4" />
+                            <span className="text-zinc-500 font-bold uppercase tracking-widest text-[10px]">Synchronizing with Mesh...</span>
+                        </div>
+                    ) : agents.length === 0 ? (
+                        <motion.div initial="hidden" animate="visible" variants={fadeInUp}>
+                            <Card className="bg-zinc-950 border-zinc-900 rounded-none border-dashed py-20">
+                                <CardContent className="flex flex-col items-center justify-center">
+                                    <Bot className="h-16 w-16 text-zinc-800 mb-6" />
+                                    <p className="text-center text-zinc-500 mb-8 font-medium">No active agents in this node.</p>
+                                    <Button
+                                        className="bg-orange-600 hover:bg-orange-500 text-white font-bold uppercase tracking-widest text-[10px] h-12 px-8"
+                                        onClick={() => setIsCreating(true)}
+                                    >
+                                        <Plus className="mr-2 h-4 w-4" />
+                                        Deploy your first agent
+                                    </Button>
+                                </CardContent>
+                            </Card>
+                        </motion.div>
+                    ) : (
+                        <motion.div
+                            initial="hidden"
+                            animate="visible"
+                            variants={staggerContainer}
+                            className="grid gap-1 md:grid-cols-2 lg:grid-cols-3 bg-zinc-900 border border-zinc-900"
+                        >
+                            {agents.map((agent: any) => (
+                                <div key={agent.id} className="bg-black h-full">
+                                    <AgentCard
+                                        agent={agent}
+                                        template={agentTemplates.find((t: any) => t.id === agent.type)}
+                                        onDelete={() => handleDeleteAgent(agent.id)}
+                                    />
+                                </div>
+                            ))}
+                        </motion.div>
+                    )}
+                </TabsContent>
+
+                <TabsContent value="templates" className="space-y-4">
+                    <motion.div
+                        initial="hidden"
+                        animate="visible"
+                        variants={staggerContainer}
+                        className="grid gap-1 md:grid-cols-2 lg:grid-cols-3 bg-zinc-900 border border-zinc-900"
+                    >
+                        {agentTemplates.map((template) => (
+                            <motion.div key={template.id} variants={fadeInUp} className="bg-black p-1">
+                                <Card className="overflow-hidden h-full bg-black border-transparent rounded-none hover:bg-zinc-950 transition-colors duration-500">
+                                    <CardHeader className="pb-0">
+                                        <div className="flex justify-between items-start mb-6">
+                                            <div className="p-4 bg-zinc-900 border border-zinc-800 rounded-none shadow-sm">{template.icon}</div>
+                                            <Badge variant="outline" className="bg-orange-500/10 border-orange-500/20 text-orange-400 rounded-none text-[8px] tracking-widest uppercase py-1">
+                                                Template
+                                            </Badge>
+                                        </div>
+                                        <CardTitle className="tracking-tighter font-bold text-2xl lowercase">{template.name}</CardTitle>
+                                        <CardDescription className="text-zinc-500 font-medium text-sm leading-relaxed mt-2">{template.description}</CardDescription>
+                                    </CardHeader>
+                                    <CardContent className="pt-8">
+                                        <div className="space-y-4">
+                                            <h4 className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest">Capabilities</h4>
+                                            <ul className="grid grid-cols-1 gap-2">
+                                                {template.skills.map((skill, index) => (
+                                                    <li key={index} className="flex items-center text-xs font-medium text-zinc-400">
+                                                        <Zap className="mr-3 h-3 w-3 text-orange-500" />
+                                                        {skill}
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    </CardContent>
+                                    <CardFooter className="pt-8">
+                                        <Button
+                                            className="w-full bg-white text-black font-bold hover:bg-orange-500 hover:text-white transition-all duration-300 uppercase tracking-widest text-[10px] h-12 rounded-none"
+                                            onClick={() => handleUseTemplate(template.id)}
+                                        >
+                                            <Sparkles className="mr-2 h-4 w-4" />
+                                            Initialize From Template
+                                        </Button>
+                                    </CardFooter>
+                                </Card>
+                            </motion.div>
+                        ))}
+                    </motion.div>
+                </TabsContent>
+
+                <TabsContent value="builder" className="space-y-4">
+                    <div className="bg-zinc-950 border border-zinc-900 p-1">
+                        <AgentBuilder />
+                    </div>
+                </TabsContent>
+            </Tabs>
+        </div>
+    )
+}

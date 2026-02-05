@@ -40,15 +40,15 @@ export const CloseIcon = (props: IconProps) => (
 );
 
 export const SendIcon = (props: IconProps) => (
-  <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
-    <path d="M3.478 2.405a.75.75 0 00-.926.94l2.432 7.905H13.5a.75.75 0 010 1.5H4.984l-2.432 7.905a.75.75 0 00.926.94 60.519 60.519 0 0018.445-8.986.75.75 0 000-1.218A60.517 60.517 0 003.478 2.405z" />
-  </svg>
+    <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
+        <path d="M3.478 2.405a.75.75 0 00-.926.94l2.432 7.905H13.5a.75.75 0 010 1.5H4.984l-2.432 7.905a.75.75 0 00.926.94 60.519 60.519 0 0018.445-8.986.75.75 0 000-1.218A60.517 60.517 0 003.478 2.405z" />
+    </svg>
 );
 
 export const ArrowUpIcon = (props: IconProps) => (
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
-      <path d="M12 19V5M5 12l7-7 7 7"/>
-  </svg>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+        <path d="M12 19V5M5 12l7-7 7 7" />
+    </svg>
 );
 
 export const StarIcon = (props: IconProps) => (
@@ -77,9 +77,9 @@ export const GridIcon = (props: IconProps) => (
 );
 
 export const HeroAppLogo = (props: IconProps) => (
-  <svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" {...props}>
-      <path d="M12.333 4.33331L5.66667 15.6666H12.3333L11 11.6666H18.3333L12.3333 4.33331Z" />
-  </svg>
+    <svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" {...props}>
+        <path d="M12.333 4.33331L5.66667 15.6666H12.3333L11 11.6666H18.3333L12.3333 4.33331Z" />
+    </svg>
 );
 
 
@@ -87,7 +87,7 @@ export const UserIcon = (props: IconProps) => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
 );
 
-export const TarsIcon = (props: IconProps) => (
+export const Sub0Icon = (props: IconProps) => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
 );
 
@@ -137,23 +137,23 @@ export const YCombinatorIcon = (props: IconProps) => (
 
 export const ProductHuntBadgeIcon = (props: IconProps) => (
     <svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
-        <path d="M12 24C18.6274 24 24 18.6274 24 12C24 5.37258 18.6274 0 12 0C5.37258 0 0 5.37258 0 12C0 18.6274 5.37258 24 12 24Z" fill="#DA552F"/>
-        <path d="M12.579 14.542H9.20301V9.45801H12.579C13.6937 9.45801 14.618 9.87328 15.352 10.7038C16.086 11.5343 16.086 12.4677 15.352 13.2982C14.618 14.1287 13.6937 14.542 12.579 14.542ZM12.585 11.021H10.967V13.001H12.585C13.251 13.001 13.731 12.521 13.731 12.011C13.731 11.501 13.251 11.021 12.585 11.021Z" fill="white"/>
+        <path d="M12 24C18.6274 24 24 18.6274 24 12C24 5.37258 18.6274 0 12 0C5.37258 0 0 5.37258 0 12C0 18.6274 5.37258 24 12 24Z" fill="#DA552F" />
+        <path d="M12.579 14.542H9.20301V9.45801H12.579C13.6937 9.45801 14.618 9.87328 15.352 10.7038C16.086 11.5343 16.086 12.4677 15.352 13.2982C14.618 14.1287 13.6937 14.542 12.579 14.542ZM12.585 11.021H10.967V13.001H12.585C13.251 13.001 13.731 12.521 13.731 12.011C13.731 11.501 13.251 11.021 12.585 11.021Z" fill="white" />
     </svg>
 );
 
 export const TaskStatusIcon = (props: IconProps) => (
-  <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
-    <path d="M3.5 1.5C3.5 1.22386 3.72386 1 4 1H12C12.2761 1 12.5 1.22386 12.5 1.5V14.5C12.5 14.7761 12.2761 15 12 15H4C3.72386 15 3.5 14.7761 3.5 14.5V1.5Z" stroke="currentColor" strokeLinejoin="round"/>
-    <path d="M5.5 12.5H10.5" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"/>
-    <path d="M5 4.5C5.83333 3.66667 8 3.5 8.5 4.5C9.5 6.5 11 5.5 11 7" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"/>
-  </svg>
+    <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+        <path d="M3.5 1.5C3.5 1.22386 3.72386 1 4 1H12C12.2761 1 12.5 1.22386 12.5 1.5V14.5C12.5 14.7761 12.2761 15 12 15H4C3.72386 15 3.5 14.7761 3.5 14.5V1.5Z" stroke="currentColor" strokeLinejoin="round" />
+        <path d="M5.5 12.5H10.5" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M5 4.5C5.83333 3.66667 8 3.5 8.5 4.5C9.5 6.5 11 5.5 11 7" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
 );
 
 export const SpinnerIcon = (props: IconProps) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
-      <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
-  </svg>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+        <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+    </svg>
 );
 
 export const CheckCircleIcon = (props: IconProps) => (
@@ -191,7 +191,7 @@ export const PanelRightCloseIcon = (props: IconProps) => (
 );
 
 export const BuildingIcon = (props: IconProps) => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/><path d="M12 10h.01"/><path d="M12 14h.01"/><path d="M16 10h.01"/><path d="M16 14h.01"/><path d="M8 10h.01"/><path d="M8 14h.01"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><rect x="4" y="4" width="16" height="16" rx="2" /><path d="M9 22v-4h6v4" /><path d="M8 6h.01" /><path d="M16 6h.01" /><path d="M12 6h.01" /><path d="M12 10h.01" /><path d="M12 14h.01" /><path d="M16 10h.01" /><path d="M16 14h.01" /><path d="M8 10h.01" /><path d="M8 14h.01" /></svg>
 );
 
 export const CreditCardIcon = (props: IconProps) => (

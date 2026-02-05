@@ -52,10 +52,10 @@ export const UnifiedOfficeCockpit: React.FC = () => {
                     </h1>
                 </div>
 
-                <div className="flex items-center gap-4 bg-zinc-900 border border-zinc-800 p-4 rounded-xl">
-                    <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                    <div className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">
-                        Handshake: <span className="text-emerald-500">Live</span>
+                <div className="flex items-center gap-4 bg-zinc-900/50 border border-zinc-800 p-4 rounded-none">
+                    <div className="w-2 h-2 rounded-none bg-orange-500 animate-pulse" />
+                    <div className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest leading-none">
+                        Mesh Handshake: <span className="text-orange-500">Synchronized</span>
                     </div>
                 </div>
             </div>
@@ -63,14 +63,14 @@ export const UnifiedOfficeCockpit: React.FC = () => {
             {/* Hybrid Telemetry (Cloud Console Vibes) */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-12">
                 {[
-                    { label: 'Neural Uplink', value: '100%', icon: Activity, color: 'text-blue-500' },
-                    { label: 'DB Vaults (LamaDB)', value: dbStats.vaults, icon: Database, color: 'text-emerald-500' },
-                    { label: 'State Sync', value: '0.0ms', icon: Zap, color: 'text-purple-500' },
-                    { label: 'Security Node', value: 'Black-Ops', icon: Shield, color: 'text-white' }
+                    { label: 'Neural Uplink', value: '100%', icon: Activity, color: 'text-orange-500' },
+                    { label: 'DB Mesh (LamaDB)', value: dbStats.vaults, icon: Database, color: 'text-orange-500' },
+                    { label: 'Latency', value: '0.4ms', icon: Zap, color: 'text-orange-500' },
+                    { label: 'Security Node', value: 'Titan-Sovereign', icon: Shield, color: 'text-white' }
                 ].map((stat, i) => (
-                    <div key={i} className="bg-zinc-950 border border-zinc-900 p-6 hover:border-zinc-700 transition-all group">
+                    <div key={i} className="bg-zinc-950 border border-zinc-900 p-6 hover:border-orange-500/30 transition-all group rounded-none">
                         <div className="flex items-center gap-3 mb-2">
-                            <stat.icon size={12} className={`${stat.color} opacity-40 group-hover:opacity-100 transition-opacity`} />
+                            <stat.icon size={12} className={`${stat.color} opacity-20 group-hover:opacity-100 transition-opacity`} />
                             <span className="text-[9px] font-bold text-zinc-600 uppercase tracking-[0.2em]">{stat.label}</span>
                         </div>
                         <div className="text-xl font-bold tracking-tighter text-zinc-300">{stat.value}</div>

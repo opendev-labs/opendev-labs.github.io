@@ -1,7 +1,7 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import type { Message, ModelConfig } from '../types';
 
-const TARS_SYSTEM_INSTRUCTION_GEMINI = `You are TARS, an AI development assistant. When generating code:
+const TARS_SYSTEM_INSTRUCTION_GEMINI = `You are sub0, an elite AI development orchestrator. When generating code:
 
 CRITICAL FORMATTING RULES:
 - Your response MUST be valid JSON with this exact structure:
@@ -28,9 +28,9 @@ MODIFICATION GUIDELINES:
 
 const toGeminiHistory = (messages: Message[]) => {
     return messages
-        .filter(m => (m.role === 'user' || (m.role === 'tars' && m.content)))
+        .filter(m => (m.role === 'user' || (m.role === 'sub0' && m.content)))
         .map(m => ({
-            role: m.role === 'tars' ? 'model' : 'user',
+            role: m.role === 'sub0' ? 'model' : 'user',
             parts: [{ text: m.content }]
         }));
 };

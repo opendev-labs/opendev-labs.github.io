@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
-import type { ChatSession, FileNode, GenerationInfo, TarsView as View } from '../../../../../types';
+import type { ChatSession, FileNode, GenerationInfo, Sub0View as View } from '../../../../../types';
 import { ChatView } from './ChatView';
 import { CodeView } from './CodeView';
 import { PanelLeftCloseIcon, PanelRightCloseIcon, CodeIcon, PlayIcon, SearchIcon as DeployIcon } from './icons/Icons';
@@ -34,7 +34,7 @@ export function ChatSessionView({
     onApiKeySave
 }: ChatSessionViewProps) {
     const lastMessage = session.messages[session.messages.length - 1];
-    const generationInfo: GenerationInfo | null = (lastMessage?.role === 'tars' && lastMessage.generationInfo)
+    const generationInfo: GenerationInfo | null = (lastMessage?.role === 'sub0' && lastMessage.generationInfo)
         ? lastMessage.generationInfo
         : null;
 

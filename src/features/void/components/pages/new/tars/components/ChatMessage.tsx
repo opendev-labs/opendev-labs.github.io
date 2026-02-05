@@ -11,8 +11,8 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
     const { role, content, generationInfo } = message;
     const isUser = role === 'user';
 
-    const isTarsGenerating = role === 'tars' && generationInfo?.status === 'generating';
-    const isThinkingPhase = isTarsGenerating && generationInfo?.files.length === 0 && !content;
+    const isSub0Generating = role === 'sub0' && generationInfo?.status === 'generating';
+    const isThinkingPhase = isSub0Generating && generationInfo?.files.length === 0 && !content;
 
     return (
         <div className={`flex items-start gap-4 w-full max-w-4xl mx-auto ${isUser ? 'flex-row-reverse' : ''}`}>

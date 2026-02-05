@@ -229,16 +229,16 @@ const AppContent: React.FC = () => {
             });
         }
 
-        navigate(`/void/projects/${newProject.id}`);
+        navigate(`/sub0/projects/${newProject.id}`);
     };
 
-    const isTars = location.pathname.includes('/new/tars');
+    const isSub0 = location.pathname.includes('/new/sub0');
     const isProjectDetail = location.pathname.includes('/projects/');
 
     return (
         <div className="min-h-screen bg-black font-sans flex flex-col selection:bg-white selection:text-black">
-            {!isTars && <Header />}
-            <main className={`flex-grow relative z-10 flex flex-col ${isTars ? 'h-screen' : 'container mx-auto px-4 py-8'}`}>
+            {!isSub0 && <Header />}
+            <main className={`flex-grow relative z-10 flex flex-col ${isSub0 ? 'h-screen' : 'container mx-auto px-4 py-8'}`}>
                 <Suspense fallback={<GlobalLoader />}>
                     <AnimatePresence mode="wait">
                         <MotionDiv
@@ -273,7 +273,7 @@ const AppContent: React.FC = () => {
                     </AnimatePresence>
                 </Suspense>
             </main>
-            {!isTars && <Footer />}
+            {!isSub0 && <Footer />}
             {isProjectDetail && <StatusFooter />}
         </div>
     );

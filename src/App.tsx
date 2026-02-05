@@ -53,11 +53,13 @@ const AppRoutes = () => {
       <ScrollToTop />
       <Routes>
         {/* Standalone Applications & Pages (No Shared Layout) */}
-        <Route path="void/*" element={
-          <Suspense fallback={<div className="min-h-screen bg-black flex items-center justify-center text-white">Loading Void...</div>}>
+        {/* sub0: Hyper-intelligent Agentic IDE */}
+        <Route path="sub0/*" element={
+          <Suspense fallback={<div className="min-h-screen bg-black flex items-center justify-center text-white">Loading sub0...</div>}>
             <VoidApp />
           </Suspense>
         } />
+        <Route path="void-ide/*" element={<Navigate to="/sub0" replace />} />
         <Route path="auth" element={
           <Suspense fallback={<div className="min-h-screen bg-black" />}>
             <LazyAuthPage />
@@ -80,8 +82,11 @@ const AppRoutes = () => {
             <Route index element={<UnifiedOfficeCockpit />} />
             <Route path="syncstack" element={<SyncStackOfficeCockpit />} />
             <Route path="agents" element={<AgentsOfficeCockpit />} />
+            <Route path="agents/new" element={<AgentsOfficeCockpit />} />
             <Route path="void" element={<UnifiedOfficeCockpit />} />
+            <Route path="void/new" element={<Navigate to="/void/new" replace />} />
             <Route path="lamadb" element={<LamaDBOfficeCockpit />} />
+            <Route path="lamadb/new" element={<LamaDBOfficeCockpit />} />
             <Route path="telemetry" element={<LamaDBTelemetryCockpit />} />
           </Route>
           <Route path="dashboard" element={<Navigate to="/office" replace />} />

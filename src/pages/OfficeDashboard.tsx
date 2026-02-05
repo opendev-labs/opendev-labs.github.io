@@ -8,10 +8,20 @@ const OfficeDashboard: React.FC = () => {
     const [isCollapsed, setIsCollapsed] = useState(false);
     const nodes = [
         {
+            id: 'sub0',
+            name: 'SUB0 // AGENTIC IDE',
+            status: 'CONNECTED',
+            desc: 'Hyper-intelligent new age agentic IDE.',
+            icon: Cpu,
+            path: '/sub0',
+            color: 'text-orange-500',
+            bg: 'bg-orange-500/5'
+        },
+        {
             id: 'void',
-            name: 'VOID INFRASTRUCTURE',
+            name: 'VOID // CLOUD PLATFORM',
             status: 'OPERATIONAL',
-            desc: 'Neural orchestration and compute clusters.',
+            desc: 'Vercel-clone advanced deployment engine.',
             icon: Terminal,
             path: '/office/void',
             color: 'text-blue-500',
@@ -102,12 +112,13 @@ const OfficeDashboard: React.FC = () => {
                 </div>
 
                 <div className="flex-1 py-8 space-y-1">
-                    <SidebarItem icon={LayoutGrid} label="Office Cockpit" path="/office" active={location.pathname === '/office'} id="cockpit" />
-                    <SidebarItem icon={Bot} label="Agents" path="/office/agents" active={location.pathname === '/office/agents'} id="agents" />
-                    <SidebarItem icon={Box} label="SyncStack" path="/office/syncstack" active={location.pathname === '/office/syncstack'} id="syncstack" />
-                    <SidebarItem icon={Terminal} label="Void Engine" path="/office/void" active={location.pathname === '/office/void'} id="void" />
-                    <SidebarItem icon={Database} label="LamaDB" path="/office/lamadb" active={location.pathname === '/office/lamadb'} id="lamadb" />
-                    <SidebarItem icon={Activity} label="LamaDB Telemetry" path="/office/telemetry" active={location.pathname === '/office/telemetry'} id="telemetry" />
+                    <SidebarItem icon={LayoutGrid} label="System Office" path="/office" active={location.pathname === '/office'} id="cockpit" />
+                    <SidebarItem icon={Cpu} label="sub0 IDE" path="/sub0" active={location.pathname.startsWith('/sub0')} id="sub0" />
+                    <SidebarItem icon={Bot} label="Agents Dashboard" path="/office/agents" active={location.pathname === '/office/agents'} id="agents" />
+                    <SidebarItem icon={Terminal} label="Void Platform" path="/office/void" active={location.pathname === '/office/void'} id="void" />
+                    <SidebarItem icon={Database} label="LamaDB Mesh" path="/office/lamadb" active={location.pathname === '/office/lamadb'} id="lamadb" />
+                    <SidebarItem icon={Box} label="SyncStack Console" path="/office/syncstack" active={location.pathname === '/office/syncstack'} id="syncstack" />
+                    <SidebarItem icon={Activity} label="Telemetry" path="/office/telemetry" active={location.pathname === '/office/telemetry'} id="telemetry" />
                 </div>
 
                 <div className="border-t border-zinc-900 pt-1">

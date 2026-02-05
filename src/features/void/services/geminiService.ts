@@ -32,9 +32,9 @@ CORE PROTOCOLS:
 
 const toGeminiHistory = (messages: Message[]) => {
     return messages
-        .filter(m => (m.role === 'user' || (m.role === 'tars' && m.content)))
+        .filter(m => (m.role === 'user' || (m.role === 'sub0' && m.content)))
         .map(m => ({
-            role: m.role === 'tars' ? 'model' : 'user',
+            role: m.role === 'sub0' ? 'model' : 'user',
             parts: [{ text: m.content }]
         }));
 };

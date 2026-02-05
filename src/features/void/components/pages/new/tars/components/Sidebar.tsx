@@ -1,6 +1,6 @@
 import React from 'react';
 import { OpendevLabsLogo, NewChatIcon, ChatsIcon, SettingsIcon, GithubIcon, ChevronLeftIcon, TrashIcon } from './icons/Icons';
-import type { TarsView as View, ChatSession } from '../../../../../types';
+import type { Sub0View as View, ChatSession } from '../../../../../types';
 
 interface SidebarProps {
     onNavigate: (view: View) => void;

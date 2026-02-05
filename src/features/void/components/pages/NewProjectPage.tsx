@@ -21,16 +21,16 @@ export const NewProjectPage: React.FC<NewProjectPageProps> = ({
     onImportRepository,
     onDeployWorkflow
 }) => {
-    const isTars = window.location.pathname.includes('/tars');
+    const isSub0 = window.location.pathname.includes('/sub0');
 
     return (
-        <div className={isTars ? "h-full" : "pb-32 px-6"}>
+        <div className={isSub0 ? "h-full" : "pb-32 px-6"}>
             <Routes>
                 <Route index element={<NewProjectLanding />} />
                 <Route path="import" element={<ImportPage onImportRepository={onImportRepository} />} />
                 <Route path="templates" element={<TemplatesPage onDeployTemplate={onDeployTemplate} />} />
                 <Route path="mesh" element={<MeshPage onDeployWorkflow={onDeployWorkflow} />} />
-                <Route path="tars" element={<TarsPage />} />
+                <Route path="sub0" element={<TarsPage />} />
                 <Route path="hosting" element={<HostingPage onDeployTemplate={onDeployTemplate} />} />
             </Routes>
             <Outlet />

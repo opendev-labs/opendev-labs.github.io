@@ -61,6 +61,8 @@ jobs:
           # Create clean manifest directory
           mkdir -p hf_manifest
           cp -r src public index.html package.json package-lock.json Dockerfile README.md hf_manifest/
+          cp tsconfig.json tsconfig.app.json tsconfig.node.json hf_manifest/ 2>/dev/null || true
+          cp vite.config.ts postcss.config.js tailwind.config.js hf_manifest/ 2>/dev/null || true
           
           cd hf_manifest
           

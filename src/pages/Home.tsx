@@ -161,7 +161,7 @@ export default function Home() {
                 <div className="max-w-[1400px] mx-auto px-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-1 ring-1 ring-zinc-900 rounded-none overflow-hidden">
                         {[
-                            { title: "sub0 Workspace", desc: "Agentic full-screen workspace for code materialization.", icon: Cpu, path: "/void/new/tars" },
+                            { title: "sub0 Workspace", desc: "Agentic full-screen workspace for code materialization.", icon: Cpu, path: "/void/new/sub0" },
                             { title: "Void Hub", desc: "Neural orchestration and project lifecycle management.", icon: Terminal, path: "/void" },
                             { title: "LamaDB", desc: "Native browser database for local-first state persistence.", icon: Database, path: "/lamadb" },
                             { title: "SyncStack", desc: "0ms latency tunnel for web-to-desktop synchronization.", icon: Box, path: "/syncstack" }

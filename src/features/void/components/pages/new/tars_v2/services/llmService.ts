@@ -30,9 +30,9 @@ MODIFICATION GUIDELINES:
 // Helper to convert app's message format to a generic format.
 const toGenericHistory = (messages: Message[]) => {
     return messages
-        .filter(m => (m.role === 'user' || (m.role === 'tars' && m.content)))
+        .filter(m => (m.role === 'user' || (m.role === 'sub0' && m.content)))
         .map(m => ({
-            role: m.role === 'tars' ? 'assistant' : 'user',
+            role: m.role === 'sub0' ? 'assistant' : 'user',
             content: m.content
         }));
 };

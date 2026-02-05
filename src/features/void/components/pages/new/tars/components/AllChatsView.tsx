@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import type { ChatSession, TarsView as View } from '../../../../../types';
+import type { ChatSession, Sub0View as View } from '../../../../../types';
 import { NewChatIcon, SearchIcon, TrashIcon } from './icons/Icons';
 
 function timeAgo(timestamp: number): string {
