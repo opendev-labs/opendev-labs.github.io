@@ -6,7 +6,7 @@ import { ImportPage } from './new/ImportPage';
 import { TemplatesPage } from './new/TemplatesPage';
 import { MeshPage } from './new/MeshPage';
 import { OpenURLPage } from './new/OpenURLPage';
-import { TarsPage } from './new/TarsPage';
+import { OpenStudioPage } from './new/OpenStudioPage';
 import { HostingPage } from './new/HostingPage';
 import { DeploymentConfigForm } from './DeploymentConfigForm';
 
@@ -21,16 +21,16 @@ export const NewProjectPage: React.FC<NewProjectPageProps> = ({
     onImportRepository,
     onDeployWorkflow
 }) => {
-    const isSub0 = window.location.pathname.includes('/sub0');
+    const isOpenStudio = window.location.pathname.includes('/open-studio');
 
     return (
-        <div className={isSub0 ? "h-full" : "pb-32 px-6"}>
+        <div className={isOpenStudio ? "h-full" : "pb-32 px-6"}>
             <Routes>
                 <Route index element={<NewProjectLanding />} />
                 <Route path="import" element={<ImportPage onImportRepository={onImportRepository} />} />
                 <Route path="templates" element={<TemplatesPage onDeployTemplate={onDeployTemplate} />} />
                 <Route path="mesh" element={<MeshPage onDeployWorkflow={onDeployWorkflow} />} />
-                <Route path="sub0" element={<TarsPage />} />
+                <Route path="open-studio" element={<OpenStudioPage />} />
                 <Route path="hosting" element={<HostingPage onDeployTemplate={onDeployTemplate} />} />
             </Routes>
             <Outlet />

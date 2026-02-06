@@ -233,10 +233,10 @@ function App() {
     let history: Message[] = [];
     let currentFileTree: FileNode[] = [];
     const userMessage: Message = { id: Date.now(), role: 'user', content: prompt };
-    const sub0MessageId = Date.now() + 1;
-    const sub0Placeholder: Message = {
-      id: sub0MessageId,
-      role: 'sub0',
+    const openStudioMessageId = Date.now() + 1;
+    const openStudioPlaceholder: Message = {
+      id: openStudioMessageId,
+      role: 'open-studio',
       content: '', // Initially empty, will show "Thinking..." via component logic
       generationInfo: {
         status: 'generating',
@@ -250,7 +250,7 @@ function App() {
       const newSession: ChatSession = {
         id: newId,
         title: prompt.length > 25 ? prompt.substring(0, 22) + '...' : prompt,
-        messages: [userMessage, sub0Placeholder],
+        messages: [userMessage, openStudioPlaceholder],
         fileTree: [],
         activeFile: null,
         lastUpdated: Date.now(),
@@ -268,7 +268,7 @@ function App() {
       }
       setSessions(prevSessions => prevSessions.map(s => {
         if (s.id === currentSessionId) {
-          return { ...s, messages: [...s.messages, userMessage, sub0Placeholder], lastUpdated: Date.now() };
+          return { ...s, messages: [...s.messages, userMessage, openStudioPlaceholder], lastUpdated: Date.now() };
         }
         return s;
       }));
@@ -297,11 +297,11 @@ function App() {
 
           if (newConversationText !== conversationText) {
             conversationText = newConversationText;
-            setSessions(prev => prev.map(s => s.id === currentSessionId ? { ...s, messages: s.messages.map(m => m.id === sub0MessageId ? { ...m, content: conversationText } : m) } : s));
+            setSessions(prev => prev.map(s => s.id === currentSessionId ? { ...s, messages: s.messages.map(m => m.id === openStudioMessageId ? { ...m, content: conversationText } : m) } : s));
           }
         } else if (!conversationText && !fullResponse.includes('"conversation"')) {
           // If it's not looking like JSON, it could be an error message. Show it directly.
-          setSessions(prev => prev.map(s => s.id === currentSessionId ? { ...s, messages: s.messages.map(m => m.id === sub0MessageId ? { ...m, content: fullResponse } : m) } : s));
+          setSessions(prev => prev.map(s => s.id === currentSessionId ? { ...s, messages: s.messages.map(m => m.id === openStudioMessageId ? { ...m, content: fullResponse } : m) } : s));
         }
       }
 
@@ -333,7 +333,7 @@ function App() {
           } catch (e) {
             console.error("Failed to parse final JSON from response", e);
             finalConversationalPart = "I tried to generate a response, but it wasn't in the correct format. The raw response is shown below.";
-            setSessions(prev => prev.map(s => s.id === currentSessionId ? { ...s, messages: s.messages.map(m => m.id === sub0MessageId ? { ...m, content: fullResponse } : m) } : s));
+            setSessions(prev => prev.map(s => s.id === currentSessionId ? { ...s, messages: s.messages.map(m => m.id === openStudioMessageId ? { ...m, content: fullResponse } : m) } : s));
           }
         } else {
           console.warn("No valid JSON found in the final response. Treating as pure conversation.");
@@ -350,7 +350,7 @@ function App() {
             status: 'generating',
           }));
           const messages = s.messages.map(msg => {
-            if (msg.id === sub0MessageId) {
+            if (msg.id === openStudioMessageId) {
               return {
                 ...msg,
                 content: finalConversationalPart,
@@ -401,7 +401,7 @@ function App() {
         setSessions(prev => prev.map(s => {
           if (s.id !== currentSessionId) return s;
           const messages = s.messages.map(msg => {
-            if (msg.id === sub0MessageId && msg.generationInfo) {
+            if (msg.id === openStudioMessageId && msg.generationInfo) {
               const files = msg.generationInfo.files.map(f =>
                 f.path === file.path ? { ...f, status: 'complete' as const } : f
               );
@@ -425,7 +425,7 @@ function App() {
       setSessions(prevSessions => prevSessions.map(s => {
         if (s.id === currentSessionId) {
           const messages = s.messages.map(msg => {
-            if (msg.id === sub0MessageId && msg.generationInfo) {
+            if (msg.id === openStudioMessageId && msg.generationInfo) {
               return { ...msg, generationInfo: { ...msg.generationInfo, status: 'complete' as const } };
             }
             return msg;
@@ -453,7 +453,7 @@ function App() {
       console.error("Error streaming chat response:", error);
       setSessions(prevSessions => prevSessions.map(s => {
         if (s.id === currentSessionId) {
-          const messages = s.messages.map(m => m.id === sub0MessageId ? { ...m, content: `Sorry, I encountered an error: ${error instanceof Error ? error.message : 'Unknown error'}` } : m);
+          const messages = s.messages.map(m => m.id === openStudioMessageId ? { ...m, content: `Sorry, I encountered an error: ${error instanceof Error ? error.message : 'Unknown error'}` } : m);
           return { ...s, messages };
         }
         return s;

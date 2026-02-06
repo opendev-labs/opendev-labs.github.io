@@ -93,7 +93,7 @@ export const Header: React.FC = () => {
         setIsMobileMenuOpen(false);
     }, [pathname]);
 
-    const isSub0Route = pathname.startsWith('/sub0');
+    const isOpenStudioRoute = pathname.startsWith('/open-studio');
 
     return (
         <nav className={`fixed top-0 w-full z-[100] transition-all duration-300 border-b h-14 ${scrolled ? 'bg-black/80 backdrop-blur-xl border-zinc-900' : 'bg-black border-transparent'}`}>
@@ -102,7 +102,7 @@ export const Header: React.FC = () => {
                     <Link to="/" className="flex items-center gap-3 group">
                         <Logo />
                         <span className="font-bold tracking-tighter text-sm tracking-[0.2em] group-hover:opacity-80 transition-opacity">
-                            {isSub0Route ? 'sub0' : 'opendev-labs'}
+                            {isOpenStudioRoute ? 'open-studio' : 'opendev-labs'}
                         </span>
                     </Link>
 

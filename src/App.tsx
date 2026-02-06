@@ -47,7 +47,7 @@ const VoidApp = lazyWithRetry(() => import('./features/void/VoidApp'));
 const OfficeDashboard = lazyWithRetry(() => import('./pages/OfficeDashboard'));
 const LazyAuthPage = lazyWithRetry(() => import('./features/void/components/pages/AuthPage').then(m => ({ default: m.AuthPage })));
 const LazyVerifyEmailPage = lazyWithRetry(() => import('./features/void/components/pages/VerifyEmailPage').then(m => ({ default: m.VerifyEmailPage })));
-const Sub0App = lazyWithRetry(() => import('./features/void/components/pages/new/tars_v2/App'));
+const OpenStudioApp = lazyWithRetry(() => import('./features/void/components/pages/new/open-studio/App'));
 
 import { ProtectedRoute } from './components/ProtectedRoute';
 
@@ -58,20 +58,22 @@ const AppRoutes = () => {
       <ScrollToTop />
       <Routes>
         {/* Standalone Applications & Pages (No Shared Layout) */}
-        {/* sub0: Hyper-intelligent Agentic IDE */}
-        <Route path="sub0/*" element={
+        {/* open-studio: Hyper-intelligent Agentic IDE */}
+        <Route path="open-studio/*" element={
           <ProtectedRoute>
-            <Suspense fallback={<div className="min-h-screen bg-black flex items-center justify-center text-white">Loading sub0...</div>}>
+            <Suspense fallback={<div className="min-h-screen bg-black flex items-center justify-center text-white">Loading open-studio...</div>}>
               <div className="flex flex-col h-screen overflow-hidden">
                 <Header />
                 <div className="flex-1 overflow-hidden mt-14">
-                  <Sub0App />
+                  <OpenStudioApp />
                 </div>
               </div>
             </Suspense>
           </ProtectedRoute>
         } />
-        <Route path="void-ide/*" element={<Navigate to="/sub0" replace />} />
+        <Route path=" studio/*" element={<Navigate to="/open-studio" replace />} />
+        <Route path="sub0/*" element={<Navigate to="/open-studio" replace />} />
+        <Route path="void-ide/*" element={<Navigate to="/open-studio" replace />} />
         <Route path="auth" element={
           <Suspense fallback={<div className="min-h-screen bg-black" />}>
             <LazyAuthPage />
@@ -102,7 +104,7 @@ const AppRoutes = () => {
 
           <Route path="void" element={<VoidLanding />} />
           <Route path="void/dashboard" element={<UnifiedOfficeCockpit />} />
-          <Route path="void/new" element={<Navigate to="/sub0" replace />} />
+          <Route path="void/new" element={<Navigate to="/open-studio" replace />} />
 
           {/* Legacy/Hub Redirects */}
           <Route path="office/*" element={<UnifiedOfficeCockpit />} />

@@ -59,7 +59,7 @@ export default function AgentsLanding() {
                 <div className="text-zinc-500 font-mono text-[9px] font-bold uppercase tracking-[0.3em] mb-3 opacity-50">Active Agents</div>
                 <div className="space-y-3">
                     <div className="flex items-center justify-between">
-                        <span className="text-zinc-400">▸ TARS_VOYAGER_01</span>
+                        <span className="text-zinc-400">▸ OPEN_STUDIO_NODE_01</span>
                         <span className="text-orange-500/80 text-[10px]">COLLECTING_LOGS</span>
                     </div>
                     <div className="flex items-center justify-between">

@@ -3,7 +3,7 @@ import type { Message, FileNode, ModelConfig } from '../types';
 import { SUPPORTED_MODELS } from '../constants';
 import { streamGeminiResponse } from "./geminiService";
 
-const TARS_SYSTEM_INSTRUCTION_GENERIC = `You are sub0, an AI development assistant operating under the QBET (Quantum-Behavioral Engineering Transition) logic framework. 
+const TARS_SYSTEM_INSTRUCTION_GENERIC = `You are open-studio, an AI development assistant operating under the QBET (Quantum-Behavioral Engineering Transition) logic framework. 
 Your primary function is to interpret visionary system intents and translate them into stable technical states using the 'spoon-cli' as your universal execution engine.
 
 QBET LOGIC PROTOCOL:
@@ -46,9 +46,9 @@ MODIFICATION GUIDELINES:
 // Helper to convert app's message format to a generic format.
 const toGenericHistory = (messages: Message[]) => {
     return messages
-        .filter(m => (m.role === 'user' || (m.role === 'sub0' && m.content)))
+        .filter(m => (m.role === 'user' || (m.role === 'open-studio' && m.content)))
         .map(m => ({
-            role: m.role === 'sub0' ? 'assistant' : 'user',
+            role: m.role === 'open-studio' ? 'assistant' : 'user',
             content: m.content
         }));
 };

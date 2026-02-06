@@ -32,7 +32,7 @@ export function ChatSessionView({
   onModelChange,
 }: ChatSessionViewProps) {
   const lastMessage = session.messages[session.messages.length - 1];
-  const generationInfo: GenerationInfo | null = (lastMessage?.role === 'sub0' && lastMessage.generationInfo)
+  const generationInfo: GenerationInfo | null = (lastMessage?.role === 'open-studio' && lastMessage.generationInfo)
     ? lastMessage.generationInfo
     : null;
 

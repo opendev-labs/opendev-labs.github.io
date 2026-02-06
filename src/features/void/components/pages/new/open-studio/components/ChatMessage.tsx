@@ -1,4 +1,5 @@
 import React from 'react';
+import { Cpu } from 'lucide-react';
 import type { Message } from '../types';
 import { UserIcon, Sub0Icon, SpinnerIcon } from './icons/Icons';
 import { GenerationStatusView } from './GenerationStatusView';
@@ -11,9 +12,9 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
   const { role, content, generationInfo } = message;
   const isUser = role === 'user';
 
-  const isSub0Generating = role === 'sub0' && generationInfo?.status === 'generating';
+  const isStudioGenerating = role === 'open-studio' && generationInfo?.status === 'generating';
   // "Thinking" phase is when generation has started, but no conversational content or file list has arrived yet.
-  const isThinkingPhase = isSub0Generating && generationInfo?.files.length === 0 && !content;
+  const isThinkingPhase = isStudioGenerating && generationInfo?.files.length === 0 && !content;
 
 
   return (
@@ -26,7 +27,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
         <div className={`w-full max-w-3xl ${isUser ? 'text-right' : 'text-left'}`}>
           <div className="flex items-center gap-2 mb-2 opacity-30">
             <span className="text-[9px] font-bold uppercase tracking-[0.3em] text-zinc-500">
-              {isUser ? 'Materializer // User' : 'Architect // sub0'}
+              {isUser ? 'Materializer // User' : 'Architect // open-studio'}
             </span>
           </div>
 
@@ -37,9 +38,19 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
                 <p className="text-[10px] font-bold tracking-[0.4em] text-zinc-500 uppercase">Synchronizing Neural Mesh...</p>
               </div>
             ) : (
-              <div className={`text-[15px] leading-relaxed font-medium ${isUser ? 'bg-zinc-900/30 p-6 border border-zinc-800' : ''}`}>
-                {content}
-              </div>
+              <>
+                {role === 'open-studio' && (
+                  <div className="flex items-center gap-2 mb-4">
+                    <div className="w-5 h-5 bg-zinc-900 border border-zinc-800 flex items-center justify-center">
+                      <Cpu size={10} className="text-zinc-500" />
+                    </div>
+                    <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em]">open-studio</span>
+                  </div>
+                )}
+                <div className={`text-[15px] leading-relaxed font-medium ${isUser ? 'bg-zinc-900/30 p-6 border border-zinc-800' : ''}`}>
+                  {content}
+                </div>
+              </>
             )}
 
             {message.generationInfo && message.generationInfo.files.length > 0 && (

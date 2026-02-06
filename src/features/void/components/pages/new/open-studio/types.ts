@@ -11,7 +11,7 @@ export interface GenerationInfo {
 
 export interface Message {
   id: number;
-  role: 'user' | 'sub0';
+  role: 'user' | 'open-studio';
   content: string;
   generationInfo?: GenerationInfo;
 }

@@ -19,11 +19,11 @@ const changelogData: ChangeEntry[] = [
         version: "v2.4.0",
         date: "FEB 02, 2026",
         type: "AI",
-        title: "TARS Superagent & Agents Core",
+        title: "open-studio Superagent & Core",
         description: "A major overhaul of the AI orchestrator and workspace management.",
         icon: Sparkles,
         updates: [
-            "Upgraded TARS to v2 with 'Neural Handshake' chat interface.",
+            "Evolved sub0 to open-studio with 'Neural Handshake' chat interface.",
             "Implemented buttery smooth 'Infrastructure Slide-in' for builds.",
             "Created Agents Registry for managing specialized AI personas.",
             "Fixed Pulse V2 Preview with robust Babel-powered runtime.",

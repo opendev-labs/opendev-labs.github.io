@@ -19,7 +19,7 @@ const getApiKeyFromEnv = (provider: string): string | undefined => {
     }
 };
 
-const TARS_SYSTEM_INSTRUCTION_GENERIC = `You are TARS, an AI development assistant. Your response MUST be a single, valid JSON object and nothing else.
+const TARS_SYSTEM_INSTRUCTION_GENERIC = `You are open-studio, an AI development assistant. Your response MUST be a single, valid JSON object and nothing else.
 DO NOT wrap the JSON in markdown backticks like \`\`\`json.
 DO NOT add any text before or after the JSON object.
 
@@ -46,9 +46,9 @@ MODIFICATION GUIDELINES:
 // Helper to convert app's message format to a generic format.
 const toGenericHistory = (messages: Message[]) => {
     return messages
-        .filter(m => (m.role === 'user' || (m.role === 'sub0' && m.content)))
+        .filter(m => (m.role === 'user' || (m.role === 'open-studio' && m.content)))
         .map(m => ({
-            role: m.role === 'sub0' ? 'assistant' : 'user',
+            role: m.role === 'open-studio' ? 'assistant' : 'user',
             content: m.content
         }));
 };

@@ -161,7 +161,7 @@ export default function Home() {
                 <div className="max-w-[1400px] mx-auto px-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-1 ring-1 ring-zinc-900 rounded-none overflow-hidden">
                         {[
-                            { title: "sub0 IDE", desc: "Agentic full-screen workspace for code materialization.", icon: Cpu, path: "/sub0" },
+                            { title: "open-studio IDE", desc: "Agentic full-screen workspace for code materialization.", icon: Cpu, path: "/open-studio" },
                             { title: "Agents Hub", desc: "Autonomous node orchestration and agent builder.", icon: Bot, path: "/agents" },
                             { title: "Void Platform", desc: "Neural orchestration and project lifecycle management.", icon: Terminal, path: "/void" },
                             { title: "LamaDB Mesh", desc: "Native browser database for local-first state persistence.", icon: Database, path: "/lamadb" },

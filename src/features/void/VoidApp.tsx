@@ -229,7 +229,7 @@ const AppContent: React.FC = () => {
             });
         }
 
-        navigate(`/sub0/projects/${newProject.id}`);
+        navigate(`/open-studio/projects/${newProject.id}`);
     };
 
     return (

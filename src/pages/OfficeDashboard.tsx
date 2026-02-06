@@ -8,12 +8,12 @@ const OfficeDashboard: React.FC = () => {
     const [isCollapsed, setIsCollapsed] = useState(false);
     const nodes = [
         {
-            id: 'sub0',
-            name: 'SUB0 // AGENTIC IDE',
+            id: 'open-studio',
+            name: 'OPEN-STUDIO // AGENTIC IDE',
             status: 'CONNECTED',
             desc: 'Hyper-intelligent new age agentic IDE.',
             icon: Cpu,
-            path: '/sub0',
+            path: '/open-studio',
             color: 'text-orange-500',
             bg: 'bg-orange-500/5'
         },
@@ -113,7 +113,7 @@ const OfficeDashboard: React.FC = () => {
 
                 <div className="flex-1 py-8 space-y-1">
                     <SidebarItem icon={LayoutGrid} label="System Office" path="/office" active={location.pathname === '/office'} id="cockpit" />
-                    <SidebarItem icon={Cpu} label="sub0 IDE" path="/sub0" active={location.pathname.startsWith('/sub0')} id="sub0" />
+                    <SidebarItem icon={Cpu} label="open-studio IDE" path="/open-studio" active={location.pathname.startsWith('/open-studio')} id="open-studio" />
                     <SidebarItem icon={Bot} label="Agents Dashboard" path="/office/agents" active={location.pathname === '/office/agents'} id="agents" />
                     <SidebarItem icon={Terminal} label="Void Platform" path="/office/void" active={location.pathname === '/office/void'} id="void" />
                     <SidebarItem icon={Database} label="LamaDB Mesh" path="/office/lamadb" active={location.pathname === '/office/lamadb'} id="lamadb" />
