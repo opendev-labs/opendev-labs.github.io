@@ -3,7 +3,7 @@ import type { Message, FileNode, ModelConfig } from '../types';
 import { SUPPORTED_MODELS } from '../constants';
 import { streamGeminiResponse } from "./geminiService";
 
-const TARS_SYSTEM_INSTRUCTION_GENERIC = `You are open-studio, an AI development assistant operating under the QBET (Quantum-Behavioral Engineering Transition) logic framework. 
+const OPEN_STUDIO_SYSTEM_INSTRUCTION_GENERIC = `You are open-studio, an AI development assistant operating under the QBET (Quantum-Behavioral Engineering Transition) logic framework. 
 Your primary function is to interpret visionary system intents and translate them into stable technical states using the 'spoon-cli' as your universal execution engine.
 
 QBET LOGIC PROTOCOL:
@@ -91,7 +91,7 @@ async function* streamOpenAICompatibleResponse(fullPrompt: string, history: Mess
     }
 
     const messages = [
-        { role: 'system', content: TARS_SYSTEM_INSTRUCTION_GENERIC },
+        { role: 'system', content: OPEN_STUDIO_SYSTEM_INSTRUCTION_GENERIC },
         ...toGenericHistory(history),
         { role: 'user', content: fullPrompt }
     ];
@@ -159,7 +159,7 @@ async function* streamOpenAICompatibleResponse(fullPrompt: string, history: Mess
 
 
 async function* streamHuggingFaceResponse(fullPrompt: string, history: Message[], modelConfig: ModelConfig, apiKey: string): AsyncGenerator<{ text: string; }> {
-    const hfPrompt = `${TARS_SYSTEM_INSTRUCTION_GENERIC}\n\n**Task:**\n${fullPrompt}`;
+    const hfPrompt = `${OPEN_STUDIO_SYSTEM_INSTRUCTION_GENERIC}\n\n**Task:**\n${fullPrompt}`;
 
     // NOTE: The free Hugging Face Inference API does not support streaming responses for text generation.
     // This function will wait for the full response before returning.

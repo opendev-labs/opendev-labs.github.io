@@ -1,7 +1,7 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import type { Message, ModelConfig, LogEntry } from '../types';
 
-const TARS_SYSTEM_INSTRUCTION_GEMINI = `You are open-studio, an elite AI development orchestrator. You are far superior to standard models.
+const OPEN_STUDIO_SYSTEM_INSTRUCTION_GEMINI = `You are open-studio, an elite AI development orchestrator. You are far superior to standard models.
 
 LOCAL CONTEXT:
 - Mesh Authority: /home/cube/syncstack/opendev-labs/
@@ -56,7 +56,7 @@ export async function* streamGeminiResponse(fullPrompt: string, history: Message
         model: modelConfig.apiIdentifier,
         contents: contents,
         config: {
-            systemInstruction: TARS_SYSTEM_INSTRUCTION_GEMINI,
+            systemInstruction: OPEN_STUDIO_SYSTEM_INSTRUCTION_GEMINI,
             responseMimeType: "application/json",
             responseSchema: {
                 type: Type.OBJECT,

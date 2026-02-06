@@ -211,10 +211,10 @@ export const HostingPage: React.FC<{
                         Need a custom solution? Our agents can build anything.
                     </p>
                     <button
-                        onClick={() => navigate('/void/new/sub0')}
+                        onClick={() => navigate('/void/new/open-studio')}
                         className="h-12 px-10 rounded-none bg-white text-black text-sm font-bold hover:bg-zinc-200 transition-all hover:scale-105 active:scale-95 inline-flex items-center justify-center gap-2"
                     >
-                        Talk to sub0
+                        Talk to open-studio
                     </button>
                 </div>
             </div>
