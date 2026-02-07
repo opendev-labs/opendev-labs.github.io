@@ -16,7 +16,7 @@ import AgentsLanding from './pages/AgentsLanding';
 import Spoon from './pages/Spoon';
 import Product from './pages/Product';
 import Changelog from './pages/Changelog';
-import NexusDashboard from './pages/NexusDashboard';
+import NexusHub from './pages/NexusHub';
 import { Preloader } from './components/Preloader';
 import { DocsPage } from './features/void/components/pages/DocsPage';
 import { MissionControl } from './pages/MissionControl';
@@ -120,7 +120,7 @@ const AppRoutes = () => {
 
           <Route path="nexus" element={
             <ProtectedRoute>
-              <NexusDashboard />
+              <NexusHub />
             </ProtectedRoute>
           } />
           <Route path="onboarding" element={

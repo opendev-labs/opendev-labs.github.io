@@ -9,7 +9,7 @@ import { LamaDB } from '../lib/lamaDB';
 import { Textarea } from '../components/ui/shadcn/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../components/ui/shadcn/dialog';
 
-export default function NexusDashboard() {
+export default function NexusHub() {
     const { user, profile, isLoading } = useAuth();
     const navigate = useNavigate();
     const [activeFeed, setActiveFeed] = useState('trending');
