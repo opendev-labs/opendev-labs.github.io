@@ -112,7 +112,7 @@ const OfficeDashboard: React.FC = () => {
                 </div>
 
                 <div className="flex-1 py-8 space-y-1">
-                    <SidebarItem icon={Globe} label="Nexus Social Hub" path="/nexus" active={location.pathname === '/nexus'} id="nexus" />
+                    <SidebarItem icon={Globe} label="Open-Hub" path="/open-hub" active={location.pathname === '/open-hub'} id="nexus" />
                     <SidebarItem icon={LayoutGrid} label="Command Center" path="/office" active={location.pathname === '/office'} id="cockpit" />
                     <SidebarItem icon={Cpu} label="Open Studio" path="/open-studio" active={location.pathname.startsWith('/open-studio')} id="open-studio" />
                     <SidebarItem icon={Bot} label="Agents Node" path="/office/agents" active={location.pathname === '/office/agents'} id="agents" />

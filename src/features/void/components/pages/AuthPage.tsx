@@ -24,7 +24,7 @@ export const AuthPage: React.FC = () => {
 
     useEffect(() => {
         if (isAuthenticated && !isConnectMode) {
-            const destination = location.state?.from?.pathname || '/nexus';
+            const destination = location.state?.from?.pathname || '/open-hub';
             navigate(destination, { replace: true });
         }
     }, [isAuthenticated, navigate, isConnectMode, location.state]);

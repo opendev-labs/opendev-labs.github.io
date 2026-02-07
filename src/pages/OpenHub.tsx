@@ -9,7 +9,7 @@ import { LamaDB } from '../lib/lamaDB';
 import { Textarea } from '../components/ui/shadcn/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../components/ui/shadcn/dialog';
 
-export default function NexusHub() {
+export default function OpenHub() {
     const { user, profile, isLoading } = useAuth();
     const navigate = useNavigate();
     const [activeFeed, setActiveFeed] = useState('all');
@@ -34,7 +34,7 @@ export default function NexusHub() {
         const fetchPosts = async () => {
             try {
                 const userContext = { uid: 'global', email: 'global' };
-                const fetched = await LamaDB.store.collection('nexus_posts', userContext).get() as any[];
+                const fetched = await LamaDB.store.collection('open_hub_posts', userContext).get() as any[];
                 if (Array.isArray(fetched)) {
                     setPosts(fetched.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()));
                 }
@@ -65,7 +65,7 @@ export default function NexusHub() {
                 timestamp: new Date().toISOString(),
                 tags: []
             };
-            await LamaDB.store.collection('nexus_posts', userContext).add(postObj);
+            await LamaDB.store.collection('open_hub_posts', userContext).add(postObj);
             setPosts(prev => [postObj, ...prev]);
             setNewPostContent('');
             setIsDialogOpen(false);
@@ -340,7 +340,7 @@ export default function NexusHub() {
                                 <span>Terms</span>
                                 <span>Security</span>
                             </div>
-                            <p className="text-center opacity-50">© 2026 OpenDev Labs // Nexus</p>
+                            <p className="text-center opacity-50">© 2026 OpenDev Labs // Open-Hub</p>
                         </footer>
                     </div>
                 </div>

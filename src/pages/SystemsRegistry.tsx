@@ -91,7 +91,7 @@ export default function SystemsRegistry() {
                 <header className="flex flex-col md:flex-row items-start md:items-end justify-between gap-8 border-b border-zinc-900 pb-12 pt-10">
                     <div className="space-y-6">
                         <div className="flex items-center gap-4 mb-4">
-                            <Link to="/nexus" className="text-[10px] font-bold text-zinc-600 hover:text-orange-500 transition-colors uppercase tracking-[0.4em]">
+                            <Link to="/open-hub" className="flex items-center gap-3 text-zinc-600 hover:text-white transition-all group z-30 font-bold uppercase tracking-[0.4em] text-[10px]">
                                 &larr; Return to Social Hub
                             </Link>
                             <div className="w-1 h-1 rounded-full bg-zinc-800" />

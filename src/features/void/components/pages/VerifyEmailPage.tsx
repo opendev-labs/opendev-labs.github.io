@@ -33,7 +33,7 @@ export const VerifyEmailPage: React.FC = () => {
             if (userToVerify) {
                 login(userToVerify);
                 localStorage.removeItem('opendev_verification_user');
-                navigate('/dashboard');
+                navigate('/open-hub');
             } else {
                 setError('Could not find user to verify. Please try logging in again.');
             }

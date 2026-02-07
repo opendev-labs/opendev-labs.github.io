@@ -174,7 +174,13 @@ export const Header: React.FC = () => {
                                         <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest leading-none mb-1">Authenticated Node</p>
                                         <p className="text-[11px] text-zinc-200 font-bold truncate">{user?.email}</p>
                                     </div>
-                                    <Link to="/void/dashboard" className="flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-zinc-400 hover:text-white hover:bg-zinc-900/50 transition-all">
+                                    <Link to="/open-hub" className="flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-orange-500 hover:bg-orange-500/5 transition-all">
+                                        Open-Hub Social
+                                    </Link>
+                                    <Link to="/office" className="flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-zinc-400 hover:text-white hover:bg-zinc-900/50 transition-all">
+                                        Command Center
+                                    </Link>
+                                    <Link to="/void" className="flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-zinc-400 hover:text-white hover:bg-zinc-900/50 transition-all">
                                         Void Platform
                                     </Link>
                                     <Link to="/agents/dashboard" className="flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-zinc-400 hover:text-white hover:bg-zinc-900/50 transition-all">

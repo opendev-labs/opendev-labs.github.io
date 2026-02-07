@@ -16,7 +16,7 @@ import AgentsLanding from './pages/AgentsLanding';
 import Spoon from './pages/Spoon';
 import Product from './pages/Product';
 import Changelog from './pages/Changelog';
-import NexusHub from './pages/NexusHub';
+import OpenHub from './pages/OpenHub';
 import { Preloader } from './components/Preloader';
 import { DocsPage } from './features/void/components/pages/DocsPage';
 import { MissionControl } from './pages/MissionControl';
@@ -98,42 +98,64 @@ const AppRoutes = () => {
         <Route element={<Layout />}>
           <Route index element={<Home />} />
 
-          {/* Decoupled Product Flow: Landing -> Workspace */}
-          <Route path="agents" element={<AgentsLanding />} />
-          <Route path="agents/dashboard" element={<AgentsOfficeCockpit />} />
-          <Route path="agents/new" element={<AgentsOfficeCockpit />} />
-          <Route path="bots" element={<BotsOfficeCockpit />} />
-          <Route path="bots/dashboard" element={<BotsOfficeCockpit />} />
-          <Route path="systems" element={<SystemsOfficeCockpit />} />
-
-          <Route path="lamadb" element={<LamaDB />} />
-          <Route path="lamadb/console" element={<LamaDBOfficeCockpit />} />
-          <Route path="lamadb/new" element={<LamaDBOfficeCockpit />} />
-          <Route path="lamadb/telemetry" element={<LamaDBTelemetryCockpit />} />
-
-          <Route path="syncstack" element={<SyncStack />} />
-          <Route path="syncstack/console" element={<SyncStackOfficeCockpit />} />
-
-          <Route path="void" element={<VoidLanding />} />
-          <Route path="void/dashboard" element={<UnifiedOfficeCockpit />} />
-          <Route path="void/new" element={<Navigate to="/open-studio" replace />} />
-
-          <Route path="nexus" element={
+          {/* Protected Product Hubs */}
+          <Route path="open-hub" element={
             <ProtectedRoute>
-              <NexusHub />
+              <OpenHub />
             </ProtectedRoute>
           } />
+          <Route path="office" element={
+            <ProtectedRoute>
+              <OfficeDashboard />
+            </ProtectedRoute>
+          }>
+            <Route index element={<UnifiedOfficeCockpit />} />
+            <Route path="void" element={<UnifiedOfficeCockpit />} />
+            <Route path="lamadb" element={<LamaDBOfficeCockpit />} />
+            <Route path="lamadb/console" element={<LamaDBOfficeCockpit />} />
+            <Route path="lamadb/new" element={<LamaDBOfficeCockpit />} />
+            <Route path="lamadb/telemetry" element={<LamaDBTelemetryCockpit />} />
+
+            <Route path="syncstack" element={<SyncStack />} />
+            <Route path="syncstack/console" element={<SyncStackOfficeCockpit />} />
+
+            <Route path="agents" element={<AgentsOfficeCockpit />} />
+            <Route path="bots" element={<BotsOfficeCockpit />} />
+            <Route path="systems" element={<SystemsOfficeCockpit />} />
+            <Route path="telemetry" element={<LamaDBTelemetryCockpit />} />
+          </Route>
+
+          <Route path="open-studio" element={
+            <ProtectedRoute>
+              <Suspense fallback={<div className="min-h-screen bg-black flex items-center justify-center text-white">Loading open-studio...</div>}>
+                <div className="flex flex-col h-screen overflow-hidden">
+                  <Header />
+                  <div className="flex-1 overflow-hidden mt-14">
+                    <OpenStudioApp />
+                  </div>
+                </div>
+              </Suspense>
+            </ProtectedRoute>
+          } />
+
+          {/* Unified Identity Protocol: Everything locked behind ProtectedRoute */}
+          <Route path="lamadb" element={<ProtectedRoute><LamaDB /></ProtectedRoute>} />
+          <Route path="syncstack" element={<ProtectedRoute><SyncStack /></ProtectedRoute>} />
+          <Route path="void" element={<ProtectedRoute><VoidLanding /></ProtectedRoute>} />
+          <Route path="q-cloud" element={<ProtectedRoute><QCloud /></ProtectedRoute>} />
+          <Route path="spoon" element={<ProtectedRoute><Spoon /></ProtectedRoute>} />
+          <Route path="agents" element={<ProtectedRoute><AgentsLanding /></ProtectedRoute>} />
+
           <Route path="onboarding" element={
             <ProtectedRoute>
               <OnboardingPage />
             </ProtectedRoute>
           } />
-          <Route path="user/profile" element={<ProfilePage />} />
-          <Route path="user/:username" element={<ProfilePage />} />
-          <Route path="settings/profile" element={<ProfileSettings />} />
 
-          <Route path="q-cloud" element={<QCloud />} />
-          <Route path="spoon" element={<Spoon />} />
+          <Route path="user/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
+          <Route path="user/:username" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
+          <Route path="settings/profile" element={<ProtectedRoute><ProfileSettings /></ProtectedRoute>} />
+
           <Route path="products" element={<Products />} />
           <Route path="changelog" element={<Changelog />} />
           <Route path="docs" element={<DocsPage />} />

@@ -229,7 +229,7 @@ export default function ProfileSettings() {
 
                                 <div className="pt-8 border-t border-zinc-900 space-y-4">
                                     <p className="text-[9px] text-zinc-700 font-bold uppercase tracking-widest leading-loose italic">
-                                        // Updates will be visible across the entire Nexus network immediately.
+                                        // Updates will be visible across the entire Open-Hub mesh immediately.
                                     </p>
                                 </div>
                             </Card>
@@ -238,7 +238,7 @@ export default function ProfileSettings() {
                 </form>
 
                 <footer className="mt-20 pt-10 border-t border-zinc-900 flex justify-between items-center text-[9px] font-bold text-zinc-700 uppercase tracking-[0.4em] opacity-50">
-                    <p>© 2026 OpenDev Labs // Nexus</p>
+                    <p>© 2026 OpenDev Labs // Open-Hub</p>
                 </footer>
             </main>
         </div>

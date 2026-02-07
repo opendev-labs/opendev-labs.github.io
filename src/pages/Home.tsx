@@ -134,10 +134,10 @@ export default function Home() {
                         <Button
                             variant="primary"
                             size="xl"
-                            onClick={() => navigate(isAuthenticated ? '/nexus' : '/auth')}
+                            onClick={() => navigate(isAuthenticated ? '/open-hub' : '/auth')}
                             className="min-w-[200px]"
                         >
-                            {isAuthenticated ? 'Enter Nexus Mesh' : 'Identity Protocol // Link'}
+                            {isAuthenticated ? 'Enter Open-Hub Mesh' : 'Identity Protocol // Link'}
                         </Button>
                     </motion.div>
                 </div>
