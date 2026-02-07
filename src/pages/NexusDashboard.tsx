@@ -5,17 +5,75 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/shadcn/button';
 import { useAuth } from '../features/void/hooks/useAuth';
+import { LamaDB } from '../lib/lamaDB';
+import { Textarea } from '../components/ui/shadcn/textarea';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../components/ui/shadcn/dialog';
 
 export default function NexusDashboard() {
     const { user, profile, isLoading } = useAuth();
     const navigate = useNavigate();
     const [activeFeed, setActiveFeed] = useState('trending');
+    const [posts, setPosts] = useState<any[]>([]);
+    const [newPostContent, setNewPostContent] = useState('');
+    const [isPosting, setIsPosting] = useState(false);
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     useEffect(() => {
         if (!isLoading && user && !profile?.username) {
             navigate('/onboarding');
         }
     }, [user, profile, isLoading, navigate]);
+
+    // Handle logout or auth loss
+    useEffect(() => {
+        if (!isLoading && !user) {
+            navigate('/auth');
+        }
+    }, [user, isLoading, navigate]);
+
+    useEffect(() => {
+        const fetchPosts = async () => {
+            try {
+                const userContext = { uid: 'global', email: 'global' };
+                const fetched = await LamaDB.store.collection('nexus_posts', userContext).get() as any[];
+                if (Array.isArray(fetched)) {
+                    setPosts(fetched.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()));
+                }
+            } catch (e) {
+                console.error("Failed to fetch posts:", e);
+            }
+        };
+        fetchPosts();
+    }, []);
+
+    const handleMaterializePost = async () => {
+        if (!newPostContent.trim() || !user) return;
+        setIsPosting(true);
+        try {
+            const userContext = { uid: 'global', email: 'global' };
+            const postObj = {
+                id: Math.random().toString(36).substr(2, 9),
+                author: {
+                    name: profile?.username || user.name,
+                    handle: profile?.username || 'anonymous',
+                    headline: profile?.headline || 'Intelligence Architect'
+                },
+                content: newPostContent,
+                likes: 0,
+                shares: 0,
+                timestamp: new Date().toISOString(),
+                tags: []
+            };
+            await LamaDB.store.collection('nexus_posts', userContext).add(postObj);
+            setPosts(prev => [postObj, ...prev]);
+            setNewPostContent('');
+            setIsDialogOpen(false);
+        } catch (e) {
+            console.error("Failed to materialize post:", e);
+        } finally {
+            setIsPosting(false);
+        }
+    };
 
     const feedItems = [
         {
@@ -53,6 +111,8 @@ export default function NexusDashboard() {
         { name: "LamaDB", growth: "+15.6%", status: "exploding" },
         { name: "Quantum-APIs", growth: "+5.2%", status: "stable" }
     ];
+
+    const combinedPosts = [...posts, ...feedItems]; // Show user posts first
 
     if (isLoading) return null;
 
@@ -95,10 +155,54 @@ export default function NexusDashboard() {
                                 My Node Profile
                             </Button>
                         </Link>
-                        <Button variant="outline" className="h-12 border-zinc-800 text-zinc-400 font-bold uppercase tracking-widest text-[10px] rounded-none px-8 hover:text-white hover:border-zinc-600 transition-all">
-                            <Plus size={14} className="mr-2" />
-                            Materialize Post
-                        </Button>
+                        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                            <DialogTrigger asChild>
+                                <Button variant="outline" className="h-12 border-zinc-800 text-zinc-400 font-bold uppercase tracking-widest text-[10px] rounded-none px-8 hover:text-white hover:border-zinc-600 transition-all">
+                                    <Plus size={14} className="mr-2" />
+                                    Materialize Post
+                                </Button>
+                            </DialogTrigger>
+                            <DialogContent className="bg-zinc-950 border-zinc-900 rounded-none max-w-2xl p-0 overflow-hidden">
+                                <DialogHeader className="p-8 border-b border-zinc-900 bg-black">
+                                    <DialogTitle className="text-[10px] font-bold text-orange-500 uppercase tracking-[0.4em] mb-4 flex items-center gap-2">
+                                        <ShieldCheck size={14} /> Materialize Node Content
+                                    </DialogTitle>
+                                    <div className="flex gap-4 items-center">
+                                        <div className="w-10 h-10 bg-zinc-900 border border-zinc-800 flex items-center justify-center">
+                                            <UserIcon size={18} className="text-zinc-600" />
+                                        </div>
+                                        <div>
+                                            <div className="text-[11px] font-bold text-white uppercase tracking-tight">{profile?.username || user?.name}</div>
+                                            <div className="text-[9px] font-bold text-zinc-600 uppercase tracking-widest">Protocol Identified</div>
+                                        </div>
+                                    </div>
+                                </DialogHeader>
+                                <div className="p-8 space-y-8 bg-zinc-950/50">
+                                    <Textarea
+                                        className="min-h-[200px] bg-black border-zinc-900 rounded-none focus:border-orange-500 text-sm leading-relaxed"
+                                        placeholder="Broadcast to the Mesh..."
+                                        value={newPostContent}
+                                        onChange={(e) => setNewPostContent(e.target.value)}
+                                    />
+                                    <div className="flex justify-end gap-4">
+                                        <Button
+                                            variant="ghost"
+                                            className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest hover:text-white"
+                                            onClick={() => setIsDialogOpen(false)}
+                                        >
+                                            Abort
+                                        </Button>
+                                        <Button
+                                            className="h-12 bg-white text-black font-bold uppercase tracking-widest text-[10px] rounded-none px-10 hover:bg-orange-500 hover:text-white transition-all disabled:opacity-50"
+                                            onClick={handleMaterializePost}
+                                            disabled={isPosting || !newPostContent}
+                                        >
+                                            {isPosting ? 'Broadcasting...' : 'Uplink Stream'}
+                                        </Button>
+                                    </div>
+                                </div>
+                            </DialogContent>
+                        </Dialog>
                     </div>
                 </div>
 
@@ -118,8 +222,8 @@ export default function NexusDashboard() {
                                         key={item.id}
                                         onClick={() => setActiveFeed(item.id)}
                                         className={`flex items-center gap-4 px-4 py-4 text-[11px] font-bold uppercase tracking-widest transition-all ${activeFeed === item.id
-                                                ? 'bg-zinc-900 text-white border-r-2 border-orange-500'
-                                                : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-900/50'
+                                            ? 'bg-zinc-900 text-white border-r-2 border-orange-500'
+                                            : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-900/50'
                                             }`}
                                     >
                                         <item.icon size={16} />
@@ -150,9 +254,9 @@ export default function NexusDashboard() {
                     {/* Middle: Professional Feed */}
                     <div className="lg:col-span-6 space-y-8">
                         <div className="space-y-6">
-                            {feedItems.map((post) => (
+                            {combinedPosts.map((post, i) => (
                                 <motion.div
-                                    key={post.id}
+                                    key={post.id || i}
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     className="bg-zinc-950/20 border border-zinc-900/50 p-8 group hover:border-zinc-700 transition-all"
@@ -170,7 +274,7 @@ export default function NexusDashboard() {
                                                 <p className="text-[10px] font-bold text-orange-500 uppercase tracking-widest mt-1 opacity-80">{post.author.headline}</p>
                                             </div>
                                         </div>
-                                        <span className="text-[9px] font-bold text-zinc-700 uppercase tracking-widest">{post.time}</span>
+                                        <span className="text-[9px] font-bold text-zinc-700 uppercase tracking-widest">{post.time || new Date(post.timestamp).toLocaleDateString()}</span>
                                     </div>
 
                                     <div className="space-y-6">

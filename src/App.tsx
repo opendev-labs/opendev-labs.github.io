@@ -75,7 +75,7 @@ const AppRoutes = () => {
             </Suspense>
           </ProtectedRoute>
         } />
-        <Route path=" studio/*" element={<Navigate to="/open-studio" replace />} />
+        <Route path="studio/*" element={<Navigate to="/open-studio" replace />} />
         <Route path="sub0/*" element={<Navigate to="/open-studio" replace />} />
         <Route path="void-ide/*" element={<Navigate to="/open-studio" replace />} />
         <Route path="auth" element={
@@ -118,8 +118,16 @@ const AppRoutes = () => {
           <Route path="void/dashboard" element={<UnifiedOfficeCockpit />} />
           <Route path="void/new" element={<Navigate to="/open-studio" replace />} />
 
-          <Route path="nexus" element={<NexusDashboard />} />
-          <Route path="onboarding" element={<OnboardingPage />} />
+          <Route path="nexus" element={
+            <ProtectedRoute>
+              <NexusDashboard />
+            </ProtectedRoute>
+          } />
+          <Route path="onboarding" element={
+            <ProtectedRoute>
+              <OnboardingPage />
+            </ProtectedRoute>
+          } />
           <Route path="user/profile" element={<ProfilePage />} />
           <Route path="user/:username" element={<ProfilePage />} />
           <Route path="settings/profile" element={<ProfileSettings />} />

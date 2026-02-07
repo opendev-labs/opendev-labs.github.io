@@ -24,9 +24,10 @@ export const AuthPage: React.FC = () => {
 
     useEffect(() => {
         if (isAuthenticated && !isConnectMode) {
-            navigate('/office');
+            const destination = location.state?.from?.pathname || '/nexus';
+            navigate(destination, { replace: true });
         }
-    }, [isAuthenticated, navigate, isConnectMode]);
+    }, [isAuthenticated, navigate, isConnectMode, location.state]);
 
     const handleGoogleLogin = async () => {
         setIsLoading(true);
