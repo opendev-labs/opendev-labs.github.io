@@ -112,15 +112,15 @@ const OfficeDashboard: React.FC = () => {
                 </div>
 
                 <div className="flex-1 py-8 space-y-1">
-                    <SidebarItem icon={Globe} label="Nexus Network" path="/nexus" active={location.pathname === '/nexus'} id="nexus" />
-                    <SidebarItem icon={LayoutGrid} label="System Office" path="/office" active={location.pathname === '/office'} id="cockpit" />
-                    <SidebarItem icon={Cpu} label="open-studio IDE" path="/open-studio" active={location.pathname.startsWith('/open-studio')} id="open-studio" />
-                    <SidebarItem icon={Bot} label="Agents Dashboard" path="/office/agents" active={location.pathname === '/office/agents'} id="agents" />
-                    <SidebarItem icon={MessageSquare} label="Bots Dashboard" path="/office/bots" active={location.pathname === '/office/bots'} id="bots" />
+                    <SidebarItem icon={Globe} label="Nexus Social Hub" path="/nexus" active={location.pathname === '/nexus'} id="nexus" />
+                    <SidebarItem icon={LayoutGrid} label="Command Center" path="/office" active={location.pathname === '/office'} id="cockpit" />
+                    <SidebarItem icon={Cpu} label="Open Studio" path="/open-studio" active={location.pathname.startsWith('/open-studio')} id="open-studio" />
+                    <SidebarItem icon={Bot} label="Agents Node" path="/office/agents" active={location.pathname === '/office/agents'} id="agents" />
+                    <SidebarItem icon={MessageSquare} label="Intelligent Bots" path="/office/bots" active={location.pathname === '/office/bots'} id="bots" />
                     <SidebarItem icon={ShieldCheck} label="Systems Registry" path="/office/systems" active={location.pathname === '/office/systems'} id="systems" />
                     <SidebarItem icon={Terminal} label="Void Platform" path="/office/void" active={location.pathname === '/office/void'} id="void" />
                     <SidebarItem icon={Database} label="LamaDB Mesh" path="/office/lamadb" active={location.pathname === '/office/lamadb'} id="lamadb" />
-                    <SidebarItem icon={Box} label="SyncStack Console" path="/office/syncstack" active={location.pathname === '/office/syncstack'} id="syncstack" />
+                    <SidebarItem icon={Box} label="SyncStack Proto" path="/office/syncstack" active={location.pathname === '/office/syncstack'} id="syncstack" />
                     <SidebarItem icon={Activity} label="Telemetry" path="/office/telemetry" active={location.pathname === '/office/telemetry'} id="telemetry" />
                 </div>
 

@@ -20,6 +20,8 @@ interface AuthState {
   githubUser: any | null;
   isGithubConnected: boolean;
   profile: any | null;
+  avatarUrl: string | null;
+  bannerUrl: string | null;
 }
 
 interface AuthContextType extends AuthState {
@@ -47,6 +49,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [lastSyncTime, setLastSyncTime] = useState<string | null>(localStorage.getItem('opendev_last_sync'));
   const [agentOnline, setAgentOnline] = useState(false);
   const [profile, setProfile] = useState<any | null>(null);
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const [bannerUrl, setBannerUrl] = useState<string | null>(null);
 
   const checkLocalAgent = useCallback(async () => {
     try {
@@ -84,10 +88,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           const userContext = { uid: firebaseUser.email, email: firebaseUser.email };
           const profiles = await LamaDB.store.collection('profiles', userContext).get();
           if (profiles && profiles.length > 0) {
-            setProfile(profiles[0]);
+            const p = profiles[0];
+            setProfile(p);
+            setAvatarUrl(p.avatarUrl || null);
+            setBannerUrl(p.bannerUrl || null);
           } else {
-            // Check if we should auto-create or wait for onboarding
             setProfile(null);
+            setAvatarUrl(null);
+            setBannerUrl(null);
           }
         } catch (e) {
           console.error("Failed to fetch profile:", e);
@@ -96,6 +104,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setUser(null);
         setToken(null);
         setProfile(null);
+        setAvatarUrl(null);
+        setBannerUrl(null);
         localStorage.removeItem('opendev_gh_token');
       }
       setIsLoading(false);
@@ -329,6 +339,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     await LamaDB.auth.logout();
     setUser(null);
     setToken(null);
+    setProfile(null);
+    setAvatarUrl(null);
+    setBannerUrl(null);
     localStorage.removeItem('opendev_gh_token');
     // safeNavigate('/login');
   }, []);
@@ -355,6 +368,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         profileData.id = newProfile.id;
       }
       setProfile(profileData);
+      setAvatarUrl(profileData.avatarUrl || null);
+      setBannerUrl(profileData.bannerUrl || null);
     } catch (error) {
       console.error("Update Profile Error:", error);
       throw error;
@@ -382,7 +397,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       syncAllRepositories,
       checkLocalAgent,
       updateProfile,
-      profile
+      profile,
+      avatarUrl,
+      bannerUrl
     }}>
       {children}
     </AuthContext.Provider>

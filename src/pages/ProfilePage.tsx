@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { User as UserIcon, Briefcase, Globe, Github, Twitter, Linkedin, Mail, Shield, Zap, Database, Terminal, Code, BookOpen, Plus, ExternalLink, Settings, Award } from "lucide-react";
+import { User as UserIcon, Briefcase, Globe, Github, Twitter, Linkedin, Mail, Shield, Zap, Database, Terminal, Code, BookOpen, Plus, ExternalLink, Settings, Award, MapPin, Calendar, Link as LinkIcon, Users, Box, Heart, Sparkles } from "lucide-react";
 import { useAuth } from "../features/void/hooks/useAuth";
 import { Button } from "../components/ui/shadcn/button";
 import { Card } from "../components/ui/Card";
@@ -13,7 +13,11 @@ export default function ProfilePage() {
     const [profile, setProfile] = useState<any>(null);
     const [isLoading, setIsLoading] = useState(true);
 
-    const isOwnProfile = currentUser && (username === currentProfile?.username || username === 'profile');
+    const isOwnProfile = currentUser && (
+        !username ||
+        username === 'profile' ||
+        username === currentProfile?.username
+    );
 
     useEffect(() => {
         const fetchProfile = async () => {
@@ -23,8 +27,20 @@ export default function ProfilePage() {
                 return;
             }
 
+            if (!username || username === 'profile') {
+                if (!currentUser) {
+                    setIsLoading(false);
+                    return;
+                }
+                // If we are here, it means currentProfile might be loading or missing
+                if (currentProfile) {
+                    setProfile(currentProfile);
+                    setIsLoading(false);
+                    return;
+                }
+            }
+
             try {
-                // Search for profile by username globally
                 const userContext = { uid: 'global', email: 'global' };
                 const profiles = await LamaDB.store.collection('profiles', userContext).get() as any[];
                 const found = profiles.find(p => p.username === username);
@@ -37,20 +53,20 @@ export default function ProfilePage() {
         };
 
         fetchProfile();
-    }, [username, currentProfile, isOwnProfile]);
+    }, [username, currentProfile, isOwnProfile, currentUser]);
 
     if (isLoading) return null;
 
     if (!profile) {
         return (
-            <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-6 text-center">
-                <div className="w-16 h-16 bg-zinc-950 border border-zinc-900 flex items-center justify-center mb-8">
-                    <Shield size={32} className="text-red-500 opacity-50" />
+            <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-6 text-center font-sans">
+                <div className="w-20 h-20 bg-zinc-950 border border-zinc-900 flex items-center justify-center mb-8 rounded-2xl rotate-3">
+                    <Shield size={36} className="text-red-500 opacity-50 -rotate-3" />
                 </div>
-                <h1 className="text-4xl font-bold tracking-tighter uppercase mb-4">Node Not Found.</h1>
-                <p className="text-zinc-600 text-[10px] font-bold uppercase tracking-[0.4em] mb-12">The requested handle has not been materialized in the Mesh.</p>
+                <h1 className="text-4xl font-bold tracking-tighter uppercase mb-4">Profile Not Found.</h1>
+                <p className="text-zinc-600 text-[10px] font-bold uppercase tracking-[0.4em] mb-12 leading-relaxed">The requested person has not joined the network yet.</p>
                 <Link to="/nexus">
-                    <Button variant="outline" className="border-zinc-800 text-zinc-400 hover:text-white rounded-none uppercase tracking-widest text-[10px] h-12 px-8">
+                    <Button variant="outline" className="border-zinc-800 text-zinc-400 hover:text-white rounded-xl uppercase tracking-widest text-[10px] h-12 px-8 transition-all">
                         Return to Hub
                     </Button>
                 </Link>
@@ -59,216 +75,181 @@ export default function ProfilePage() {
     }
 
     return (
-        <div className="min-h-screen bg-black text-white selection:bg-orange-500 selection:text-black font-sans">
-            {/* Background Atmosphere */}
-            <div className="fixed inset-0 pointer-events-none">
-                <div className="absolute top-0 left-0 w-full h-full opacity-[0.02]"
-                    style={{ backgroundImage: 'linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)', backgroundSize: '60px 60px' }}
-                />
-                <div className="absolute bottom-0 left-0 w-full h-[50vh] bg-gradient-to-t from-orange-600/5 to-transparent" />
+        <div className="min-h-screen bg-[#050505] text-white selection:bg-orange-500 selection:text-black font-sans pb-20">
+            {/* Header / Banner Section */}
+            <div className="relative h-[25vh] md:h-[35vh] w-full bg-zinc-900 overflow-hidden">
+                {profile.bannerUrl ? (
+                    <img src={profile.bannerUrl} alt="Banner" className="w-full h-full object-cover" />
+                ) : (
+                    <div className="w-full h-full bg-gradient-to-r from-orange-600 to-orange-400 opacity-30" />
+                )}
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
             </div>
 
-            <main className="relative z-10 max-w-[1400px] mx-auto p-6 md:p-12">
-                {/* Profile Header */}
-                <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-12 border-b border-zinc-900 pb-20 pt-10 mb-20">
-                    <div className="flex flex-col md:flex-row gap-10 items-start md:items-end">
-                        <div className="w-32 h-32 md:w-48 md:h-48 bg-zinc-950 border border-zinc-900 flex items-center justify-center relative group">
-                            <div className="absolute inset-0 bg-orange-600/10 opacity-0 group-hover:opacity-100 transition-opacity" />
-                            <UserIcon size={64} className="text-zinc-700 md:scale-150" />
-                            <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-black border border-zinc-800 flex items-center justify-center">
-                                <Shield size={14} className="text-orange-500" />
-                            </div>
-                        </div>
-
-                        <div className="space-y-6">
-                            <div className="space-y-2">
-                                <div className="flex items-center gap-3">
-                                    <h1 className="text-6xl md:text-8xl font-bold tracking-tighter uppercase leading-none">{profile.username}</h1>
-                                    <div className="px-2 py-0.5 bg-orange-600/20 border border-orange-600/30 text-[8px] font-bold text-orange-500 uppercase tracking-widest mt-4">Verified Node</div>
-                                </div>
-                                <p className="text-zinc-600 font-mono text-sm">@{profile.username}</p>
-                            </div>
-                            <div className="flex items-center gap-6">
-                                <p className="text-zinc-400 text-lg md:text-xl font-medium tracking-tight uppercase tracking-widest leading-none">
-                                    {profile.headline || 'Intelligence Architect'}
-                                </p>
-                            </div>
-                            <div className="flex gap-4">
-                                <Button variant="ghost" size="icon" className="w-10 h-10 border border-zinc-900 rounded-none text-zinc-600 hover:text-white hover:border-zinc-700"><Github size={18} /></Button>
-                                <Button variant="ghost" size="icon" className="w-10 h-10 border border-zinc-900 rounded-none text-zinc-600 hover:text-white hover:border-zinc-700"><Twitter size={18} /></Button>
-                                <Button variant="ghost" size="icon" className="w-10 h-10 border border-zinc-900 rounded-none text-zinc-600 hover:text-white hover:border-zinc-700"><Linkedin size={18} /></Button>
-                                <Button variant="ghost" size="icon" className="w-10 h-10 border border-zinc-900 rounded-none text-zinc-600 hover:text-white hover:border-zinc-700"><Globe size={18} /></Button>
-                            </div>
-                        </div>
+            <main className="max-w-[1200px] mx-auto px-4 md:px-8 relative">
+                {/* Profile Header Card */}
+                <div className="flex flex-col md:flex-row gap-8 items-end -mt-20 mb-12">
+                    <div className="w-32 h-32 md:w-44 md:h-44 rounded-3xl border-8 border-black bg-zinc-900 overflow-hidden shadow-2xl shrink-0 relative z-10">
+                        <img src={profile.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${profile.username}`} alt="Profile" className="w-full h-full object-cover" />
                     </div>
 
-                    <div className="flex flex-col items-end gap-6 w-full md:w-auto">
-                        {isOwnProfile ? (
-                            <Link to="/settings/profile" className="w-full md:w-auto">
-                                <Button className="w-full md:w-auto h-14 bg-white text-black font-bold uppercase tracking-[0.2em] text-[10px] rounded-none px-10 hover:bg-orange-500 hover:text-white transition-all">
-                                    <Settings size={14} className="mr-2" />
-                                    Edit Node Parameters
-                                </Button>
-                            </Link>
-                        ) : (
-                            <div className="flex gap-4 w-full md:w-auto">
-                                <Button className="flex-1 md:flex-none h-14 bg-white text-black font-bold uppercase tracking-[0.2em] text-[10px] rounded-none px-10 hover:bg-orange-500 hover:text-white transition-all">Initiate Handshake</Button>
-                                <Button variant="outline" className="h-14 border-zinc-800 text-zinc-400 font-bold uppercase tracking-[0.2em] text-[10px] rounded-none px-6 hover:text-white hover:border-zinc-600 transition-all"><Mail size={16} /></Button>
+                    <div className="grow pb-2 space-y-4">
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 w-full">
+                            <div className="space-y-2">
+                                <div className="flex items-center gap-3">
+                                    <h1 className="text-4xl md:text-5xl font-bold tracking-tighter uppercase leading-none">{profile.username}</h1>
+                                    <div className="bg-orange-600/20 border border-orange-600/30 p-1 rounded-full"><Shield size={12} className="text-orange-500" /></div>
+                                </div>
+                                <p className="text-zinc-500 text-sm font-medium uppercase tracking-[0.2em]">@{profile.username}</p>
                             </div>
-                        )}
-                        <div className="flex items-center gap-4 text-right">
-                            <div className="text-[10px] font-bold text-zinc-600 uppercase tracking-[0.4em]">Node Vitality: <span className="text-orange-500">OPTIMIZED</span></div>
-                            <div className="w-2.5 h-2.5 bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.3)] animate-pulse" />
+
+                            <div className="flex gap-3">
+                                {isOwnProfile ? (
+                                    <Link to="/settings/profile">
+                                        <Button className="bg-white text-black font-bold uppercase tracking-widest text-[10px] rounded-xl px-10 hover:bg-orange-500 hover:text-white transition-all h-12 shadow-lg">
+                                            <Settings size={14} className="mr-2" />
+                                            Edit Profile
+                                        </Button>
+                                    </Link>
+                                ) : (
+                                    <>
+                                        <Button className="bg-white text-black font-bold uppercase tracking-widest text-[10px] rounded-xl px-10 hover:bg-orange-500 hover:text-white transition-all h-12 shadow-lg">Connect</Button>
+                                        <Button variant="outline" className="border-zinc-800 text-zinc-400 rounded-xl px-4 hover:text-white hover:border-zinc-600 h-12 transition-all"><Mail size={16} /></Button>
+                                    </>
+                                )}
+                            </div>
+                        </div>
+
+                        <div className="flex flex-wrap items-center gap-6 text-[10px] font-bold text-zinc-500 uppercase tracking-widest pt-2">
+                            <div className="flex items-center gap-2"><MapPin size={14} className="text-orange-500" /> <span>Remote / Earth</span></div>
+                            <div className="flex items-center gap-2"><Calendar size={14} className="text-orange-500" /> <span>Joined {profile.joinedAt ? new Date(profile.joinedAt).toLocaleDateString(undefined, { month: 'long', year: 'numeric' }) : "Recently"}</span></div>
+                            <div className="flex items-center gap-2"><LinkIcon size={14} className="text-orange-500" /> <span className="text-zinc-300">opendev.io/{profile.username}</span></div>
                         </div>
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-20">
-                    {/* Main Content: Projects & Documentation */}
-                    <div className="lg:col-span-8 space-y-24">
-                        {/* Projects Section */}
-                        <section className="space-y-12">
-                            <div className="flex items-center justify-between border-b border-zinc-900 pb-6">
-                                <div className="flex items-center gap-4">
-                                    <div className="w-8 h-8 bg-zinc-900 border border-zinc-800 flex items-center justify-center">
-                                        <Code size={14} className="text-orange-500" />
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+                    {/* Main Content Area */}
+                    <div className="lg:col-span-8 space-y-12">
+                        {/* Bio / About */}
+                        <section className="bg-zinc-950 border border-zinc-900 rounded-3xl p-8 shadow-xl">
+                            <h2 className="text-sm font-bold tracking-widest uppercase text-zinc-400 mb-6 flex items-center gap-2">
+                                <UserIcon size={16} className="text-orange-500" /> About
+                            </h2>
+                            <p className="text-zinc-300 text-lg leading-relaxed font-medium">
+                                {profile.bio || "No biography provided yet. This professional is part of the Nexus network."}
+                            </p>
+                        </section>
+
+                        {/* Professional Stats Row */}
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            {[
+                                { label: 'Connections', val: '128', icon: Users, color: 'text-blue-500' },
+                                { label: 'Projects', val: '12', icon: Code, color: 'text-orange-500' },
+                                { label: 'Reputation', val: '4.2k', icon: Award, color: 'text-emerald-500' },
+                                { label: 'Pulse', val: '86', icon: Zap, color: 'text-purple-500' }
+                            ].map((stat, i) => (
+                                <Card key={i} className="bg-zinc-950 border-zinc-900 p-6 rounded-2xl shadow-xl hover:border-zinc-700 transition-all flex flex-col items-center justify-center text-center group">
+                                    <div className={`p-3 rounded-2xl bg-zinc-900 mb-4 group-hover:scale-110 transition-transform ${stat.color} opacity-80`}>
+                                        <stat.icon size={20} />
                                     </div>
-                                    <h2 className="text-xl font-bold tracking-widest uppercase">Materialized Projects</h2>
-                                </div>
-                                {isOwnProfile && (
-                                    <Button variant="ghost" className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest hover:text-white">
-                                        <Plus size={14} className="mr-2" />
-                                        Add New Nexus Node
-                                    </Button>
-                                )}
+                                    <div className="text-2xl font-bold tracking-tighter mb-1">{stat.val}</div>
+                                    <div className="text-[9px] font-bold text-zinc-600 uppercase tracking-widest">{stat.label}</div>
+                                </Card>
+                            ))}
+                        </div>
+
+                        {/* Recent Projects */}
+                        <section className="space-y-6">
+                            <div className="flex items-center justify-between">
+                                <h2 className="text-sm font-bold tracking-widest uppercase text-zinc-400 flex items-center gap-2">
+                                    <Box size={16} className="text-orange-500" /> Recent Projects
+                                </h2>
+                                <Button variant="ghost" className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest hover:text-white">View All</Button>
                             </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 {[
-                                    { title: "Spoon CLI Extension", desc: "A neural expansion for the universal orchestrator, adding support for multi-vector reasoning.", tech: ["Rust", "WASM", "Gemini"], stars: 45, type: "CLI" },
-                                    { title: "Nexus Social Protocol", desc: "Decentralized identity layer for developer ecosystem bridging CLI and Web.", tech: ["React", "LamaDB", "Framer"], stars: 128, type: "Web" }
-                                ].map((project, i) => (
-                                    <Card key={i} className="p-8 bg-zinc-950/20 border border-zinc-900/50 hover:border-orange-500/30 transition-all group">
-                                        <div className="flex justify-between items-start mb-8">
-                                            <div className="w-10 h-10 bg-zinc-900 border border-zinc-800 flex items-center justify-center">
-                                                <Terminal size={16} className="text-zinc-500 group-hover:text-orange-500 transition-colors" />
+                                    { title: "Nexus Social Hub", desc: "A premium social protocol for professionals and developers.", tags: ["React", "UI/UX"], stars: 124 },
+                                    { title: "OpenStudio Toolkit", desc: "High-performance creative tools built for the decentralized era.", tags: ["Rust", "WASM"], stars: 89 }
+                                ].map((p, i) => (
+                                    <Card key={i} className="bg-zinc-950 border-zinc-900 p-8 rounded-2xl shadow-xl hover:border-orange-500/20 transition-all group">
+                                        <div className="flex justify-between items-start mb-6">
+                                            <div className="p-3 rounded-xl bg-zinc-900 group-hover:bg-orange-500/10 transition-colors">
+                                                <Terminal size={18} className="text-zinc-600 group-hover:text-orange-500" />
                                             </div>
-                                            <span className="text-[9px] font-bold text-zinc-700 uppercase tracking-widest border border-zinc-900 px-2 py-1">{project.type}</span>
-                                        </div>
-                                        <h3 className="text-lg font-bold tracking-tight uppercase mb-4 text-white">{project.title}</h3>
-                                        <p className="text-zinc-600 text-[11px] leading-relaxed mb-8 uppercase font-bold tracking-widest opacity-80">{project.desc}</p>
-                                        <div className="flex flex-wrap gap-2 mb-8">
-                                            {project.tech.map(t => <span key={t} className="text-[8px] font-bold text-zinc-400 uppercase tracking-[0.2em] px-2 py-0.5 bg-zinc-900/50 border border-zinc-800">{t}</span>)}
-                                        </div>
-                                        <div className="flex items-center justify-between pt-6 border-t border-zinc-900">
-                                            <div className="flex items-center gap-3 text-zinc-600">
-                                                <Award size={12} />
-                                                <span className="text-[10px] font-bold uppercase tracking-widest">{project.stars} Handshakes</span>
+                                            <div className="flex items-center gap-1.5 text-[10px] font-bold text-zinc-700">
+                                                <Heart size={12} /> {p.stars}
                                             </div>
-                                            <Button variant="ghost" size="icon" className="text-zinc-700 hover:text-white"><ExternalLink size={14} /></Button>
+                                        </div>
+                                        <h3 className="text-lg font-bold tracking-tight uppercase mb-3 text-white group-hover:text-orange-500 transition-colors">{p.title}</h3>
+                                        <p className="text-zinc-500 text-xs leading-relaxed font-medium mb-6">{p.desc}</p>
+                                        <div className="flex flex-wrap gap-2">
+                                            {p.tags.map(t => <span key={t} className="text-[8px] font-bold text-zinc-400 uppercase tracking-widest px-2 py-1 bg-zinc-900 border border-zinc-800 rounded-md">{t}</span>)}
                                         </div>
                                     </Card>
                                 ))}
                             </div>
                         </section>
-
-                        {/* Recent Activity / Logs */}
-                        <section className="space-y-12">
-                            <div className="flex items-center gap-4 border-b border-zinc-900 pb-6">
-                                <div className="w-8 h-8 bg-zinc-900 border border-zinc-800 flex items-center justify-center">
-                                    <BookOpen size={14} className="text-blue-500" />
-                                </div>
-                                <h2 className="text-xl font-bold tracking-widest uppercase">Intelligence Stream</h2>
-                            </div>
-
-                            <div className="space-y-6">
-                                {[
-                                    { text: "Synchronized new project node 'Void-IDE' to global registry.", time: "2 days ago", type: "SYNC" },
-                                    { text: "Established handshake with @trinity_nexus.", time: "5 days ago", type: "LINK" },
-                                    { text: "Deployed high-fidelity update to Spoon core substrate.", time: "1 week ago", type: "DEPLOY" }
-                                ].map((log, i) => (
-                                    <div key={i} className="flex gap-6 items-start">
-                                        <span className="text-[9px] font-mono text-zinc-800 pt-1 shrink-0">{log.time}</span>
-                                        <div className="flex-1 pb-6 border-b border-zinc-950 font-mono text-xs">
-                                            <span className="text-zinc-500 mr-4">[{log.type}]</span>
-                                            <span className="text-zinc-300">{log.text}</span>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </section>
                     </div>
 
-                    {/* Sidebar Stats & Meta */}
-                    <div className="lg:col-span-4 space-y-16">
-                        <section className="space-y-6">
-                            <h3 className="text-[10px] font-bold text-zinc-700 uppercase tracking-[0.4em]">Node Parameters</h3>
-                            <Card className="p-8 bg-zinc-950 border border-zinc-900 space-y-10">
-                                <div className="space-y-4">
-                                    <div className="flex justify-between items-center text-[10px] font-bold uppercase tracking-widest text-zinc-600">
-                                        <span>System Mastery</span>
-                                        <span className="text-orange-500">Expert</span>
-                                    </div>
-                                    <div className="flex flex-wrap gap-2">
-                                        {['Architect', 'Full-Stack', 'RUST', 'AI/ML', 'DevOps', 'Nexus-Core'].map(s => (
-                                            <span key={s} className="px-3 py-1 bg-zinc-900 border border-zinc-800 text-[9px] font-bold tracking-widest uppercase text-zinc-400">{s}</span>
-                                        ))}
-                                    </div>
-                                </div>
+                    {/* Sidebar Area */}
+                    <div className="lg:col-span-4 space-y-8">
+                        {/* Skills & Expertise */}
+                        <Card className="bg-zinc-950 border-zinc-900 p-8 rounded-3xl shadow-xl">
+                            <h3 className="text-[10px] font-bold text-zinc-600 uppercase tracking-[0.3em] mb-8 flex items-center gap-2">
+                                <Sparkles size={14} className="text-orange-500" /> Expertise
+                            </h3>
+                            <div className="flex flex-wrap gap-2">
+                                {['Software Architecture', 'Interaction Design', 'Product Management', 'Branding', 'Open Source', 'Community'].map(skill => (
+                                    <span key={skill} className="px-3 py-1.5 bg-zinc-900 border border-zinc-800 text-[10px] font-bold tracking-widest uppercase text-zinc-400 rounded-lg hover:text-white transition-colors cursor-default">{skill}</span>
+                                ))}
+                            </div>
+                        </Card>
 
-                                <div className="space-y-4 pt-10 border-t border-zinc-900">
-                                    <h4 className="text-[9px] font-bold text-zinc-600 uppercase tracking-widest">Intelligence Distribution</h4>
-                                    <div className="space-y-4">
-                                        {[
-                                            { label: 'Engineering', val: 85, color: 'bg-orange-600' },
-                                            { label: 'Product', val: 70, color: 'bg-blue-600' },
-                                            { label: 'Research', val: 92, color: 'bg-purple-600' }
-                                        ].map(stat => (
-                                            <div key={stat.label} className="space-y-2">
-                                                <div className="flex justify-between text-[8px] font-bold uppercase tracking-[0.2em]">
-                                                    <span className="text-zinc-500">{stat.label}</span>
-                                                    <span className="text-white">{stat.val}%</span>
-                                                </div>
-                                                <div className="w-full h-[2px] bg-zinc-900">
-                                                    <div className={`h-full ${stat.color}`} style={{ width: `${stat.val}%` }} />
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            </Card>
-                        </section>
-
-                        <section className="space-y-6">
-                            <h3 className="text-[10px] font-bold text-zinc-700 uppercase tracking-[0.4em]">Mesh Metadata</h3>
+                        {/* Social Links */}
+                        <Card className="bg-zinc-950 border-zinc-900 p-8 rounded-3xl shadow-xl">
+                            <h3 className="text-[10px] font-bold text-zinc-600 uppercase tracking-[0.3em] mb-8">Social Presence</h3>
                             <div className="space-y-4">
                                 {[
-                                    { label: "Joined Mesh", val: profile.joinedAt ? new Date(profile.joinedAt).toLocaleDateString() : "Feb 2026" },
-                                    { label: "Location", val: "San Francisco / Neural Hub" },
-                                    { label: "Active Project", val: "opendev-labs" },
-                                    { label: "Node ID", val: profile.id?.slice(0, 12) || "ID#NEX-8812" }
-                                ].map(item => (
-                                    <div key={item.label} className="flex justify-between items-center text-[10px] font-bold uppercase tracking-widest border-b border-zinc-900 pb-3">
-                                        <span className="text-zinc-700">{item.label}</span>
-                                        <span className="text-zinc-400">{item.val}</span>
+                                    { icon: Github, label: 'GitHub', val: `@${profile.username}` },
+                                    { icon: Twitter, label: 'Twitter', val: `@${profile.username}_x` },
+                                    { icon: Linkedin, label: 'LinkedIn', val: profile.username }
+                                ].map((social, i) => (
+                                    <div key={i} className="flex items-center justify-between group cursor-pointer">
+                                        <div className="flex items-center gap-3">
+                                            <div className="p-2 rounded-lg bg-zinc-900 group-hover:bg-zinc-800 transition-colors"><social.icon size={16} className="text-zinc-500 group-hover:text-white" /></div>
+                                            <span className="text-[11px] font-bold text-zinc-500 uppercase tracking-tight">{social.label}</span>
+                                        </div>
+                                        <span className="text-[11px] font-mono text-zinc-700 group-hover:text-orange-500 transition-colors">{social.val}</span>
                                     </div>
                                 ))}
                             </div>
-                        </section>
+                        </Card>
 
-                        <section className="p-8 bg-zinc-900/30 border border-dashed border-zinc-800 flex flex-col items-center text-center space-y-6">
-                            <Zap size={24} className="text-zinc-800" />
-                            <p className="text-[10px] font-bold text-zinc-600 uppercase tracking-[0.3em] leading-loose">
-                                This node is synchronized with the Hardline Protocol. All data is immutable and sovereign.
-                            </p>
-                            <Button variant="ghost" className="text-[9px] font-bold text-orange-500 uppercase tracking-widest hover:text-white">
-                                View Technical Manifest
-                            </Button>
-                        </section>
+                        {/* Suggestions */}
+                        <div className="space-y-4">
+                            <h3 className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest px-4">People you may know</h3>
+                            {[
+                                { name: 'Morpheus', handle: 'morpheus', head: 'Lead Architect' },
+                                { name: 'Trinity', handle: 'trinity', head: 'Security Researcher' }
+                            ].map((person, i) => (
+                                <div key={i} className="bg-zinc-950/50 border border-zinc-900 p-4 rounded-2xl flex items-center gap-3 hover:bg-zinc-950 transition-all cursor-pointer group">
+                                    <div className="w-10 h-10 rounded-full bg-zinc-900 overflow-hidden border border-zinc-800 group-hover:border-orange-500/50 transition-colors">
+                                        <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${person.name}`} alt="user" className="w-full h-full object-cover" />
+                                    </div>
+                                    <div className="grow">
+                                        <div className="text-[11px] font-bold text-white uppercase tracking-tight">{person.name}</div>
+                                        <div className="text-[8px] font-bold text-zinc-600 uppercase tracking-widest">{person.head}</div>
+                                    </div>
+                                    <Button size="icon" variant="ghost" className="w-8 h-8 rounded-full border border-zinc-900 text-zinc-600 hover:text-white hover:border-orange-500">
+                                        <Plus size={14} />
+                                    </Button>
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </div>
-
-                <div className="h-32" />
             </main>
         </div>
     );

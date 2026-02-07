@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Terminal, Database, Cpu, Zap, Box, Code, Activity, Users, ShieldCheck, MessageSquare, Heart, Share2, MoreHorizontal, User as UserIcon, Briefcase, Globe, TrendingUp, Sparkles, Plus, Award } from 'lucide-react';
+import { Terminal, Database, Cpu, Zap, Box, Code, Activity, Users, ShieldCheck, MessageSquare, Heart, Share2, MoreHorizontal, User as UserIcon, Briefcase, Globe, TrendingUp, Sparkles, Plus, Award, Image as ImageIcon, MapPin, Calendar } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card } from '../components/ui/Card';
@@ -12,7 +12,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 export default function NexusHub() {
     const { user, profile, isLoading } = useAuth();
     const navigate = useNavigate();
-    const [activeFeed, setActiveFeed] = useState('trending');
+    const [activeFeed, setActiveFeed] = useState('all');
     const [posts, setPosts] = useState<any[]>([]);
     const [newPostContent, setNewPostContent] = useState('');
     const [isPosting, setIsPosting] = useState(false);
@@ -24,7 +24,6 @@ export default function NexusHub() {
         }
     }, [user, profile, isLoading, navigate]);
 
-    // Handle logout or auth loss
     useEffect(() => {
         if (!isLoading && !user) {
             navigate('/auth');
@@ -46,7 +45,7 @@ export default function NexusHub() {
         fetchPosts();
     }, []);
 
-    const handleMaterializePost = async () => {
+    const handleCreatePost = async () => {
         if (!newPostContent.trim() || !user) return;
         setIsPosting(true);
         try {
@@ -54,12 +53,14 @@ export default function NexusHub() {
             const postObj = {
                 id: Math.random().toString(36).substr(2, 9),
                 author: {
-                    name: profile?.username || user.name,
+                    name: user.name,
                     handle: profile?.username || 'anonymous',
-                    headline: profile?.headline || 'Intelligence Architect'
+                    headline: profile?.headline || 'Professional',
+                    avatarUrl: profile?.avatarUrl || null
                 },
                 content: newPostContent,
                 likes: 0,
+                comments: 0,
                 shares: 0,
                 timestamp: new Date().toISOString(),
                 tags: []
@@ -69,316 +70,280 @@ export default function NexusHub() {
             setNewPostContent('');
             setIsDialogOpen(false);
         } catch (e) {
-            console.error("Failed to materialize post:", e);
+            console.error("Failed to create post:", e);
         } finally {
             setIsPosting(false);
         }
     };
 
-    const feedItems = [
+    const suggestedPosts = [
         {
-            id: 1,
-            author: { name: "Hardy Smith", handle: "hardy_ai", avatar: null, headline: "AI Architect @ OpenDev" },
-            content: "Just materialized a new neural bridge for Spoon CLI. The latency is down by 40%. Full documentation live on my node profile.",
-            likes: 42,
-            shares: 12,
+            id: 's1',
+            author: { name: "Hardy Smith", handle: "hardy_dev", avatarUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=Hardy", headline: "Full Stack Developer" },
+            content: "Just finished a major update on the OpenStudio toolkit. The new AI integration is working flawlessly! Check it out in the systems registry.",
+            likes: 124,
+            comments: 18,
             time: "2h ago",
-            tags: ["AI", "Spoon", "CLI"]
+            tags: ["Development", "AI"]
         },
         {
-            id: 2,
-            author: { name: "Sarah Chen", handle: "schen_dev", avatar: null, headline: "Systems Engineer" },
-            content: "Excited to join the OpenDev Mesh! Looking for collaborators for a decentralized compute project. Handshake in bio.",
-            likes: 24,
-            shares: 5,
-            time: "4h ago",
-            tags: ["OpenDev", "Startup", "Collaborate"]
-        },
-        {
-            id: 3,
-            author: { name: "Titan Operator", handle: "titan_prime", avatar: null, headline: "Security Protocol Sentinel" },
-            content: "Nexus Registry v12.01 is now active. All nodes please synchronize. Enhanced encryption layer deployed globally.",
-            likes: 156,
-            shares: 89,
-            time: "6h ago",
-            tags: ["Security", "Protocol", "Update"]
+            id: 's2',
+            author: { name: "Sarah Miller", handle: "sarah_m", avatarUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah", headline: "Product Designer" },
+            content: "Looking for feedback on the new profile banner layouts. Which one do you prefer? 🎨",
+            likes: 89,
+            comments: 42,
+            time: "5h ago",
+            tags: ["Design", "UX"]
         }
     ];
 
-    const trendingNodes = [
-        { name: "Spoon CLI", growth: "+12.4%", status: "trending" },
-        { name: "Void-IDE", growth: "+8.1%", status: "active" },
-        { name: "LamaDB", growth: "+15.6%", status: "exploding" },
-        { name: "Quantum-APIs", growth: "+5.2%", status: "stable" }
+    const trendingTopics = [
+        { name: "Web3 Evolution", count: "2.4k posts" },
+        { name: "AI Architecture", count: "1.8k posts" },
+        { name: "Remote Work 2026", count: "1.2k posts" },
+        { name: "Open Source", count: "950 posts" }
     ];
 
-    const combinedPosts = [...posts, ...feedItems]; // Show user posts first
+    const allPosts = [...posts, ...suggestedPosts];
 
     if (isLoading) return null;
 
     return (
-        <div className="min-h-screen bg-black text-white selection:bg-orange-500 selection:text-black font-sans">
-            {/* Background Atmosphere */}
-            <div className="fixed inset-0 pointer-events-none">
-                <div className="absolute top-0 left-0 w-full h-full opacity-[0.03]"
-                    style={{ backgroundImage: 'linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)', backgroundSize: '50px 50px' }}
-                />
-                <div className="absolute top-1/4 right-1/4 w-[800px] h-[800px] bg-orange-600/5 blur-[150px] rounded-none animate-pulse" />
-            </div>
+        <div className="min-h-screen bg-[#050505] text-white selection:bg-orange-500 selection:text-black font-sans">
+            <main className="max-w-[1200px] mx-auto p-4 md:p-8">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
 
-            <main className="relative z-10 max-w-[1400px] mx-auto p-6 md:p-12">
-                {/* Header Context */}
-                <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-8 mb-16 border-b border-zinc-900 pb-12">
-                    <div className="space-y-6">
-                        <div className="flex items-center gap-4">
-                            <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-none bg-zinc-900 border border-zinc-800 text-[10px] font-bold text-orange-500 uppercase tracking-[0.4em]">
-                                <Globe size={14} />
-                                <span>Nexus Network // Global Mesh Hub</span>
+                    {/* Left Sidebar: Profile Summary & Navigation */}
+                    <div className="lg:col-span-3 space-y-6">
+                        <Card className="bg-zinc-950 border-zinc-900 overflow-hidden rounded-2xl shadow-2xl">
+                            <div className="h-16 w-full bg-gradient-to-r from-orange-600 to-orange-400">
+                                {profile?.bannerUrl && <img src={profile.bannerUrl} alt="Banner" className="w-full h-full object-cover opacity-50" />}
                             </div>
-                            <Link to="/systems" className="text-[10px] font-bold text-zinc-600 hover:text-white transition-colors uppercase tracking-[0.4em] flex items-center gap-2 group">
-                                <Box size={12} className="group-hover:text-orange-500 transition-colors" />
-                                Systems Registry
-                            </Link>
-                        </div>
-                        <h1 className="text-6xl md:text-8xl font-bold tracking-tighter uppercase leading-[0.8]">
-                            nexus<br /><span className="text-zinc-600 text-5xl md:text-7xl">network.</span>
-                        </h1>
-                        <p className="text-zinc-500 text-sm font-medium tracking-tight uppercase tracking-[0.3em] opacity-80">
-                            Professional Intelligence Layer // NODE: <span className="text-white">@{profile?.username || user?.name || 'anonymous'}</span>
-                        </p>
-                    </div>
-
-                    <div className="flex gap-4">
-                        <Link to={`/user/${profile?.username}`}>
-                            <Button className="h-12 bg-white text-black font-bold uppercase tracking-widest text-[10px] rounded-none px-8 hover:bg-orange-500 hover:text-white transition-all">
-                                <UserIcon size={14} className="mr-2" />
-                                My Node Profile
-                            </Button>
-                        </Link>
-                        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                            <DialogTrigger asChild>
-                                <Button variant="outline" className="h-12 border-zinc-800 text-zinc-400 font-bold uppercase tracking-widest text-[10px] rounded-none px-8 hover:text-white hover:border-zinc-600 transition-all">
-                                    <Plus size={14} className="mr-2" />
-                                    Materialize Post
-                                </Button>
-                            </DialogTrigger>
-                            <DialogContent className="bg-zinc-950 border-zinc-900 rounded-none max-w-2xl p-0 overflow-hidden">
-                                <DialogHeader className="p-8 border-b border-zinc-900 bg-black">
-                                    <DialogTitle className="text-[10px] font-bold text-orange-500 uppercase tracking-[0.4em] mb-4 flex items-center gap-2">
-                                        <ShieldCheck size={14} /> Materialize Node Content
-                                    </DialogTitle>
-                                    <div className="flex gap-4 items-center">
-                                        <div className="w-10 h-10 bg-zinc-900 border border-zinc-800 flex items-center justify-center">
-                                            <UserIcon size={18} className="text-zinc-600" />
-                                        </div>
-                                        <div>
-                                            <div className="text-[11px] font-bold text-white uppercase tracking-tight">{profile?.username || user?.name}</div>
-                                            <div className="text-[9px] font-bold text-zinc-600 uppercase tracking-widest">Protocol Identified</div>
-                                        </div>
-                                    </div>
-                                </DialogHeader>
-                                <div className="p-8 space-y-8 bg-zinc-950/50">
-                                    <Textarea
-                                        className="min-h-[200px] bg-black border-zinc-900 rounded-none focus:border-orange-500 text-sm leading-relaxed"
-                                        placeholder="Broadcast to the Mesh..."
-                                        value={newPostContent}
-                                        onChange={(e) => setNewPostContent(e.target.value)}
-                                    />
-                                    <div className="flex justify-end gap-4">
-                                        <Button
-                                            variant="ghost"
-                                            className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest hover:text-white"
-                                            onClick={() => setIsDialogOpen(false)}
-                                        >
-                                            Abort
-                                        </Button>
-                                        <Button
-                                            className="h-12 bg-white text-black font-bold uppercase tracking-widest text-[10px] rounded-none px-10 hover:bg-orange-500 hover:text-white transition-all disabled:opacity-50"
-                                            onClick={handleMaterializePost}
-                                            disabled={isPosting || !newPostContent}
-                                        >
-                                            {isPosting ? 'Broadcasting...' : 'Uplink Stream'}
-                                        </Button>
+                            <div className="px-6 pb-6 text-center">
+                                <div className="relative -mt-8 mb-4 flex justify-center">
+                                    <div className="w-20 h-20 rounded-full border-4 border-zinc-950 bg-zinc-900 overflow-hidden shadow-xl">
+                                        <img src={profile?.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.name}`} alt="Avatar" className="w-full h-full object-cover" />
                                     </div>
                                 </div>
-                            </DialogContent>
-                        </Dialog>
-                    </div>
-                </div>
-
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-                    {/* Left Sidebar: Nav & Identity */}
-                    <div className="lg:col-span-3 space-y-12">
-                        <div className="space-y-6">
-                            <h3 className="text-[10px] font-bold text-zinc-700 uppercase tracking-[0.4em] ml-2">Channel Substrates</h3>
-                            <nav className="flex flex-col gap-1">
-                                {[
-                                    { label: 'Trending', icon: TrendingUp, id: 'trending' },
-                                    { label: 'Global Feed', icon: Globe, id: 'global' },
-                                    { label: 'Mesh Contacts', icon: Users, id: 'contacts' },
-                                    { label: 'Handshakes', icon: Sparkles, id: 'handshakes' }
-                                ].map((item) => (
-                                    <button
-                                        key={item.id}
-                                        onClick={() => setActiveFeed(item.id)}
-                                        className={`flex items-center gap-4 px-4 py-4 text-[11px] font-bold uppercase tracking-widest transition-all ${activeFeed === item.id
-                                            ? 'bg-zinc-900 text-white border-r-2 border-orange-500'
-                                            : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-900/50'
-                                            }`}
-                                    >
-                                        <item.icon size={16} />
-                                        <span>{item.label}</span>
-                                    </button>
-                                ))}
-                            </nav>
-                        </div>
-
-                        <div className="space-y-6 pt-12 border-t border-zinc-900">
-                            <h3 className="text-[10px] font-bold text-zinc-700 uppercase tracking-[0.4em] ml-2">Trending Nodes</h3>
-                            <div className="space-y-4">
-                                {trendingNodes.map((node) => (
-                                    <div key={node.name} className="flex flex-col gap-1 px-4">
-                                        <div className="flex justify-between items-center">
-                                            <span className="text-[11px] font-bold text-zinc-300 hover:text-orange-500 transition-colors cursor-pointer">{node.name}</span>
-                                            <span className="text-[9px] font-bold text-zinc-600 uppercase tracking-widest">{node.growth}</span>
-                                        </div>
-                                        <div className="w-full h-[1px] bg-zinc-900 flex">
-                                            <div className={`h-full bg-orange-500/50 animate-pulse`} style={{ width: node.growth.replace('+', '') }} />
-                                        </div>
+                                <h3 className="font-bold text-lg leading-tight truncate">{user?.name}</h3>
+                                <p className="text-zinc-500 text-xs font-mono mb-4">@{profile?.username || 'user'}</p>
+                                <div className="h-[1px] bg-zinc-900 w-full mb-4" />
+                                <div className="space-y-4">
+                                    <div className="flex justify-between items-center text-[10px] font-bold uppercase tracking-widest">
+                                        <span className="text-zinc-500">Profile Views</span>
+                                        <span className="text-orange-500">1.2k</span>
                                     </div>
-                                ))}
+                                    <div className="flex justify-between items-center text-[10px] font-bold uppercase tracking-widest">
+                                        <span className="text-zinc-500">Post Impressions</span>
+                                        <span className="text-orange-500">5.8k</span>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+                            <div className="bg-zinc-900/50 p-4 border-t border-zinc-900">
+                                <Link to={`/user/${profile?.username}`} className="text-[10px] font-bold text-white uppercase tracking-widest hover:text-orange-500 transition-colors flex items-center justify-center gap-2">
+                                    <UserIcon size={12} />
+                                    View Full Profile
+                                </Link>
+                            </div>
+                        </Card>
+
+                        <nav className="space-y-1">
+                            {[
+                                { label: 'Social Feed', icon: Activity, id: 'all' },
+                                { label: 'My Network', icon: Users, id: 'network' },
+                                { label: 'Trending', icon: TrendingUp, id: 'trending' },
+                                { label: 'Messages', icon: MessageSquare, id: 'messages' }
+                            ].map((item) => (
+                                <button
+                                    key={item.id}
+                                    onClick={() => setActiveFeed(item.id)}
+                                    className={`w-full flex items-center gap-4 px-6 py-4 rounded-xl text-xs font-bold uppercase tracking-widest transition-all ${activeFeed === item.id
+                                        ? 'bg-zinc-900 text-white shadow-lg'
+                                        : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-900/30'
+                                        }`}
+                                >
+                                    <item.icon size={18} className={activeFeed === item.id ? 'text-orange-500' : ''} />
+                                    <span>{item.label}</span>
+                                </button>
+                            ))}
+                        </nav>
                     </div>
 
-                    {/* Middle: Professional Feed */}
-                    <div className="lg:col-span-6 space-y-8">
+                    {/* Middle: Professional Social Feed */}
+                    <div className="lg:col-span-6 space-y-6">
+                        {/* Create Post Card */}
+                        <Card className="bg-zinc-950 border-zinc-900 p-6 rounded-2xl shadow-xl">
+                            <div className="flex gap-4">
+                                <div className="w-12 h-12 rounded-full overflow-hidden shrink-0 border border-zinc-900">
+                                    <img src={profile?.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.name}`} alt="Avatar" className="w-full h-full object-cover" />
+                                </div>
+                                <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                                    <DialogTrigger asChild>
+                                        <button className="grow bg-zinc-900 hover:bg-zinc-800 text-zinc-500 text-left px-6 rounded-full text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-orange-500/20">
+                                            What's on your mind, {user?.name?.split(' ')[0]}?
+                                        </button>
+                                    </DialogTrigger>
+                                    <DialogContent className="bg-zinc-950 border-zinc-900 rounded-3xl max-w-xl p-0 overflow-hidden shadow-2xl">
+                                        <DialogHeader className="p-6 border-b border-zinc-900">
+                                            <DialogTitle className="text-sm font-bold uppercase tracking-widest text-white">Create New Post</DialogTitle>
+                                        </DialogHeader>
+                                        <div className="p-6 space-y-6">
+                                            <div className="flex gap-3">
+                                                <div className="w-10 h-10 rounded-full overflow-hidden border border-zinc-900">
+                                                    <img src={profile?.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.name}`} alt="Avatar" className="w-full h-full object-cover" />
+                                                </div>
+                                                <div>
+                                                    <div className="text-[12px] font-bold text-white uppercase tracking-tight">{user?.name}</div>
+                                                    <div className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest">Posting to Public Feed</div>
+                                                </div>
+                                            </div>
+                                            <Textarea
+                                                className="min-h-[150px] bg-transparent border-none focus-visible:ring-0 text-lg leading-relaxed placeholder:text-zinc-700 resize-none p-0"
+                                                placeholder="Share your thoughts, progress or questions..."
+                                                value={newPostContent}
+                                                onChange={(e) => setNewPostContent(e.target.value)}
+                                            />
+                                            <div className="flex items-center gap-4 py-4 border-t border-zinc-900">
+                                                <button className="text-zinc-500 hover:text-orange-500 transition-colors"><ImageIcon size={20} /></button>
+                                                <button className="text-zinc-500 hover:text-orange-500 transition-colors"><Zap size={20} /></button>
+                                                <div className="grow" />
+                                                <Button
+                                                    className="bg-white text-black font-bold uppercase tracking-widest text-[10px] rounded-full px-8 hover:bg-orange-500 hover:text-white transition-all h-10 shadow-lg disabled:opacity-50"
+                                                    onClick={handleCreatePost}
+                                                    disabled={isPosting || !newPostContent}
+                                                >
+                                                    {isPosting ? 'Posting...' : 'Share Post'}
+                                                </Button>
+                                            </div>
+                                        </div>
+                                    </DialogContent>
+                                </Dialog>
+                            </div>
+                        </Card>
+
+                        {/* Feed Filter */}
+                        <div className="flex items-center gap-2 py-2">
+                            <div className="h-[1px] grow bg-zinc-900" />
+                            <span className="text-[9px] font-bold text-zinc-600 uppercase tracking-[0.3em] px-4">Latest Updates</span>
+                            <div className="h-[1px] grow bg-zinc-900" />
+                        </div>
+
+                        {/* Post List */}
                         <div className="space-y-6">
-                            {combinedPosts.map((post, i) => (
+                            {allPosts.map((post, i) => (
                                 <motion.div
                                     key={post.id || i}
-                                    initial={{ opacity: 0, y: 20 }}
+                                    initial={{ opacity: 0, y: 10 }}
                                     animate={{ opacity: 1, y: 0 }}
-                                    className="bg-zinc-950/20 border border-zinc-900/50 p-8 group hover:border-zinc-700 transition-all"
+                                    className="bg-zinc-950 border border-zinc-900 rounded-2xl p-6 shadow-xl group hover:border-zinc-700 transition-all"
                                 >
-                                    <div className="flex justify-between items-start mb-8">
+                                    <div className="flex justify-between items-start mb-6">
                                         <div className="flex gap-4">
-                                            <div className="w-12 h-12 bg-zinc-900 border border-zinc-800 flex items-center justify-center shrink-0">
-                                                <UserIcon size={20} className="text-zinc-600" />
+                                            <div className="w-12 h-12 rounded-full overflow-hidden border border-zinc-900 shrink-0">
+                                                <img src={post.author.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${post.author.name}`} alt="Avatar" className="w-full h-full object-cover" />
                                             </div>
                                             <div>
                                                 <div className="flex items-center gap-2">
-                                                    <h4 className="text-sm font-bold uppercase tracking-tight text-white">{post.author.name}</h4>
+                                                    <h4 className="text-[13px] font-bold text-white uppercase tracking-tight">{post.author.name}</h4>
                                                     <span className="text-[10px] text-zinc-600 font-mono">@{post.author.handle}</span>
                                                 </div>
-                                                <p className="text-[10px] font-bold text-orange-500 uppercase tracking-widest mt-1 opacity-80">{post.author.headline}</p>
+                                                <p className="text-[9px] font-bold text-orange-500 uppercase tracking-widest mt-0.5">{post.author.headline}</p>
                                             </div>
                                         </div>
-                                        <span className="text-[9px] font-bold text-zinc-700 uppercase tracking-widest">{post.time || new Date(post.timestamp).toLocaleDateString()}</span>
+                                        <button className="text-zinc-700 hover:text-white transition-colors"><MoreHorizontal size={18} /></button>
                                     </div>
 
-                                    <div className="space-y-6">
-                                        <p className="text-zinc-400 text-sm leading-relaxed font-medium">
+                                    <div className="space-y-4 mb-6">
+                                        <p className="text-zinc-300 text-[14px] leading-relaxed font-medium">
                                             {post.content}
                                         </p>
                                         <div className="flex flex-wrap gap-2">
                                             {post.tags.map((tag: string) => (
-                                                <span key={tag} className="text-[9px] font-bold text-zinc-600 uppercase tracking-widest px-2 py-1 bg-zinc-900 border border-zinc-800">
+                                                <span key={tag} className="text-[8px] font-bold text-zinc-600 hover:text-orange-500 transition-colors cursor-pointer uppercase tracking-widest">
                                                     #{tag}
                                                 </span>
                                             ))}
                                         </div>
                                     </div>
 
-                                    <div className="mt-8 pt-8 border-t border-zinc-900/50 flex items-center gap-8">
-                                        <button className="flex items-center gap-2 text-[10px] font-bold text-zinc-600 hover:text-orange-500 transition-colors uppercase tracking-widest ring-0 outline-none">
-                                            <Heart size={14} />
-                                            <span>{post.likes}</span>
-                                        </button>
-                                        <button className="flex items-center gap-2 text-[10px] font-bold text-zinc-600 hover:text-blue-500 transition-colors uppercase tracking-widest ring-0 outline-none">
-                                            <MessageSquare size={14} />
-                                            <span>Reply</span>
-                                        </button>
-                                        <button className="flex items-center gap-2 text-[10px] font-bold text-zinc-600 hover:text-white transition-colors uppercase tracking-widest ml-auto ring-0 outline-none">
-                                            <Share2 size={14} />
-                                            <span>{post.shares}</span>
+                                    <div className="pt-4 border-t border-zinc-900/50 flex items-center justify-between">
+                                        <div className="flex items-center gap-6">
+                                            <button className="flex items-center gap-2 text-[10px] font-bold text-zinc-600 hover:text-orange-500 transition-all uppercase tracking-widest focus:outline-none">
+                                                <Heart size={16} />
+                                                <span>{post.likes}</span>
+                                            </button>
+                                            <button className="flex items-center gap-2 text-[10px] font-bold text-zinc-600 hover:text-white transition-all uppercase tracking-widest focus:outline-none">
+                                                <MessageSquare size={16} />
+                                                <span>{post.comments || 0}</span>
+                                            </button>
+                                        </div>
+                                        <button className="flex items-center gap-2 text-[10px] font-bold text-zinc-600 hover:text-white transition-all uppercase tracking-widest focus:outline-none">
+                                            <Share2 size={16} />
+                                            <span>Share</span>
                                         </button>
                                     </div>
                                 </motion.div>
                             ))}
                         </div>
 
-                        <div className="py-12 flex flex-col items-center justify-center space-y-4 border-t border-zinc-900">
-                            <div className="w-1.5 h-1.5 bg-orange-500 animate-bounce" />
-                            <span className="text-[10px] font-bold text-zinc-700 uppercase tracking-[0.6em]">End of Transmission</span>
+                        <div className="py-12 flex flex-col items-center justify-center space-y-4">
+                            <div className="w-8 h-[2px] bg-zinc-900" />
+                            <span className="text-[9px] font-bold text-zinc-700 uppercase tracking-[0.4em]">Stay tuned for more updates</span>
                         </div>
                     </div>
 
-                    {/* Right Sidebar: Personal Stats & Actions */}
-                    <div className="lg:col-span-3 space-y-12">
-                        <section className="bg-zinc-950 border border-zinc-900 p-8 space-y-8 relative overflow-hidden">
-                            <div className="absolute top-0 right-0 p-4 opacity-5">
-                                <Award size={80} className="text-orange-500" />
-                            </div>
-
-                            <div className="space-y-4">
-                                <h3 className="text-[10px] font-bold text-zinc-600 uppercase tracking-[0.4em]">Node Vitality</h3>
-                                <div className="space-y-6">
-                                    <div className="flex flex-col gap-2">
-                                        <div className="flex justify-between items-end">
-                                            <span className="text-2xl font-bold tracking-tighter text-white">1,240</span>
-                                            <span className="text-[9px] font-bold text-orange-500 uppercase tracking-widest mb-1">Intelligence Score</span>
-                                        </div>
-                                        <div className="w-full h-1 bg-zinc-900">
-                                            <div className="h-full bg-orange-600 w-3/4" />
-                                        </div>
-                                    </div>
-                                    <div className="grid grid-cols-2 gap-4">
-                                        <div className="bg-zinc-900 p-4 border border-zinc-800">
-                                            <span className="text-[8px] text-zinc-600 block uppercase font-bold mb-1">Handshakes</span>
-                                            <span className="text-sm font-bold text-white tracking-tight">42</span>
-                                        </div>
-                                        <div className="bg-zinc-900 p-4 border border-zinc-800">
-                                            <span className="text-[8px] text-zinc-600 block uppercase font-bold mb-1">Nodes Linked</span>
-                                            <span className="text-sm font-bold text-white tracking-tight">128</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-
-                        <section className="space-y-6">
-                            <h3 className="text-[10px] font-bold text-zinc-700 uppercase tracking-[0.4em] ml-2">Suggested Connections</h3>
-                            <div className="space-y-2">
-                                {[
-                                    { name: "Morpheus", handle: "architect_zero", headline: "Matrix Designer" },
-                                    { name: "Trinity", handle: "neural_link", headline: "Core Dev" }
-                                ].map((suggested) => (
-                                    <div key={suggested.handle} className="bg-zinc-950/40 border border-zinc-900 p-4 hover:border-zinc-700 transition-all flex items-center justify-between group">
-                                        <div>
-                                            <h5 className="text-[11px] font-bold uppercase tracking-tight text-zinc-300">{suggested.name}</h5>
-                                            <p className="text-[9px] text-zinc-600 font-mono">@{suggested.handle}</p>
-                                        </div>
-                                        <button className="w-8 h-8 bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400 hover:text-white hover:border-orange-500 transition-all">
-                                            <Plus size={14} />
-                                        </button>
+                    {/* Right Sidebar: Trending Topics & Suggestions */}
+                    <div className="lg:col-span-3 space-y-6">
+                        <Card className="bg-zinc-950 border-zinc-900 p-6 rounded-2xl shadow-xl">
+                            <h3 className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.3em] mb-6 flex items-center gap-2">
+                                <TrendingUp size={14} className="text-orange-500" />
+                                Trending Topics
+                            </h3>
+                            <div className="space-y-6">
+                                {trendingTopics.map((topic) => (
+                                    <div key={topic.name} className="group cursor-pointer">
+                                        <div className="text-[11px] font-bold text-white group-hover:text-orange-500 transition-colors uppercase tracking-tight">{topic.name}</div>
+                                        <div className="text-[9px] font-bold text-zinc-600 uppercase tracking-widest mt-1">{topic.count}</div>
                                     </div>
                                 ))}
                             </div>
-                        </section>
+                            <Button variant="ghost" className="w-full mt-6 text-[9px] font-bold text-zinc-600 uppercase tracking-widest hover:text-white h-8">View All Topics</Button>
+                        </Card>
+
+                        <Card className="bg-zinc-950 border-zinc-900 p-6 rounded-2xl shadow-xl">
+                            <h3 className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.3em] mb-6">Who to follow</h3>
+                            <div className="space-y-4">
+                                {[
+                                    { name: "Morpheus", handle: "morpheus_ai", head: "Matrix Designer" },
+                                    { name: "Trinity", handle: "trinity_dev", head: "Neural Link Architect" }
+                                ].map((person) => (
+                                    <div key={person.handle} className="flex items-center gap-3 group">
+                                        <div className="w-10 h-10 rounded-full bg-zinc-900 overflow-hidden border border-zinc-800">
+                                            <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${person.name}`} alt="user" className="w-full h-full object-cover" />
+                                        </div>
+                                        <div className="grow">
+                                            <div className="text-[11px] font-bold text-white group-hover:text-orange-500 transition-colors uppercase tracking-tight leading-none mb-1">{person.name}</div>
+                                            <div className="text-[8px] font-bold text-zinc-600 uppercase tracking-widest truncate">{person.head}</div>
+                                        </div>
+                                        <Button size="icon" variant="ghost" className="w-8 h-8 rounded-full border border-zinc-900 text-zinc-600 hover:text-white hover:border-orange-500 transition-all">
+                                            <Plus size={14} />
+                                        </Button>
+                                    </div>
+                                ))}
+                            </div>
+                        </Card>
+
+                        <footer className="px-4 text-[9px] font-bold text-zinc-700 uppercase tracking-widest space-y-4">
+                            <div className="flex flex-wrap gap-4 justify-center">
+                                <span>About</span>
+                                <span>Privacy</span>
+                                <span>Terms</span>
+                                <span>Security</span>
+                            </div>
+                            <p className="text-center opacity-50">© 2026 OpenDev Labs // Nexus</p>
+                        </footer>
                     </div>
                 </div>
-
-                <footer className="mt-32 pt-12 border-t border-zinc-900 flex justify-between items-center text-[9px] font-bold text-zinc-700 uppercase tracking-widest italic">
-                    <p>© 2026 OpenDev-Labs // Nexus Network Core</p>
-                    <div className="flex gap-8">
-                        <span>Terminal: v11.12-HUB</span>
-                        <div className="flex items-center gap-2">
-                            <div className="w-1.5 h-1.5 bg-green-500 animate-pulse" />
-                            <span>Sovereign Encryption Active</span>
-                        </div>
-                    </div>
-                </footer>
             </main>
         </div>
     );
