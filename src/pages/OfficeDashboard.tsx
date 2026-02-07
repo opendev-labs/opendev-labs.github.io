@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Terminal, Database, Box, Cpu, Activity, Shield, Zap, ArrowUpRight, Plus, Settings, LayoutGrid, LogOut, Search, ChevronLeft, ChevronRight, Menu, Bot } from 'lucide-react';
+import { Terminal, Database, Box, Cpu, Activity, Shield, Zap, ArrowUpRight, Plus, Settings, LayoutGrid, LogOut, Search, ChevronLeft, ChevronRight, Menu, Bot, MessageSquare, Globe, ShieldCheck } from 'lucide-react';
 import { Link, useNavigate, useLocation, Outlet } from 'react-router-dom';
 import { Button } from '../components/ui/Button';
 import { useAuth } from '../features/void/hooks/useAuth';
@@ -112,9 +112,12 @@ const OfficeDashboard: React.FC = () => {
                 </div>
 
                 <div className="flex-1 py-8 space-y-1">
+                    <SidebarItem icon={Globe} label="Nexus Network" path="/nexus" active={location.pathname === '/nexus'} id="nexus" />
                     <SidebarItem icon={LayoutGrid} label="System Office" path="/office" active={location.pathname === '/office'} id="cockpit" />
                     <SidebarItem icon={Cpu} label="open-studio IDE" path="/open-studio" active={location.pathname.startsWith('/open-studio')} id="open-studio" />
                     <SidebarItem icon={Bot} label="Agents Dashboard" path="/office/agents" active={location.pathname === '/office/agents'} id="agents" />
+                    <SidebarItem icon={MessageSquare} label="Bots Dashboard" path="/office/bots" active={location.pathname === '/office/bots'} id="bots" />
+                    <SidebarItem icon={ShieldCheck} label="Systems Registry" path="/office/systems" active={location.pathname === '/office/systems'} id="systems" />
                     <SidebarItem icon={Terminal} label="Void Platform" path="/office/void" active={location.pathname === '/office/void'} id="void" />
                     <SidebarItem icon={Database} label="LamaDB Mesh" path="/office/lamadb" active={location.pathname === '/office/lamadb'} id="lamadb" />
                     <SidebarItem icon={Box} label="SyncStack Console" path="/office/syncstack" active={location.pathname === '/office/syncstack'} id="syncstack" />

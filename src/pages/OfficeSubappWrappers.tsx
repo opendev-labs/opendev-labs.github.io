@@ -9,6 +9,8 @@ import { GlobalLoader } from '../features/void/components/common/GlobalLoader';
 import { SyncStackConsole } from './SyncStackConsole';
 import { LamaDBTelemetry } from './LamaDBTelemetry';
 import AgentsDashboard from './AgentsDashboard';
+import BotsDashboard from './BotsDashboard';
+import SystemsRegistry from './SystemsRegistry';
 
 import { Activity, Cpu, Shield, Zap, Database, Terminal, Bot } from 'lucide-react';
 
@@ -141,6 +143,20 @@ export const AgentsOfficeCockpit: React.FC = () => {
     return (
         <div className="min-h-screen bg-black">
             <AgentsDashboard />
+        </div>
+    );
+};
+export const BotsOfficeCockpit: React.FC = () => {
+    return (
+        <div className="min-h-screen bg-black">
+            <BotsDashboard />
+        </div>
+    );
+};
+export const SystemsOfficeCockpit: React.FC = () => {
+    return (
+        <div className="min-h-screen bg-black">
+            <SystemsRegistry />
         </div>
     );
 };

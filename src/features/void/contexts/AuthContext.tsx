@@ -19,6 +19,7 @@ interface AuthState {
   agentOnline: boolean;
   githubUser: any | null;
   isGithubConnected: boolean;
+  profile: any | null;
 }
 
 interface AuthContextType extends AuthState {
@@ -29,9 +30,10 @@ interface AuthContextType extends AuthState {
   fetchRepositories: () => Promise<any[]>;
   createRepository: (name: string, description: string, isPrivate: boolean) => Promise<any>;
   uploadFile: (repoName: string, path: string, content: string, message: string) => Promise<any>;
-  login: (user: User) => void;
   syncAllRepositories: () => Promise<void>;
   checkLocalAgent: () => Promise<boolean>;
+  updateProfile: (data: any) => Promise<void>;
+  login: (user: User) => void;
 }
 
 export const AuthContext = createContext<AuthContextType | null>(null);
@@ -44,6 +46,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [syncStatus, setSyncStatus] = useState<SyncStatus>(SyncStatus.IDLE);
   const [lastSyncTime, setLastSyncTime] = useState<string | null>(localStorage.getItem('opendev_last_sync'));
   const [agentOnline, setAgentOnline] = useState(false);
+  const [profile, setProfile] = useState<any | null>(null);
 
   const checkLocalAgent = useCallback(async () => {
     try {
@@ -65,18 +68,34 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const storedToken = localStorage.getItem('opendev_gh_token');
     if (storedToken) setToken(storedToken);
 
-    const unsubscribe = LamaDB.auth.onAuthStateChanged((firebaseUser: any) => {
+    const unsubscribe = LamaDB.auth.onAuthStateChanged(async (firebaseUser: any) => {
       if (firebaseUser) {
-        setUser({
+        const userData: User = {
           uid: firebaseUser.uid,
           name: firebaseUser.displayName || 'User',
           email: firebaseUser.email || '',
           avatar: firebaseUser.photoURL || undefined,
           providers: firebaseUser.providers || []
-        });
+        };
+        setUser(userData);
+
+        // Fetch Profile from LamaDB
+        try {
+          const userContext = { uid: firebaseUser.email, email: firebaseUser.email };
+          const profiles = await LamaDB.store.collection('profiles', userContext).get();
+          if (profiles && profiles.length > 0) {
+            setProfile(profiles[0]);
+          } else {
+            // Check if we should auto-create or wait for onboarding
+            setProfile(null);
+          }
+        } catch (e) {
+          console.error("Failed to fetch profile:", e);
+        }
       } else {
         setUser(null);
         setToken(null);
+        setProfile(null);
         localStorage.removeItem('opendev_gh_token');
       }
       setIsLoading(false);
@@ -317,8 +336,30 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Legacy manual login (e.g. for email/demo)
   const login = useCallback((user: User) => {
     setUser(user);
-    // safeNavigate('/');
   }, []);
+
+  const updateProfile = useCallback(async (data: any) => {
+    if (!user) return;
+    try {
+      const userContext = { uid: user.email, email: user.email };
+      const profileData = {
+        ...profile,
+        ...data,
+        updatedAt: new Date().toISOString()
+      };
+
+      if (profile?.id) {
+        await LamaDB.store.collection('profiles', userContext).update(profile.id, profileData);
+      } else {
+        const newProfile = await LamaDB.store.collection('profiles', userContext).add(profileData);
+        profileData.id = newProfile.id;
+      }
+      setProfile(profileData);
+    } catch (error) {
+      console.error("Update Profile Error:", error);
+      throw error;
+    }
+  }, [user, profile]);
 
   return (
     <AuthContext.Provider value={{
@@ -339,7 +380,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       uploadFile,
       login,
       syncAllRepositories,
-      checkLocalAgent
+      checkLocalAgent,
+      updateProfile,
+      profile
     }}>
       {children}
     </AuthContext.Provider>

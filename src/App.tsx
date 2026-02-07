@@ -20,8 +20,12 @@ import NexusDashboard from './pages/NexusDashboard';
 import { Preloader } from './components/Preloader';
 import { DocsPage } from './features/void/components/pages/DocsPage';
 import { MissionControl } from './pages/MissionControl';
-import { UnifiedOfficeCockpit, LamaDBOfficeCockpit, SyncStackOfficeCockpit, LamaDBTelemetryCockpit, AgentsOfficeCockpit } from './pages/OfficeSubappWrappers';
+import { UnifiedOfficeCockpit, LamaDBOfficeCockpit, SyncStackOfficeCockpit, LamaDBTelemetryCockpit, AgentsOfficeCockpit, BotsOfficeCockpit, SystemsOfficeCockpit } from './pages/OfficeSubappWrappers';
 import { Header } from './components/Header';
+import DiscordVerifyPage from './pages/DiscordVerifyPage';
+import OnboardingPage from './pages/OnboardingPage';
+import ProfilePage from './pages/ProfilePage';
+import ProfileSettings from './pages/ProfileSettings';
 
 const lazyWithRetry = (componentImport: () => Promise<any>) =>
   lazy(async () => {
@@ -79,6 +83,11 @@ const AppRoutes = () => {
             <LazyAuthPage />
           </Suspense>
         } />
+        <Route path="verify-user" element={
+          <Suspense fallback={<div className="min-h-screen bg-black" />}>
+            <DiscordVerifyPage />
+          </Suspense>
+        } />
         <Route path="verify-email" element={
           <Suspense fallback={<div className="min-h-screen bg-black" />}>
             <LazyVerifyEmailPage />
@@ -93,6 +102,9 @@ const AppRoutes = () => {
           <Route path="agents" element={<AgentsLanding />} />
           <Route path="agents/dashboard" element={<AgentsOfficeCockpit />} />
           <Route path="agents/new" element={<AgentsOfficeCockpit />} />
+          <Route path="bots" element={<BotsOfficeCockpit />} />
+          <Route path="bots/dashboard" element={<BotsOfficeCockpit />} />
+          <Route path="systems" element={<SystemsOfficeCockpit />} />
 
           <Route path="lamadb" element={<LamaDB />} />
           <Route path="lamadb/console" element={<LamaDBOfficeCockpit />} />
@@ -106,11 +118,12 @@ const AppRoutes = () => {
           <Route path="void/dashboard" element={<UnifiedOfficeCockpit />} />
           <Route path="void/new" element={<Navigate to="/open-studio" replace />} />
 
-          {/* Legacy/Hub Redirects */}
-          <Route path="office/*" element={<UnifiedOfficeCockpit />} />
-          <Route path="dashboard" element={<Navigate to="/void/dashboard" replace />} />
+          <Route path="nexus" element={<NexusDashboard />} />
+          <Route path="onboarding" element={<OnboardingPage />} />
+          <Route path="user/profile" element={<ProfilePage />} />
+          <Route path="user/:username" element={<ProfilePage />} />
+          <Route path="settings/profile" element={<ProfileSettings />} />
 
-          {/* Product Pages */}
           <Route path="q-cloud" element={<QCloud />} />
           <Route path="spoon" element={<Spoon />} />
           <Route path="products" element={<Products />} />
