@@ -110,8 +110,8 @@ export default function OpenHub() {
 
     return (
         <div className="min-h-screen bg-[#050505] text-white selection:bg-orange-500 selection:text-black font-sans">
-            <main className="max-w-[1200px] mx-auto p-4 md:p-8">
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <main className="max-w-[1200px] mx-auto p-3 md:p-8">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 md:gap-8">
 
                     {/* Left Sidebar: Profile Summary & Navigation */}
                     <div className="lg:col-span-3 space-y-6">

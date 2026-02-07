@@ -97,7 +97,7 @@ export const Header: React.FC = () => {
 
     return (
         <nav className={`fixed top-0 w-full z-[100] transition-all duration-300 border-b h-14 ${scrolled ? 'bg-black/80 backdrop-blur-xl border-zinc-900' : 'bg-black border-transparent'}`}>
-            <div className="h-full flex items-center justify-between px-6 md:px-12 max-w-[1400px] mx-auto">
+            <div className="h-full flex items-center justify-between px-4 md:px-12 max-w-[1400px] mx-auto">
                 <div className="flex items-center gap-10">
                     <Link to="/" className="flex items-center gap-3 group">
                         <Logo />
