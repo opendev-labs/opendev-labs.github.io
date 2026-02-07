@@ -23,8 +23,10 @@ export default function OnboardingPage() {
         if (!authLoading && !user) {
             navigate('/auth');
         } else if (!authLoading && profile?.username) {
-            navigate('/nexus');
-        } else if (user && !username) {
+            // Force re-check profile instead of immediate navigate if possible
+            // but for now, if profile exists, we definitely should not be here
+            navigate('/nexus', { replace: true });
+        } else if (user && !username && !profile?.username) {
             // Default username to google/github name (sanitized)
             const defaultName = user.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
             setUsername(defaultName);
@@ -38,10 +40,11 @@ export default function OnboardingPage() {
         }
         setIsChecking(true);
         try {
-            // Check in LamaDB globally if username exists
-            // Since LamaDB is client-side, we might need a global collection or just query all users
-            // For now, we'll simulate availability or check a dedicated global 'usernames' collection
-            const userContext = { uid: 'global', email: 'global' };
+            // Check in profiles collection
+            const userContext = {
+                uid: user?.email || 'global',
+                email: user?.email || 'global'
+            };
             const existing = await LamaDB.store.collection('profiles', userContext).get() as any[];
             const taken = existing.some(p => p.username === name && p.email !== user?.email);
             setIsAvailable(!taken);
@@ -74,7 +77,13 @@ export default function OnboardingPage() {
                 skills: [],
                 joinedAt: new Date().toISOString()
             });
-            navigate('/nexus');
+
+            // WE MUST NOT NAVIGATE BEFORE UPDATEPROFILE IS FULLY RESOLVED
+            // The profile in useAuth might take a second to update from Firestore/LamaDB
+            // Let's force a replacement navigation to /nexus
+            setTimeout(() => {
+                navigate('/nexus', { replace: true });
+            }, 100);
         } catch (err) {
             console.error(err);
         } finally {
