@@ -86,5 +86,5 @@ jobs:
           git checkout -b main
           git add .
           git commit -m "feat: manifest Nexus genesis protocol [text-only-sync]"
-          git remote add hf https://cube:${HF_TOKEN}@huggingface.co/spaces/opendev-labs/nexus
+          git remote add hf https://opendev-labs:${HF_TOKEN}@huggingface.co/spaces/opendev-labs/nexus.git
           git push hf main --force
