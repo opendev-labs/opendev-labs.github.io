@@ -326,7 +326,7 @@ function App() {
         if (jsonString) {
           try {
             const parsed = JSON.parse(jsonString);
-            finalConversationalPart = parsed.conversation || "(sub0 did not provide a conversational response.)";
+            finalConversationalPart = parsed.conversation || "(Nexus did not provide a conversational response.)";
             if (parsed.files && Array.isArray(parsed.files)) {
               generatedFileObjects = parsed.files.filter((f: any) => f.path && f.action);
             }
@@ -341,7 +341,7 @@ function App() {
         }
       }
 
-      // Update the sub0 message with the FINAL conversational part and file changes list
+      // Update the Nexus message with the FINAL conversational part and file changes list
       setSessions(prev => prev.map(s => {
         if (s.id === currentSessionId) {
           const finalGenerationFiles: GenerationFile[] = generatedFileObjects.map(f => ({

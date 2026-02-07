@@ -22,7 +22,7 @@ export function Sidebar({ onNavigate, recentChats, onSelectChat, onDeleteSession
             <div className="w-6 h-6 bg-white rounded-none flex items-center justify-center">
               <div className="w-3 h-3 bg-black" />
             </div>
-            <span className="text-xl font-bold tracking-tighter text-white lowercase">sub0.</span>
+            <span className="text-xl font-bold tracking-tighter text-white lowercase">nexus.</span>
           </div>
           <button
             onClick={onToggle}

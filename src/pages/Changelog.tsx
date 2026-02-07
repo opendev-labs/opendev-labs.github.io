@@ -23,7 +23,7 @@ const changelogData: ChangeEntry[] = [
         description: "A major overhaul of the AI orchestrator and workspace management.",
         icon: Sparkles,
         updates: [
-            "Evolved sub0 to open-studio with 'Neural Handshake' chat interface.",
+            "Evolved Nexus to open-studio with 'Neural Handshake' chat interface.",
             "Implemented buttery smooth 'Infrastructure Slide-in' for builds.",
             "Created Agents Registry for managing specialized AI personas.",
             "Fixed Pulse V2 Preview with robust Babel-powered runtime.",

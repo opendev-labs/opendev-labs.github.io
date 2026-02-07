@@ -1,4 +1,4 @@
-name: sub0 Sovereign Sync (Ultimate)
+name: OpenDev Sovereign Sync (Ultimate)
 
 on:
   push:
@@ -22,7 +22,7 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
-      - name: Build sub0 Manifest
+      - name: Build Nexus Manifest
         run: npm run build
         env:
           VITE_FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY }}
@@ -81,10 +81,10 @@ jobs:
                          -delete
           
           git init
-          git config user.name "sub0-manifest"
+          git config user.name "opendev-manifest"
           git config user.email "manifest@opendev-labs.ai"
           git checkout -b main
           git add .
-          git commit -m "feat: manifest sub0 genesis protocol [text-only-sync]"
-          git remote add hf https://cube:${HF_TOKEN}@huggingface.co/spaces/opendev-labs/sub0
+          git commit -m "feat: manifest Nexus genesis protocol [text-only-sync]"
+          git remote add hf https://cube:${HF_TOKEN}@huggingface.co/spaces/opendev-labs/nexus
           git push hf main --force

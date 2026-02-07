@@ -51,7 +51,7 @@ export function SettingsView() {
                                 <input type="text" disabled value="Sovereign User" className="bg-zinc-900/50 border border-zinc-800 rounded-none px-4 py-2 text-[11px] font-mono w-full sm:w-80 text-zinc-500 cursor-not-allowed focus:outline-none" />
                             </SettingsRow>
                             <SettingsRow label="Uplink ID">
-                                <input type="email" disabled value="uplink@sub0.io" className="bg-zinc-900/50 border border-zinc-800 rounded-none px-4 py-2 text-[11px] font-mono w-full sm:w-80 text-zinc-500 cursor-not-allowed focus:outline-none" />
+                                <input type="email" disabled value="uplink@opendev-labs.io" className="bg-zinc-900/50 border border-zinc-800 rounded-none px-4 py-2 text-[11px] font-mono w-full sm:w-80 text-zinc-500 cursor-not-allowed focus:outline-none" />
                             </SettingsRow>
                             <SettingsRow label="System Theme">
                                 <select disabled className="bg-zinc-900/50 border border-zinc-800 rounded-none px-4 py-2 text-[11px] font-mono w-full sm:w-80 text-zinc-500 cursor-not-allowed appearance-none focus:outline-none">

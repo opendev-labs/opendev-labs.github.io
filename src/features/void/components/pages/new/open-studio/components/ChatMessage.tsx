@@ -1,7 +1,7 @@
 import React from 'react';
 import { Cpu } from 'lucide-react';
 import type { Message } from '../types';
-import { UserIcon, Sub0Icon, SpinnerIcon } from './icons/Icons';
+import { UserIcon, NexusIcon, SpinnerIcon } from './icons/Icons';
 import { GenerationStatusView } from './GenerationStatusView';
 
 interface ChatMessageProps {
@@ -20,7 +20,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
   return (
     <div className={`flex items-start gap-6 w-full max-w-5xl mx-auto ${isUser ? 'flex-row-reverse' : ''} mb-12 animate-in fade-in slide-in-from-bottom-4 duration-500`}>
       <div className={`flex-shrink-0 h-10 w-10 flex items-center justify-center rounded-none border ${isUser ? 'bg-white border-white text-black' : 'bg-black border-zinc-900 shadow-2xl'}`}>
-        {isUser ? <UserIcon className="h-5 w-5" /> : <Sub0Icon className="h-5 w-5 text-orange-500" />}
+        {isUser ? <UserIcon className="h-5 w-5" /> : <NexusIcon className="h-5 w-5 text-orange-500" />}
       </div>
 
       <div className={`flex flex-col w-full ${isUser ? 'items-end' : 'items-start'}`}>

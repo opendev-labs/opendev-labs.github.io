@@ -282,7 +282,7 @@ export default function NexusDashboard() {
                                             {post.content}
                                         </p>
                                         <div className="flex flex-wrap gap-2">
-                                            {post.tags.map(tag => (
+                                            {post.tags.map((tag: string) => (
                                                 <span key={tag} className="text-[9px] font-bold text-zinc-600 uppercase tracking-widest px-2 py-1 bg-zinc-900 border border-zinc-800">
                                                     #{tag}
                                                 </span>
