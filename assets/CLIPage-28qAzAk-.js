@@ -1,4 +1,4 @@
-import{u as H,r as i,j as n,b as L}from"./index-YvvooqGc.js";import{b as U,s as I}from"./VoidApp-BCBMwHna.js";const _=`
+import{u as H,r as i,j as n,b as L}from"./index-B8qjnWSA.js";import{b as U,s as I}from"./VoidApp-DURIGCiX.js";const _=`
 <div class="space-y-1">
 <div class="font-bold text-white uppercase tracking-widest text-[10px] mb-2">opendev CLI - Operational Protocols</div>
 <div class="pl-0 flex gap-4"><span class="text-white font-bold w-32 shrink-0">help</span> <span class="text-zinc-600">Display available protocols.</span></div>
