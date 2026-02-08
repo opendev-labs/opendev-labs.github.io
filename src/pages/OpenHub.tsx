@@ -20,6 +20,7 @@ export default function OpenHub() {
     const [isMaterializeOpen, setIsMaterializeOpen] = useState(false);
     const [isMaterializing, setIsMaterializing] = useState(false);
     const [materializeStatus, setMaterializeStatus] = useState<'idle' | 'processing' | 'success' | 'error'>('idle');
+    const [materializeError, setMaterializeError] = useState<string | null>(null);
 
     // Removal of Onboarding Redirect in favor of Universal Identity System
 
@@ -101,10 +102,13 @@ export default function OpenHub() {
                     window.location.href = `/user/${data.username}`;
                 }, 2000);
             } else {
+                const errData = await res.json();
+                setMaterializeError(errData.message || 'Identity rejection by mesh network.');
                 setMaterializeStatus('error');
             }
-        } catch (e) {
+        } catch (e: any) {
             console.error(e);
+            setMaterializeError(e.message || 'Signal lost during transmission.');
             setMaterializeStatus('error');
         } finally {
             setIsMaterializing(false);
@@ -497,6 +501,12 @@ export default function OpenHub() {
                                     </>
                                 )}
                             </Button>
+
+                            {materializeError && (
+                                <p className="text-[9px] font-bold text-red-500 uppercase tracking-widest text-center border border-red-500/20 p-3 rounded-xl bg-red-500/5">
+                                    Error: {materializeError}
+                                </p>
+                            )}
 
                             {materializeStatus === 'processing' && (
                                 <p className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest text-center animate-pulse">
