@@ -1,0 +1,85 @@
+name: Create OpenHub Profile
+description: Generate your sovereign digital home on the OpenDev Mesh.
+title: "[PROFILE]: username"
+labels: ["openhub-profile"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Welcome to the OpenHub Universal Identity System. This request will materialize your static profile folder.
+  - type: input
+    id: username
+    attributes:
+      label: Universal Handle
+      description: This will be your URL path (e.g., alex-vortex). Avoid special characters.
+      placeholder: alex-vortex
+    validations:
+      required: true
+  - type: input
+    id: full_name
+    attributes:
+      label: Full Identity Name
+      description: Your primary display name.
+      placeholder: Alex Vortex
+    validations:
+      required: true
+  - type: input
+    id: headline
+    attributes:
+      label: Professional Headline
+      description: e.g. Sovereign Architect / Designer / Visionary
+      placeholder: Sovereign Architect
+    validations:
+      required: true
+  - type: textarea
+    id: bio
+    attributes:
+      label: Biography
+      description: Synthesize your mission within the mesh.
+      placeholder: Building the future of autonomous systems...
+    validations:
+      required: true
+  - type: dropdown
+    id: energy_type
+    attributes:
+      label: Energy Type / Frequency
+      description: Your Human Design / Quantum Signature type.
+      options:
+        - Manifestor
+        - Generator
+        - Manifesting Generator
+        - Projector
+        - Reflector
+        - Sovereign (Universal)
+    validations:
+      required: true
+  - type: input
+    id: avatar_url
+    attributes:
+      label: Avatar URL
+      description: Provide a direct link to your profile image.
+      placeholder: https://raw.githubusercontent.com/...
+    validations:
+      required: true
+  - type: input
+    id: banner_url
+    attributes:
+      label: Banner URL
+      description: Provide a direct link to your background banner.
+      placeholder: https://images.unsplash.com/...
+  - type: input
+    id: instagram
+    attributes:
+      label: Instagram Handle
+      placeholder: @yourusername
+  - type: input
+    id: twitter
+    attributes:
+      label: X (Twitter) Handle
+      placeholder: @yourusername
+  - type: input
+    id: public_key
+    attributes:
+      label: Sovereign Public Key (Optional)
+      description: Linking to your identity's cryptographic proof.
+      placeholder: ed25519_pk_...

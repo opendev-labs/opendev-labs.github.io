@@ -23,7 +23,6 @@ import { MissionControl } from './pages/MissionControl';
 import { UnifiedOfficeCockpit, LamaDBOfficeCockpit, SyncStackOfficeCockpit, LamaDBTelemetryCockpit, AgentsOfficeCockpit, BotsOfficeCockpit, SystemsOfficeCockpit } from './pages/OfficeSubappWrappers';
 import { Header } from './components/Header';
 import DiscordVerifyPage from './pages/DiscordVerifyPage';
-import OnboardingPage from './pages/OnboardingPage';
 import ProfilePage from './pages/ProfilePage';
 import ProfileSettings from './pages/ProfileSettings';
 
@@ -146,11 +145,6 @@ const AppRoutes = () => {
           <Route path="spoon" element={<ProtectedRoute><Spoon /></ProtectedRoute>} />
           <Route path="agents" element={<ProtectedRoute><AgentsLanding /></ProtectedRoute>} />
 
-          <Route path="onboarding" element={
-            <ProtectedRoute>
-              <OnboardingPage />
-            </ProtectedRoute>
-          } />
 
           <Route path="user/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
           <Route path="user/:username" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />

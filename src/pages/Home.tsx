@@ -137,7 +137,7 @@ export default function Home() {
                             onClick={() => navigate(isAuthenticated ? '/open-hub' : '/auth')}
                             className="min-w-[200px]"
                         >
-                            {isAuthenticated ? 'Enter Open-Hub Mesh' : 'Identity Protocol // Link'}
+                            {isAuthenticated ? 'Enter Open-Hub Mesh' : 'Join Universal Identity System'}
                         </Button>
                     </motion.div>
                 </div>

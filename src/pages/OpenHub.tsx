@@ -18,11 +18,7 @@ export default function OpenHub() {
     const [isPosting, setIsPosting] = useState(false);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-    useEffect(() => {
-        if (!isLoading && user && !profile?.username) {
-            navigate('/onboarding');
-        }
-    }, [user, profile, isLoading, navigate]);
+    // Removal of Onboarding Redirect in favor of Universal Identity System
 
     useEffect(() => {
         if (!isLoading && !user) {
@@ -116,7 +112,7 @@ export default function OpenHub() {
                     {/* Left Sidebar: Profile Summary & Navigation */}
                     <div className="lg:col-span-3 space-y-6">
                         <Card className="bg-zinc-950 border-zinc-900 overflow-hidden rounded-2xl shadow-2xl">
-                            <div className="h-16 w-full bg-gradient-to-r from-orange-600 to-orange-400">
+                            <div className="h-16 w-full bg-gradient-to-r from-zinc-800 to-zinc-900">
                                 {profile?.bannerUrl && <img src={profile.bannerUrl} alt="Banner" className="w-full h-full object-cover opacity-50" />}
                             </div>
                             <div className="px-6 pb-6 text-center">
@@ -126,24 +122,44 @@ export default function OpenHub() {
                                     </div>
                                 </div>
                                 <h3 className="font-bold text-lg leading-tight truncate">{user?.name}</h3>
-                                <p className="text-zinc-500 text-xs font-mono mb-4">@{profile?.username || 'user'}</p>
+                                <p className="text-zinc-500 text-xs font-mono mb-4">{profile?.username ? `@${profile.username}` : 'Unmaterialized Node'}</p>
                                 <div className="h-[1px] bg-zinc-900 w-full mb-4" />
-                                <div className="space-y-4">
-                                    <div className="flex justify-between items-center text-[10px] font-bold uppercase tracking-widest">
-                                        <span className="text-zinc-500">Profile Views</span>
-                                        <span className="text-orange-500">1.2k</span>
+                                {profile?.username ? (
+                                    <div className="space-y-4">
+                                        <div className="flex justify-between items-center text-[10px] font-bold uppercase tracking-widest">
+                                            <span className="text-zinc-500">Profile Views</span>
+                                            <span className="text-orange-500">1.2k</span>
+                                        </div>
+                                        <div className="flex justify-between items-center text-[10px] font-bold uppercase tracking-widest">
+                                            <span className="text-zinc-500">Post Impressions</span>
+                                            <span className="text-orange-500">5.8k</span>
+                                        </div>
                                     </div>
-                                    <div className="flex justify-between items-center text-[10px] font-bold uppercase tracking-widest">
-                                        <span className="text-zinc-500">Post Impressions</span>
-                                        <span className="text-orange-500">5.8k</span>
+                                ) : (
+                                    <div className="py-4">
+                                        <p className="text-[9px] font-bold text-zinc-600 uppercase tracking-widest leading-relaxed">
+                                            Materialize your sovereign identity to join the global mesh.
+                                        </p>
                                     </div>
-                                </div>
+                                )}
                             </div>
                             <div className="bg-zinc-900/50 p-4 border-t border-zinc-900">
-                                <Link to={`/user/${profile?.username}`} className="text-[10px] font-bold text-white uppercase tracking-widest hover:text-orange-500 transition-colors flex items-center justify-center gap-2">
-                                    <UserIcon size={12} />
-                                    View Full Profile
-                                </Link>
+                                {profile?.username ? (
+                                    <Link to={`/user/${profile?.username}`} className="text-[10px] font-bold text-white uppercase tracking-widest hover:text-orange-500 transition-colors flex items-center justify-center gap-2">
+                                        <UserIcon size={12} />
+                                        View Full Profile
+                                    </Link>
+                                ) : (
+                                    <a
+                                        href="https://github.com/opendev-labs/opendev-labs.github.io/issues/new?template=profile-request.yml&labels=openhub-profile"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-[10px] font-bold text-orange-500 uppercase tracking-widest hover:text-white transition-colors flex items-center justify-center gap-2"
+                                    >
+                                        <Plus size={12} />
+                                        Materialize Node
+                                    </a>
+                                )}
                             </div>
                         </Card>
 
@@ -171,6 +187,33 @@ export default function OpenHub() {
 
                     {/* Middle: Professional Social Feed */}
                     <div className="lg:col-span-6 space-y-6">
+                        {!profile?.username && (
+                            <motion.div
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                className="bg-orange-500/10 border border-orange-500/20 rounded-2xl p-8 relative overflow-hidden group shadow-2xl"
+                            >
+                                <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
+                                    <Sparkles size={120} className="text-orange-500" />
+                                </div>
+                                <div className="relative z-10 space-y-4">
+                                    <h2 className="text-2xl font-bold tracking-tighter uppercase">Initialize Sovereign Identity.</h2>
+                                    <p className="text-zinc-400 text-sm font-medium leading-relaxed max-w-md">
+                                        OpenHub is transitioning to a Universal Identity System. Materialize your permanent static profile on the OpenDev Mesh today.
+                                    </p>
+                                    <div className="pt-4">
+                                        <a
+                                            href="https://github.com/opendev-labs/opendev-labs.github.io/issues/new?template=profile-request.yml&labels=openhub-profile"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="inline-flex items-center gap-3 bg-orange-500 text-black font-bold uppercase tracking-widest text-[10px] px-8 py-4 rounded-xl hover:bg-white transition-all shadow-xl"
+                                        >
+                                            <Plus size={14} /> Materialize My Profile
+                                        </a>
+                                    </div>
+                                </div>
+                            </motion.div>
+                        )}
                         {/* Create Post Card */}
                         <Card className="bg-zinc-950 border-zinc-900 p-6 rounded-2xl shadow-xl">
                             <div className="flex gap-4">
