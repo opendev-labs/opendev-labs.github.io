@@ -99,9 +99,9 @@ export default function Home() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.1 }}
-                        className="text-6xl md:text-8xl lg:text-9xl font-bold tracking-tighter mb-10 text-white leading-[0.8] lowercase px-4"
+                        className="text-6xl md:text-8xl lg:text-[10rem] font-bold tracking-tighter mb-10 text-white leading-[0.75] lowercase px-4"
                     >
-                        gh-face.<br />protocol.
+                        Sovereign.<br /><span className="text-orange-500">Infrastructure.</span>
                     </motion.h1>
 
                     <motion.p
@@ -135,10 +135,21 @@ export default function Home() {
                             variant="primary"
                             size="xl"
                             onClick={() => navigate(isAuthenticated ? '/open-hub' : '/auth')}
-                            className="min-w-[200px]"
+                            className="min-w-[200px] shadow-[0_0_30px_rgba(249,115,22,0.2)] hover:shadow-[0_0_50px_rgba(249,115,22,0.4)] transition-all"
                         >
                             {isAuthenticated ? 'Enter Open-Hub Mesh' : 'Join Universal Identity System'}
                         </Button>
+                    </motion.div>
+
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 0.4 }}
+                        transition={{ delay: 1 }}
+                        className="mt-20 text-[9px] font-bold text-zinc-600 uppercase tracking-[0.6em] flex items-center justify-center gap-4"
+                    >
+                        <span className="w-12 h-px bg-zinc-900" />
+                        Mesh Density: Stable // 4.2 Pb/s
+                        <span className="w-12 h-px bg-zinc-900" />
                     </motion.div>
                 </div>
 

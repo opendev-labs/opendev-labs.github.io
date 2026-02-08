@@ -12,6 +12,22 @@ export default async function handler(req, res) {
         return res.status(500).json({ error: 'System Config Error: Missing Token' });
     }
 
+    // New: Sovereign Logic Interception (Hugging Face Brain)
+    let aiSignature = "SOVEREIGN_PROTO_V1_VERIFIED";
+    try {
+        const brainRes = await fetch('https://opendev-labs-sovereign-logic.hf.space/api/analyze', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, bio, energy })
+        });
+        if (brainRes.ok) {
+            const brainData = await brainRes.json();
+            aiSignature = brainData.quantum_signature || aiSignature;
+        }
+    } catch (e) {
+        console.warn('Sovereign Logic Offline: Falling back to local protocol verification.', e);
+    }
+
     // 1. Construct Profile HTML
     const profileContent = `
 <!DOCTYPE html>
@@ -78,6 +94,10 @@ export default async function handler(req, res) {
                     </div>
                 </div>
                 <p class="text-zinc-300 leading-relaxed text-xl font-medium">${bio}</p>
+                <div class="mt-12 pt-6 border-t border-white/5 flex items-center justify-between">
+                    <div class="text-[8px] font-bold text-zinc-600 uppercase tracking-widest">Quantum Signature</div>
+                    <div class="text-[9px] font-mono text-orange-500/50">${aiSignature}</div>
+                </div>
             </div>
         </div>
 

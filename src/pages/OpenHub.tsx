@@ -137,10 +137,10 @@ export default function OpenHub() {
     ];
 
     const trendingTopics = [
-        { name: "Web3 Evolution", count: "2.4k posts" },
+        { name: "Sovereign Identity", count: "ACTIVE" },
+        { name: "Mesh Infrastructure", count: "89% SYNC" },
         { name: "AI Architecture", count: "1.8k posts" },
-        { name: "Remote Work 2026", count: "1.2k posts" },
-        { name: "Open Source", count: "950 posts" }
+        { name: "Neural Handshake", count: "LOW LATENCY" }
     ];
 
     const allPosts = [...posts, ...suggestedPosts];
@@ -155,10 +155,16 @@ export default function OpenHub() {
                     {/* Left Sidebar: Profile Summary & Navigation */}
                     <div className="lg:col-span-3 space-y-6">
                         <Card className="bg-zinc-950 border-zinc-900 overflow-hidden rounded-2xl shadow-2xl">
-                            <div className="h-16 w-full bg-gradient-to-r from-zinc-800 to-zinc-900">
+                            <div className="h-16 w-full bg-gradient-to-r from-zinc-800 to-zinc-900 relative overflow-hidden">
                                 {profile?.bannerUrl && <img src={profile.bannerUrl} alt="Banner" className="w-full h-full object-cover opacity-50" />}
+                                {!profile?.username && (
+                                    <div className="absolute inset-0 bg-white/5 animate-pulse" />
+                                )}
                             </div>
-                            <div className="px-6 pb-6 text-center">
+                            <div className="px-6 pb-6 text-center relative">
+                                {!profile?.username && (
+                                    <div className="absolute top-0 left-0 w-full h-px bg-orange-500/50 shadow-[0_0_10px_orange] animate-scan-y pointer-events-none" />
+                                )}
                                 <div className="relative -mt-8 mb-4 flex justify-center">
                                     <div className="w-20 h-20 rounded-full border-4 border-zinc-950 bg-zinc-900 overflow-hidden shadow-xl">
                                         <img src={profile?.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.name}`} alt="Avatar" className="w-full h-full object-cover" />

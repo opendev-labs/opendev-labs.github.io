@@ -129,3 +129,13 @@ body {
 .animate-rainbow-disco {
   animation: rainbow-disco 0.8s linear infinite;
 }
+@keyframes scan-y {
+  0% { transform: translateY(0); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateY(400px); opacity: 0; }
+}
+
+.animate-scan-y {
+  animation: scan-y 3s linear infinite;
+}
