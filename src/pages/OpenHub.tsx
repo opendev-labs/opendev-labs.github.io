@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Terminal, Database, Cpu, Zap, Box, Code, Activity, Users, ShieldCheck, MessageSquare, Heart, Share2, MoreHorizontal, User as UserIcon, Briefcase, Globe, TrendingUp, Sparkles, Plus, Award, Image as ImageIcon, MapPin, Calendar } from 'lucide-react';
+import { Terminal, Database, Cpu, Zap, Box, Code, Activity, Users, ShieldCheck, MessageSquare, Heart, Share2, MoreHorizontal, User as UserIcon, Briefcase, Globe, TrendingUp, Sparkles, Plus, Award, Image as ImageIcon, MapPin, Calendar, Check, AlertCircle } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card } from '../components/ui/Card';
@@ -17,6 +17,9 @@ export default function OpenHub() {
     const [newPostContent, setNewPostContent] = useState('');
     const [isPosting, setIsPosting] = useState(false);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [isMaterializeOpen, setIsMaterializeOpen] = useState(false);
+    const [isMaterializing, setIsMaterializing] = useState(false);
+    const [materializeStatus, setMaterializeStatus] = useState<'idle' | 'processing' | 'success' | 'error'>('idle');
 
     // Removal of Onboarding Redirect in favor of Universal Identity System
 
@@ -69,6 +72,42 @@ export default function OpenHub() {
             console.error("Failed to create post:", e);
         } finally {
             setIsPosting(false);
+        }
+    };
+
+    const handleMaterialize = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        setIsMaterializing(true);
+        setMaterializeStatus('processing');
+
+        const formData = new FormData(event.currentTarget);
+        const data = Object.fromEntries(formData.entries());
+
+        try {
+            // Using relative path for the Vercel Function bridge
+            const res = await fetch('/api/materialize', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    ...data,
+                    fullName: user?.name,
+                    publicKey: 'IDENTITY_PROVISIONED_' + Math.random().toString(36).substr(2, 9).toUpperCase()
+                }),
+            });
+
+            if (res.ok) {
+                setMaterializeStatus('success');
+                setTimeout(() => {
+                    window.location.href = `/user/${data.username}`;
+                }, 2000);
+            } else {
+                setMaterializeStatus('error');
+            }
+        } catch (e) {
+            console.error(e);
+            setMaterializeStatus('error');
+        } finally {
+            setIsMaterializing(false);
         }
     };
 
@@ -150,15 +189,13 @@ export default function OpenHub() {
                                         View Full Profile
                                     </Link>
                                 ) : (
-                                    <a
-                                        href="https://github.com/opendev-labs/opendev-labs.github.io/issues/new?template=profile-request.yml&labels=openhub-profile"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="text-[10px] font-bold text-orange-500 uppercase tracking-widest hover:text-white transition-colors flex items-center justify-center gap-2"
+                                    <button
+                                        onClick={() => setIsMaterializeOpen(true)}
+                                        className="w-full text-[10px] font-bold text-orange-500 uppercase tracking-widest hover:text-white transition-colors flex items-center justify-center gap-2"
                                     >
                                         <Plus size={12} />
                                         Materialize Node
-                                    </a>
+                                    </button>
                                 )}
                             </div>
                         </Card>
@@ -202,14 +239,12 @@ export default function OpenHub() {
                                         OpenHub is transitioning to a Universal Identity System. Materialize your permanent static profile on the OpenDev Mesh today.
                                     </p>
                                     <div className="pt-4">
-                                        <a
-                                            href="https://github.com/opendev-labs/opendev-labs.github.io/issues/new?template=profile-request.yml&labels=openhub-profile"
-                                            target="_blank"
-                                            rel="noopener noreferrer"
+                                        <button
+                                            onClick={() => setIsMaterializeOpen(true)}
                                             className="inline-flex items-center gap-3 bg-orange-500 text-black font-bold uppercase tracking-widest text-[10px] px-8 py-4 rounded-xl hover:bg-white transition-all shadow-xl"
                                         >
                                             <Plus size={14} /> Materialize My Profile
-                                        </a>
+                                        </button>
                                     </div>
                                 </div>
                             </motion.div>
@@ -388,6 +423,96 @@ export default function OpenHub() {
                     </div>
                 </div>
             </main>
+
+            {/* Universal Identity Materialization Modal */}
+            <Dialog open={isMaterializeOpen} onOpenChange={setIsMaterializeOpen}>
+                <DialogContent className="bg-zinc-950 border-zinc-900 rounded-[2.5rem] max-w-md p-0 overflow-hidden shadow-2xl border-white/5">
+                    <div className="p-10 space-y-8">
+                        <div className="space-y-2">
+                            <h2 className="text-2xl font-black tracking-tighter uppercase text-white">Initialize Node</h2>
+                            <p className="text-zinc-500 text-[10px] font-bold uppercase tracking-widest">Protocol: Sovereign Identity Materialization</p>
+                        </div>
+
+                        <form onSubmit={handleMaterialize} className="space-y-6">
+                            <div className="space-y-2">
+                                <label className="text-[9px] font-bold text-zinc-600 uppercase tracking-widest ml-1">Sovereign Handle</label>
+                                <input
+                                    name="username"
+                                    placeholder="e.g. neo-1"
+                                    required
+                                    pattern="[a-z0-9-]+"
+                                    className="w-full bg-black/50 border border-zinc-900 rounded-2xl p-4 text-white focus:border-orange-500 outline-none transition-all font-mono text-sm placeholder:text-zinc-800"
+                                />
+                            </div>
+
+                            <div className="space-y-2">
+                                <label className="text-[9px] font-bold text-zinc-600 uppercase tracking-widest ml-1">Core Directive (Bio)</label>
+                                <textarea
+                                    name="bio"
+                                    placeholder="Describe your mission..."
+                                    required
+                                    maxLength={160}
+                                    className="w-full bg-black/50 border border-zinc-900 rounded-2xl p-4 text-white focus:border-orange-500 outline-none transition-all text-sm h-32 resize-none placeholder:text-zinc-800"
+                                />
+                            </div>
+
+                            <div className="space-y-2">
+                                <label className="text-[9px] font-bold text-zinc-600 uppercase tracking-widest ml-1">Frequency Modulation</label>
+                                <select name="energy" className="w-full bg-black/50 border border-zinc-900 rounded-2xl p-4 text-white outline-none focus:border-orange-500 transition-all text-sm appearance-none cursor-pointer">
+                                    <option value="Manifestor">Manifestor</option>
+                                    <option value="Generator">Generator</option>
+                                    <option value="Projector">Projector</option>
+                                    <option value="Reflector">Reflector</option>
+                                    <option value="Sovereign">Sovereign (Universal)</option>
+                                </select>
+                            </div>
+
+                            <Button
+                                type="submit"
+                                disabled={isMaterializing}
+                                className={`w-full h-16 rounded-2xl font-bold uppercase tracking-[0.3em] text-[10px] transition-all flex items-center justify-center gap-3 shadow-2xl ${materializeStatus === 'error' ? 'bg-red-500 hover:bg-red-600' :
+                                    materializeStatus === 'success' ? 'bg-emerald-500' :
+                                        'bg-orange-500 hover:bg-white hover:text-black'
+                                    }`}
+                            >
+                                {isMaterializing ? (
+                                    <>
+                                        <Zap size={14} className="animate-pulse" />
+                                        Processing Protocol...
+                                    </>
+                                ) : materializeStatus === 'success' ? (
+                                    <>
+                                        <Check size={14} />
+                                        Identity Confirmed
+                                    </>
+                                ) : materializeStatus === 'error' ? (
+                                    <>
+                                        <AlertCircle size={14} />
+                                        Materialization Failed
+                                    </>
+                                ) : (
+                                    <>
+                                        <Plus size={14} />
+                                        Materialize Identity
+                                    </>
+                                )}
+                            </Button>
+
+                            {materializeStatus === 'processing' && (
+                                <p className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest text-center animate-pulse">
+                                    // Encrypting packet and pushing to mesh network...
+                                </p>
+                            )}
+
+                            {materializeStatus === 'success' && (
+                                <p className="text-[9px] font-bold text-emerald-500 uppercase tracking-widest text-center">
+                                    // Redirecting to your sovereign home...
+                                </p>
+                            )}
+                        </form>
+                    </div>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }
