@@ -48,7 +48,7 @@ export const Footer: React.FC = () => {
 
                 <div className="flex flex-col md:flex-row justify-between items-center gap-6 border-t border-zinc-900 pt-8">
                     <p className="text-[10px] font-bold text-zinc-700 uppercase tracking-[0.2em]">
-                        &copy; 2026 Nexus Registry Protocol // Distributed Intel.
+                        &copy; 2026 opendev-labs protocol // Distributed State.
                     </p>
                     <div className="flex items-center gap-2">
                         <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />

@@ -34,7 +34,7 @@ export const Preloader: React.FC = () => {
                         <div className="w-64 flex flex-col items-center">
                             <DiamondLine />
                             <div className="mt-6">
-                                <span className="text-[10px] font-bold text-zinc-600 uppercase tracking-[0.6em] animate-pulse">Syncing Nexus</span>
+                                <span className="text-[10px] font-bold text-zinc-600 uppercase tracking-[0.6em] animate-pulse">Initializing Mesh Network</span>
                             </div>
                         </div>
                     </motion.div>
