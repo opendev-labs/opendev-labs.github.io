@@ -5,87 +5,111 @@ export const DevIcon3D: React.FC = () => {
     const [isHovered, setIsHovered] = useState(false);
     const [isClicked, setIsClicked] = useState(false);
 
-    const toggleState = () => setIsClicked(!isClicked);
     const activeState = isHovered || isClicked;
 
     return (
         <div
-            className="relative w-48 h-48 flex items-center justify-center cursor-pointer perspective-1000"
+            className="relative w-64 h-64 flex items-center justify-center cursor-pointer overflow-visible"
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
-            onClick={toggleState}
+            onClick={() => setIsClicked(!isClicked)}
+            style={{ perspective: '1200px' }}
         >
             <AnimatePresence mode="wait">
                 {!activeState ? (
                     <motion.div
-                        key="icon"
-                        initial={{ opacity: 0, rotateY: -90, scale: 0.8 }}
-                        animate={{
-                            opacity: 1,
-                            rotateY: [0, 360],
-                            rotateX: [0, 15, 0],
-                            scale: 1
-                        }}
-                        exit={{ opacity: 0, rotateY: 90, scale: 0.8 }}
-                        transition={{
-                            rotateY: { duration: 10, repeat: Infinity, ease: "linear" },
-                            rotateX: { duration: 5, repeat: Infinity, ease: "easeInOut" },
-                            opacity: { duration: 0.5 },
-                            scale: { duration: 0.5 }
-                        }}
-                        className="relative w-24 h-24 flex items-center justify-center shadow-[0_0_50px_rgba(255,85,0,0.2)]"
+                        key="cube-container"
+                        initial={{ opacity: 0, scale: 0.5 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.5, rotateY: 180 }}
+                        className="relative w-32 h-32"
+                        style={{ transformStyle: 'preserve-3d' }}
                     >
-                        {/* 3D Wireframe Cube Construction */}
-                        <div className="absolute inset-0 border-2 border-[#ff5500]/40 rounded-lg transform rotate-45" />
-                        <div className="absolute inset-0 border-2 border-white/20 rounded-lg transform -rotate-45" />
-                        <div className="absolute w-4 h-4 bg-[#ff5500] rounded-sm blur-[2px] animate-pulse shadow-[0_0_15px_#ff5500]" />
-
-                        {/* Orbits */}
                         <motion.div
-                            animate={{ rotate: 360 }}
-                            transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                            className="absolute inset-[-10px] border border-zinc-800 rounded-full border-t-[#ff5500]/60"
-                        />
+                            animate={{
+                                rotateY: [0, 360],
+                                rotateX: [0, 360],
+                                rotateZ: [0, 360]
+                            }}
+                            transition={{
+                                duration: 20,
+                                repeat: Infinity,
+                                ease: "linear"
+                            }}
+                            className="absolute inset-0 w-full h-full"
+                            style={{ transformStyle: 'preserve-3d' }}
+                        >
+                            {/* 6 Faces of the Wireframe Cube */}
+                            {[
+                                { rotateY: 0, translateZ: '64px' },
+                                { rotateY: 90, translateZ: '64px' },
+                                { rotateY: 180, translateZ: '64px' },
+                                { rotateY: 270, translateZ: '64px' },
+                                { rotateX: 90, translateZ: '64px' },
+                                { rotateX: -90, translateZ: '64px' }
+                            ].map((style, i) => (
+                                <div
+                                    key={i}
+                                    className="absolute inset-0 border border-[#ff5500]/40 bg-[#ff5500]/5 backdrop-blur-[2px]"
+                                    style={{
+                                        transform: `rotateY(${style.rotateY || 0}deg) rotateX(${style.rotateX || 0}deg) translateZ(${style.translateZ})`,
+                                        backfaceVisibility: 'visible'
+                                    }}
+                                />
+                            ))}
+
+                            {/* Inner Core */}
+                            <div className="absolute inset-[35%] bg-[#ff5500] blur-[15px] opacity-40 animate-pulse rounded-full" />
+                            <div className="absolute inset-[45%] bg-white blur-[2px] shadow-[0_0_20px_#ff5500] rounded-full" />
+                        </motion.div>
                     </motion.div>
                 ) : (
                     <motion.div
-                        key="text"
-                        initial={{ opacity: 0, y: 20, rotateX: 45 }}
-                        animate={{ opacity: 1, y: 0, rotateX: 0 }}
-                        exit={{ opacity: 0, y: -20, rotateX: -45 }}
-                        transition={{
-                            type: "spring",
-                            stiffness: 300,
-                            damping: 20
-                        }}
-                        className="flex flex-col items-center justify-center gap-2"
+                        key="status-text"
+                        initial={{ opacity: 0, rotateY: -90, scale: 0.8 }}
+                        animate={{ opacity: 1, rotateY: 0, scale: 1 }}
+                        exit={{ opacity: 0, rotateY: 90, scale: 0.8 }}
+                        transition={{ type: "spring", damping: 15 }}
+                        className="flex flex-col items-center gap-4"
                     >
-                        <div className="px-4 py-2 bg-zinc-900/80 backdrop-blur-xl border border-[#ff5500]/30 rounded-md shadow-[0_0_30px_rgba(255,85,0,0.1)]">
-                            <span className="text-[12px] font-mono font-bold text-[#ff5500] tracking-[0.3em] whitespace-nowrap overflow-hidden border-r-2 border-[#ff5500] animate-typing">
-                                UNDER DEVELOPMENT
-                            </span>
+                        <div className="relative group">
+                            {/* Glassmorphic Container */}
+                            <div className="px-8 py-4 bg-zinc-900/40 backdrop-blur-2xl border border-white/10 rounded-lg shadow-2xl relative overflow-hidden">
+                                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#ff550010] to-transparent animate-scanline" />
+
+                                <span className="text-xl font-mono font-black text-white tracking-[0.4em] whitespace-nowrap inline-block relative">
+                                    <span className="text-[#ff5500]">UNDER</span> DEVELOPMENT
+                                    <motion.span
+                                        animate={{ opacity: [1, 0] }}
+                                        transition={{ duration: 0.8, repeat: Infinity }}
+                                        className="inline-block ml-1 w-2 h-5 bg-[#ff5500]"
+                                    />
+                                </span>
+                            </div>
+
+                            {/* Ambient Glow */}
+                            <div className="absolute -inset-4 bg-[#ff5500]/20 blur-3xl -z-10 rounded-full animate-pulse" />
                         </div>
-                        <span className="text-[9px] text-zinc-500 uppercase tracking-widest font-medium opacity-60">
-                            Protocol Alpha-9.2
-                        </span>
+
+                        <div className="flex gap-4 text-[10px] font-mono text-zinc-500 tracking-tighter uppercase">
+                            <span className="flex items-center gap-1">
+                                <span className="w-1.5 h-1.5 rounded-full bg-[#ff5500] animate-ping" />
+                                MESH: ACTIVE
+                            </span>
+                            <span>|</span>
+                            <span>NODE: 0x2A9</span>
+                        </div>
                     </motion.div>
                 )}
             </AnimatePresence>
 
-            {/* Background Glow */}
-            <div className={`absolute inset-0 bg-[#ff5500]/5 blur-[60px] rounded-full transition-opacity duration-700 ${activeState ? 'opacity-100' : 'opacity-40'}`} />
-
             <style>{`
-                .perspective-1000 {
-                    perspective: 1000px;
+                @keyframes scanline {
+                    0% { transform: translateY(-100%); }
+                    100% { transform: translateY(100%); }
                 }
-                @keyframes typing {
-                    from { width: 0 }
-                    to { width: 100% }
-                }
-                .animate-typing {
-                    display: inline-block;
-                    animation: typing 2s steps(20, end) infinite alternate;
+                .animate-scanline {
+                    animation: scanline 3s linear infinite;
                 }
             `}</style>
         </div>
