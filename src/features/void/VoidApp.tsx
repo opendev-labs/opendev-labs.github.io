@@ -224,7 +224,7 @@ const AppContent: React.FC = () => {
         // Write to LamaDB (User Scoped)
         if (isAuthenticated && user) {
             const userContext = { uid: user.email, email: user.email };
-            LamaDB.store.collection('projects', userContext).add(newProject).catch(err => {
+            LamaDB.store.collection('projects', userContext).add(newProject).catch((err: any) => {
                 console.error("Failed to persist workflow project:", err);
             });
         }
