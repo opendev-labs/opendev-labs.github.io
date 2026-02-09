@@ -4,7 +4,7 @@ import { Template } from '../../../types';
 import { hostingTemplates } from '../../../constants/hostingTemplates';
 import { TemplateCard } from '../TemplateCard';
 import { motion } from 'framer-motion';
-import { Server, Zap, Lock, Infinity } from 'lucide-react';
+import { Server, Zap, Lock, Infinity, ShieldCheck } from 'lucide-react';
 import { templateDeploymentService } from '../../../services/templateDeploymentService';
 import { DeploymentPlatform } from '../../../types';
 
@@ -94,12 +94,13 @@ export const HostingPage: React.FC<{
             });
 
             if (result.success) {
-                setDeploymentStatus(`✅ Deployed to ${platform.toUpperCase()}! Live at: ${result.liveUrl}`);
+                const vanityUrl = result.liveUrl || `https://opendev.app/${projectName.toLowerCase().replace(/[^a-z0-9-]/g, '-')}`;
+                setDeploymentStatus(`✓ Uplink established. ▸ Environment live at ${vanityUrl.replace('https://', '')}`);
                 setTimeout(() => {
                     if (result.liveUrl) window.open(result.liveUrl, '_blank');
                 }, 2000);
             } else {
-                setDeploymentStatus(`❌ Error: ${result.error}`);
+                setDeploymentStatus(`❌ Protocol Error: ${result.error}`);
             }
         } catch (error) {
             setDeploymentStatus(`❌ Deployment failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
@@ -140,7 +141,7 @@ export const HostingPage: React.FC<{
 
                         <h1 className="text-6xl md:text-8xl lg:text-9xl font-bold tracking-tighter text-white leading-[0.85] mb-10">
                             Sync <br />
-                            <span className="text-emerald-500 italic font-serif">Hosting.</span>
+                            <span className="text-[#ff5500] italic font-serif">Infrastructure.</span>
                         </h1>
 
                         <p className="max-w-xl mx-auto text-lg text-zinc-500 leading-relaxed font-medium mb-12">
@@ -186,11 +187,20 @@ export const HostingPage: React.FC<{
                     {/* Deployment Status Notification */}
                     {deploymentStatus && (
                         <motion.div
-                            initial={{ opacity: 0, y: -20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            className="mb-8 p-6 bg-zinc-950 border border-emerald-500/30 text-center"
+                            initial={{ opacity: 0, y: -20, scale: 0.95 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            className="mb-12 p-8 bg-zinc-950 border border-[#ff5500]/30 relative overflow-hidden group"
                         >
-                            <p className="text-sm font-bold text-white">{deploymentStatus}</p>
+                            <div className="absolute top-0 left-0 w-1 h-full bg-[#ff5500]" />
+                            <div className="flex items-center gap-10">
+                                <div className="w-12 h-12 bg-[#ff5500]/10 flex items-center justify-center">
+                                    <ShieldCheck className="text-[#ff5500]" />
+                                </div>
+                                <div>
+                                    <p className="text-[10px] font-black text-zinc-600 uppercase tracking-[0.4em] mb-2">Protocol Materialized</p>
+                                    <p className="text-lg font-black text-white tracking-widest uppercase">{deploymentStatus}</p>
+                                </div>
+                            </div>
                         </motion.div>
                     )}
 
