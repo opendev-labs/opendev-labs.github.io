@@ -6,6 +6,8 @@ import HeroBg from '../assets/bg.png';
 import { motion } from 'framer-motion';
 import { useAuth } from '../features/void/hooks/useAuth';
 import { NewProjectIcon } from '../features/void/components/common/Icons';
+import { DevIcon3D } from '../components/animated/DevIcon3D';
+import { DiamondLine } from '../components/ui/DiamondLine';
 
 const TechnologySection = () => {
     const techs = [
@@ -153,15 +155,24 @@ export default function Home() {
                     </motion.div>
                 </div>
 
-                {/* Bottom Scroll Indicator */}
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 1, duration: 1 }}
-                    className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
-                >
+                {/* Bottom Scroll Indicator - Replacing motion.div with a simple div for stability */}
+                <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-40">
                     <div className="w-px h-12 bg-gradient-to-t from-zinc-500 to-transparent" />
-                </motion.div>
+                </div>
+            </section>
+
+            {/* Development Status Anchor - SUPER SIYAN FIX */}
+            <section className="py-20 flex flex-col items-center justify-center bg-zinc-950/20 relative z-20 border-b border-zinc-900 overflow-hidden">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_#ff550005_0%,_transparent_70%)]" />
+                <div className="relative z-10 flex flex-col items-center gap-8">
+                    <DevIcon3D />
+                    <div className="flex flex-col items-center gap-4">
+                        <h2 className="text-[10px] font-black tracking-[0.6em] text-white/40 uppercase">Sovereign Mesh Development Phase</h2>
+                        <div className="w-32">
+                            <DiamondLine />
+                        </div>
+                    </div>
+                </div>
             </section>
 
             {/* Technologies Section */}
@@ -278,6 +289,6 @@ export default function Home() {
                     </Card>
                 </div>
             </section>
-        </div>
+        </div >
     );
 }
