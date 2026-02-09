@@ -95,7 +95,7 @@ export const HostingPage: React.FC<{
 
             if (result.success) {
                 const vanityUrl = result.liveUrl || `https://opendev.app/${projectName.toLowerCase().replace(/[^a-z0-9-]/g, '-')}`;
-                setDeploymentStatus(`✓ Uplink established. ▸ Environment live at ${vanityUrl.replace('https://', '')}`);
+                setDeploymentStatus(`✓ Uplink established. ▸ Quantum node hardened at ${vanityUrl.replace('https://', '')}`);
                 setTimeout(() => {
                     if (result.liveUrl) window.open(result.liveUrl, '_blank');
                 }, 2000);
@@ -140,8 +140,8 @@ export const HostingPage: React.FC<{
                         </span>
 
                         <h1 className="text-6xl md:text-8xl lg:text-9xl font-bold tracking-tighter text-white leading-[0.85] mb-10">
-                            Sync <br />
-                            <span className="text-[#ff5500] italic font-serif">Infrastructure.</span>
+                            Quantum <br />
+                            <span className="text-[#ff5500] italic font-serif">Materialization.</span>
                         </h1>
 
                         <p className="max-w-xl mx-auto text-lg text-zinc-500 leading-relaxed font-medium mb-12">

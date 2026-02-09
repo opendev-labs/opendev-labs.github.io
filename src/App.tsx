@@ -26,6 +26,7 @@ import DiscordVerifyPage from './pages/DiscordVerifyPage';
 import ProfilePage from './pages/ProfilePage';
 import ProfileSettings from './pages/ProfileSettings';
 import UserProfilePage from './pages/UserProfilePage';
+import TranscendersPage from './pages/TranscendersPage';
 
 const lazyWithRetry = (componentImport: () => Promise<any>) =>
   lazy(async () => {
@@ -150,6 +151,7 @@ const AppRoutes = () => {
           <Route path="user/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
           <Route path="user/:username" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
           <Route path="users/:username" element={<UserProfilePage />} />
+          <Route path="products/transcenders" element={<TranscendersPage />} />
           <Route path="settings/profile" element={<ProtectedRoute><ProfileSettings /></ProtectedRoute>} />
 
           <Route path="products" element={<Products />} />

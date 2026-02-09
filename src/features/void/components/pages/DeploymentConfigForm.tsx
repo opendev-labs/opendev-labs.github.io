@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Github, Rocket, Flame, Box, Check, ShieldCheck, ArrowRight } from 'lucide-react';
+import { Github, Rocket, Flame, Box, Check, ShieldCheck, ArrowRight, Activity, Network } from 'lucide-react';
 import { AnimatedLoaderIcon } from '../common/AnimatedLoaderIcon';
 import { DeploymentPlatform } from '../../types';
+import { quantumAPIService, QuantumState } from '../../../../services/quantumAPIService';
 
 interface DeploymentConfigFormProps {
     templateName: string;
@@ -82,10 +83,14 @@ export const DeploymentConfigForm: React.FC<DeploymentConfigFormProps> = ({
         }
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (projectName.trim() && !isDeploying) {
             setIsDeploying(true);
+
+            // Trigger Quantum Materialization
+            await quantumAPIService.materializeNode(projectName.trim(), [selectedPlatform]);
+
             setTimeout(() => {
                 onDeploy(projectName.trim(), selectedPlatform, isPrivate);
             }, 800);
@@ -98,9 +103,14 @@ export const DeploymentConfigForm: React.FC<DeploymentConfigFormProps> = ({
 
             {/* Header */}
             <div className="border-b border-zinc-900 pb-6">
-                <div className="flex items-center gap-3 mb-2">
-                    <div className="w-2 h-2 rounded-none bg-[#ff5500] animate-pulse" />
-                    <h3 className="text-xl font-black text-white uppercase tracking-tighter">Materialization Protocol</h3>
+                <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-3">
+                        <div className="w-2 h-2 rounded-none bg-[#ff5500] animate-pulse" />
+                        <h3 className="text-xl font-black text-white uppercase tracking-tighter">Quantum Materialization</h3>
+                    </div>
+                    <div className="px-2 py-0.5 bg-zinc-900 border border-zinc-800 text-[8px] font-black text-zinc-500 uppercase tracking-widest">
+                        Protocol: Entanglement v2
+                    </div>
                 </div>
                 <p className="text-[10px] text-zinc-600 font-bold uppercase tracking-[0.4em]"> নীল ভয়েড // BLUE VOID SECURE GENESIS</p>
             </div>
@@ -194,8 +204,8 @@ export const DeploymentConfigForm: React.FC<DeploymentConfigFormProps> = ({
             {/* Actions */}
             <div className="flex flex-col md:flex-row justify-between items-center gap-6 pt-8 border-t border-zinc-900">
                 <div className="flex items-center gap-4">
-                    <ShieldCheck size={16} className="text-zinc-800" />
-                    <span className="text-[9px] font-bold text-zinc-700 uppercase tracking-[0.2em]">Secure Node Orchestration // v1.0.4</span>
+                    <Activity size={16} className="text-zinc-800" />
+                    <span className="text-[9px] font-bold text-zinc-700 uppercase tracking-[0.2em]">Quantum State: {isDeploying ? 'COLLAPSING' : 'SUPERPOSITION'}</span>
                 </div>
 
                 <div className="flex items-center gap-4 w-full md:w-auto">
@@ -221,11 +231,11 @@ export const DeploymentConfigForm: React.FC<DeploymentConfigFormProps> = ({
                         {isDeploying ? (
                             <>
                                 <AnimatedLoaderIcon size={14} className="animate-spin" />
-                                Materializing...
+                                Collapsing Wave Function...
                             </>
                         ) : (
                             <>
-                                Initiate Genesis
+                                Initiate Entanglement
                                 <ArrowRight size={14} />
                             </>
                         )}
