@@ -1,30 +1,269 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <link rel="icon" type="image/png" href="/favicon.png" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>opendev-labs | Sovereign Infrastructure</title>
-  <!-- Start Single Page Apps for GitHub Pages -->
-  <script type="text/javascript">
-    (function (l) {
-      if (l.search[1] === '/') {
-        var decoded = l.search.slice(1).split('&').map(function (s) {
-          return s.replace(/~and~/g, '&')
-        }).join('?');
-        window.history.replaceState(null, null,
-          l.pathname.slice(0, -1) + decoded + l.hash
-        );
-      }
-    }(window.location))
-  </script>
-  <!-- End Single Page Apps for GitHub Pages -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>opendev-labs | Sovereign Intelligence</title>
+    <meta name="description" content="opendev-labs: The Sovereign Intelligence Consortium. Architecting the Void.">
+    <link rel="icon" type="image/png" href="logo.png">
+    <meta name="theme-color" content="#000000">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body,
+        html {
+            height: 100%;
+            overflow: hidden;
+            background-color: #050505;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: #fff;
+        }
+
+        /* Iframe Container */
+        .iframe-container {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+
+        .iframe-container.loaded {
+            opacity: 1;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+
+        /* Loading Screen */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #050505;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            transition: opacity 0.8s ease-out, visibility 0.8s;
+        }
+
+        .loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader-logo {
+            width: 80px;
+            height: auto;
+            margin-bottom: 30px;
+            filter: drop-shadow(0 0 20px rgba(0, 255, 65, 0.3));
+            animation: pulse 2s infinite ease-in-out;
+        }
+
+        .loader-bar-container {
+            width: 200px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .loader-bar {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, #00ff41, transparent);
+            position: absolute;
+            transform: translateX(-100%);
+            animation: loading 1.5s infinite;
+        }
+
+        .loader-text {
+            margin-top: 15px;
+            font-size: 12px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.5);
+            font-weight: 500;
+        }
+
+        /* Auth Helper Button */
+        .auth-helper {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 100;
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-auth {
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #ccc;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-auth:hover {
+            background: rgba(0, 255, 65, 0.1);
+            border-color: rgba(0, 255, 65, 0.3);
+            color: #00ff41;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.8;
+                transform: scale(0.95);
+            }
+        }
+
+        @keyframes loading {
+            0% {
+                transform: translateX(-100%);
+            }
+
+            50% {
+                transform: translateX(100%);
+            }
+
+            100% {
+                transform: translateX(100%);
+            }
+        }
+    </style>
 </head>
 
 <body>
-  <div id="root"></div>
-  <script type="module" src="/src/main.tsx"></script>
+
+    <!-- Loading Screen -->
+    <div class="loader" id="loader">
+        <img src="logo.png" alt="NanoPi" class="loader-logo">
+        <div class="loader-bar-container">
+            <div class="loader-bar"></div>
+        </div>
+        <div class="loader-text">Initializing Neural Link...</div>
+    </div>
+
+    <!-- Auth Helper Overlay -->
+    <div class="auth-helper">
+        <button onclick="openLoginPopup()" class="btn-auth">
+            <span>👤</span> Connect Account
+        </button>
+        <button onclick="reloadFrame()" class="btn-auth" title="Reload Chat">
+            <span>↻</span>
+        </button>
+    </div>
+
+    <!-- Iframe -->
+    <div class="iframe-container" id="iframe-container">
+        <iframe src="https://opendev-labs-nanopi.hf.space" id="app-frame"
+            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; microphone; clipboard-read; clipboard-write"
+            allowfullscreen onload="onIframeLoad()">
+        </iframe>
+    </div>
+
+    <script type="module">
+        // Import Firebase SDKs
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-analytics.js";
+
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyB2z9HjYik99kDK0P7KPQ7PPo4jd7XOv68",
+            authDomain: "opendev-office.firebaseapp.com",
+            projectId: "opendev-office",
+            storageBucket: "opendev-office.firebasestorage.app",
+            messagingSenderId: "357128961442",
+            appId: "1:357128961442:web:72f7f867864d57390646fb",
+            measurementId: "G-9XJL09GE6R"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+
+        // Loader Login
+        const loader = document.getElementById('loader');
+        const iframeContainer = document.getElementById('iframe-container');
+        const loaderText = document.querySelector('.loader-text');
+
+        // Minimum load time for effect
+        const minLoadTime = 1500;
+        const startTime = Date.now();
+
+        window.onIframeLoad = function () {
+            const elapsed = Date.now() - startTime;
+            const remaining = Math.max(0, minLoadTime - elapsed);
+
+            setTimeout(() => {
+                loaderText.innerText = "Uplink Established";
+                setTimeout(() => {
+                    loader.classList.add('hidden');
+                    iframeContainer.classList.add('loaded');
+                }, 500);
+            }, remaining);
+        }
+
+        // Auth Helpers
+        window.openLoginPopup = function () {
+            // Open the HF Space auth directly in a popup window
+            // This bypasses iframe restrictions (X-Frame-Options) for the login flow
+            const width = 600;
+            const height = 700;
+            const left = (window.innerWidth - width) / 2;
+            const top = (window.innerHeight - height) / 2;
+
+            window.open(
+                'https://opendev-labs-nanopi.hf.space/',
+                'NanoPi Login',
+                `width=${width},height=${height},top=${top},left=${left}`
+            );
+        }
+
+        window.reloadFrame = function () {
+            document.getElementById('app-frame').src = document.getElementById('app-frame').src;
+        }
+
+        // Fallback safety
+        setTimeout(() => {
+            if (!iframeContainer.classList.contains('loaded')) {
+                window.onIframeLoad();
+            }
+        }, 5000);
+    </script>
+    <script src="void_hud.js"></script>
 </body>
 
 </html>
