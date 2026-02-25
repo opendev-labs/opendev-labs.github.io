@@ -35,6 +35,16 @@ jobs:
           VITE_OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY || secrets.VITE_OPENROUTER_API_KEY }}
           VITE_GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY || secrets.VITE_GEMINI_API_KEY }}
 
+      - name: 📚 Build Co-Writter Sub-App
+        run: |
+          git clone https://github.com/opendev-labs/co-writter.git /tmp/co-writter
+          cd /tmp/co-writter
+          npm ci
+          VITE_BASE=/co-writter/ npm run build
+          mkdir -p $GITHUB_WORKSPACE/dist/co-writter
+          cp -r /tmp/co-writter/dist/. $GITHUB_WORKSPACE/dist/co-writter/
+          echo "Co-Writter built and placed at dist/co-writter/"
+
       - name: 🚀 Deploy to Vercel (The Void Engine)
         uses: amondnet/vercel-action@v25
         with:
