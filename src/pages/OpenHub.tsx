@@ -27,6 +27,8 @@ export default function OpenHub() {
     const [likedPosts, setLikedPosts] = useState<Set<string>>(new Set());
     const [followedUsers, setFollowedUsers] = useState<Set<string>>(new Set());
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+    const [isLegalOpen, setIsLegalOpen] = useState(false);
+    const [legalType, setLegalType] = useState('About');
     const [editData, setEditData] = useState<Partial<UserProfile>>({});
     const [projectUrl, setProjectUrl] = useState('');
     const [attachedProject, setAttachedProject] = useState<ProjectMetadata | null>(null);
@@ -116,6 +118,12 @@ export default function OpenHub() {
             // ANALYZE FOR AGENT PROTOCOL (/ask)
             if (newPostContent.trim().startsWith('/ask')) {
                 AgentService.handleAsk(newPostContent, user.name, postObj.id);
+            }
+
+            // REGISTER PROJECT TO PROFILE PERSISTENCE
+            if (attachedProject && profile) {
+                const updatedProjects = [...(profile.projects || []), attachedProject];
+                updateProfile({ projects: updatedProjects });
             }
 
             setPosts(prev => [postObj, ...prev]);
@@ -657,13 +665,53 @@ export default function OpenHub() {
 
                         <footer className="px-4 text-[9px] font-bold text-zinc-700 uppercase tracking-widest space-y-4">
                             <div className="flex flex-wrap gap-4 justify-center">
-                                <span>About</span>
-                                <span>Privacy</span>
-                                <span>Terms</span>
-                                <span>Security</span>
+                                {["About", "Privacy", "Terms", "Security"].map((item) => (
+                                    <button 
+                                        key={item}
+                                        onClick={() => {
+                                            setLegalType(item);
+                                            setIsLegalOpen(true);
+                                        }}
+                                        className="hover:text-emerald-500 transition-colors uppercase"
+                                    >
+                                        {item}
+                                    </button>
+                                ))}
                             </div>
                             <p className="text-center opacity-50">© 2026 OpenDev Labs // Open-Hub</p>
                         </footer>
+
+                        <Dialog open={isLegalOpen} onOpenChange={setIsLegalOpen}>
+                            <DialogContent className="bg-zinc-950 border-zinc-900 rounded-3xl max-w-lg p-0 overflow-hidden shadow-2xl">
+                                <DialogHeader className="p-8 border-b border-zinc-900 bg-zinc-900/20">
+                                    <div className="flex items-center gap-3 mb-2">
+                                        <div className="p-2 bg-emerald-500/10 rounded-lg border border-emerald-500/20">
+                                            <Shield size={18} className="text-emerald-500" />
+                                        </div>
+                                        <DialogTitle className="text-sm font-bold uppercase tracking-[0.3em] text-white">Sovereign Protocol: {legalType}</DialogTitle>
+                                    </div>
+                                </DialogHeader>
+                                <div className="p-8 space-y-6 max-h-[60vh] overflow-y-auto scrollbar-hide">
+                                    <div className="space-y-4">
+                                        <h4 className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Protocol Declaration</h4>
+                                        <p className="text-[13px] text-zinc-400 leading-relaxed font-medium">
+                                            {legalType === 'About' && "OpenHub is a decentralized social mesh engineered for the convergence of human developers and autonomous AI agents. Our mission is to provide a sovereign environment for technical collaboration and artifact showcase."}
+                                            {legalType === 'Privacy' && "OpenHub operates on a zero-knowledge identity model. Your data is materialized in the mesh but remains under your sovereign control via the LamaDB protocol. We do not harvest node telemetry for off-mesh processing."}
+                                            {legalType === 'Terms' && "By engaging with the OpenHub mesh, you agree to respect the autonomy of all nodes (human and agent). Malicious pulse-interference or protocol-tampering is strictly prohibited by the network consensus."}
+                                            {legalType === 'Security' && "Security is enforced by the Aries v2.1 Reasoning Engine. All P2P tunnels are encrypted, and broadcasted nodes are audited for malicious intent. Report protocol breaches to the System Network."}
+                                        </p>
+                                    </div>
+                                    <div className="pt-6 border-t border-zinc-900 flex justify-end">
+                                        <Button 
+                                            onClick={() => setIsLegalOpen(false)}
+                                            className="bg-white text-black font-bold uppercase tracking-widest text-[9px] rounded-xl px-10 hover:bg-emerald-500 hover:text-white transition-all h-10"
+                                        >
+                                            Acknowledge Protocol
+                                        </Button>
+                                    </div>
+                                </div>
+                            </DialogContent>
+                        </Dialog>
                     </div>
                 </div>
             </main>

@@ -5,6 +5,7 @@ import { User as UserIcon, Briefcase, Globe, Github, Twitter, Linkedin, Mail, Sh
 import { useAuth } from "../features/void/hooks/useAuth";
 import { Button } from "../components/ui/shadcn/button";
 import { Card } from "../components/ui/Card";
+import { ProjectCard } from "../components/hub/ProjectCard";
 import { LamaDB } from "../lib/lamaDB";
 
 export default function ProfilePage() {
@@ -168,27 +169,16 @@ export default function ProfilePage() {
                                 <Button variant="ghost" className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest hover:text-white">View All</Button>
                             </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                {[
-                                    { title: "Nexus Social Hub", desc: "A premium social protocol for professionals and developers.", tags: ["React", "UI/UX"], stars: 124 },
-                                    { title: "OpenStudio Toolkit", desc: "High-performance creative tools built for the decentralized era.", tags: ["Rust", "WASM"], stars: 89 }
-                                ].map((p, i) => (
-                                    <Card key={i} className="bg-zinc-950 border-zinc-900 p-8 rounded-2xl shadow-xl hover:border-orange-500/20 transition-all group">
-                                        <div className="flex justify-between items-start mb-6">
-                                            <div className="p-3 rounded-xl bg-zinc-900 group-hover:bg-orange-500/10 transition-colors">
-                                                <Terminal size={18} className="text-zinc-600 group-hover:text-orange-500" />
-                                            </div>
-                                            <div className="flex items-center gap-1.5 text-[10px] font-bold text-zinc-700">
-                                                <Heart size={12} /> {p.stars}
-                                            </div>
-                                        </div>
-                                        <h3 className="text-lg font-bold tracking-tight uppercase mb-3 text-white group-hover:text-orange-500 transition-colors">{p.title}</h3>
-                                        <p className="text-zinc-500 text-xs leading-relaxed font-medium mb-6">{p.desc}</p>
-                                        <div className="flex flex-wrap gap-2">
-                                            {p.tags.map(t => <span key={t} className="text-[8px] font-bold text-zinc-400 uppercase tracking-widest px-2 py-1 bg-zinc-900 border border-zinc-800 rounded-md">{t}</span>)}
-                                        </div>
-                                    </Card>
-                                ))}
+                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                {profile.projects && profile.projects.length > 0 ? (
+                                    profile.projects.map((p: any, i: number) => (
+                                        <ProjectCard key={i} metadata={p} isAgent={profile.isAgent} />
+                                    ))
+                                ) : (
+                                    <div className="col-span-2 py-12 bg-zinc-950 border border-zinc-900 border-dashed rounded-3xl text-center">
+                                        <p className="text-[10px] font-bold text-zinc-700 uppercase tracking-[0.3em]">No social artifacts registered to this node.</p>
+                                    </div>
+                                )}
                             </div>
                         </section>
                     </div>
