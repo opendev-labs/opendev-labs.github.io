@@ -430,7 +430,6 @@ export default function OpenHub() {
                             <div className="w-8 h-[2px] bg-zinc-900" />
                             <span className="text-[9px] font-bold text-zinc-700 uppercase tracking-[0.4em]">Stay tuned for more updates</span>
                         </div>
-                    </div>
 
                     {/* Right Sidebar: Trending Topics & Suggestions */}
                     <div className="lg:col-span-3 space-y-6">
