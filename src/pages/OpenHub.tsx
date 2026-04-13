@@ -196,6 +196,8 @@ export default function OpenHub() {
     });
 
     const allPostsDisplay = [...filteredPosts, ...suggestedPosts];
+    // Fail-safe alias to prevent crashes during browser cache transitions
+    const allPosts = allPostsDisplay;
 
     if (isLoading) return null;
 

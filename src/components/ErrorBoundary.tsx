@@ -21,6 +21,20 @@ export class ErrorBoundary extends Component<Props, State> {
 
     public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
         console.error("Uncaught error:", error, errorInfo);
+        
+        // Sovereign Self-Healing: Detect stale cache (ReferenceError or ChunkLoadError)
+        const errorStr = error.toString();
+        if (errorStr.includes('allPosts') || errorStr.includes('Loading chunk')) {
+            const lastRetry = localStorage.getItem('last-emergency-retry');
+            const now = Date.now();
+            
+            // Limit retries to once every 10 seconds to prevent loops
+            if (!lastRetry || now - parseInt(lastRetry) > 10000) {
+                localStorage.setItem('last-emergency-retry', now.toString());
+                console.warn("Sovereign Sync: Stale cache detected. Forcing autonomous update...");
+                setTimeout(() => window.location.reload(), 500);
+            }
+        }
     }
 
     public render() {
