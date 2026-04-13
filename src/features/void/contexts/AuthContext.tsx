@@ -354,7 +354,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const updateProfile = useCallback(async (data: any) => {
     if (!user) return;
     try {
-      const userContext = { uid: user.email, email: user.email };
+      const userContext = { uid: user.uid, email: user.email };
       const profileData = {
         ...profile,
         ...data,

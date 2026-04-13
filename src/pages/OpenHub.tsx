@@ -86,6 +86,7 @@ export default function OpenHub() {
         const data = Object.fromEntries(formData.entries());
 
         try {
+            console.log("LAMADB: Starting materialization for", data.username);
             // NEW: Use direct LamaDB Sync (Client-side)
             await updateProfile({
                 username: data.username,
@@ -94,6 +95,7 @@ export default function OpenHub() {
                 role: data.energy,
                 publicKey: 'IDENTITY_PROVISIONED_' + Math.random().toString(36).substr(2, 9).toUpperCase()
             });
+            console.log("LAMADB: Profile sync complete.");
 
             setMaterializeStatus('success');
             setTimeout(() => {
@@ -432,7 +434,7 @@ export default function OpenHub() {
                 <DialogContent className="bg-zinc-950 border-zinc-900 rounded-[2.5rem] max-w-md p-0 overflow-hidden shadow-2xl border-white/5">
                     <div className="p-10 space-y-8">
                         <div className="space-y-2">
-                            <h2 className="text-2xl font-black tracking-tighter uppercase text-white">Create Profile</h2>
+                            <DialogTitle className="text-2xl font-black tracking-tighter uppercase text-white">Create Profile</DialogTitle>
                             <p className="text-zinc-500 text-[10px] font-bold uppercase tracking-widest">Status: Setting up your account</p>
                         </div>
 
