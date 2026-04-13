@@ -17,10 +17,6 @@ export default function OpenHub() {
     const [newPostContent, setNewPostContent] = useState('');
     const [isPosting, setIsPosting] = useState(false);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [isMaterializeOpen, setIsMaterializeOpen] = useState(false);
-    const [isMaterializing, setIsMaterializing] = useState(false);
-    const [materializeStatus, setMaterializeStatus] = useState<'idle' | 'processing' | 'success' | 'error'>('idle');
-    const [materializeError, setMaterializeError] = useState<string | null>(null);
 
     // Removal of Onboarding Redirect in favor of Universal Identity System
 
@@ -76,39 +72,6 @@ export default function OpenHub() {
         }
     };
 
-    const handleMaterialize = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        setIsMaterializing(true);
-        setMaterializeStatus('processing');
-        setMaterializeError(null); // Clear previous errors
-
-        const formData = new FormData(event.currentTarget);
-        const data = Object.fromEntries(formData.entries());
-
-        try {
-            console.log("LAMADB: Starting materialization for", data.username);
-            // NEW: Use direct LamaDB Sync (Client-side)
-            await updateProfile({
-                username: data.username,
-                bio: data.bio,
-                headline: data.energy || 'Professional',
-                role: data.energy,
-                publicKey: 'IDENTITY_PROVISIONED_' + Math.random().toString(36).substr(2, 9).toUpperCase()
-            });
-            console.log("LAMADB: Profile sync complete.");
-
-            setMaterializeStatus('success');
-            setTimeout(() => {
-                window.location.href = `/user/${data.username}`;
-            }, 2000);
-        } catch (e: any) {
-            console.error("Profile Materialization Failed:", e);
-            setMaterializeError(e.message || 'Signal lost during transmission.');
-            setMaterializeStatus('error');
-        } finally {
-            setIsMaterializing(false);
-        }
-    };
 
     const suggestedPosts = [
         {
@@ -157,9 +120,7 @@ export default function OpenHub() {
                                 )}
                             </div>
                             <div className="px-6 pb-6 text-center relative">
-                                {!profile?.username && (
-                                    <div className="absolute top-0 left-0 w-full h-px bg-orange-500/50 shadow-[0_0_10px_orange] animate-scan-y pointer-events-none" />
-                                )}
+                                <div className="absolute top-0 left-0 w-full h-px bg-orange-500/50 shadow-[0_0_10px_orange] animate-scan-y pointer-events-none" />
                                 <div className="relative -mt-8 mb-4 flex justify-center">
                                     <div className="w-20 h-20 rounded-full border-4 border-zinc-950 bg-zinc-900 overflow-hidden shadow-xl">
                                         <img src={profile?.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.name}`} alt="Avatar" className="w-full h-full object-cover" />
@@ -168,40 +129,20 @@ export default function OpenHub() {
                                 <h3 className="font-bold text-lg leading-tight truncate">{user?.name}</h3>
                                 <p className="text-zinc-500 text-xs font-mono mb-4">{profile?.username ? `@${profile.username}` : 'New Member'}</p>
                                 <div className="h-[1px] bg-zinc-900 w-full mb-4" />
-                                {profile?.username ? (
-                                    <div className="space-y-4">
-                                        <div className="flex justify-between items-center text-[10px] font-bold uppercase tracking-widest">
-                                            <span className="text-zinc-500">Profile Views</span>
-                                            <span className="text-orange-500">1.2k</span>
-                                        </div>
-                                        <div className="flex justify-between items-center text-[10px] font-bold uppercase tracking-widest">
-                                            <span className="text-zinc-500">Post Impressions</span>
-                                            <span className="text-orange-500">5.8k</span>
-                                        </div>
-                                    </div>
-                                ) : (
-                                    <div className="py-4">
-                                        <p className="text-[9px] font-bold text-zinc-600 uppercase tracking-widest leading-relaxed">
-                                            Materialize your sovereign identity to join the global mesh.
-                                        </p>
-                                    </div>
-                                )}
+                                <div className="py-4">
+                                    <p className="text-[9px] font-bold text-zinc-600 uppercase tracking-widest leading-relaxed">
+                                        Node Status: <span className="text-emerald-500">Active & Synced</span>
+                                    </p>
+                                </div>
                             </div>
                             <div className="bg-zinc-900/50 p-4 border-t border-zinc-900">
-                                {profile?.username ? (
-                                    <Link to={`/user/${profile?.username}`} className="text-[10px] font-bold text-white uppercase tracking-widest hover:text-orange-500 transition-colors flex items-center justify-center gap-2">
-                                        <UserIcon size={12} />
-                                        View Full Profile
-                                    </Link>
-                                ) : (
-                                    <button
-                                        onClick={() => setIsMaterializeOpen(true)}
-                                        className="w-full text-[10px] font-bold text-orange-500 uppercase tracking-widest hover:text-white transition-colors flex items-center justify-center gap-2"
-                                    >
-                                        <Plus size={12} />
-                                        Materialize Node
-                                    </button>
-                                )}
+                                <button
+                                    onClick={() => alert("Profile Editing coming soon in settings.")}
+                                    className="w-full text-[10px] font-bold text-zinc-500 uppercase tracking-widest hover:text-white transition-colors flex items-center justify-center gap-2"
+                                >
+                                    <Plus size={12} />
+                                    Edit Node Details
+                                </button>
                             </div>
                         </Card>
 
@@ -227,33 +168,8 @@ export default function OpenHub() {
                         </nav>
                     </div>
 
-                    {/* Middle: Professional Social Feed */}
-                    <div className="lg:col-span-6 space-y-6">
-                        {!profile?.username && (
-                            <motion.div
-                                initial={{ opacity: 0, y: 10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                className="bg-orange-500/10 border border-orange-500/20 rounded-2xl p-8 relative overflow-hidden group shadow-2xl"
-                            >
-                                <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
-                                    <Sparkles size={120} className="text-orange-500" />
-                                </div>
-                                <div className="relative z-10 space-y-4">
-                                    <h2 className="text-2xl font-bold tracking-tighter uppercase">Set Up Your Profile.</h2>
-                                    <p className="text-zinc-400 text-sm font-medium leading-relaxed max-w-md">
-                                        Join our growing community of developers. Create your professional profile to start sharing your projects today.
-                                    </p>
-                                    <div className="pt-4">
-                                        <button
-                                            onClick={() => setIsMaterializeOpen(true)}
-                                            className="inline-flex items-center gap-3 bg-orange-500 text-black font-bold uppercase tracking-widest text-[10px] px-8 py-4 rounded-xl hover:bg-white transition-all shadow-xl"
-                                        >
-                                            <Plus size={14} /> Create My Profile
-                                        </button>
-                                    </div>
-                                </div>
-                            </motion.div>
-                        )}
+                        {/* Middle: Professional Social Feed */}
+                        <div className="lg:col-span-6 space-y-6">
                         {/* Create Post Card */}
                         <Card className="bg-zinc-950 border-zinc-900 p-6 rounded-2xl shadow-xl">
                             <div className="flex gap-4">
