@@ -41,7 +41,7 @@ jobs:
         with:
           folder: dist
           branch: gh-pages
-          token: ${{ secrets.GH_PAT_OFFICE }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: 🚀 Deploy to Vercel (The Void Engine)
         uses: amondnet/vercel-action@v25
