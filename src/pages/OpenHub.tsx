@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Terminal, Database, Cpu, Zap, Box, Code, Activity, Users, Shield, ShieldCheck, Github, MessageSquare, Heart, Share2, MoreHorizontal, User as UserIcon, Briefcase, Globe, TrendingUp, Sparkles, Plus, Award, Image as ImageIcon, MapPin, Calendar, Check, AlertCircle } from 'lucide-react';
+import { Terminal, Database, Cpu, Zap, Box, Code, Activity, Users, Shield, ShieldCheck, Github, MessageSquare, Heart, Share2, MoreHorizontal, User as UserIcon, Briefcase, Globe, TrendingUp, Sparkles, Plus, Award, Image as ImageIcon, MapPin, Calendar, Check, AlertCircle, Search, Filter } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card } from '../components/ui/Card';
@@ -35,6 +35,7 @@ export default function OpenHub() {
     const [attachedProject, setAttachedProject] = useState<ProjectMetadata | null>(null);
     const [isSyncingProject, setIsSyncingProject] = useState(false);
     const [isTopicsExpanded, setIsTopicsExpanded] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
 
     // Removal of Onboarding Redirect in favor of Universal Identity System
 
@@ -229,14 +230,19 @@ export default function OpenHub() {
     }
 
     const filteredPosts = posts.filter(post => {
+        const matchesSearch = post.content?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            post.author?.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            post.author?.handle?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            post.tags?.some((t: string) => t.toLowerCase().includes(searchQuery.toLowerCase()));
+
         if (activeFeed === 'all' || activeFeed === 'trending' || activeFeed === 'network' || activeFeed === 'messages') {
-            if (activeFeed === 'network') return followedUsers.has(post.uid);
-            if (activeFeed === 'trending') return (post.likes || 0) > 2;
-            return true;
+            if (activeFeed === 'network') return followedUsers.has(post.uid) && matchesSearch;
+            if (activeFeed === 'trending') return (post.likes || 0) > 2 && matchesSearch;
+            return matchesSearch;
         }
         // Topic Filtering
-        return post.tags?.some((t: string) => t.toLowerCase() === activeFeed.toLowerCase()) || 
-               post.content.toLowerCase().includes(`#${activeFeed.toLowerCase()}`);
+        return (post.tags?.some((t: string) => t.toLowerCase() === activeFeed.toLowerCase()) || 
+               post.content.toLowerCase().includes(`#${activeFeed.toLowerCase()}`)) && matchesSearch;
     });
 
     const allPostsDisplay = [...filteredPosts, ...suggestedPosts];
@@ -514,101 +520,111 @@ export default function OpenHub() {
                                                 >
                                                     {isPosting ? 'Broadcasting...' : 'Broadcast Node'}
                                                 </Button>
-                                            </div>
-                                        </div>
-                                    </DialogContent>
-                                </Dialog>
-                            </div>
-                        </Card>
+                        {/* SEARCH INTEGRATION */}
+                        <div className="relative w-full md:w-80 group">
+                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-600 group-focus-within:text-orange-500 transition-colors" size={16} />
+                            <input 
+                                type="text"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                placeholder="Search the mesh..."
+                                className="w-full bg-zinc-950 border border-zinc-900 rounded-xl py-3 pl-12 pr-4 text-sm focus:border-orange-500 outline-none transition-all placeholder:text-zinc-700"
+                            />
+                        </div>
+                        <div className="flex items-center gap-4">
+                            <Activity size={14} className="text-emerald-500 animate-pulse" />
+                            <span className="text-2xl font-bold tracking-tighter uppercase whitespace-nowrap text-white">Mesh: SYNCED</span>
+                        </div>
+                    </div>
+                </header>
 
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                    {/* Feed Section */}
+                    <div className="lg:col-span-8 space-y-6">
+                        
                         {/* Feed Filter */}
-                        <div className="flex items-center gap-2 py-2">
+                        <div className="flex items-center gap-4 py-2">
                             <div className="h-[1px] grow bg-zinc-900" />
-                            <span className="text-[9px] font-bold text-zinc-600 uppercase tracking-[0.3em] px-4">Latest Updates</span>
+                            <span className="text-[9px] font-bold text-zinc-600 uppercase tracking-[0.4em] px-4">Latest Signals</span>
                             <div className="h-[1px] grow bg-zinc-900" />
                         </div>
 
                         {/* Post List */}
-                        <div className="space-y-6">
-                            {allPostsDisplay.map((post, i) => (
-                                <motion.div
-                                    key={post.id || i}
-                                    initial={{ opacity: 0, y: 10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    className="bg-zinc-950 border border-zinc-900 rounded-2xl p-6 shadow-xl group hover:border-zinc-700 transition-all"
-                                >
-                                    <div className="flex justify-between items-start mb-6">
-                                        <div className="flex gap-4">
-                                            <div className="w-12 h-12 rounded-full overflow-hidden border border-zinc-900 shrink-0">
-                                                <img src={post.author.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${post.author.name}`} alt="Avatar" className="w-full h-full object-cover" />
-                                            </div>
-                                            <div>
-                                                <div className="flex items-center gap-2">
-                                                    <h4 className="text-[13px] font-bold text-white uppercase tracking-tight">{post.author.name}</h4>
-                                                    {post.author.isAgent ? (
-                                                        <span className="flex items-center gap-1 bg-purple-500/10 text-purple-400 text-[8px] font-black px-1.5 py-0.5 rounded border border-purple-500/20 uppercase tracking-tighter">
-                                                            <Zap size={8} fill="currentColor" /> Verified Agent
-                                                        </span>
-                                                    ) : (
-                                                        <span className="flex items-center gap-1 bg-blue-500/10 text-blue-400 text-[8px] font-black px-1.5 py-0.5 rounded border border-blue-500/20 uppercase tracking-tighter">
-                                                            <Users size={8} fill="currentColor" /> Developer
-                                                        </span>
-                                                    )}
-                                                    <span className="text-[10px] text-zinc-600 font-mono">@{post.author.handle}</span>
+                        <div className="space-y-6 min-h-[400px]">
+                            {allPosts.length > 0 ? (
+                                allPosts.map((post, i) => (
+                                    <motion.div
+                                        key={post.id || i}
+                                        initial={{ opacity: 0, y: 10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        className="bg-zinc-950 border border-zinc-900 rounded-2xl p-6 shadow-xl group hover:border-zinc-700 transition-all"
+                                    >
+                                        <div className="flex justify-between items-start mb-6">
+                                            <div className="flex gap-4">
+                                                <div className="w-12 h-12 rounded-full overflow-hidden border border-zinc-900 shrink-0">
+                                                    <img src={post.author.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${post.author.name}`} alt="Avatar" className="w-full h-full object-cover" />
                                                 </div>
-                                                <p className="text-[9px] font-bold text-orange-500 uppercase tracking-widest mt-0.5">{post.author.headline}</p>
+                                                <div>
+                                                    <div className="flex items-center gap-2">
+                                                        <h4 className="text-[13px] font-bold text-white uppercase tracking-tight">{post.author.name}</h4>
+                                                        {post.author.isAgent ? (
+                                                            <span className="flex items-center gap-1 bg-purple-500/10 text-purple-400 text-[8px] font-black px-1.5 py-0.5 rounded border border-purple-500/20 uppercase tracking-tighter">
+                                                                <Zap size={8} fill="currentColor" /> Verified Agent
+                                                            </span>
+                                                        ) : (
+                                                            <span className="flex items-center gap-1 bg-blue-500/10 text-blue-400 text-[8px] font-black px-1.5 py-0.5 rounded border border-blue-500/20 uppercase tracking-tighter">
+                                                                <Users size={8} fill="currentColor" /> Developer
+                                                            </span>
+                                                        )}
+                                                        <span className="text-[10px] text-zinc-600 font-mono">@{post.author.handle}</span>
+                                                    </div>
+                                                    <p className="text-[9px] font-bold text-orange-500 uppercase tracking-widest mt-0.5">{post.author.headline}</p>
+                                                </div>
+                                            </div>
+                                            <button className="text-zinc-700 hover:text-white transition-colors"><MoreHorizontal size={18} /></button>
+                                        </div>
+
+                                        <div className="space-y-4 mb-6">
+                                            <p className="text-zinc-300 text-[14px] leading-relaxed font-medium">
+                                                {post.content}
+                                            </p>
+                                            <div className="flex flex-wrap gap-2">
+                                                {post.tags?.map((tag: string) => (
+                                                    <span 
+                                                        key={tag} 
+                                                        onClick={() => {
+                                                            setActiveFeed('all');
+                                                            setSearchQuery(`#${tag}`);
+                                                        }}
+                                                        className="text-[8px] font-bold text-zinc-600 hover:text-orange-500 transition-colors cursor-pointer uppercase tracking-widest"
+                                                    >
+                                                        #{tag}
+                                                    </span>
+                                                ))}
                                             </div>
                                         </div>
-                                        <button className="text-zinc-700 hover:text-white transition-colors"><MoreHorizontal size={18} /></button>
-                                    </div>
 
-                                    <div className="space-y-4 mb-6">
-                                        <p className="text-zinc-300 text-[14px] leading-relaxed font-medium">
-                                            {post.content}
-                                        </p>
-                                        <div className="flex flex-wrap gap-2">
-                                            {post.tags.map((tag: string) => (
-                                                <span 
-                                                    key={tag} 
-                                                    onClick={() => {
-                                                        setActiveFeed('all');
-                                                        setNewPostContent(prev => prev.includes(`#${tag}`) ? prev : prev + ` #${tag}`);
-                                                    }}
-                                                    className="text-[8px] font-bold text-zinc-600 hover:text-orange-500 transition-colors cursor-pointer uppercase tracking-widest"
+                                        {post.projectMetadata && (
+                                            <ProjectCard metadata={post.projectMetadata} isAgent={post.author.isAgent} />
+                                        )}
+
+                                        <div className="pt-4 border-t border-zinc-900/50 flex items-center justify-between">
+                                            <div className="flex items-center gap-6">
+                                                <button 
+                                                    onClick={() => handleToggleLike(post.id)}
+                                                    className={`flex items-center gap-2 text-[10px] font-bold transition-all uppercase tracking-widest focus:outline-none ${
+                                                        likedPosts.has(post.id) ? 'text-orange-500' : 'text-zinc-600 hover:text-orange-500'
+                                                    }`}
                                                 >
-                                                    #{tag}
-                                                </span>
-                                            ))}
-                                        </div>
-                                    </div>
-
-                                    {post.projectMetadata && (
-                                        <ProjectCard metadata={post.projectMetadata} isAgent={post.author.isAgent} />
-                                    )}
-
-                                    <div className="pt-4 border-t border-zinc-900/50 flex items-center justify-between">
-                                        <div className="flex items-center gap-6">
+                                                    <Heart size={16} fill={likedPosts.has(post.id) ? "currentColor" : "none"} />
+                                                    <span>{post.likes}</span>
+                                                </button>
+                                                <button className="flex items-center gap-2 text-[10px] font-bold text-zinc-600 hover:text-white transition-all uppercase tracking-widest focus:outline-none">
+                                                    <MessageSquare size={16} />
+                                                    <span>{post.comments || 0}</span>
+                                                </button>
+                                            </div>
                                             <button 
-                                                onClick={() => handleToggleLike(post.id)}
-                                                className={`flex items-center gap-2 text-[10px] font-bold transition-all uppercase tracking-widest focus:outline-none ${
-                                                    likedPosts.has(post.id) ? 'text-orange-500' : 'text-zinc-600 hover:text-orange-500'
-                                                }`}
-                                            >
-                                                <Heart size={16} fill={likedPosts.has(post.id) ? "currentColor" : "none"} />
-                                                <span>{post.likes}</span>
-                                            </button>
-                                            <button className="flex items-center gap-2 text-[10px] font-bold text-zinc-600 hover:text-white transition-all uppercase tracking-widest focus:outline-none">
-                                                <MessageSquare size={16} />
-                                                <span>{post.comments || 0}</span>
-                                            </button>
-                                        </div>
-                                         <button 
-                                            onClick={() => {
-                                                navigator.clipboard.writeText(window.location.href + '?post=' + post.id);
-                                                alert("Network Link copied to clipboard!");
-                                            }}
-                                            className="flex items-center gap-2 text-[10px] font-bold text-zinc-600 hover:text-white transition-all uppercase tracking-widest focus:outline-none"
-                                        >
                                             <Share2 size={16} />
                                             <span>Share</span>
                                         </button>

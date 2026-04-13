@@ -121,8 +121,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 projects: []
               };
 
-              const newProfile = await LamaDB.store.collection('profiles', userContext).add(newProfileData);
-              const finalProfile = { ...newProfileData, id: newProfile.id };
+              // Clean undefined values before saving to LamaDB
+              const cleanProfileData = Object.fromEntries(
+                Object.entries(newProfileData).filter(([_, v]) => v !== undefined)
+              );
+
+              const newProfile = await LamaDB.store.collection('profiles', userContext).add(cleanProfileData);
+              const finalProfile = { ...newProfileData, id: newProfile.id } as UserProfile;
               
               // Broadcast to the Global Mesh Registry
               const globalContext = { uid: 'global', email: 'global' };
@@ -413,10 +418,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const globalProfiles = await LamaDB.store.collection('global_mesh_profiles', globalContext).get();
       const existingGlobal = globalProfiles.find((p: any) => p.uid === user.uid);
       
+      // Clean undefined values for Firestore compatibility
+      const cleanedData = Object.fromEntries(
+        Object.entries(profileData).filter(([_, v]) => v !== undefined)
+      );
+
       if (existingGlobal) {
-        await LamaDB.store.collection('global_mesh_profiles', globalContext).update(existingGlobal.id, profileData);
+        await LamaDB.store.collection('global_mesh_profiles', globalContext).update(existingGlobal.id, cleanedData);
       } else {
-        await LamaDB.store.collection('global_mesh_profiles', globalContext).add(profileData);
+        await LamaDB.store.collection('global_mesh_profiles', globalContext).add(cleanedData);
       }
     } catch (error) {
       console.error("Update Profile Error:", error);
