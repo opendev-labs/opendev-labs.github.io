@@ -10,7 +10,7 @@ import { Textarea } from '../components/ui/shadcn/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../components/ui/shadcn/dialog';
 
 export default function OpenHub() {
-    const { user, profile, isLoading } = useAuth();
+    const { user, profile, isLoading, updateProfile } = useAuth();
     const navigate = useNavigate();
     const [activeFeed, setActiveFeed] = useState('all');
     const [posts, setPosts] = useState<any[]>([]);
