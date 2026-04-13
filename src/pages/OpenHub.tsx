@@ -80,34 +80,27 @@ export default function OpenHub() {
         event.preventDefault();
         setIsMaterializing(true);
         setMaterializeStatus('processing');
+        setMaterializeError(null); // Clear previous errors
 
         const formData = new FormData(event.currentTarget);
         const data = Object.fromEntries(formData.entries());
 
         try {
-            // Using relative path for the Vercel Function bridge
-            const res = await fetch('/api/materialize', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    ...data,
-                    fullName: user?.name,
-                    publicKey: 'IDENTITY_PROVISIONED_' + Math.random().toString(36).substr(2, 9).toUpperCase()
-                }),
+            // NEW: Use direct LamaDB Sync (Client-side)
+            await updateProfile({
+                username: data.username,
+                bio: data.bio,
+                headline: data.energy || 'Professional',
+                role: data.energy,
+                publicKey: 'IDENTITY_PROVISIONED_' + Math.random().toString(36).substr(2, 9).toUpperCase()
             });
 
-            if (res.ok) {
-                setMaterializeStatus('success');
-                setTimeout(() => {
-                    window.location.href = `/user/${data.username}`;
-                }, 2000);
-            } else {
-                const errData = await res.json();
-                setMaterializeError(errData.message || 'Identity rejection by mesh network.');
-                setMaterializeStatus('error');
-            }
+            setMaterializeStatus('success');
+            setTimeout(() => {
+                window.location.href = `/user/${data.username}`;
+            }, 2000);
         } catch (e: any) {
-            console.error(e);
+            console.error("Profile Materialization Failed:", e);
             setMaterializeError(e.message || 'Signal lost during transmission.');
             setMaterializeStatus('error');
         } finally {
@@ -448,9 +441,9 @@ export default function OpenHub() {
                                 <label className="text-[9px] font-bold text-zinc-600 uppercase tracking-widest ml-1">Sovereign Handle</label>
                                 <input
                                     name="username"
-                                    placeholder="e.g. neo-1"
+                                    placeholder="e.g. iamyash.io"
                                     required
-                                    pattern="[a-z0-9-]+"
+                                    pattern="[a-z0-9.-]+"
                                     className="w-full bg-black/50 border border-zinc-900 rounded-2xl p-4 text-white focus:border-orange-500 outline-none transition-all font-mono text-sm placeholder:text-zinc-800"
                                 />
                             </div>
