@@ -1,0 +1,49 @@
+<svg width="512" height="512" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <filter id="hyper-glow" x="-100%" y="-100%" width="300%" height="300%">
+            <feGaussianBlur stdDeviation="4" result="blur" />
+            <feComposite in="SourceGraphic" in2="blur" operator="over" />
+        </filter>
+        
+        <linearGradient id="rainbow-1" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#ff00d4" />
+            <stop offset="100%" stop-color="#bc00ff" />
+        </linearGradient>
+        <linearGradient id="rainbow-2" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#00f2ff" />
+            <stop offset="100%" stop-color="#0062ff" />
+        </linearGradient>
+        <linearGradient id="rainbow-3" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#4CAF50" />
+            <stop offset="100%" stop-color="#00f2ff" />
+        </linearGradient>
+    </defs>
+
+    {/* Optimized Fill: Scale and centered to remove excess padding */}
+    <path 
+        d="M2 10H98L50 98L2 10Z" 
+        stroke="url(#rainbow-1)" 
+        stroke-width="3" 
+        filter="url(#hyper-glow)"
+    />
+    
+    <path 
+        d="M18 24H82L50 84L18 24Z" 
+        stroke="url(#rainbow-2)" 
+        stroke-width="3" 
+        filter="url(#hyper-glow)"
+    />
+    
+    <path 
+        d="M34 38H66L50 70L34 38Z" 
+        stroke="url(#rainbow-3)" 
+        stroke-width="3" 
+        filter="url(#hyper-glow)"
+    />
+    
+    <path 
+        d="M44 48H56L50 58L44 48Z" 
+        stroke="white" 
+        stroke-width="2"
+    />
+</svg>
