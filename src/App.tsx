@@ -23,10 +23,6 @@ import AgentsLanding from './pages/AgentsLanding';
 import Spoon from './pages/Spoon';
 import Product from './pages/Product';
 import Changelog from './pages/Changelog';
-const OpenHub = lazyWithRetry(() => import('./pages/OpenHub'));
-const ProfilePage = lazyWithRetry(() => import('./pages/ProfilePage'));
-const ProfileSettings = lazyWithRetry(() => import('./pages/ProfileSettings'));
-
 const lazyWithRetry = (componentImport: () => Promise<any>) =>
   lazy(async () => {
     const pageHasAlreadyBeenForceRefreshed = JSON.parse(
@@ -46,6 +42,10 @@ const lazyWithRetry = (componentImport: () => Promise<any>) =>
       throw error;
     }
   });
+
+const OpenHub = lazyWithRetry(() => import('./pages/OpenHub'));
+const ProfilePage = lazyWithRetry(() => import('./pages/ProfilePage'));
+const ProfileSettings = lazyWithRetry(() => import('./pages/ProfileSettings'));
 
 const VoidApp = lazyWithRetry(() => import('./features/void/VoidApp'));
 const OfficeDashboard = lazyWithRetry(() => import('./pages/OfficeDashboard'));
