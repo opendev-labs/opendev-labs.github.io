@@ -234,3 +234,15 @@ export const BrainCircuitIcon = (props: IconProps) => (
         <path d="M12 5a3 3 0 1 0-5.993.129 3 3 0 0 0 5.993-.13Z" /><path d="M12 19a3 3 0 1 0 5.993-.129A3 3 0 0 0 12 19Z" /><path d="M21 12a3 3 0 1 0-.129-5.993A3 3 0 0 0 21 12Z" /><path d="M3 12a3 3 0 1 0 .129 5.993A3 3 0 0 0 3 12Z" /><path d="M12 12a3 3 0 1 0-5.993-.129 3 3 0 0 0 5.993.13Z" /><path d="M14.63 15.35a3 3 0 1 0-1.28-1.28" /><path d="M6.1 6.1a3 3 0 1 0 5.8 2.22" /><path d="M9.35 9.37a3 3 0 1 0 1.28 1.28" /><path d="M14.65 14.63a3 3 0 1 0 2.22 5.8" /><path d="M17.9 17.9a3 3 0 1 0-5.8-2.22" /><path d="m9 14 3 3" /><path d="M12 12 9.27 9.27" /><path d="M14.73 9.27 12 12" /><path d="m6 6 3 3" /><path d="M18 6 15 9" />
     </svg>
 );
+
+export const DatabaseIcon = (props: IconProps) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M21 12V7H3v5m18 0v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-5m18 0H3"></path><path d="M3 7l9-4 9 4M3 12l9 4 9-4M12 3v13"></path></svg>
+);
+
+export const ZapIcon = (props: IconProps) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+);
+
+export const ShareIcon = (props: IconProps) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg>
+);

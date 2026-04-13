@@ -1,6 +1,10 @@
 
 import React from 'react';
-import { OpendevLabsLogo, NewChatIcon, ChatsIcon, SettingsIcon, GithubIcon, CloseIcon, ChevronLeftIcon, TrashIcon } from './icons/Icons';
+import { 
+  OpendevLabsLogo, NewChatIcon, ChatsIcon, SettingsIcon, 
+  GithubIcon, CloseIcon, ChevronLeftIcon, TrashIcon,
+  DatabaseIcon, ZapIcon
+} from './icons/Icons';
 import type { View, ChatSession } from '../types';
 
 interface SidebarProps {
@@ -43,6 +47,8 @@ export function Sidebar({ onNavigate, recentChats, onSelectChat, onDeleteSession
         <nav className="mt-10 space-y-2">
           {[
             { id: 'all-chats' as View, label: 'Neural Archives', icon: ChatsIcon },
+            { id: 'storage' as View, label: 'LamaDB Memory', icon: DatabaseIcon },
+            { id: 'deploy' as View, label: 'Void Deploy', icon: ZapIcon },
             { id: 'settings' as View, label: 'Core Configuration', icon: SettingsIcon },
           ].map((item) => (
             <button

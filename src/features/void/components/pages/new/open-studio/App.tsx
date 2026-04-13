@@ -8,6 +8,11 @@ import type { Message, FileNode, View, ChatSession, GenerationInfo, GenerationFi
 import { streamChatResponse, generateSuggestions } from './services/llmService';
 import { SidebarIcon } from './components/icons/Icons';
 import { SUPPORTED_MODELS } from './constants';
+import { LamaDBOfficeCockpit, UnifiedOfficeCockpit } from '../../../../../../pages/OfficeSubappWrappers';
+import { hubService } from '../../../../../../services/hubService';
+import { useAuth } from '../../../../hooks/useAuth';
+import { ShareIcon } from './components/icons/Icons';
+import { toast } from 'sonner'; // Assuming sonner or similar is available for feedback
 
 // A simple ID generator
 const generateId = () => Date.now().toString() + Math.random().toString(36).substring(2);
@@ -42,6 +47,8 @@ function App() {
   }, []);
 
 
+  const { user, profile } = useAuth();
+
   useEffect(() => {
     const handleHashChange = () => {
       const hash = window.location.hash.replace(/^#\/?/, ''); // Normalize hash
@@ -56,6 +63,12 @@ function App() {
       } else if (path === 'settings') {
         setActiveSessionId(null);
         setView('settings');
+      } else if (path === 'storage') {
+        setActiveSessionId(null);
+        setView('storage');
+      } else if (path === 'deploy') {
+        setActiveSessionId(null);
+        setView('deploy');
       } else {
         setActiveSessionId(null);
         setView('new-chat');
@@ -83,6 +96,26 @@ function App() {
       case 'settings':
         window.location.hash = '/settings';
         break;
+      case 'storage':
+        window.location.hash = '/storage';
+        break;
+      case 'deploy':
+        window.location.hash = '/deploy';
+        break;
+    }
+  };
+
+  const handleShareToHub = async () => {
+    if (!activeSession || !user) return;
+    
+    try {
+      const content = `Node Project: ${activeSession.title}\n\nBuilt with OpenStudio. Contains ${activeSession.fileTree.length} materialized assets.`;
+      const title = activeSession.title;
+      
+      await hubService.shareToHub(user, profile, content, title);
+      toast.success("Build shared to OpenHub feed!");
+    } catch (error) {
+      toast.error("Failed to share build.");
     }
   };
 
@@ -501,7 +534,21 @@ function App() {
             <SidebarIcon className="h-4 w-4 text-zinc-500" />
           </button>
         )}
-        <div key={view + activeSessionId} className="h-full">
+
+        {/* Global Action Header for Session View */}
+        {view === 'chat-session' && activeSession && (
+          <div className="absolute top-6 right-6 z-20 flex items-center gap-3">
+             <button
+                onClick={handleShareToHub}
+                className="flex items-center gap-2 px-4 py-2 border border-zinc-900 bg-black/50 backdrop-blur-xl hover:border-zinc-700 transition-all text-[10px] font-bold uppercase tracking-widest text-zinc-400 hover:text-white group"
+              >
+                <ShareIcon className="w-3 h-3 group-hover:text-orange-500" />
+                <span>Share to Hub</span>
+              </button>
+          </div>
+        )}
+
+        <div key={view + activeSessionId} className="h-full overflow-y-auto">
           {view === 'chat-session' && activeSession && (
             <ChatSessionView
               session={activeSession}
@@ -516,8 +563,18 @@ function App() {
           {view === 'new-chat' && !activeSessionId && (
             <WelcomeScreen {...commonProps} />
           )}
+          {view === 'storage' && (
+            <div className="h-full overflow-y-auto pt-10">
+              <LamaDBOfficeCockpit />
+            </div>
+          )}
+          {view === 'deploy' && (
+            <div className="h-full overflow-y-auto pt-10">
+              <UnifiedOfficeCockpit />
+            </div>
+          )}
           {view === 'chat-session' && !activeSession && !isInitialLoad && (
-            <div className="p-8 text-white flex flex-col items-center justify-center h-full text-center">
+             <div className="p-8 text-white flex flex-col items-center justify-center h-full text-center">
               <h1 className="text-xl font-bold mb-2 lowercase tracking-tighter">node not materialized</h1>
               <p className="text-zinc-600 mb-8 max-w-sm uppercase text-[10px] font-bold tracking-[0.2em] leading-relaxed">the session you are attempting to uplink with is currently void or offline in this mesh.</p>
               <button

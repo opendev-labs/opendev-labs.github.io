@@ -21,7 +21,7 @@ export interface FileNode {
   content: string;
 }
 
-export type View = 'new-chat' | 'chat-session' | 'all-chats' | 'settings';
+export type View = 'new-chat' | 'chat-session' | 'all-chats' | 'settings' | 'storage' | 'deploy';
 
 export interface ChatSession {
   id: string;
