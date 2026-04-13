@@ -421,6 +421,7 @@ export default function OpenHub() {
                                     </div>
                                 </motion.div>
                             ))}
+                            </div>
                             </>
                         )}
                         </div>
