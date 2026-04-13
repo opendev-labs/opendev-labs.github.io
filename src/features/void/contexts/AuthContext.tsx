@@ -73,6 +73,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (storedToken) setToken(storedToken);
 
     const unsubscribe = LamaDB.auth.onAuthStateChanged(async (firebaseUser: any) => {
+      setIsLoading(false);
       if (firebaseUser) {
         const userData: User = {
           uid: firebaseUser.uid,
@@ -83,46 +84,49 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         };
         setUser(userData);
 
-        // Fetch Profile from LamaDB
-        try {
-          const userContext = { uid: firebaseUser.uid, email: firebaseUser.email };
-          const profiles = await LamaDB.store.collection('profiles', userContext).get();
-          
-          if (profiles && profiles.length > 0) {
-            const p = profiles[0];
-            setProfile(p);
-            setAvatarUrl(p.avatarUrl || null);
-            setBannerUrl(p.bannerUrl || null);
-          } else {
-            console.log("🚀 LAMA_BRIDGE: First-time login detected. Materializing Digital Profile...");
-            // AUTO-CREATE PROFILE
-            const defaultHandle = (firebaseUser.displayName || 'user')
-              .toLowerCase()
-              .replace(/\s+/g, '.')
-              .replace(/[^a-z0-9.]/g, '') + '.' + Math.random().toString(36).substr(2, 4);
-
-            const newProfileData = {
-              username: defaultHandle,
-              displayName: firebaseUser.displayName || 'New Member',
-              avatarUrl: firebaseUser.photoURL || `https://api.dicebear.com/7.x/avataaars/svg?seed=${firebaseUser.uid}`,
-              bio: "Collaborating on the OpenDev Mesh.",
-              headline: "Professional Developer",
-              energy: "Professional",
-              createdAt: new Date().toISOString(),
-              publicKey: 'ID_' + Math.random().toString(36).substr(2, 9).toUpperCase()
-            };
-
-            const newProfile = await LamaDB.store.collection('profiles', userContext).add(newProfileData);
-            const finalProfile = { ...newProfileData, id: newProfile.id };
+        // Fetch Profile from LamaDB asynchronously
+        const fetchProfileData = async () => {
+          try {
+            const userContext = { uid: firebaseUser.uid, email: firebaseUser.email };
+            const profiles = await LamaDB.store.collection('profiles', userContext).get();
             
-            setProfile(finalProfile);
-            setAvatarUrl(finalProfile.avatarUrl || null);
-            setBannerUrl(null);
-            console.log("✅ LAMA_BRIDGE: Digital Profile Materialized:", defaultHandle);
+            if (profiles && profiles.length > 0) {
+              const p = profiles[0];
+              setProfile(p);
+              setAvatarUrl(p.avatarUrl || null);
+              setBannerUrl(p.bannerUrl || null);
+            } else {
+              console.log("🚀 LAMA_BRIDGE: First-time login detected. Materializing Digital Profile...");
+              // AUTO-CREATE PROFILE
+              const defaultHandle = (firebaseUser.displayName || 'user')
+                .toLowerCase()
+                .replace(/\s+/g, '.')
+                .replace(/[^a-z0-9.]/g, '') + '.' + Math.random().toString(36).substr(2, 4);
+
+              const newProfileData = {
+                username: defaultHandle,
+                displayName: firebaseUser.displayName || 'New Member',
+                avatarUrl: firebaseUser.photoURL || `https://api.dicebear.com/7.x/avataaars/svg?seed=${firebaseUser.uid}`,
+                bio: "Collaborating on the OpenDev Mesh.",
+                headline: "Professional Developer",
+                energy: "Professional",
+                createdAt: new Date().toISOString(),
+                publicKey: 'ID_' + Math.random().toString(36).substr(2, 9).toUpperCase()
+              };
+
+              const newProfile = await LamaDB.store.collection('profiles', userContext).add(newProfileData);
+              const finalProfile = { ...newProfileData, id: newProfile.id };
+              
+              setProfile(finalProfile);
+              setAvatarUrl(finalProfile.avatarUrl || null);
+              setBannerUrl(null);
+              console.log("✅ LAMA_BRIDGE: Digital Profile Materialized:", defaultHandle);
+            }
+          } catch (e) {
+            console.error("LAMA_BRIDGE: Identity sync failed:", e);
           }
-        } catch (e) {
-          console.error("LAMA_BRIDGE: Identity sync failed:", e);
-        }
+        };
+        fetchProfileData();
       } else {
         setUser(null);
         setToken(null);
@@ -131,7 +135,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setBannerUrl(null);
         localStorage.removeItem('opendev_gh_token');
       }
-      setIsLoading(false);
     });
 
     // Initial agent handshake
