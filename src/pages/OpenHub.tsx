@@ -254,6 +254,37 @@ export default function OpenHub() {
     return (
         <div className="min-h-screen bg-[#050505] text-white selection:bg-orange-500 selection:text-black font-sans">
             <main className="max-w-[1200px] mx-auto p-3 md:p-8">
+                
+                {/* GLOBAL MESH HEADER */}
+                <header className="flex flex-col md:flex-row items-center justify-between gap-8 border-b border-zinc-900 pb-12 pt-10 mb-8">
+                    <div className="space-y-4 text-center md:text-left">
+                        <h1 className="text-5xl md:text-7xl font-bold tracking-tighter uppercase leading-none">
+                            Open<br /><span className="text-zinc-600">Hub.</span>
+                        </h1>
+                        <p className="max-w-xl text-zinc-500 text-[10px] font-bold uppercase tracking-[0.4em] opacity-80">
+                            Sovereign Social Mesh // NODE: <span className="text-white">@{profile?.username || user?.name || 'anonymous'}</span>
+                        </p>
+                    </div>
+
+                    <div className="flex flex-col items-center md:items-end gap-6 w-full md:w-auto">
+                        {/* NODAL SEARCH */}
+                        <div className="relative w-full md:w-80 group">
+                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-600 group-focus-within:text-orange-500 transition-colors" size={16} />
+                            <input 
+                                type="text"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                placeholder="Search the mesh..."
+                                className="w-full bg-zinc-950 border border-zinc-900 rounded-xl py-3 pl-12 pr-4 text-sm focus:border-orange-500 outline-none transition-all placeholder:text-zinc-700 shadow-2xl"
+                            />
+                        </div>
+                        <div className="flex items-center gap-4">
+                            <Activity size={14} className="text-emerald-500 animate-pulse" />
+                            <span className="text-2xl font-bold tracking-tighter uppercase whitespace-nowrap text-white">Mesh: SYNCED</span>
+                        </div>
+                    </div>
+                </header>
+
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 md:gap-8">
 
                     {/* Left Sidebar: Profile Summary & Navigation */}
@@ -520,27 +551,14 @@ export default function OpenHub() {
                                                 >
                                                     {isPosting ? 'Broadcasting...' : 'Broadcast Node'}
                                                 </Button>
-                        {/* SEARCH INTEGRATION */}
-                        <div className="relative w-full md:w-80 group">
-                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-600 group-focus-within:text-orange-500 transition-colors" size={16} />
-                            <input 
-                                type="text"
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                                placeholder="Search the mesh..."
-                                className="w-full bg-zinc-950 border border-zinc-900 rounded-xl py-3 pl-12 pr-4 text-sm focus:border-orange-500 outline-none transition-all placeholder:text-zinc-700"
-                            />
-                        </div>
-                        <div className="flex items-center gap-4">
-                            <Activity size={14} className="text-emerald-500 animate-pulse" />
-                            <span className="text-2xl font-bold tracking-tighter uppercase whitespace-nowrap text-white">Mesh: SYNCED</span>
-                        </div>
-                    </div>
-                </header>
+                                            </div>
+                                        </div>
+                                    </DialogContent>
+                                </Dialog>
+                            </div>
+                        </Card>
 
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-                    {/* Feed Section */}
-                    <div className="lg:col-span-8 space-y-6">
+                        {/* SIGNAL FEED FILTER */}
                         
                         {/* Feed Filter */}
                         <div className="flex items-center gap-4 py-2">
@@ -625,12 +643,27 @@ export default function OpenHub() {
                                                 </button>
                                             </div>
                                             <button 
-                                            <Share2 size={16} />
-                                            <span>Share</span>
-                                        </button>
-                                    </div>
+                                                onClick={() => {
+                                                    navigator.clipboard.writeText(window.location.href + '?post=' + post.id);
+                                                    alert("Signal URL copied to clipboard!");
+                                                }}
+                                                className="flex items-center gap-2 text-[10px] font-bold text-zinc-600 hover:text-white transition-all uppercase tracking-widest focus:outline-none"
+                                            >
+                                                <Share2 size={16} />
+                                                <span>Share</span>
+                                            </button>
+                                        </div>
                                 </motion.div>
-                            ))}
+                                ))
+                            ) : (
+                                <div className="py-20 text-center space-y-4 bg-zinc-950/10 border border-dashed border-zinc-900 rounded-3xl">
+                                    <div className="flex justify-center flex-col items-center">
+                                        <Search size={32} className="text-zinc-800 mb-4" />
+                                        <p className="text-zinc-500 font-bold uppercase tracking-widest text-[9px]">No signals detected in this sector</p>
+                                        <Button variant="ghost" size="sm" onClick={() => setSearchQuery('')} className="text-orange-500 hover:text-orange-400 text-[9px] font-bold uppercase tracking-widest mt-4">Clear Frequency</Button>
+                                    </div>
+                                </div>
+                            )}
                             </div>
                             </>
                         )}

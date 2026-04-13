@@ -2,11 +2,12 @@ import React, { createContext, useCallback, useEffect, useState } from 'react';
 import type { User } from '../types';
 import { safeNavigate } from '../services/navigation';
 import { LamaDB } from '../../../lib/lamaDB/config'; // ✅ SINGLETON - Single source of truth
+const lama = LamaDB as any;
 import { GithubAuthProvider } from 'firebase/auth';
 
 // For the purpose of "LamaDB", we will use the exposed auth methods.
 // To get the TOKEN (which is needed for GitHub API calls), we need the result from signInWithPopup.
-// LamaDB.auth.loginWithGithub() returns the UserCredential.
+// lama.auth.loginWithGithub() returns the UserCredential.
 
 import { SyncStatus, UserProfile } from '../types';
 
@@ -72,7 +73,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const storedToken = localStorage.getItem('opendev_gh_token');
     if (storedToken) setToken(storedToken);
 
-    const unsubscribe = LamaDB.auth.onAuthStateChanged(async (firebaseUser: any) => {
+    const unsubscribe = lama.auth.onAuthStateChanged(async (firebaseUser: any) => {
       setIsLoading(false);
       if (firebaseUser) {
         const userData: User = {
@@ -88,7 +89,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const fetchProfileData = async () => {
           try {
             const userContext = { uid: firebaseUser.uid, email: firebaseUser.email };
-            const profiles = await LamaDB.store.collection('profiles', userContext).get();
+            const profiles = await (LamaDB as any).store.collection('profiles', userContext).get();
             
             if (profiles && profiles.length > 0) {
               const p = profiles[0];
@@ -126,12 +127,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 Object.entries(newProfileData).filter(([_, v]) => v !== undefined)
               );
 
-              const newProfile = await LamaDB.store.collection('profiles', userContext).add(cleanProfileData);
+              const newProfile = await (LamaDB as any).store.collection('profiles', userContext).add(cleanProfileData);
               const finalProfile = { ...newProfileData, id: newProfile.id } as UserProfile;
               
               // Broadcast to the Global Mesh Registry
               const globalContext = { uid: 'global', email: 'global' };
-              await LamaDB.store.collection('global_mesh_profiles', globalContext).add(finalProfile);
+              await (LamaDB as any).store.collection('global_mesh_profiles', globalContext).add(finalProfile);
 
               setProfile(finalProfile);
               setAvatarUrl(finalProfile.avatarUrl || null);
@@ -190,7 +191,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const loginWithGitHub = useCallback(async () => {
     try {
-      const result = await LamaDB.auth.loginWithGithub();
+      const result = await lama.auth.loginWithGithub();
       const credential = GithubAuthProvider.credentialFromResult(result as any);
       if (credential?.accessToken) {
         setToken(credential.accessToken);
@@ -204,7 +205,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const linkWithGitHub = useCallback(async () => {
     try {
-      const result = await LamaDB.auth.linkGithub();
+      const result = await lama.auth.linkGithub();
       const credential = GithubAuthProvider.credentialFromResult(result as any);
       if (credential?.accessToken) {
         setToken(credential.accessToken);
@@ -218,7 +219,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const loginWithGoogle = useCallback(async () => {
     try {
-      await LamaDB.auth.loginWithGoogle();
+      await lama.auth.loginWithGoogle();
       // safeNavigate('/');
     } catch (error) {
       console.error("Google Login Error:", error);
@@ -378,7 +379,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [token, fetchRepositories]);
 
   const logout = useCallback(async () => {
-    await LamaDB.auth.logout();
+    await lama.auth.logout();
     setUser(null);
     setToken(null);
     setProfile(null);
@@ -404,18 +405,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       };
 
       if (profile?.id) {
-        await LamaDB.store.collection('profiles', userContext).update(profile.id, profileData);
+        await (LamaDB as any).store.collection('profiles', userContext).update(profile.id, profileData);
       } else {
-        const newProfile = await LamaDB.store.collection('profiles', userContext).add(profileData);
+        const newProfile = await (LamaDB as any).store.collection('profiles', userContext).add(profileData);
         profileData.id = newProfile.id;
       }
-      setProfile(profileData);
+      setProfile(profileData as UserProfile);
       setAvatarUrl(profileData.avatarUrl || null);
       setBannerUrl(profileData.bannerUrl || null);
 
       // BROADCAST TO GLOBAL MESH
       const globalContext = { uid: 'global', email: 'global' };
-      const globalProfiles = await LamaDB.store.collection('global_mesh_profiles', globalContext).get();
+      const globalProfiles = await (LamaDB as any).store.collection('global_mesh_profiles', globalContext).get();
       const existingGlobal = globalProfiles.find((p: any) => p.uid === user.uid);
       
       // Clean undefined values for Firestore compatibility
@@ -424,9 +425,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       );
 
       if (existingGlobal) {
-        await LamaDB.store.collection('global_mesh_profiles', globalContext).update(existingGlobal.id, cleanedData);
+        await (LamaDB as any).store.collection('global_mesh_profiles', globalContext).update(existingGlobal.id, cleanedData);
       } else {
-        await LamaDB.store.collection('global_mesh_profiles', globalContext).add(cleanedData);
+        await (LamaDB as any).store.collection('global_mesh_profiles', globalContext).add(cleanedData);
       }
     } catch (error) {
       console.error("Update Profile Error:", error);
