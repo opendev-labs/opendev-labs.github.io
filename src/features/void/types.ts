@@ -112,6 +112,11 @@ export interface UserProfile {
     followers: string[]; // uids
     likedPosts: string[]; // post ids
     projects: any[]; // Project showcase
+    github?: string;
+    twitter?: string;
+    linkedin?: string;
+    location?: string;
+    website?: string;
 }
 
 // --- New types for Vercel-inspired features ---

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Terminal, Database, Cpu, Zap, Box, Code, Activity, Users, Shield, ShieldCheck, MessageSquare, Heart, Share2, MoreHorizontal, User as UserIcon, Briefcase, Globe, TrendingUp, Sparkles, Plus, Award, Image as ImageIcon, MapPin, Calendar, Check, AlertCircle } from 'lucide-react';
+import { Terminal, Database, Cpu, Zap, Box, Code, Activity, Users, Shield, ShieldCheck, Github, MessageSquare, Heart, Share2, MoreHorizontal, User as UserIcon, Briefcase, Globe, TrendingUp, Sparkles, Plus, Award, Image as ImageIcon, MapPin, Calendar, Check, AlertCircle } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card } from '../components/ui/Card';
@@ -14,6 +14,7 @@ import { MessagingLayer } from '../components/hub/MessagingLayer';
 import { HubService, ProjectMetadata } from '../services/hubService';
 import { AgentService } from '../services/agentService';
 import { SampleDataService } from '../services/sampleData';
+import { UserProfile } from '../features/void/types';
 
 export default function OpenHub() {
     const { user, profile, isLoading, updateProfile } = useAuth();
