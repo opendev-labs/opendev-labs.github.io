@@ -1,3 +1,4 @@
+// Ascension Protocol: Genesis Synchronization 🚀 [Sovereign State]
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { lazy, Suspense, Component } from 'react';
 import Layout from './components/Layout';
