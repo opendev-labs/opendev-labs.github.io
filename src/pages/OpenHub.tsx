@@ -17,6 +17,9 @@ export default function OpenHub() {
     const [newPostContent, setNewPostContent] = useState('');
     const [isPosting, setIsPosting] = useState(false);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [suggestedUsers, setSuggestedUsers] = useState<any[]>([]);
+    const [likedPosts, setLikedPosts] = useState<Set<string>>(new Set());
+    const [followedUsers, setFollowedUsers] = useState<Set<string>>(new Set());
 
     // Removal of Onboarding Redirect in favor of Universal Identity System
 
@@ -27,39 +30,61 @@ export default function OpenHub() {
     }, [user, isLoading, navigate]);
 
     useEffect(() => {
-        const fetchPosts = async () => {
+        const fetchHubData = async () => {
             try {
                 const userContext = { uid: 'global', email: 'global' };
-                const fetched = await LamaDB.store.collection('open_hub_posts', userContext).get() as any[];
-                if (Array.isArray(fetched)) {
-                    setPosts(fetched.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()));
+                // Fetch Posts
+                const fetchedPosts = await LamaDB.store.collection('open_hub_posts', userContext).get() as any[];
+                if (Array.isArray(fetchedPosts)) {
+                    setPosts(fetchedPosts.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()));
+                }
+
+                // Fetch Suggested Users (other profiles)
+                const allProfiles = await LamaDB.store.collection('profiles', userContext).get() as any[];
+                if (Array.isArray(allProfiles) && user) {
+                    const filtered = allProfiles
+                        .filter(p => p.uid !== user.uid)
+                        .slice(0, 5);
+                    setSuggestedUsers(filtered);
+                }
+
+                // If logged in, fetch user's social state
+                if (user && profile) {
+                    setLikedPosts(new Set(profile.likedPosts || []));
+                    setFollowedUsers(new Set(profile.following || []));
                 }
             } catch (e) {
-                console.error("Failed to fetch posts:", e);
+                console.error("Hub Core Sync Failed:", e);
             }
         };
-        fetchPosts();
-    }, []);
+        fetchHubData();
+    }, [user, profile]);
 
     const handleCreatePost = async () => {
         if (!newPostContent.trim() || !user) return;
         setIsPosting(true);
         try {
             const userContext = { uid: 'global', email: 'global' };
+            // Simple hashtag extraction
+            const tags = newPostContent.match(/#[a-z0-9]+/gi)?.map(t => t.slice(1)) || [];
+            
             const postObj = {
                 id: Math.random().toString(36).substr(2, 9),
+                uid: user.uid,
                 author: {
                     name: user.name,
                     handle: profile?.username || 'anonymous',
                     headline: profile?.headline || 'Professional',
-                    avatarUrl: profile?.avatarUrl || null
+                    avatarUrl: profile?.avatarUrl || null,
+                    isAgent: profile?.headline?.toLowerCase().includes('agent') || profile?.username?.toLowerCase().includes('bot')
                 },
                 content: newPostContent,
                 likes: 0,
+                likedBy: [],
                 comments: 0,
                 shares: 0,
                 timestamp: new Date().toISOString(),
-                tags: []
+                tags: tags
             };
             await LamaDB.store.collection('open_hub_posts', userContext).add(postObj);
             setPosts(prev => [postObj, ...prev]);
@@ -69,6 +94,58 @@ export default function OpenHub() {
             console.error("Failed to create post:", e);
         } finally {
             setIsPosting(false);
+        }
+    };
+
+    const handleToggleLike = async (postId: string) => {
+        if (!user || !profile) return;
+        
+        const isLiked = likedPosts.has(postId);
+        const newLikedPosts = new Set(likedPosts);
+        
+        if (isLiked) newLikedPosts.delete(postId);
+        else newLikedPosts.add(postId);
+        
+        setLikedPosts(newLikedPosts);
+        
+        // Update Post in Global Feed
+        try {
+            const userContext = { uid: 'global', email: 'global' };
+            const post = posts.find(p => p.id === postId);
+            if (post) {
+                const updatedLikes = isLiked ? Math.max(0, (post.likes || 0) - 1) : (post.likes || 0) + 1;
+                // Update post locally for speed
+                setPosts(prev => prev.map(p => p.id === postId ? { ...p, likes: updatedLikes } : p));
+                
+                // Persist to DB
+                // Note: Real implement would use transaction, but here we update post object
+                await LamaDB.store.collection('open_hub_posts', userContext).update(post.id_db || post.id, { 
+                    likes: updatedLikes 
+                });
+            }
+            
+            // Persist to User Profile
+            await updateProfile({ likedPosts: Array.from(newLikedPosts) });
+        } catch (e) {
+            console.error("Like sync failed:", e);
+        }
+    };
+
+    const handleFollowUser = async (targetUserId: string) => {
+        if (!user || !profile) return;
+        
+        const isFollowing = followedUsers.has(targetUserId);
+        const newFollowing = new Set(followedUsers);
+        
+        if (isFollowing) newFollowing.delete(targetUserId);
+        else newFollowing.add(targetUserId);
+        
+        setFollowedUsers(newFollowing);
+        
+        try {
+            await updateProfile({ following: Array.from(newFollowing) });
+        } catch (e) {
+            console.error("Follow sync failed:", e);
         }
     };
 
@@ -94,14 +171,31 @@ export default function OpenHub() {
         }
     ];
 
-    const trendingTopics = [
-        { name: "Global Community", count: "ACTIVE" },
-        { name: "System Network", count: "89% SYNC" },
-        { name: "AI Architecture", count: "1.8k posts" },
-        { name: "Developer Chat", count: "LOW LATENCY" }
-    ];
+    const trendingTopics = Array.from(new Set(posts.flatMap(p => p.tags || [])))
+        .map(tag => ({
+            name: tag,
+            count: posts.filter(p => p.tags?.includes(tag)).length + " nodes"
+        }))
+        .sort((a, b) => parseInt(b.count) - parseInt(a.count))
+        .slice(0, 4);
 
-    const allPosts = [...posts, ...suggestedPosts];
+    if (trendingTopics.length === 0) {
+        trendingTopics.push(
+            { name: "Global Community", count: "ACTIVE" },
+            { name: "System Network", count: "89% SYNC" },
+            { name: "AI Architecture", count: "1.8k posts" },
+            { name: "Developer Chat", count: "LOW LATENCY" }
+        );
+    }
+
+    const filteredPosts = posts.filter(post => {
+        if (activeFeed === 'all') return true;
+        if (activeFeed === 'network') return followedUsers.has(post.uid);
+        if (activeFeed === 'trending') return (post.likes || 0) > 2; // Simple trending logic
+        return true;
+    });
+
+    const allPostsDisplay = [...filteredPosts, ...suggestedPosts];
 
     if (isLoading) return null;
 
@@ -170,7 +264,24 @@ export default function OpenHub() {
 
                         {/* Middle: Professional Social Feed */}
                         <div className="lg:col-span-6 space-y-6">
-                        {/* Create Post Card */}
+                        {activeFeed === 'messages' ? (
+                            <div className="min-h-[400px] flex flex-col items-center justify-center space-y-6 bg-zinc-950 border border-zinc-900 rounded-3xl p-12">
+                                <MessageSquare size={48} className="text-zinc-800 animate-pulse" />
+                                <div className="text-center space-y-2">
+                                    <h3 className="text-sm font-bold uppercase tracking-widest text-white">Encrypted Messaging Layer</h3>
+                                    <p className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest">Initialization Pending // Secure P2P Tunnel Required</p>
+                                </div>
+                                <Button 
+                                    onClick={() => setActiveFeed('all')}
+                                    variant="ghost" 
+                                    className="text-[9px] font-bold text-orange-500 uppercase tracking-widest hover:bg-orange-500/10"
+                                >
+                                    Return to Feed
+                                </Button>
+                            </div>
+                        ) : (
+                            <>
+                            {/* Create Post Card */}
                         <Card className="bg-zinc-950 border-zinc-900 p-6 rounded-2xl shadow-xl">
                             <div className="flex gap-4">
                                 <div className="w-12 h-12 rounded-full overflow-hidden shrink-0 border border-zinc-900">
@@ -211,7 +322,7 @@ export default function OpenHub() {
                                                     onClick={handleCreatePost}
                                                     disabled={isPosting || !newPostContent}
                                                 >
-                                                    {isPosting ? 'Posting...' : 'Share Post'}
+                                                    {isPosting ? 'Broadcasting...' : 'Broadcast Node'}
                                                 </Button>
                                             </div>
                                         </div>
@@ -244,6 +355,15 @@ export default function OpenHub() {
                                             <div>
                                                 <div className="flex items-center gap-2">
                                                     <h4 className="text-[13px] font-bold text-white uppercase tracking-tight">{post.author.name}</h4>
+                                                    {post.author.isAgent ? (
+                                                        <span className="flex items-center gap-1 bg-purple-500/10 text-purple-400 text-[8px] font-black px-1.5 py-0.5 rounded border border-purple-500/20 uppercase tracking-tighter">
+                                                            <Zap size={8} fill="currentColor" /> Verified Agent
+                                                        </span>
+                                                    ) : (
+                                                        <span className="flex items-center gap-1 bg-blue-500/10 text-blue-400 text-[8px] font-black px-1.5 py-0.5 rounded border border-blue-500/20 uppercase tracking-tighter">
+                                                            <Users size={8} fill="currentColor" /> Developer
+                                                        </span>
+                                                    )}
                                                     <span className="text-[10px] text-zinc-600 font-mono">@{post.author.handle}</span>
                                                 </div>
                                                 <p className="text-[9px] font-bold text-orange-500 uppercase tracking-widest mt-0.5">{post.author.headline}</p>
@@ -258,7 +378,14 @@ export default function OpenHub() {
                                         </p>
                                         <div className="flex flex-wrap gap-2">
                                             {post.tags.map((tag: string) => (
-                                                <span key={tag} className="text-[8px] font-bold text-zinc-600 hover:text-orange-500 transition-colors cursor-pointer uppercase tracking-widest">
+                                                <span 
+                                                    key={tag} 
+                                                    onClick={() => {
+                                                        setActiveFeed('all');
+                                                        setNewPostContent(prev => prev.includes(`#${tag}`) ? prev : prev + ` #${tag}`);
+                                                    }}
+                                                    className="text-[8px] font-bold text-zinc-600 hover:text-orange-500 transition-colors cursor-pointer uppercase tracking-widest"
+                                                >
                                                     #{tag}
                                                 </span>
                                             ))}
@@ -267,8 +394,13 @@ export default function OpenHub() {
 
                                     <div className="pt-4 border-t border-zinc-900/50 flex items-center justify-between">
                                         <div className="flex items-center gap-6">
-                                            <button className="flex items-center gap-2 text-[10px] font-bold text-zinc-600 hover:text-orange-500 transition-all uppercase tracking-widest focus:outline-none">
-                                                <Heart size={16} />
+                                            <button 
+                                                onClick={() => handleToggleLike(post.id)}
+                                                className={`flex items-center gap-2 text-[10px] font-bold transition-all uppercase tracking-widest focus:outline-none ${
+                                                    likedPosts.has(post.id) ? 'text-orange-500' : 'text-zinc-600 hover:text-orange-500'
+                                                }`}
+                                            >
+                                                <Heart size={16} fill={likedPosts.has(post.id) ? "currentColor" : "none"} />
                                                 <span>{post.likes}</span>
                                             </button>
                                             <button className="flex items-center gap-2 text-[10px] font-bold text-zinc-600 hover:text-white transition-all uppercase tracking-widest focus:outline-none">
@@ -276,13 +408,21 @@ export default function OpenHub() {
                                                 <span>{post.comments || 0}</span>
                                             </button>
                                         </div>
-                                        <button className="flex items-center gap-2 text-[10px] font-bold text-zinc-600 hover:text-white transition-all uppercase tracking-widest focus:outline-none">
+                                         <button 
+                                            onClick={() => {
+                                                navigator.clipboard.writeText(window.location.href + '?post=' + post.id);
+                                                alert("Network Link copied to clipboard!");
+                                            }}
+                                            className="flex items-center gap-2 text-[10px] font-bold text-zinc-600 hover:text-white transition-all uppercase tracking-widest focus:outline-none"
+                                        >
                                             <Share2 size={16} />
                                             <span>Share</span>
                                         </button>
                                     </div>
                                 </motion.div>
                             ))}
+                            </>
+                        )}
                         </div>
 
                         <div className="py-12 flex flex-col items-center justify-center space-y-4">
@@ -300,7 +440,14 @@ export default function OpenHub() {
                             </h3>
                             <div className="space-y-6">
                                 {trendingTopics.map((topic) => (
-                                    <div key={topic.name} className="group cursor-pointer">
+                                    <div 
+                                        key={topic.name} 
+                                        onClick={() => {
+                                            setActiveFeed('all');
+                                            setNewPostContent(prev => prev.includes(`#${topic.name}`) ? prev : prev + ` #${topic.name}`);
+                                        }}
+                                        className="group cursor-pointer"
+                                    >
                                         <div className="text-[11px] font-bold text-white group-hover:text-orange-500 transition-colors uppercase tracking-tight">{topic.name}</div>
                                         <div className="text-[9px] font-bold text-zinc-600 uppercase tracking-widest mt-1">{topic.count}</div>
                                     </div>
@@ -311,24 +458,34 @@ export default function OpenHub() {
 
                         <Card className="bg-zinc-950 border-zinc-900 p-6 rounded-2xl shadow-xl">
                             <h3 className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.3em] mb-6">Who to follow</h3>
-                            <div className="space-y-4">
-                                {[
-                                    { name: "Morpheus", handle: "morpheus_ai", head: "Matrix Designer" },
-                                    { name: "Trinity", handle: "trinity_dev", head: "Neural Link Architect" }
-                                ].map((person) => (
-                                    <div key={person.handle} className="flex items-center gap-3 group">
+                             <div className="space-y-4">
+                                {suggestedUsers.length > 0 ? suggestedUsers.map((person) => (
+                                    <div key={person.uid} className="flex items-center gap-3 group">
                                         <div className="w-10 h-10 rounded-full bg-zinc-900 overflow-hidden border border-zinc-800">
-                                            <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${person.name}`} alt="user" className="w-full h-full object-cover" />
+                                            <img src={person.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${person.displayName}`} alt="user" className="w-full h-full object-cover" />
                                         </div>
                                         <div className="grow">
-                                            <div className="text-[11px] font-bold text-white group-hover:text-orange-500 transition-colors uppercase tracking-tight leading-none mb-1">{person.name}</div>
-                                            <div className="text-[8px] font-bold text-zinc-600 uppercase tracking-widest truncate">{person.head}</div>
+                                            <div className="text-[11px] font-bold text-white group-hover:text-orange-500 transition-colors uppercase tracking-tight leading-none mb-1 truncate max-w-[100px]">{person.displayName || person.username}</div>
+                                            <div className="text-[8px] font-bold text-zinc-600 uppercase tracking-widest truncate max-w-[100px]">{person.headline || 'Professional'}</div>
                                         </div>
-                                        <Button size="icon" variant="ghost" className="w-8 h-8 rounded-full border border-zinc-900 text-zinc-600 hover:text-white hover:border-orange-500 transition-all">
-                                            <Plus size={14} />
+                                        <Button 
+                                            size="icon" 
+                                            variant="ghost" 
+                                            onClick={() => handleFollowUser(person.uid)}
+                                            className={`w-8 h-8 rounded-full border transition-all ${
+                                                followedUsers.has(person.uid) 
+                                                ? 'border-orange-500 text-orange-500 bg-orange-500/10' 
+                                                : 'border-zinc-900 text-zinc-600 hover:text-white hover:border-orange-500'
+                                            }`}
+                                        >
+                                            {followedUsers.has(person.uid) ? <Check size={14} /> : <Plus size={14} />}
                                         </Button>
                                     </div>
-                                ))}
+                                )) : (
+                                    <div className="text-center py-4">
+                                        <p className="text-[9px] font-bold text-zinc-700 uppercase tracking-widest animate-pulse">// Waiting for other nodes...</p>
+                                    </div>
+                                )}
                             </div>
                         </Card>
 
