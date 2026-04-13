@@ -20,7 +20,7 @@ jobs:
           node-version: '20'
 
       - name: Install Dependencies
-        run: npm ci
+        run: npm install --legacy-peer-deps
 
       - name: Build Nexus Manifest
         run: npm run build
@@ -39,7 +39,7 @@ jobs:
         run: |
           git clone https://github.com/opendev-labs/co-writter.git /tmp/co-writter
           cd /tmp/co-writter
-          npm ci
+          npm install --legacy-peer-deps
           VITE_BASE=/co-writter/ npm run build
           mkdir -p $GITHUB_WORKSPACE/dist/co-writter
           cp -r /tmp/co-writter/dist/. $GITHUB_WORKSPACE/dist/co-writter/
