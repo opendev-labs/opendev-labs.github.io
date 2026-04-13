@@ -3,6 +3,12 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { lazy, Suspense, Component } from 'react';
 import Layout from './components/Layout';
 import Home from './pages/Home';
+import { Preloader } from './components/Preloader';
+import { DocsPage } from './features/void/components/pages/DocsPage';
+import { MissionControl } from './pages/MissionControl';
+import { UnifiedOfficeCockpit, LamaDBOfficeCockpit, SyncStackOfficeCockpit, LamaDBTelemetryCockpit, AgentsOfficeCockpit, BotsOfficeCockpit, SystemsOfficeCockpit } from './pages/OfficeSubappWrappers';
+import { Header } from './components/Header';
+import DiscordVerifyPage from './pages/DiscordVerifyPage';
 import Products from './pages/Products';
 import Contact from './pages/Contact';
 import Placeholder from './pages/Placeholder';
@@ -17,15 +23,9 @@ import AgentsLanding from './pages/AgentsLanding';
 import Spoon from './pages/Spoon';
 import Product from './pages/Product';
 import Changelog from './pages/Changelog';
-import OpenHub from './pages/OpenHub';
-import { Preloader } from './components/Preloader';
-import { DocsPage } from './features/void/components/pages/DocsPage';
-import { MissionControl } from './pages/MissionControl';
-import { UnifiedOfficeCockpit, LamaDBOfficeCockpit, SyncStackOfficeCockpit, LamaDBTelemetryCockpit, AgentsOfficeCockpit, BotsOfficeCockpit, SystemsOfficeCockpit } from './pages/OfficeSubappWrappers';
-import { Header } from './components/Header';
-import DiscordVerifyPage from './pages/DiscordVerifyPage';
-import ProfilePage from './pages/ProfilePage';
-import ProfileSettings from './pages/ProfileSettings';
+const OpenHub = lazyWithRetry(() => import('./pages/OpenHub'));
+const ProfilePage = lazyWithRetry(() => import('./pages/ProfilePage'));
+const ProfileSettings = lazyWithRetry(() => import('./pages/ProfileSettings'));
 
 const lazyWithRetry = (componentImport: () => Promise<any>) =>
   lazy(async () => {
@@ -101,7 +101,9 @@ const AppRoutes = () => {
           {/* Primary Unified Products */}
           <Route path="open-hub" element={
             <ProtectedRoute>
-              <OpenHub />
+              <Suspense fallback={<div className="min-h-screen bg-black flex items-center justify-center text-white italic tracking-widest">Opening Workspace...</div>}>
+                <OpenHub />
+              </Suspense>
             </ProtectedRoute>
           } />
           <Route path="open-studio" element={
@@ -118,9 +120,27 @@ const AppRoutes = () => {
           } />
 
           {/* User & Identity */}
-          <Route path="user/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
-          <Route path="user/:username" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
-          <Route path="settings/profile" element={<ProtectedRoute><ProfileSettings /></ProtectedRoute>} />
+          <Route path="user/profile" element={
+            <ProtectedRoute>
+              <Suspense fallback={null}>
+                <ProfilePage />
+              </Suspense>
+            </ProtectedRoute>
+          } />
+          <Route path="user/:username" element={
+            <ProtectedRoute>
+              <Suspense fallback={null}>
+                <ProfilePage />
+              </Suspense>
+            </ProtectedRoute>
+          } />
+          <Route path="settings/profile" element={
+            <ProtectedRoute>
+              <Suspense fallback={null}>
+                <ProfileSettings />
+              </Suspense>
+            </ProtectedRoute>
+          } />
 
           {/* Informational */}
           <Route path="changelog" element={<Changelog />} />
