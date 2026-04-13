@@ -92,7 +92,7 @@ export default function Home() {
                         className="inline-flex items-center gap-3 px-4 py-1.5 rounded-none bg-white/5 border border-white/10 text-[10px] font-bold text-zinc-400 mb-10 uppercase tracking-[0.4em] backdrop-blur-md"
                     >
                         <span className="w-1.5 h-1.5 rounded-none bg-blue-500 animate-pulse" />
-                        <span>Nexus Registry Protocol // v11.12</span>
+                        <span>System Status: Online // v11.12</span>
                     </motion.div>
 
                     <motion.h1
@@ -101,7 +101,7 @@ export default function Home() {
                         transition={{ delay: 0.1 }}
                         className="text-6xl md:text-8xl lg:text-[10rem] font-bold tracking-tighter mb-10 text-white leading-[0.75] lowercase px-4"
                     >
-                        Sovereign.<br /><span className="text-orange-500">Infrastructure.</span>
+                        Professional.<br /><span className="text-orange-500">Infrastructure.</span>
                     </motion.h1>
 
                     <motion.p
@@ -110,7 +110,7 @@ export default function Home() {
                         transition={{ delay: 0.2 }}
                         className="text-lg md:text-xl text-zinc-400 max-w-2xl mx-auto mb-14 font-medium leading-relaxed uppercase tracking-widest opacity-80"
                     >
-                        Unified state machine for high-fidelity autonomy and distributed sovereign clusters.
+                        A powerful platform to build, share, and launch your software projects instantly.
                     </motion.p>
 
                     <motion.div
@@ -128,7 +128,7 @@ export default function Home() {
                                 className="bg-black border border-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-900 min-w-[200px] flex items-center justify-center gap-3"
                             >
                                 <NewProjectIcon />
-                                Deploy
+                                Create New
                             </Button>
                         </div>
                         <Button
@@ -137,7 +137,7 @@ export default function Home() {
                             onClick={() => navigate(isAuthenticated ? '/open-hub' : '/auth')}
                             className="min-w-[200px] shadow-[0_0_30px_rgba(249,115,22,0.2)] hover:shadow-[0_0_50px_rgba(249,115,22,0.4)] transition-all"
                         >
-                            {isAuthenticated ? 'Enter Open-Hub Mesh' : 'Join Universal Identity System'}
+                            {isAuthenticated ? 'Go to Open-Hub' : 'Create Your Account'}
                         </Button>
                     </motion.div>
 
@@ -148,7 +148,7 @@ export default function Home() {
                         className="mt-20 text-[9px] font-bold text-zinc-600 uppercase tracking-[0.6em] flex items-center justify-center gap-4"
                     >
                         <span className="w-12 h-px bg-zinc-900" />
-                        Mesh Density: Stable // 4.2 Pb/s
+                        Network Status: Secure // 4.2 Pb/s
                         <span className="w-12 h-px bg-zinc-900" />
                     </motion.div>
                 </div>
@@ -172,11 +172,11 @@ export default function Home() {
                 <div className="max-w-[1400px] mx-auto px-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-1 ring-1 ring-zinc-900 rounded-none overflow-hidden">
                         {[
-                            { title: "open-studio IDE", desc: "Agentic full-screen workspace for code materialization.", icon: Cpu, path: "/open-studio" },
-                            { title: "Agents Hub", desc: "Autonomous node orchestration and agent builder.", icon: Bot, path: "/agents" },
-                            { title: "Void Platform", desc: "Neural orchestration and project lifecycle management.", icon: Terminal, path: "/void" },
-                            { title: "LamaDB Mesh", desc: "Native browser database for local-first state persistence.", icon: Database, path: "/lamadb" },
-                            { title: "SyncStack", desc: "0ms latency tunnel for web-to-desktop synchronization.", icon: Box, path: "/syncstack" }
+                            { title: "open-studio IDE", desc: "A powerful AI code editor to build your software in full-screen.", icon: Cpu, path: "/open-studio" },
+                            { title: "Agents Hub", desc: "Build and manage autonomous AI agents for your team.", icon: Bot, path: "/agents" },
+                            { title: "Void Platform", desc: "Project management and orchestration for modern teams.", icon: Terminal, path: "/void" },
+                            { title: "LamaDB", desc: "Speedy browser database to keep your data local and fast.", icon: Database, path: "/lamadb" },
+                            { title: "SyncStack", desc: "Instantly sync your web projects with your desktop computer.", icon: Box, path: "/syncstack" }
                         ].map((item, i) => (
                             <motion.button
                                 key={i}
@@ -193,7 +193,7 @@ export default function Home() {
                                         {item.desc}
                                     </p>
                                     <div className="text-[10px] font-bold uppercase tracking-[0.4em] flex items-center gap-2 hover:text-white text-zinc-600 transition-colors">
-                                        Identify <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                                        Open <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
                                     </div>
                                 </div>
                                 <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -214,7 +214,7 @@ export default function Home() {
                             whileInView={{ opacity: 1 }}
                             className="inline-flex items-center gap-2 px-4 py-1.5 rounded-none bg-zinc-900 border border-zinc-800 text-[10px] font-bold text-zinc-500 mb-10 uppercase tracking-[0.4em]"
                         >
-                            High-Fidelity Autonomy
+                            Smart Automation
                         </motion.div>
                         <h2 className="text-6xl md:text-7xl font-bold mb-10 tracking-tighter leading-[0.9] lowercase">
                             Develop at the speed <br /><span className="text-zinc-600">of thought.</span>
@@ -225,10 +225,10 @@ export default function Home() {
 
                         <div className="grid grid-cols-2 gap-10">
                             {[
-                                { label: "Secure Default", icon: ShieldCheck },
-                                { label: "Instant Deploy", icon: Zap },
+                                { label: "Private by Default", icon: ShieldCheck },
+                                { label: "Instant Deployment", icon: Zap },
                                 { label: "Global Network", icon: Globe },
-                                { label: "Deep Context", icon: Cpu }
+                                { label: "Advanced Context", icon: Cpu }
                             ].map((item, i) => (
                                 <div key={i} className="flex items-center gap-4 group">
                                     <item.icon className="text-zinc-700 group-hover:text-white transition-colors" size={20} />

@@ -106,7 +106,7 @@ const AppRoutes = () => {
           } />
           <Route path="open-studio" element={
             <ProtectedRoute>
-              <Suspense fallback={<div className="min-h-screen bg-black flex items-center justify-center text-white">Loading open-studio...</div>}>
+            <Suspense fallback={<div className="min-h-screen bg-black flex items-center justify-center text-white italic tracking-widest">Opening Workspace...</div>}>
                 <div className="flex flex-col h-screen overflow-hidden">
                   <Header />
                   <div className="flex-1 overflow-hidden mt-14">

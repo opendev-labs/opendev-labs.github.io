@@ -137,10 +137,10 @@ export default function OpenHub() {
     ];
 
     const trendingTopics = [
-        { name: "Sovereign Identity", count: "ACTIVE" },
-        { name: "Mesh Infrastructure", count: "89% SYNC" },
+        { name: "Global Community", count: "ACTIVE" },
+        { name: "System Network", count: "89% SYNC" },
         { name: "AI Architecture", count: "1.8k posts" },
-        { name: "Neural Handshake", count: "LOW LATENCY" }
+        { name: "Developer Chat", count: "LOW LATENCY" }
     ];
 
     const allPosts = [...posts, ...suggestedPosts];
@@ -171,7 +171,7 @@ export default function OpenHub() {
                                     </div>
                                 </div>
                                 <h3 className="font-bold text-lg leading-tight truncate">{user?.name}</h3>
-                                <p className="text-zinc-500 text-xs font-mono mb-4">{profile?.username ? `@${profile.username}` : 'Unmaterialized Node'}</p>
+                                <p className="text-zinc-500 text-xs font-mono mb-4">{profile?.username ? `@${profile.username}` : 'New Member'}</p>
                                 <div className="h-[1px] bg-zinc-900 w-full mb-4" />
                                 {profile?.username ? (
                                     <div className="space-y-4">
@@ -244,16 +244,16 @@ export default function OpenHub() {
                                     <Sparkles size={120} className="text-orange-500" />
                                 </div>
                                 <div className="relative z-10 space-y-4">
-                                    <h2 className="text-2xl font-bold tracking-tighter uppercase">Initialize Sovereign Identity.</h2>
+                                    <h2 className="text-2xl font-bold tracking-tighter uppercase">Set Up Your Profile.</h2>
                                     <p className="text-zinc-400 text-sm font-medium leading-relaxed max-w-md">
-                                        OpenHub is transitioning to a Universal Identity System. Materialize your permanent static profile on the OpenDev Mesh today.
+                                        Join our growing community of developers. Create your professional profile to start sharing your projects today.
                                     </p>
                                     <div className="pt-4">
                                         <button
                                             onClick={() => setIsMaterializeOpen(true)}
                                             className="inline-flex items-center gap-3 bg-orange-500 text-black font-bold uppercase tracking-widest text-[10px] px-8 py-4 rounded-xl hover:bg-white transition-all shadow-xl"
                                         >
-                                            <Plus size={14} /> Materialize My Profile
+                                            <Plus size={14} /> Create My Profile
                                         </button>
                                     </div>
                                 </div>
@@ -439,8 +439,8 @@ export default function OpenHub() {
                 <DialogContent className="bg-zinc-950 border-zinc-900 rounded-[2.5rem] max-w-md p-0 overflow-hidden shadow-2xl border-white/5">
                     <div className="p-10 space-y-8">
                         <div className="space-y-2">
-                            <h2 className="text-2xl font-black tracking-tighter uppercase text-white">Initialize Node</h2>
-                            <p className="text-zinc-500 text-[10px] font-bold uppercase tracking-widest">Protocol: Sovereign Identity Materialization</p>
+                            <h2 className="text-2xl font-black tracking-tighter uppercase text-white">Create Profile</h2>
+                            <p className="text-zinc-500 text-[10px] font-bold uppercase tracking-widest">Status: Setting up your account</p>
                         </div>
 
                         <form onSubmit={handleMaterialize} className="space-y-6">
@@ -456,7 +456,7 @@ export default function OpenHub() {
                             </div>
 
                             <div className="space-y-2">
-                                <label className="text-[9px] font-bold text-zinc-600 uppercase tracking-widest ml-1">Core Directive (Bio)</label>
+                                <label className="text-[9px] font-bold text-zinc-600 uppercase tracking-widest ml-1">About Me</label>
                                 <textarea
                                     name="bio"
                                     placeholder="Describe your mission..."
@@ -467,13 +467,13 @@ export default function OpenHub() {
                             </div>
 
                             <div className="space-y-2">
-                                <label className="text-[9px] font-bold text-zinc-600 uppercase tracking-widest ml-1">Frequency Modulation</label>
+                                <label className="text-[9px] font-bold text-zinc-600 uppercase tracking-widest ml-1">Your Role</label>
                                 <select name="energy" className="w-full bg-black/50 border border-zinc-900 rounded-2xl p-4 text-white outline-none focus:border-orange-500 transition-all text-sm appearance-none cursor-pointer">
-                                    <option value="Manifestor">Manifestor</option>
-                                    <option value="Generator">Generator</option>
-                                    <option value="Projector">Projector</option>
-                                    <option value="Reflector">Reflector</option>
-                                    <option value="Sovereign">Sovereign (Universal)</option>
+                                    <option value="Creator">Creator</option>
+                                    <option value="Developer">Developer</option>
+                                    <option value="Designer">Designer</option>
+                                    <option value="Manager">Manager</option>
+                                    <option value="Sovereign">Professional</option>
                                 </select>
                             </div>
 
@@ -488,7 +488,7 @@ export default function OpenHub() {
                                 {isMaterializing ? (
                                     <>
                                         <Zap size={14} className="animate-pulse" />
-                                        Processing Protocol...
+                                        Creating Account...
                                     </>
                                 ) : materializeStatus === 'success' ? (
                                     <>
@@ -503,7 +503,7 @@ export default function OpenHub() {
                                 ) : (
                                     <>
                                         <Plus size={14} />
-                                        Materialize Identity
+                                        Create Profile
                                     </>
                                 )}
                             </Button>
@@ -516,13 +516,13 @@ export default function OpenHub() {
 
                             {materializeStatus === 'processing' && (
                                 <p className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest text-center animate-pulse">
-                                    // Encrypting packet and pushing to mesh network...
+                                    // Encrypting data and saving your profile...
                                 </p>
                             )}
 
                             {materializeStatus === 'success' && (
                                 <p className="text-[9px] font-bold text-emerald-500 uppercase tracking-widest text-center">
-                                    // Redirecting to your sovereign home...
+                                    // Redirecting to your profile...
                                 </p>
                             )}
                         </form>

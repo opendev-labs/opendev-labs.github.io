@@ -82,7 +82,7 @@ export const AuthPage: React.FC = () => {
                         className="inline-flex items-center gap-4 px-5 py-2 rounded-none bg-white/5 backdrop-blur-xl border border-white/10 text-[10px] font-bold text-zinc-400 uppercase tracking-[0.5em]"
                     >
                         <Cpu size={14} className="text-blue-500" />
-                        <span>Secure Account Access // ONLINE</span>
+                        <span>Secure Login // ONLINE</span>
                     </motion.div>
 
                     <motion.h1
@@ -91,7 +91,7 @@ export const AuthPage: React.FC = () => {
                         transition={{ delay: 0.1 }}
                         className="text-5xl lg:text-6xl font-bold text-white tracking-tighter leading-[0.9] lowercase"
                     >
-                        connect<br /><span className="text-white block mt-2">your workspace.</span>
+                        sign in to<br /><span className="text-white block mt-2">your workspace.</span>
                     </motion.h1>
 
                     <motion.p
@@ -100,7 +100,7 @@ export const AuthPage: React.FC = () => {
                         transition={{ delay: 0.2 }}
                         className="text-zinc-500 text-lg font-medium tracking-tight leading-relaxed max-w-sm uppercase tracking-[0.2em] opacity-80"
                     >
-                        Deploy, manage, and scale your applications with high-fidelity control.
+                        Build, manage, and scale your projects with professional AI tools.
                     </motion.p>
 
                     <motion.div
@@ -144,8 +144,8 @@ export const AuthPage: React.FC = () => {
                                     Reference: <span className="text-white font-mono">{challenge}</span>
                                 </p>
                                 <div className="p-8 bg-black/50 rounded-none border border-zinc-900 text-left mb-10">
-                                    <p className="text-[9px] font-bold text-zinc-700 tracking-[0.4em] uppercase mb-2 ml-1">Detected ID</p>
-                                    <p className="text-sm font-bold text-white font-mono lowercase">authenticating_node_alpha</p>
+                                    <p className="text-[9px] font-bold text-zinc-700 tracking-[0.4em] uppercase mb-2 ml-1">Identity Confirmed</p>
+                                    <p className="text-sm font-bold text-white font-mono lowercase">verified_account_session</p>
                                 </div>
                                 <Button
                                     variant="primary"
@@ -262,18 +262,18 @@ export const AuthPage: React.FC = () => {
 
                                     <div className="relative py-10 opacity-30">
                                         <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-zinc-900" /></div>
-                                        <div className="relative flex justify-center"><span className="bg-black px-4 text-[9px] font-bold text-zinc-700 uppercase tracking-[0.5em]">Nexus ID</span></div>
+                                        <div className="relative flex justify-center"><span className="bg-black px-4 text-[9px] font-bold text-zinc-700 uppercase tracking-[0.5em]">Login System</span></div>
                                     </div>
 
                                     <div className="flex justify-between items-center text-[10px] font-bold uppercase tracking-[0.4em]">
                                         <p className="text-zinc-700">
-                                            {isSignUp ? 'Registered?' : 'New Node?'}
+                                            {isSignUp ? 'Already registered?' : 'New here?'}
                                         </p>
                                         <Link
                                             to={isSignUp ? "/auth" : "/auth?mode=signup"}
                                             className="text-white hover:text-blue-500 transition-colors"
                                         >
-                                            {isSignUp ? 'Authorize Session' : 'Register Entry'}
+                                            {isSignUp ? 'Sign In' : 'Sign Up'}
                                         </Link>
                                     </div>
                                 </div>

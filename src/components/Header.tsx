@@ -51,9 +51,9 @@ const MENU_DATA = [
     {
         title: "Platform",
         items: [
-            { name: "OpenHub", desc: "Sovereign Social Feed", icon: SparklesIcon, path: "/open-hub" },
-            { name: "OpenStudio", desc: "Agentic IDE Workspace", icon: BookOpenIcon, path: "/open-studio" },
-            { name: "Documentation", desc: "Protocol & API Guides", icon: TerminalIcon, path: "/docs" },
+            { name: "OpenHub", desc: "Community Feed", icon: SparklesIcon, path: "/open-hub" },
+            { name: "OpenStudio", desc: "AI-Powered Code Editor", icon: BookOpenIcon, path: "/open-studio" },
+            { name: "Documentation", desc: "Learn & Build Guides", icon: TerminalIcon, path: "/docs" },
         ]
     }
 ];
