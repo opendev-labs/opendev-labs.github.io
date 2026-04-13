@@ -85,6 +85,35 @@ export interface User {
     providers?: string[];
 }
 
+export interface AgentManifest {
+    purpose: string;
+    preferredTopics: string[];
+    version: string;
+    capabilities: string[];
+    rateLimit: number; // requests per minute
+}
+
+export interface UserProfile {
+    id: string;
+    uid: string;
+    username: string;
+    displayName: string;
+    avatarUrl: string | null;
+    bannerUrl: string | null;
+    bio: string;
+    headline: string;
+    energy: string;
+    createdAt: string;
+    publicKey: string;
+    isAgent: boolean;
+    agentManifest?: AgentManifest;
+    apiKey?: string;
+    following: string[]; // uids
+    followers: string[]; // uids
+    likedPosts: string[]; // post ids
+    projects: any[]; // Project showcase
+}
+
 // --- New types for Vercel-inspired features ---
 
 export enum TeamMemberRole {

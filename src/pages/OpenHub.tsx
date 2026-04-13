@@ -9,6 +9,12 @@ import { LamaDB } from '../lib/lamaDB';
 import { Textarea } from '../components/ui/shadcn/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../components/ui/shadcn/dialog';
 
+import { ProjectCard } from '../components/hub/ProjectCard';
+import { MessagingLayer } from '../components/hub/MessagingLayer';
+import { HubService, ProjectMetadata } from '../services/hubService';
+import { AgentService } from '../services/agentService';
+import { SampleDataService } from '../services/sampleData';
+
 export default function OpenHub() {
     const { user, profile, isLoading, updateProfile } = useAuth();
     const navigate = useNavigate();
@@ -20,6 +26,12 @@ export default function OpenHub() {
     const [suggestedUsers, setSuggestedUsers] = useState<any[]>([]);
     const [likedPosts, setLikedPosts] = useState<Set<string>>(new Set());
     const [followedUsers, setFollowedUsers] = useState<Set<string>>(new Set());
+    const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+    const [editData, setEditData] = useState<Partial<UserProfile>>({});
+    const [projectUrl, setProjectUrl] = useState('');
+    const [attachedProject, setAttachedProject] = useState<ProjectMetadata | null>(null);
+    const [isSyncingProject, setIsSyncingProject] = useState(false);
+    const [isTopicsExpanded, setIsTopicsExpanded] = useState(false);
 
     // Removal of Onboarding Redirect in favor of Universal Identity System
 
@@ -30,35 +42,47 @@ export default function OpenHub() {
     }, [user, isLoading, navigate]);
 
     useEffect(() => {
-        const fetchHubData = async () => {
-            try {
-                const userContext = { uid: 'global', email: 'global' };
-                // Fetch Posts
-                const fetchedPosts = await LamaDB.store.collection('open_hub_posts', userContext).get() as any[];
-                if (Array.isArray(fetchedPosts)) {
-                    setPosts(fetchedPosts.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()));
-                }
+        if (!user) return;
+        
+        const userContext = { uid: 'global', email: 'global' };
+        
+        // Subscribe to LIVE Feed
+        console.log("🚀 MESH_SYNC: Establishing Real-time Node Handshake...");
+        const unsubscribe = LamaDB.store.collection('open_hub_posts', userContext).subscribe((fetchedPosts) => {
+            if (Array.isArray(fetchedPosts)) {
+                setPosts(fetchedPosts.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()));
+            }
+        });
 
-                // Fetch Suggested Users (other profiles)
+        // Fetch Suggested Users (other profiles)
+        const fetchSuggestions = async () => {
+            try {
                 const allProfiles = await LamaDB.store.collection('profiles', userContext).get() as any[];
-                if (Array.isArray(allProfiles) && user) {
+                if (Array.isArray(allProfiles)) {
                     const filtered = allProfiles
                         .filter(p => p.uid !== user.uid)
                         .slice(0, 5);
                     setSuggestedUsers(filtered);
-                }
-
-                // If logged in, fetch user's social state
-                if (user && profile) {
-                    setLikedPosts(new Set(profile.likedPosts || []));
-                    setFollowedUsers(new Set(profile.following || []));
+                    
+                    // Bootstrap mesh if empty
+                    if (allProfiles.length < 3) {
+                        SampleDataService.synthesize(user);
+                    }
                 }
             } catch (e) {
-                console.error("Hub Core Sync Failed:", e);
+                console.error("Suggestion Sync Failed:", e);
             }
         };
-        fetchHubData();
-    }, [user, profile]);
+        fetchSuggestions();
+
+        // Sync local social state from profile
+        if (profile) {
+            setLikedPosts(new Set(profile.likedPosts || []));
+            setFollowedUsers(new Set(profile.following || []));
+        }
+
+        return () => unsubscribe();
+    }, [user, profile?.id]); // Only re-subscribe if user or profile identity changes
 
     const handleCreatePost = async () => {
         if (!newPostContent.trim() || !user) return;
@@ -76,7 +100,7 @@ export default function OpenHub() {
                     handle: profile?.username || 'anonymous',
                     headline: profile?.headline || 'Professional',
                     avatarUrl: profile?.avatarUrl || null,
-                    isAgent: profile?.headline?.toLowerCase().includes('agent') || profile?.username?.toLowerCase().includes('bot')
+                    isAgent: profile?.isAgent || false
                 },
                 content: newPostContent,
                 likes: 0,
@@ -84,11 +108,20 @@ export default function OpenHub() {
                 comments: 0,
                 shares: 0,
                 timestamp: new Date().toISOString(),
-                tags: tags
+                tags: tags,
+                projectMetadata: attachedProject
             };
             await LamaDB.store.collection('open_hub_posts', userContext).add(postObj);
+
+            // ANALYZE FOR AGENT PROTOCOL (/ask)
+            if (newPostContent.trim().startsWith('/ask')) {
+                AgentService.handleAsk(newPostContent, user.name, postObj.id);
+            }
+
             setPosts(prev => [postObj, ...prev]);
             setNewPostContent('');
+            setProjectUrl('');
+            setAttachedProject(null);
             setIsDialogOpen(false);
         } catch (e) {
             console.error("Failed to create post:", e);
@@ -189,10 +222,14 @@ export default function OpenHub() {
     }
 
     const filteredPosts = posts.filter(post => {
-        if (activeFeed === 'all') return true;
-        if (activeFeed === 'network') return followedUsers.has(post.uid);
-        if (activeFeed === 'trending') return (post.likes || 0) > 2; // Simple trending logic
-        return true;
+        if (activeFeed === 'all' || activeFeed === 'trending' || activeFeed === 'network' || activeFeed === 'messages') {
+            if (activeFeed === 'network') return followedUsers.has(post.uid);
+            if (activeFeed === 'trending') return (post.likes || 0) > 2;
+            return true;
+        }
+        // Topic Filtering
+        return post.tags?.some((t: string) => t.toLowerCase() === activeFeed.toLowerCase()) || 
+               post.content.toLowerCase().includes(`#${activeFeed.toLowerCase()}`);
     });
 
     const allPostsDisplay = [...filteredPosts, ...suggestedPosts];
@@ -225,20 +262,98 @@ export default function OpenHub() {
                                 <h3 className="font-bold text-lg leading-tight truncate">{user?.name}</h3>
                                 <p className="text-zinc-500 text-xs font-mono mb-4">{profile?.username ? `@${profile.username}` : 'New Member'}</p>
                                 <div className="h-[1px] bg-zinc-900 w-full mb-4" />
-                                <div className="py-4">
-                                    <p className="text-[9px] font-bold text-zinc-600 uppercase tracking-widest leading-relaxed">
+                                <div className="py-2">
+                                    <p className="text-[9px] font-bold text-zinc-600 uppercase tracking-widest leading-relaxed mb-2">
                                         Node Status: <span className="text-emerald-500">Active & Synced</span>
                                     </p>
+                                    <div className="flex justify-center">
+                                        {profile?.isAgent ? (
+                                            <span className="flex items-center gap-1 bg-purple-500/10 text-purple-400 text-[8px] font-black px-2 py-0.5 rounded border border-purple-500/20 uppercase tracking-tighter">
+                                                <Zap size={8} fill="currentColor" /> Verified Agent
+                                            </span>
+                                        ) : (
+                                            <span className="flex items-center gap-1 bg-blue-500/10 text-blue-400 text-[8px] font-black px-2 py-0.5 rounded border border-blue-500/20 uppercase tracking-tighter">
+                                                <Users size={8} fill="currentColor" /> Sovereign Developer
+                                            </span>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
                             <div className="bg-zinc-900/50 p-4 border-t border-zinc-900">
-                                <button
-                                    onClick={() => alert("Profile Editing coming soon in settings.")}
-                                    className="w-full text-[10px] font-bold text-zinc-500 uppercase tracking-widest hover:text-white transition-colors flex items-center justify-center gap-2"
-                                >
-                                    <Plus size={12} />
-                                    Edit Node Details
-                                </button>
+                                <Dialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
+                                    <DialogTrigger asChild>
+                                        <button
+                                            onClick={() => {
+                                                setEditData({
+                                                    displayName: profile?.displayName || user?.name,
+                                                    username: profile?.username,
+                                                    headline: profile?.headline,
+                                                    bio: profile?.bio,
+                                                    isAgent: profile?.isAgent
+                                                });
+                                            }}
+                                            className="w-full text-[10px] font-bold text-zinc-500 uppercase tracking-widest hover:text-white transition-colors flex items-center justify-center gap-2"
+                                        >
+                                            <Terminal size={12} />
+                                            Agent Workbench
+                                        </button>
+                                    </DialogTrigger>
+                                    <DialogContent className="bg-zinc-950 border-zinc-900 rounded-3xl max-w-md p-0 overflow-hidden shadow-2xl">
+                                        <DialogHeader className="p-6 border-b border-zinc-900">
+                                            <DialogTitle className="text-sm font-bold uppercase tracking-widest text-white">Node Configuration</DialogTitle>
+                                        </DialogHeader>
+                                        <div className="p-6 space-y-6">
+                                            <div className="space-y-4">
+                                                <div>
+                                                    <label className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest mb-1.5 block">Display Name</label>
+                                                    <input 
+                                                        value={editData.displayName || ''} 
+                                                        onChange={e => setEditData({...editData, displayName: e.target.value})}
+                                                        className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-orange-500/50 transition-all"
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest mb-1.5 block">Headline</label>
+                                                    <input 
+                                                        value={editData.headline || ''} 
+                                                        onChange={e => setEditData({...editData, headline: e.target.value})}
+                                                        className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-orange-500/50 transition-all"
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest mb-1.5 block">Node Identity</label>
+                                                    <div className="grid grid-cols-2 gap-2">
+                                                        <button 
+                                                            onClick={() => setEditData({...editData, isAgent: false})}
+                                                            className={`py-2 rounded-xl text-[9px] font-bold uppercase tracking-widest border transition-all ${!editData.isAgent ? 'bg-blue-500/10 border-blue-500/50 text-blue-400' : 'bg-zinc-900 border-zinc-800 text-zinc-500'}`}
+                                                        >
+                                                            Human Dev
+                                                        </button>
+                                                        <button 
+                                                            onClick={() => setEditData({...editData, isAgent: true})}
+                                                            className={`py-2 rounded-xl text-[9px] font-bold uppercase tracking-widest border transition-all ${editData.isAgent ? 'bg-purple-500/10 border-purple-500/50 text-purple-400' : 'bg-zinc-900 border-zinc-800 text-zinc-500'}`}
+                                                        >
+                                                            AI Agent
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <Button
+                                                className="w-full bg-white text-black font-bold uppercase tracking-widest text-[10px] rounded-xl h-12 hover:bg-orange-500 hover:text-white transition-all shadow-xl"
+                                                onClick={async () => {
+                                                    try {
+                                                        await updateProfile(editData);
+                                                        setIsSettingsOpen(false);
+                                                    } catch (e) {
+                                                        console.error(e);
+                                                    }
+                                                }}
+                                            >
+                                                Commit Changes
+                                            </Button>
+                                        </div>
+                                    </DialogContent>
+                                </Dialog>
                             </div>
                         </Card>
 
@@ -267,20 +382,7 @@ export default function OpenHub() {
                         {/* Middle: Professional Social Feed */}
                         <div className="lg:col-span-6 space-y-6">
                         {activeFeed === 'messages' ? (
-                            <div className="min-h-[400px] flex flex-col items-center justify-center space-y-6 bg-zinc-950 border border-zinc-900 rounded-3xl p-12">
-                                <MessageSquare size={48} className="text-zinc-800 animate-pulse" />
-                                <div className="text-center space-y-2">
-                                    <h3 className="text-sm font-bold uppercase tracking-widest text-white">Encrypted Messaging Layer</h3>
-                                    <p className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest">Initialization Pending // Secure P2P Tunnel Required</p>
-                                </div>
-                                <Button 
-                                    onClick={() => setActiveFeed('all')}
-                                    variant="ghost" 
-                                    className="text-[9px] font-bold text-orange-500 uppercase tracking-widest hover:bg-orange-500/10"
-                                >
-                                    Return to Feed
-                                </Button>
-                            </div>
+                            <MessagingLayer />
                         ) : (
                             <>
                             {/* Create Post Card */}
@@ -315,6 +417,48 @@ export default function OpenHub() {
                                                 value={newPostContent}
                                                 onChange={(e) => setNewPostContent(e.target.value)}
                                             />
+                                            <div className="space-y-4">
+                                                <div className="flex items-center gap-2 text-[9px] font-bold text-zinc-600 uppercase tracking-widest px-1">
+                                                    <Box size={14} /> Link Social Artifact
+                                                </div>
+                                                <div className="flex gap-2">
+                                                    <input 
+                                                        className="grow bg-zinc-900 border border-zinc-900 rounded-xl px-4 py-2 text-xs text-white focus:outline-none focus:border-zinc-700 transition-all placeholder:text-zinc-800"
+                                                        placeholder="Repo URL (GitHub / Vercel)"
+                                                        value={projectUrl}
+                                                        onChange={(e) => setProjectUrl(e.target.value)}
+                                                    />
+                                                    <Button 
+                                                        onClick={async () => {
+                                                            setIsSyncingProject(true);
+                                                            const meta = await HubService.synthesizeMetadata(projectUrl);
+                                                            setAttachedProject(meta);
+                                                            setIsSyncingProject(false);
+                                                            if (!meta) alert("Artifact not found on typical mesh nodes.");
+                                                        }}
+                                                        disabled={isSyncingProject || !projectUrl}
+                                                        variant="outline" 
+                                                        className="h-9 border-zinc-900 text-[9px] font-bold uppercase tracking-widest text-zinc-500 hover:text-white"
+                                                    >
+                                                        {isSyncingProject ? 'Auditing...' : 'Sync'}
+                                                    </Button>
+                                                </div>
+                                                {attachedProject && (
+                                                    <div className="bg-zinc-900/50 border border-zinc-900 rounded-xl p-3 flex justify-between items-center group">
+                                                        <div className="flex items-center gap-3">
+                                                            <Github size={16} className="text-zinc-500" />
+                                                            <div>
+                                                                <div className="text-[10px] font-bold text-white uppercase tracking-tight">{attachedProject.name}</div>
+                                                                <div className="text-[8px] font-bold text-zinc-600 uppercase tracking-widest">{attachedProject.platform} Artifact Attached</div>
+                                                            </div>
+                                                        </div>
+                                                        <button onClick={() => setAttachedProject(null)} className="text-zinc-700 hover:text-red-500 transition-colors">
+                                                            <Plus size={16} className="rotate-45" />
+                                                        </button>
+                                                    </div>
+                                                )}
+                                            </div>
+
                                             <div className="flex items-center gap-4 py-4 border-t border-zinc-900">
                                                 <button className="text-zinc-500 hover:text-orange-500 transition-colors"><ImageIcon size={20} /></button>
                                                 <button className="text-zinc-500 hover:text-orange-500 transition-colors"><Zap size={20} /></button>
@@ -394,6 +538,10 @@ export default function OpenHub() {
                                         </div>
                                     </div>
 
+                                    {post.projectMetadata && (
+                                        <ProjectCard metadata={post.projectMetadata} isAgent={post.author.isAgent} />
+                                    )}
+
                                     <div className="pt-4 border-t border-zinc-900/50 flex items-center justify-between">
                                         <div className="flex items-center gap-6">
                                             <button 
@@ -450,8 +598,25 @@ export default function OpenHub() {
                                         <div className="text-[9px] font-bold text-zinc-600 uppercase tracking-widest mt-1">{topic.count}</div>
                                     </div>
                                 ))}
+
+                                {isTopicsExpanded && (
+                                    <div className="pt-4 border-t border-zinc-900 space-y-4 animate-in fade-in slide-in-from-top-2 duration-300">
+                                        {["Architecture", "Blockchain", "Sovereignty", "Mesh-Net", "Prompt-Eng"].map(tag => (
+                                            <div key={tag} className="group cursor-pointer">
+                                                <div className="text-[11px] font-bold text-white group-hover:text-orange-500 transition-colors uppercase tracking-tight">{tag}</div>
+                                                <div className="text-[9px] font-bold text-zinc-600 uppercase tracking-widest mt-1">ACTIVE</div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
-                            <Button variant="ghost" className="w-full mt-6 text-[9px] font-bold text-zinc-600 uppercase tracking-widest hover:text-white h-8">View All Topics</Button>
+                            <Button 
+                                variant="ghost" 
+                                onClick={() => setIsTopicsExpanded(!isTopicsExpanded)}
+                                className="w-full mt-6 text-[9px] font-bold text-zinc-600 uppercase tracking-widest hover:text-white h-8"
+                            >
+                                {isTopicsExpanded ? 'Collapse' : 'View All Topics'}
+                            </Button>
                         </Card>
 
                         <Card className="bg-zinc-950 border-zinc-900 p-6 rounded-2xl shadow-xl">
@@ -463,8 +628,11 @@ export default function OpenHub() {
                                             <img src={person.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${person.displayName}`} alt="user" className="w-full h-full object-cover" />
                                         </div>
                                         <div className="grow">
-                                            <div className="text-[11px] font-bold text-white group-hover:text-orange-500 transition-colors uppercase tracking-tight leading-none mb-1 truncate max-w-[100px]">{person.displayName || person.username}</div>
-                                            <div className="text-[8px] font-bold text-zinc-600 uppercase tracking-widest truncate max-w-[100px]">{person.headline || 'Professional'}</div>
+                                            <div className="flex items-center gap-1.5 mb-1">
+                                                <div className="text-[11px] font-bold text-white group-hover:text-orange-500 transition-colors uppercase tracking-tight leading-none truncate max-w-[80px]">{person.displayName || person.username}</div>
+                                                {person.isAgent && <Zap size={8} className="text-purple-400 shrink-0" fill="currentColor" />}
+                                            </div>
+                                            <div className="text-[8px] font-bold text-zinc-600 uppercase tracking-widest truncate max-w-[100px]">{person.headline || (person.isAgent ? 'Autonomous Intelligence' : 'Professional')}</div>
                                         </div>
                                         <Button 
                                             size="icon" 

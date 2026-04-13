@@ -8,7 +8,7 @@ import { GithubAuthProvider } from 'firebase/auth';
 // To get the TOKEN (which is needed for GitHub API calls), we need the result from signInWithPopup.
 // LamaDB.auth.loginWithGithub() returns the UserCredential.
 
-import { SyncStatus } from '../types';
+import { SyncStatus, UserProfile } from '../types';
 
 interface AuthState {
   isAuthenticated: boolean;
@@ -19,7 +19,7 @@ interface AuthState {
   agentOnline: boolean;
   githubUser: any | null;
   isGithubConnected: boolean;
-  profile: any | null;
+  profile: UserProfile | null;
   avatarUrl: string | null;
   bannerUrl: string | null;
 }
@@ -48,7 +48,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [syncStatus, setSyncStatus] = useState<SyncStatus>(SyncStatus.IDLE);
   const [lastSyncTime, setLastSyncTime] = useState<string | null>(localStorage.getItem('opendev_last_sync'));
   const [agentOnline, setAgentOnline] = useState(false);
-  const [profile, setProfile] = useState<any | null>(null);
+  const [profile, setProfile] = useState<UserProfile | null>(null);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [bannerUrl, setBannerUrl] = useState<string | null>(null);
 
@@ -103,15 +103,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 .replace(/\s+/g, '.')
                 .replace(/[^a-z0-9.]/g, '') + '.' + Math.random().toString(36).substr(2, 4);
 
-              const newProfileData = {
+              const newProfileData: Omit<UserProfile, 'id'> = {
+                uid: firebaseUser.uid,
                 username: defaultHandle,
                 displayName: firebaseUser.displayName || 'New Member',
                 avatarUrl: firebaseUser.photoURL || `https://api.dicebear.com/7.x/avataaars/svg?seed=${firebaseUser.uid}`,
+                bannerUrl: null,
                 bio: "Collaborating on the OpenDev Mesh.",
                 headline: "Professional Developer",
                 energy: "Professional",
                 createdAt: new Date().toISOString(),
-                publicKey: 'ID_' + Math.random().toString(36).substr(2, 9).toUpperCase()
+                publicKey: 'ID_' + Math.random().toString(36).substr(2, 9).toUpperCase(),
+                isAgent: false,
+                following: [],
+                followers: [],
+                likedPosts: [],
+                projects: []
               };
 
               const newProfile = await LamaDB.store.collection('profiles', userContext).add(newProfileData);
@@ -377,7 +384,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser(user);
   }, []);
 
-  const updateProfile = useCallback(async (data: any) => {
+  const updateProfile = useCallback(async (data: Partial<UserProfile>) => {
     if (!user) return;
     try {
       const userContext = { uid: user.uid, email: user.email };
