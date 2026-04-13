@@ -57,26 +57,21 @@ export default function OpenHub() {
             }
         });
 
-        // Fetch Suggested Users (other profiles)
-        const fetchSuggestions = async () => {
-            try {
-                const allProfiles = await LamaDB.store.collection('profiles', userContext).get() as any[];
-                if (Array.isArray(allProfiles)) {
-                    const filtered = allProfiles
-                        .filter(p => p.uid !== user.uid)
-                        .slice(0, 5);
-                    setSuggestedUsers(filtered);
-                    
-                    // Bootstrap mesh if empty
-                    if (allProfiles.length < 3) {
-                        SampleDataService.synthesize(user);
-                    }
+        // SUBSCRIBE to Real Humans and Agents on the Mesh
+        console.log("🚀 MESH_DISCOVERY: Listening for new nodes joining the mesh...");
+        const unsubscribeProfiles = LamaDB.store.collection('global_mesh_profiles', { uid: 'global', email: 'global' }).subscribe((allProfiles) => {
+            if (Array.isArray(allProfiles)) {
+                const filtered = allProfiles
+                    .filter(p => p.uid !== user.uid)
+                    .slice(0, 5);
+                setSuggestedUsers(filtered);
+                
+                // If the mesh is still quiet, keep the example friends for now
+                if (allProfiles.length < 2) {
+                    SampleDataService.synthesize(user);
                 }
-            } catch (e) {
-                console.error("Suggestion Sync Failed:", e);
             }
-        };
-        fetchSuggestions();
+        });
 
         // Sync local social state from profile
         if (profile) {
@@ -84,8 +79,11 @@ export default function OpenHub() {
             setFollowedUsers(new Set(profile.following || []));
         }
 
-        return () => unsubscribe();
-    }, [user, profile?.id]); // Only re-subscribe if user or profile identity changes
+        return () => {
+            unsubscribe();
+            unsubscribeProfiles();
+        };
+    }, [user, profile?.id]); 
 
     const handleCreatePost = async () => {
         if (!newPostContent.trim() || !user) return;
@@ -298,6 +296,10 @@ export default function OpenHub() {
                                                     username: profile?.username,
                                                     headline: profile?.headline,
                                                     bio: profile?.bio,
+                                                    avatarUrl: profile?.avatarUrl,
+                                                    bannerUrl: profile?.bannerUrl,
+                                                    website: profile?.website,
+                                                    location: profile?.location,
                                                     isAgent: profile?.isAgent
                                                 });
                                             }}
@@ -314,20 +316,53 @@ export default function OpenHub() {
                                         <div className="p-6 space-y-6">
                                             <div className="space-y-4">
                                                 <div>
-                                                    <label className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest mb-1.5 block">Display Name</label>
-                                                    <input 
-                                                        value={editData.displayName || ''} 
-                                                        onChange={e => setEditData({...editData, displayName: e.target.value})}
-                                                        className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-orange-500/50 transition-all"
+                                                    <label className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest mb-1.5 block">Nodal Bio</label>
+                                                    <textarea 
+                                                        value={editData.bio || ''} 
+                                                        onChange={e => setEditData({...editData, bio: e.target.value})}
+                                                        placeholder="Write a short bit about what you build..."
+                                                        className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-orange-500/50 transition-all min-h-[80px]"
                                                     />
                                                 </div>
-                                                <div>
-                                                    <label className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest mb-1.5 block">Headline</label>
-                                                    <input 
-                                                        value={editData.headline || ''} 
-                                                        onChange={e => setEditData({...editData, headline: e.target.value})}
-                                                        className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-orange-500/50 transition-all"
-                                                    />
+                                                <div className="grid grid-cols-2 gap-4">
+                                                    <div>
+                                                        <label className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest mb-1.5 block">Avatar URL</label>
+                                                        <input 
+                                                            value={editData.avatarUrl || ''} 
+                                                            onChange={e => setEditData({...editData, avatarUrl: e.target.value})}
+                                                            className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-[10px] text-white focus:outline-none focus:border-orange-500/50 transition-all font-mono"
+                                                            placeholder="https://..."
+                                                        />
+                                                    </div>
+                                                    <div>
+                                                        <label className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest mb-1.5 block">Banner URL</label>
+                                                        <input 
+                                                            value={editData.bannerUrl || ''} 
+                                                            onChange={e => setEditData({...editData, bannerUrl: e.target.value})}
+                                                            className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-[10px] text-white focus:outline-none focus:border-orange-500/50 transition-all font-mono"
+                                                            placeholder="https://..."
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <div className="grid grid-cols-2 gap-4">
+                                                    <div>
+                                                        <label className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest mb-1.5 block">Website</label>
+                                                        <input 
+                                                            value={editData.website || ''} 
+                                                            onChange={e => setEditData({...editData, website: e.target.value})}
+                                                            className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-orange-500/50 transition-all"
+                                                            placeholder="example.com"
+                                                        />
+                                                    </div>
+                                                    <div>
+                                                        <label className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest mb-1.5 block">Location</label>
+                                                        <input 
+                                                            value={editData.location || ''} 
+                                                            onChange={e => setEditData({...editData, location: e.target.value})}
+                                                            className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-orange-500/50 transition-all"
+                                                            placeholder="City, Mesh"
+                                                        />
+                                                    </div>
                                                 </div>
                                                 <div>
                                                     <label className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest mb-1.5 block">Node Identity</label>

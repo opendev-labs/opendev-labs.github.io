@@ -124,6 +124,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
               const newProfile = await LamaDB.store.collection('profiles', userContext).add(newProfileData);
               const finalProfile = { ...newProfileData, id: newProfile.id };
               
+              // Broadcast to the Global Mesh Registry
+              const globalContext = { uid: 'global', email: 'global' };
+              await LamaDB.store.collection('global_mesh_profiles', globalContext).add(finalProfile);
+
               setProfile(finalProfile);
               setAvatarUrl(finalProfile.avatarUrl || null);
               setBannerUrl(null);
@@ -403,6 +407,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setProfile(profileData);
       setAvatarUrl(profileData.avatarUrl || null);
       setBannerUrl(profileData.bannerUrl || null);
+
+      // BROADCAST TO GLOBAL MESH
+      const globalContext = { uid: 'global', email: 'global' };
+      const globalProfiles = await LamaDB.store.collection('global_mesh_profiles', globalContext).get();
+      const existingGlobal = globalProfiles.find((p: any) => p.uid === user.uid);
+      
+      if (existingGlobal) {
+        await LamaDB.store.collection('global_mesh_profiles', globalContext).update(existingGlobal.id, profileData);
+      } else {
+        await LamaDB.store.collection('global_mesh_profiles', globalContext).add(profileData);
+      }
     } catch (error) {
       console.error("Update Profile Error:", error);
       throw error;
