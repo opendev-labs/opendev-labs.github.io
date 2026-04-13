@@ -340,7 +340,7 @@ export default function OpenHub() {
 
                         {/* Post List */}
                         <div className="space-y-6">
-                            {allPosts.map((post, i) => (
+                            {allPostsDisplay.map((post, i) => (
                                 <motion.div
                                     key={post.id || i}
                                     initial={{ opacity: 0, y: 10 }}
