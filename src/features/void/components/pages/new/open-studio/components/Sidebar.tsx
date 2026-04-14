@@ -21,30 +21,30 @@ export function Sidebar({ onNavigate, recentChats, onSelectChat, onDeleteSession
   return (
     <aside className="w-64 bg-black border-r border-zinc-900 p-6 flex flex-col justify-between hidden md:flex selection:bg-white selection:text-black">
       <div>
-        <div className="flex items-center justify-between mb-10">
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-6 bg-white rounded-none flex items-center justify-center">
-              <div className="w-3 h-3 bg-black" />
+        <div className="flex items-center justify-between mb-10 px-2">
+          <div className="flex items-center gap-3">
+            <div className="w-6 h-6 bg-white rounded-none flex items-center justify-center shadow-[0_0_15px_rgba(255,255,255,0.2)]">
+              <div className="w-2.5 h-2.5 bg-black" />
             </div>
-            <span className="text-xl font-bold tracking-tighter text-white lowercase">nexus.</span>
+            <span className="text-xl font-bold tracking-[-0.05em] text-white lowercase">nexus.</span>
           </div>
           <button
             onClick={onToggle}
-            className="p-1.5 border border-zinc-900 hover:border-zinc-700 transition-colors rounded-none"
+            className="p-1.5 border border-zinc-900 hover:border-zinc-700 transition-all rounded-none bg-black/50"
             aria-label="Collapse sidebar"
           >
-            <ChevronLeftIcon className="h-4 w-4 text-zinc-500" />
+            <ChevronLeftIcon className="h-3.5 w-3.5 text-zinc-600" />
           </button>
         </div>
 
         <button
           onClick={() => onNavigate('new-chat')}
-          className="w-full flex items-center justify-center gap-3 px-4 py-2.5 text-[10px] font-bold uppercase tracking-widest bg-white text-black hover:bg-orange-500 hover:text-white transition-all duration-300 rounded-none">
+          className="w-full flex items-center justify-center gap-3 px-4 py-3 text-[10px] font-bold uppercase tracking-[0.3em] bg-white text-black hover:bg-orange-500 hover:text-white transition-all duration-500 rounded-none shadow-[0_0_20px_rgba(255,255,255,0.05)]">
           <NewChatIcon className="h-4 w-4" />
           Materialize Node
         </button>
 
-        <nav className="mt-10 space-y-2">
+        <nav className="mt-12 space-y-1">
           {[
             { id: 'all-chats' as View, label: 'Neural Archives', icon: ChatsIcon },
             { id: 'storage' as View, label: 'LamaDB Memory', icon: DatabaseIcon },
@@ -54,7 +54,7 @@ export function Sidebar({ onNavigate, recentChats, onSelectChat, onDeleteSession
             <button
               key={item.id}
               onClick={() => onNavigate(item.id)}
-              className={`w-full text-left flex items-center gap-3 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.2em] transition-all border border-transparent ${activeView === item.id ? 'bg-zinc-900 border-zinc-800 text-white' : 'text-zinc-600 hover:text-zinc-300'}`}
+              className={`w-full text-left flex items-center gap-4 px-4 py-2.5 text-[9px] font-bold uppercase tracking-[0.25em] transition-all border-l-2 ${activeView === item.id ? 'bg-zinc-900/50 border-orange-500 text-white' : 'border-transparent text-zinc-600 hover:text-zinc-300 hover:bg-zinc-900/20'}`}
             >
               <item.icon className="h-4 w-4" />
               {item.label}
@@ -63,14 +63,14 @@ export function Sidebar({ onNavigate, recentChats, onSelectChat, onDeleteSession
         </nav>
 
         {recentChats.length > 0 && (
-          <div className="mt-12">
-            <p className="px-4 text-[9px] font-bold text-zinc-700 uppercase tracking-[0.4em] mb-4">Active Nodes</p>
-            <nav className="space-y-1">
+          <div className="mt-14">
+            <p className="px-4 text-[8px] font-bold text-zinc-800 uppercase tracking-[0.5em] mb-6">Archive // Active Nodes</p>
+            <nav className="space-y-0.5">
               {recentChats.slice(0, 5).map(chat => (
-                <div key={chat.id} className="group relative px-2">
+                <div key={chat.id} className="group relative">
                   <button
                     onClick={() => onSelectChat(chat.id)}
-                    className={`w-full text-left flex items-center justify-between gap-3 px-3 py-2 text-[11px] font-medium text-zinc-500 truncate transition-all border border-transparent hover:border-zinc-900 ${chat.id === activeChatId ? 'text-white bg-zinc-900/50' : 'hover:bg-zinc-950 hover:text-zinc-300'}`}>
+                    className={`w-full text-left flex items-center justify-between gap-3 px-4 py-2 text-[10px] font-bold tracking-widest transition-all border-l-2 ${chat.id === activeChatId ? 'text-white border-zinc-500 bg-zinc-900/30' : 'text-zinc-600 border-transparent hover:text-zinc-400 hover:bg-zinc-950'}`}>
                     <span className="truncate lowercase">{chat.title}</span>
                   </button>
                   <button

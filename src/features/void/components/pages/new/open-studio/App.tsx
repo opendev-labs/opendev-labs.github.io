@@ -512,7 +512,7 @@ function App() {
   }
 
   return (
-    <div className="flex h-screen bg-black text-zinc-400 selection:bg-white selection:text-black">
+    <div className="flex h-screen bg-black text-zinc-400 selection:bg-white selection:text-black overflow-hidden transform-gpu">
       {isSidebarOpen && (
         <Sidebar
           onNavigate={handleNavigate}
@@ -524,69 +524,96 @@ function App() {
           onToggle={() => setIsSidebarOpen(false)}
         />
       )}
-      <main className="flex-1 flex flex-col overflow-hidden relative">
-        {!isSidebarOpen && view !== 'new-chat' && (
-          <button
-            onClick={() => setIsSidebarOpen(true)}
-            className="absolute top-6 left-6 z-20 p-2 border border-zinc-900 bg-black hover:border-zinc-700 transition-colors rounded-none shadow-2xl"
-            aria-label="Open sidebar"
-          >
-            <SidebarIcon className="h-4 w-4 text-zinc-500" />
-          </button>
-        )}
+      
+      <main className="flex-1 flex flex-col min-w-0 bg-[#050505] relative overflow-hidden">
+        {/* Unified Workspace Header */}
+        <header className="flex-shrink-0 h-16 border-b border-zinc-900 bg-black flex items-center justify-between px-6 z-30">
+          <div className="flex items-center gap-4">
+            {!isSidebarOpen && (
+              <button
+                onClick={() => setIsSidebarOpen(true)}
+                className="p-2 border border-zinc-900 bg-black hover:border-zinc-700 transition-all rounded-none group"
+                aria-label="Open sidebar"
+              >
+                <SidebarIcon className="h-3.5 w-3.5 text-zinc-500 group-hover:text-white" />
+              </button>
+            )}
+            
+            <div className="flex items-center gap-3">
+              <span className="text-[10px] font-bold text-zinc-600 uppercase tracking-[0.4em]">Open-Studio</span>
+              <div className="w-[1px] h-3 bg-zinc-900" />
+              <div className="flex items-center gap-2">
+                <div className={`w-1.5 h-1.5 rounded-full ${isThinking ? 'bg-orange-500 animate-pulse' : 'bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.4)]'}`} />
+                <span className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest leading-none">
+                  {view === 'chat-session' && activeSession ? `Node: ${activeSession.title}` : 'Materialization Mesh // Online'}
+                </span>
+              </div>
+            </div>
+          </div>
 
-        {/* Global Action Header for Session View */}
-        {view === 'chat-session' && activeSession && (
-          <div className="absolute top-6 right-6 z-20 flex items-center gap-3">
-             <button
+          <div className="flex items-center gap-3">
+            {view === 'chat-session' && activeSession && (
+              <button
                 onClick={handleShareToHub}
-                className="flex items-center gap-2 px-4 py-2 border border-zinc-900 bg-black/50 backdrop-blur-xl hover:border-zinc-700 transition-all text-[10px] font-bold uppercase tracking-widest text-zinc-400 hover:text-white group"
+                className="flex items-center gap-2 px-4 py-2 border border-zinc-900 bg-zinc-950 hover:border-zinc-700 transition-all text-[10px] font-bold uppercase tracking-widest text-zinc-400 hover:text-white group"
               >
                 <ShareIcon className="w-3 h-3 group-hover:text-orange-500" />
-                <span>Share to Hub</span>
+                <span>Share Build</span>
               </button>
+            )}
+            
+            <div className="w-[1px] h-4 bg-zinc-900 mx-2" />
+            
+            <div className="flex items-center gap-2 px-3 py-1.5 border border-zinc-900 bg-black">
+              <span className="text-[9px] font-bold text-zinc-700 uppercase tracking-widest">Protocol</span>
+              <span className="text-[9px] font-bold text-white uppercase tracking-widest">{profile?.username || 'GUEST'}</span>
+            </div>
           </div>
-        )}
+        </header>
 
-        <div key={view + activeSessionId} className="h-full overflow-y-auto">
-          {view === 'chat-session' && activeSession && (
-            <ChatSessionView
-              session={activeSession}
-              {...commonProps}
-              setActiveFile={setActiveFileForSession}
-              onFileContentChange={handleFileContentChange}
-              onAddFileOrFolder={handleAddFileOrFolder}
-              onDeleteFileOrFolder={handleDeleteFileOrFolder}
-              onRenameFileOrFolder={handleRenameFileOrFolder}
-            />
-          )}
-          {view === 'new-chat' && !activeSessionId && (
-            <WelcomeScreen {...commonProps} />
-          )}
-          {view === 'storage' && (
-            <div className="h-full overflow-y-auto pt-10">
-              <LamaDBOfficeCockpit />
-            </div>
-          )}
-          {view === 'deploy' && (
-            <div className="h-full overflow-y-auto pt-10">
-              <UnifiedOfficeCockpit />
-            </div>
-          )}
-          {view === 'chat-session' && !activeSession && !isInitialLoad && (
-             <div className="p-8 text-white flex flex-col items-center justify-center h-full text-center">
-              <h1 className="text-xl font-bold mb-2 lowercase tracking-tighter">node not materialized</h1>
-              <p className="text-zinc-600 mb-8 max-w-sm uppercase text-[10px] font-bold tracking-[0.2em] leading-relaxed">the session you are attempting to uplink with is currently void or offline in this mesh.</p>
-              <button
-                onClick={() => handleNavigate('new-chat')}
-                className="px-6 py-2.5 text-[10px] font-bold uppercase tracking-widest bg-white text-black hover:bg-orange-500 hover:text-white transition-all duration-300 rounded-none"
-              >
-                Materialize New Node
-              </button>
-            </div>
-          )}
-          {view === 'all-chats' && <AllChatsView sessions={sessions} onSelectChat={handleSelectChat} onDeleteSession={handleDeleteSession} onNavigate={handleNavigate} />}
-          {view === 'settings' && <SettingsView />}
+        <div className="flex-1 overflow-hidden relative">
+          <div className="absolute inset-0 overflow-y-auto">
+            {view === 'chat-session' && activeSession && (
+              <ChatSessionView
+                session={activeSession}
+                {...commonProps}
+                setActiveFile={setActiveFileForSession}
+                onFileContentChange={handleFileContentChange}
+                onAddFileOrFolder={handleAddFileOrFolder}
+                onDeleteFileOrFolder={handleDeleteFileOrFolder}
+                onRenameFileOrFolder={handleRenameFileOrFolder}
+              />
+            )}
+            {view === 'new-chat' && !activeSessionId && (
+              <div className="h-full">
+                <WelcomeScreen {...commonProps} />
+              </div>
+            )}
+            {view === 'storage' && (
+              <div className="h-full pt-10 px-8">
+                <LamaDBOfficeCockpit />
+              </div>
+            )}
+            {view === 'deploy' && (
+              <div className="h-full pt-10 px-8">
+                <UnifiedOfficeCockpit />
+              </div>
+            )}
+            {view === 'chat-session' && !activeSession && !isInitialLoad && (
+              <div className="p-8 text-white flex flex-col items-center justify-center h-full text-center">
+                <h1 className="text-xl font-bold mb-2 lowercase tracking-tighter">node not materialized</h1>
+                <p className="text-zinc-600 mb-8 max-w-sm uppercase text-[10px] font-bold tracking-[0.2em] leading-relaxed">the session you are attempting to uplink with is currently void or offline in this mesh.</p>
+                <button
+                  onClick={() => handleNavigate('new-chat')}
+                  className="px-6 py-2.5 text-[10px] font-bold uppercase tracking-widest bg-white text-black hover:bg-orange-500 hover:text-white transition-all duration-300 rounded-none"
+                >
+                  Materialize New Node
+                </button>
+              </div>
+            )}
+            {view === 'all-chats' && <div className="p-8"><AllChatsView sessions={sessions} onSelectChat={handleSelectChat} onDeleteSession={handleDeleteSession} onNavigate={handleNavigate} /></div>}
+            {view === 'settings' && <div className="h-full"><SettingsView /></div>}
+          </div>
         </div>
       </main>
     </div>

@@ -42,8 +42,11 @@ export function PromptInput({ onSendMessage, disabled, selectedModelId, onModelC
   const currentModel = SUPPORTED_MODELS.find(m => m.id === selectedModelId);
 
   return (
-    <form onSubmit={handleSubmit} className="w-full max-w-3xl mx-auto relative group">
-      <div className="bg-zinc-950 border border-zinc-900 rounded-none px-6 py-4 flex flex-col justify-between transition-all duration-300 focus-within:border-orange-500/50 shadow-2xl">
+    <form onSubmit={handleSubmit} className="w-full max-w-4xl mx-auto relative group px-4">
+      <div className="bg-zinc-950/40 backdrop-blur-3xl border border-zinc-900 rounded-none px-8 py-6 flex flex-col justify-between transition-all duration-700 focus-within:border-zinc-500 focus-within:shadow-[0_0_50px_rgba(255,255,255,0.02)] relative overflow-hidden">
+        {/* Subtle top light sweep */}
+        <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-zinc-500/20 to-transparent group-focus-within:via-white/20" />
+        
         <textarea
           ref={textareaRef}
           value={prompt}
@@ -55,12 +58,12 @@ export function PromptInput({ onSendMessage, disabled, selectedModelId, onModelC
             }
           }}
           placeholder="What shall we materialize today?"
-          className="w-full bg-transparent text-zinc-200 text-base placeholder-zinc-700 resize-none focus:outline-none font-medium mb-4"
+          className="w-full bg-transparent text-white text-lg placeholder-zinc-800 resize-none focus:outline-none font-bold mb-6 lowercase tracking-tight"
           rows={1}
           disabled={disabled}
-          style={{ maxHeight: '200px' }}
+          style={{ maxHeight: '250px' }}
         />
-        <div className="flex items-center justify-between border-t border-zinc-900 pt-4">
+        <div className="flex items-center justify-between border-t border-zinc-900/50 pt-6">
           <div className="flex items-center gap-2 text-zinc-600">
             {[
               { icon: ImageIcon, label: 'Visual Context' },

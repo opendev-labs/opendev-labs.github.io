@@ -87,63 +87,46 @@ export function ChatSessionView({
   }, [chatPanelWidth]);
 
   return (
-    <div className="flex flex-col h-full bg-black selection:bg-white selection:text-black">
-      <header className="flex-shrink-0 flex items-center justify-between px-8 py-5 border-b border-zinc-900 bg-black h-16">
-        <div className="flex items-center gap-6">
-          <button
-            onClick={() => window.location.hash = '/'}
-            className="text-[10px] font-bold text-zinc-600 hover:text-orange-500 transition-colors uppercase tracking-[0.4em]"
-          >
-            &larr; Return to Fleet
-          </button>
-          <div className="w-[1px] h-4 bg-zinc-900" />
-          <div className="flex flex-col">
-            <div className="text-[9px] font-bold text-zinc-500 uppercase tracking-[0.3em] mb-0.5">
-              Node: <span className="text-white">{session.title}</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse" />
-              <span className="text-[10px] font-bold text-orange-500 uppercase tracking-widest">Neural Uplink // Active</span>
-            </div>
+    <div className="flex flex-col h-full bg-[#050505] selection:bg-white selection:text-black transform-gpu">
+      {/* Refined Sub-Header for Workspace Actions */}
+      <div className="flex-shrink-0 flex items-center justify-between px-6 py-3 border-b border-zinc-900 bg-black/40 backdrop-blur-md h-12">
+        <div className="flex items-center gap-4">
+          <div className="flex items-center bg-zinc-950 border border-zinc-900 p-0.5 rounded-none">
+            <button
+              onClick={() => setActiveTab('code')}
+              className={`px-4 py-1.5 text-[9px] font-bold uppercase tracking-[0.2em] transition-all ${activeTab === 'code' ? 'bg-zinc-800 text-white shadow-[0_0_10px_rgba(255,255,255,0.05)]' : 'text-zinc-600 hover:text-zinc-400'}`}
+            >
+              Architect
+            </button>
+            <button
+              onClick={() => setActiveTab('preview')}
+              className={`px-4 py-1.5 text-[9px] font-bold uppercase tracking-[0.2em] transition-all ${activeTab === 'preview' ? 'bg-zinc-800 text-white shadow-[0_0_10px_rgba(255,255,255,0.05)]' : 'text-zinc-600 hover:text-zinc-400'}`}
+            >
+              Live Render
+            </button>
           </div>
         </div>
 
         <div className="flex items-center gap-4">
-          {isCodeViewVisible && (
-            <div className="flex items-center bg-zinc-950 border border-zinc-900 p-1 rounded-none">
-              <button
-                onClick={() => setActiveTab('code')}
-                className={`px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest transition-all ${activeTab === 'code' ? 'bg-zinc-800 text-white' : 'text-zinc-600 hover:text-zinc-400'}`}
-              >
-                Code
-              </button>
-              <button
-                onClick={() => setActiveTab('preview')}
-                className={`px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest transition-all ${activeTab === 'preview' ? 'bg-zinc-800 text-white' : 'text-zinc-600 hover:text-zinc-400'}`}
-              >
-                Live Preview
-              </button>
-            </div>
-          )}
+          <div className="flex items-center gap-2 pr-2 border-r border-zinc-900">
+             <span className="text-[9px] font-bold text-zinc-700 uppercase tracking-widest">Workspace</span>
+             <code className="text-[9px] font-mono text-zinc-500 bg-zinc-950 px-2 py-0.5 border border-zinc-900">nexus-v11</code>
+          </div>
 
           <button
             onClick={() => setIsCodeViewVisible(!isCodeViewVisible)}
-            className="p-2 border border-zinc-900 hover:border-zinc-700 transition-colors rounded-none group"
+            className="p-1.5 border border-zinc-900 hover:border-zinc-700 transition-all rounded-none group bg-zinc-950"
             title={isCodeViewVisible ? "Collapse Node" : "Expand Node"}
           >
-            {isCodeViewVisible ? <PanelLeftCloseIcon className="h-4 w-4 text-zinc-500 group-hover:text-white" /> : <PanelRightCloseIcon className="h-4 w-4 text-zinc-500 group-hover:text-white" />}
-          </button>
-
-          <button className="px-5 py-2 text-[10px] font-bold uppercase tracking-widest bg-white text-black hover:bg-orange-500 hover:text-white transition-all duration-300 flex items-center gap-2 rounded-none">
-            <DeployIcon className="h-4 w-4" />
-            Materialize Node
+            {isCodeViewVisible ? <PanelLeftCloseIcon className="h-3.5 w-3.5 text-zinc-600 group-hover:text-white" /> : <PanelRightCloseIcon className="h-3.5 w-3.5 text-zinc-600 group-hover:text-white" />}
           </button>
         </div>
-      </header>
+      </div>
+
       <div className="flex-1 flex h-full overflow-hidden">
         <motion.div
           ref={chatViewRef}
-          className="h-full border-r border-neutral-800"
+          className="h-full border-r border-neutral-900"
           initial={false}
           animate={{ width: isCodeViewVisible ? `${chatPanelWidth}px` : '100%' }}
           transition={{ type: 'spring', stiffness: 300, damping: 30 }}
@@ -162,7 +145,7 @@ export function ChatSessionView({
             <>
               <div
                 onMouseDown={startResizing}
-                className="w-1.5 h-full cursor-col-resize bg-neutral-900 hover:bg-zinc-800 transition-colors flex-shrink-0 hidden lg:block z-10"
+                className="w-1 h-full cursor-col-resize bg-black hover:bg-orange-500/50 transition-colors flex-shrink-0 hidden lg:block z-10"
               />
               <motion.div
                 className="flex-1 h-full overflow-hidden"
