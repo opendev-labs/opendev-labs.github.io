@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ArrowUpIcon, ImageIcon, GridIcon, BrainCircuitIcon, PlusIcon } from './icons/Icons';
+import { ArrowUpIcon, ImageIcon, GridIcon, BrainCircuitIcon, PlusIcon, StarIcon } from './icons/Icons';
 import { ModelDropdown } from './ModelDropdown';
 import { SUPPORTED_MODELS } from '../constants';
 
