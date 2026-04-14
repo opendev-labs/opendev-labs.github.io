@@ -7,12 +7,21 @@ import { ExternalLink, Code2, Layout, Sparkles } from 'lucide-react';
 import TemplateWebsite from '../assets/template-website.png';
 import TemplateLanding from '../assets/template-landing.png';
 
-const ShowcaseItem = ({ title, category, description, children, icon: Icon }: any) => (
+const ShowcaseItem = ({ title, category, description, children, icon: Icon, previewLink }: any) => (
     <Card hover glass className="group flex flex-col h-full bg-zinc-950/20 border-zinc-900/50">
         <div className="relative aspect-video overflow-hidden border-b border-zinc-900/50">
             {children}
             <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center backdrop-blur-[2px]">
-                <Button variant="secondary" size="sm" className="gap-2">
+                <Button 
+                    variant="secondary" 
+                    size="sm" 
+                    className="gap-2"
+                    onClick={() => {
+                        if (previewLink) {
+                            window.open(previewLink, '_blank', 'noopener,noreferrer');
+                        }
+                    }}
+                >
                     <ExternalLink size={14} /> View Project
                 </Button>
             </div>
@@ -78,6 +87,7 @@ export const ShowcaseSection = () => {
                         category="3D Design"
                         description="A beautiful 3D wormhole that you can move with your mouse."
                         icon={Code2}
+                        previewLink="/open-studio"
                     >
                         <div className="absolute inset-0 bg-zinc-950">
                            <WormholeHero className="absolute inset-0" />
@@ -89,6 +99,7 @@ export const ShowcaseSection = () => {
                         category="Web App"
                         description="A professional and clean dashboard for your business data."
                         icon={Layout}
+                        previewLink={TemplateWebsite}
                     >
                         <img src={TemplateWebsite} alt="Website Template" className="w-full h-full object-cover" />
                     </ShowcaseItem>
@@ -98,6 +109,7 @@ export const ShowcaseSection = () => {
                         category="Website"
                         description="A high-quality website to show your AI products to the world."
                         icon={Sparkles}
+                        previewLink={TemplateLanding}
                     >
                         <img src={TemplateLanding} alt="Landing Page Template" className="w-full h-full object-cover" />
                     </ShowcaseItem>
