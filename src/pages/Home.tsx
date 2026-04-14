@@ -89,14 +89,7 @@ export default function Home() {
                         <span>System Status: Online // v11.12</span>
                     </motion.div>
 
-                    <motion.h1
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.1 }}
-                        className="text-2xl md:text-3xl font-bold tracking-[0.4em] mb-10 text-zinc-600 leading-[0.8] lowercase px-4"
-                    >
-                        vibecode
-                    </motion.h1>
+
 
                     <motion.p
                         initial={{ opacity: 0, y: 20 }}
