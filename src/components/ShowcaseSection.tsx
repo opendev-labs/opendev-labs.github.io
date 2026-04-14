@@ -87,7 +87,7 @@ export const ShowcaseSection = () => {
                         category="3D Design"
                         description="A beautiful 3D wormhole that you can move with your mouse."
                         icon={Code2}
-                        previewLink="/open-studio"
+                        previewLink="https://opendev-labs.github.io/preview"
                     >
                         <div className="absolute inset-0 bg-zinc-950">
                            <WormholeHero className="absolute inset-0" />
@@ -99,7 +99,7 @@ export const ShowcaseSection = () => {
                         category="Web App"
                         description="A professional and clean dashboard for your business data."
                         icon={Layout}
-                        previewLink={TemplateWebsite}
+                        previewLink="https://opendev-labs.github.io/preview"
                     >
                         <img src={TemplateWebsite} alt="Website Template" className="w-full h-full object-cover" />
                     </ShowcaseItem>
@@ -109,7 +109,7 @@ export const ShowcaseSection = () => {
                         category="Website"
                         description="A high-quality website to show your AI products to the world."
                         icon={Sparkles}
-                        previewLink={TemplateLanding}
+                        previewLink="https://opendev-labs.github.io/preview"
                     >
                         <img src={TemplateLanding} alt="Landing Page Template" className="w-full h-full object-cover" />
                     </ShowcaseItem>
