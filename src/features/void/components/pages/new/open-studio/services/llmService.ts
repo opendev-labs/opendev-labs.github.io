@@ -318,11 +318,14 @@ export async function generateSuggestions(context: string): Promise<string[]> {
             apiKey: envKey,
             apiVersion: 'v1'
         });
-        const response = await ai.models.generateContent({
+        const genModel = ai.getGenerativeModel({
             model: 'gemini-1.5-flash',
-            contents: context,
-            config: {
-                systemInstruction: `You are an expert developer assistant. Based on the user's last request and the files that were generated, provide 3-4 short, actionable follow-up prompts. Return a JSON object with a single key "suggestions" which is an array of strings. Example: {"suggestions": ["Make it responsive", "Add a loading state"]}`,
+            systemInstruction: `You are an expert developer assistant. Based on the user's last request and the files that were generated, provide 3-4 short, actionable follow-up prompts. Return a JSON object with a single key "suggestions" which is an array of strings. Example: {"suggestions": ["Make it responsive", "Add a loading state"]}`,
+        });
+
+        const response = await genModel.generateContent({
+            contents: [{ role: 'user', parts: [{ text: context }] }],
+            generationConfig: {
                 responseMimeType: "application/json",
                 responseSchema: {
                     type: Type.OBJECT,

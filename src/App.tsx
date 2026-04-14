@@ -66,11 +66,11 @@ const AppRoutes = () => {
         <Route path="open-studio/*" element={
           <ProtectedRoute>
             <Suspense fallback={<div className="min-h-screen bg-black flex items-center justify-center text-white">Loading open-studio...</div>}>
-              <div className="flex flex-col h-screen overflow-hidden">
+              <div className="h-screen overflow-hidden">
                 <Header />
-                <div className="flex-1 overflow-hidden mt-14">
+                <main className="h-full pt-14 overflow-hidden">
                   <OpenStudioApp />
-                </div>
+                </main>
               </div>
             </Suspense>
           </ProtectedRoute>
@@ -109,11 +109,11 @@ const AppRoutes = () => {
           <Route path="open-studio" element={
             <ProtectedRoute>
             <Suspense fallback={<div className="min-h-screen bg-black flex items-center justify-center text-white italic tracking-widest">Opening Workspace...</div>}>
-                <div className="flex flex-col h-screen overflow-hidden">
+                <div className="h-screen overflow-hidden">
                   <Header />
-                  <div className="flex-1 overflow-hidden mt-14">
+                  <main className="h-full pt-14 overflow-hidden">
                     <OpenStudioApp />
-                  </div>
+                  </main>
                 </div>
               </Suspense>
             </ProtectedRoute>

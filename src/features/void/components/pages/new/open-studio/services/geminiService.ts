@@ -56,11 +56,14 @@ export async function* streamGeminiResponse(
         { role: 'user', parts: [{ text: fullPrompt }] }
     ];
 
-    const result = await ai.models.generateContentStream({
+    const genModel = ai.getGenerativeModel({
         model: modelConfig.apiIdentifier,
+        systemInstruction: TARS_SYSTEM_INSTRUCTION_GEMINI,
+    });
+
+    const result = await genModel.generateContentStream({
         contents: contents,
-        config: {
-            systemInstruction: TARS_SYSTEM_INSTRUCTION_GEMINI,
+        generationConfig: {
             responseMimeType: "application/json",
             responseSchema: {
                 type: Type.OBJECT,

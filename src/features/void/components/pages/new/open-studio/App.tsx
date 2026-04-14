@@ -512,7 +512,7 @@ function App() {
   }
 
   return (
-    <div className="flex h-screen bg-black text-zinc-400 selection:bg-white selection:text-black overflow-hidden transform-gpu">
+    <div className="flex h-full bg-black text-zinc-400 selection:bg-white selection:text-black overflow-hidden transform-gpu">
       {isSidebarOpen && (
         <Sidebar
           onNavigate={handleNavigate}

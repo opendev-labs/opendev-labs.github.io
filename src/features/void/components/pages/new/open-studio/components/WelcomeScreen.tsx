@@ -13,7 +13,7 @@ interface WelcomeScreenProps {
 
 export function WelcomeScreen({ onSendMessage, isThinking, selectedModelId, onModelChange }: WelcomeScreenProps) {
     return (
-        <div className="flex flex-col h-screen w-full bg-black text-white selection:bg-white selection:text-black relative overflow-hidden">
+        <div className="flex flex-col h-full w-full bg-black text-white selection:bg-white selection:text-black relative overflow-hidden">
             {/* Background Image with Cinematic Depth */}
             <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
                 <div 
