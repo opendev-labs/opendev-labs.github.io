@@ -317,7 +317,7 @@ function App() {
       let fullResponse = '';
       let conversationText = '';
 
-      const stream = streamChatResponse(prompt, history, currentFileTree, selectedModelId, undefined);
+      const stream = streamChatResponse(prompt, history, currentFileTree, selectedModelId, profile);
 
       for await (const chunk of stream) {
         fullResponse += chunk.text;

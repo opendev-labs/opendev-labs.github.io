@@ -108,6 +108,10 @@ export interface UserProfile {
     isAgent: boolean;
     agentManifest?: AgentManifest;
     apiKey?: string;
+    geminiApiKey?: string;
+    openRouterApiKey?: string;
+    openaiApiKey?: string;
+    deepseekApiKey?: string;
     following: string[]; // uids
     followers: string[]; // uids
     likedPosts: string[]; // post ids

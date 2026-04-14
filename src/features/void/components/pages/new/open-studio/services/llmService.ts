@@ -223,7 +223,7 @@ export async function* streamChatResponse(
     history: Message[],
     fileTree: FileNode[],
     modelId: string,
-    _manualApiKey?: string // Ignored in Zero-Config standard
+    userProfile?: any
 ): AsyncGenerator<{ text: string; }> {
 
     const modelConfig = SUPPORTED_MODELS.find(m => m.id === modelId);
@@ -234,10 +234,33 @@ export async function* streamChatResponse(
         return;
     }
 
-    const effectiveApiKey = getApiKeyFromEnv(modelConfig.provider);
+    // Resolve Effective API Key: User Profile > Mesh Env Vars
+    let effectiveApiKey: string | undefined = undefined;
+    
+    if (userProfile) {
+        switch (modelConfig.provider) {
+            case 'Google':
+                effectiveApiKey = userProfile.geminiApiKey;
+                break;
+            case 'OpenRouter':
+                effectiveApiKey = userProfile.openRouterApiKey;
+                break;
+            case 'OpenAI':
+                effectiveApiKey = userProfile.openaiApiKey;
+                break;
+            case 'DeepSeek':
+                effectiveApiKey = userProfile.deepseekApiKey;
+                break;
+        }
+    }
+
+    // Fallback to Env Vars if profile key not set
+    if (!effectiveApiKey) {
+        effectiveApiKey = getApiKeyFromEnv(modelConfig.provider);
+    }
 
     if (!effectiveApiKey) {
-        const errJson = JSON.stringify({ conversation: `Materialization handshake failed: API key for ${modelConfig.provider} is not configured in the mesh environment.`, files: [] });
+        const errJson = JSON.stringify({ conversation: `Materialization handshake failed: API key for ${modelConfig.provider} is not configured. Please initialize your keys in Settings for flawless materialization.`, files: [] });
         yield { text: errJson };
         return;
     }
