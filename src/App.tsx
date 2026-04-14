@@ -65,10 +65,10 @@ const AppRoutes = () => {
         {/* open-studio: Hyper-intelligent Agentic IDE */}
         <Route path="open-studio/*" element={
           <ProtectedRoute>
-            <Suspense fallback={<div className="min-h-screen bg-black flex items-center justify-center text-white">Loading open-studio...</div>}>
-              <div className="h-screen overflow-hidden">
+            <Suspense fallback={<div className="min-h-screen bg-black flex items-center justify-center text-zinc-500 font-mono text-[10px] uppercase tracking-widest">Materializing Neural Mesh...</div>}>
+              <div className="h-screen bg-black overflow-hidden flex flex-col">
                 <Header />
-                <main className="h-full pt-14 overflow-hidden">
+                <main className="flex-1 pt-14 overflow-hidden">
                   <OpenStudioApp />
                 </main>
               </div>
@@ -103,18 +103,6 @@ const AppRoutes = () => {
             <ProtectedRoute>
               <Suspense fallback={<div className="min-h-screen bg-black flex items-center justify-center text-white italic tracking-widest">Opening Workspace...</div>}>
                 <OpenHub />
-              </Suspense>
-            </ProtectedRoute>
-          } />
-          <Route path="open-studio" element={
-            <ProtectedRoute>
-            <Suspense fallback={<div className="min-h-screen bg-black flex items-center justify-center text-white italic tracking-widest">Opening Workspace...</div>}>
-                <div className="h-screen overflow-hidden">
-                  <Header />
-                  <main className="h-full pt-14 overflow-hidden">
-                    <OpenStudioApp />
-                  </main>
-                </div>
               </Suspense>
             </ProtectedRoute>
           } />

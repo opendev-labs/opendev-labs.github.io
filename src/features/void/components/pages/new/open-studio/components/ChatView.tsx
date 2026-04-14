@@ -24,14 +24,14 @@ export function ChatView({ messages, isThinking, onSendMessage, suggestions, sel
   }, [messages]);
 
   return (
-    <div className="flex flex-col h-full bg-[#0A0A0A] relative">
-      <div ref={scrollRef} className="flex-1 overflow-y-auto p-6 md:p-10 lg:p-14 space-y-12 scroll-smooth">
+    <div className="flex flex-col h-full bg-transparent relative">
+      <div ref={scrollRef} className="flex-1 overflow-y-auto p-6 md:p-10 lg:p-14 space-y-2 scrollbar-thin scrollbar-thumb-zinc-800 scroll-smooth">
         {messages.map((msg) => <ChatMessage key={msg.id} message={msg} />)}
         {isThinking && messages.length > 0 && messages[messages.length - 1].role === 'user' && (
           <ChatMessage message={{ id: Date.now(), role: 'open-studio', content: 'Thinking...' }} />
         )}
       </div>
-      <div className="px-4 md:px-6 lg:px-8 pb-4 bg-gradient-to-t from-[#0A0A0A] to-transparent">
+      <div className="px-4 md:px-6 lg:px-8 pb-4 bg-gradient-to-t from-black/20 to-transparent">
         {!isThinking && suggestions && suggestions.length > 0 && (
           <SuggestedPromptsView suggestions={suggestions} onSendMessage={onSendMessage} />
         )}

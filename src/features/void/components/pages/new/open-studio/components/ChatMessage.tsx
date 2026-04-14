@@ -1,5 +1,4 @@
 import React from 'react';
-import { Cpu } from 'lucide-react';
 import type { Message } from '../types';
 import { UserIcon, NexusIcon, SpinnerIcon } from './icons/Icons';
 import { GenerationStatusView } from './GenerationStatusView';
@@ -13,71 +12,69 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
   const isUser = role === 'user';
 
   const isStudioGenerating = role === 'open-studio' && generationInfo?.status === 'generating';
-  // "Thinking" phase is when generation has started, but no conversational content or file list has arrived yet.
   const isThinkingPhase = isStudioGenerating && generationInfo?.files.length === 0 && !content;
 
-
   return (
-    <div className={`flex items-start gap-6 w-full max-w-5xl mx-auto ${isUser ? 'flex-row-reverse' : ''} mb-12 animate-in fade-in slide-in-from-bottom-4 duration-500`}>
-      <div className={`flex-shrink-0 h-10 w-10 flex items-center justify-center rounded-none border ${isUser ? 'bg-white border-white text-black' : 'bg-black border-zinc-900 shadow-2xl'}`}>
-        {isUser ? <UserIcon className="h-5 w-5" /> : <NexusIcon className="h-5 w-5 text-orange-500" />}
-      </div>
+    <div className={`flex flex-col gap-6 w-full max-w-5xl mx-auto mb-12 animate-in fade-in slide-in-from-bottom-4 duration-500`}>
+      <div className={`flex gap-6 ${isUser ? 'flex-row-reverse' : 'flex-row'}`}>
+        {/* AVATAR */}
+        <div className={`flex-shrink-0 h-10 w-10 flex items-center justify-center rounded-xl border transition-all duration-300 ${
+          isUser 
+            ? 'bg-white border-white text-black' 
+            : 'bg-zinc-900 border-zinc-800 text-white'
+        }`}>
+          {isUser ? <UserIcon className="h-5 w-5" /> : <NexusIcon className="h-5 w-5" />}
+        </div>
 
-      <div className={`flex flex-col w-full ${isUser ? 'items-end' : 'items-start'}`}>
-        <div className={`w-full max-w-3xl ${isUser ? 'text-right' : 'text-left'}`}>
-          <div className="flex items-center gap-2 mb-2 opacity-30">
-            <span className="text-[9px] font-bold uppercase tracking-[0.3em] text-zinc-500">
-              {isUser ? 'Materializer // User' : 'Architect // open-studio'}
+        {/* CONTENT AREA */}
+        <div className={`flex-1 min-w-0 flex flex-col gap-3 ${isUser ? 'items-end' : 'items-start'}`}>
+          <div className="flex items-center gap-2 px-1">
+            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-600 font-mono">
+              {isUser ? 'Architect' : 'OpenStudio'}
+            </span>
+            <div className="w-1 h-1 rounded-full bg-zinc-800" />
+            <span className="text-[9px] text-zinc-700 font-mono uppercase">
+               {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
             </span>
           </div>
 
-          <div className={`px-0 py-2 ${isUser ? 'text-zinc-200' : 'text-white'}`}>
+          <div className={`w-full p-6 transition-all duration-500 ${
+            isUser 
+              ? 'text-zinc-300' 
+              : 'bg-[#0A0A0A]/50 backdrop-blur-sm border border-zinc-900/50 text-zinc-100 rounded-2xl shadow-sm'
+          }`}>
             {isThinkingPhase ? (
-              <div className="flex items-center gap-4 py-4 bg-zinc-950/50 border border-zinc-900 px-6">
-                <SpinnerIcon className="h-4 w-4 animate-spin text-orange-500" />
-                <p className="text-[10px] font-bold tracking-[0.4em] text-zinc-500 uppercase">Synchronizing Neural Mesh...</p>
+              <div className="flex items-center gap-3 py-1">
+                <SpinnerIcon className="h-3.5 w-3.5 animate-spin text-zinc-500" />
+                <p className="text-[10px] font-bold tracking-[0.2em] text-zinc-600 uppercase font-mono">Synthesizing Response...</p>
               </div>
             ) : (
-              <>
-                {role === 'open-studio' && (
-                  <div className="flex items-center gap-2 mb-4">
-                    <div className="w-5 h-5 bg-zinc-900 border border-zinc-800 flex items-center justify-center">
-                      <Cpu size={10} className="text-zinc-500" />
+              <div className="text-[15px] leading-relaxed font-normal selection:bg-white/10 whitespace-pre-wrap">
+                {content.trim().startsWith('{') && content.trim().endsWith('}') ? (
+                  <div className="bg-red-500/5 border border-red-500/10 p-5 rounded-xl font-mono text-xs overflow-x-auto">
+                    <div className="flex items-center gap-2 mb-3 text-red-500/80 font-bold uppercase tracking-widest text-[9px]">
+                      <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
+                      Runtime Protocol Error
                     </div>
-                    <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em]">open-studio</span>
+                    <pre className="whitespace-pre-wrap text-zinc-500">
+                      {(() => {
+                        try { return JSON.stringify(JSON.parse(content), null, 2); } catch (e) { return content; }
+                      })()}
+                    </pre>
                   </div>
+                ) : (
+                  content
                 )}
-                <div className={`text-[15px] leading-relaxed font-medium ${isUser ? 'bg-zinc-900/30 p-6 border border-zinc-800' : ''}`}>
-                  {content.trim().startsWith('{') && content.trim().endsWith('}') ? (
-                    <div className="bg-red-500/5 border border-red-500/20 p-6 font-mono text-xs overflow-x-auto">
-                      <div className="flex items-center gap-2 mb-4 text-red-500 font-bold uppercase tracking-widest text-[9px]">
-                        <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-                        Protocol Synchronization Error
-                      </div>
-                      <pre className="whitespace-pre-wrap text-zinc-400">
-                        {(() => {
-                          try {
-                            return JSON.stringify(JSON.parse(content), null, 2);
-                          } catch (e) {
-                            return content;
-                          }
-                        })()}
-                      </pre>
-                    </div>
-                  ) : (
-                    content
-                  )}
-                </div>
-              </>
+              </div>
             )}
 
             {message.generationInfo && message.generationInfo.files.length > 0 && (
-              <div className="mt-8">
-                <div className="flex items-center gap-2 mb-4 opacity-50">
-                  <div className="w-1.5 h-1.5 rounded-none bg-emerald-500" />
-                  <span className="text-[9px] font-bold uppercase tracking-[0.3em] text-zinc-500">Nodes Materializing</span>
+              <div className="mt-8 pt-6 border-t border-zinc-900/50">
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="w-1 h-1 rounded-full bg-blue-500" />
+                  <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-zinc-600 font-mono">Materialized Modules</span>
                 </div>
-                <div className="bg-zinc-950 border border-zinc-900 p-6">
+                <div className="bg-black/20 rounded-xl border border-zinc-900/30 overflow-hidden">
                   <GenerationStatusView info={message.generationInfo} />
                 </div>
               </div>

@@ -512,61 +512,50 @@ function App() {
   }
 
   return (
-    <div className="flex h-full bg-black text-zinc-400 selection:bg-white selection:text-black overflow-hidden transform-gpu">
-      {isSidebarOpen && (
-        <Sidebar
-          onNavigate={handleNavigate}
-          recentChats={sessions}
-          onSelectChat={handleSelectChat}
-          onDeleteSession={handleDeleteSession}
-          activeView={view}
-          activeChatId={activeSessionId}
-          onToggle={() => setIsSidebarOpen(false)}
-        />
-      )}
+    <div className="flex h-full bg-[#030303] text-zinc-400 selection:bg-white/10 selection:text-white overflow-hidden">
+      {/* 🛸 LEFT ISLAND: THE MINI-SIDEBAR */}
+      <Sidebar
+        onNavigate={handleNavigate}
+        recentChats={sessions}
+        onSelectChat={handleSelectChat}
+        onDeleteSession={handleDeleteSession}
+        activeView={view}
+        activeChatId={activeSessionId}
+        onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
+      />
       
-      <main className="flex-1 flex flex-col min-w-0 bg-[#050505] relative overflow-hidden">
+      {/* 🏗️ MAIN ISLAND: THE ARCHITECT WORKSPACE */}
+      <main className="flex-1 flex flex-col min-w-0 bg-[#080808] relative overflow-hidden border-l border-zinc-900/80 shadow-2xl">
         {/* Unified Workspace Header */}
-        <header className="flex-shrink-0 h-16 border-b border-zinc-900 bg-black flex items-center justify-between px-6 z-30">
-          <div className="flex items-center gap-4">
-            {!isSidebarOpen && (
-              <button
-                onClick={() => setIsSidebarOpen(true)}
-                className="p-2 border border-zinc-900 bg-black hover:border-zinc-700 transition-all rounded-none group"
-                aria-label="Open sidebar"
-              >
-                <SidebarIcon className="h-3.5 w-3.5 text-zinc-500 group-hover:text-white" />
-              </button>
-            )}
-            
+        <header className="flex-shrink-0 h-16 border-b border-zinc-900/50 bg-black/40 backdrop-blur-xl flex items-center justify-between px-8 z-30">
+          <div className="flex items-center gap-6">
             <div className="flex items-center gap-3">
-              <span className="text-[10px] font-bold text-zinc-600 uppercase tracking-[0.4em]">Open-Studio</span>
-              <div className="w-[1px] h-3 bg-zinc-900" />
-              <div className="flex items-center gap-2">
-                <div className={`w-1.5 h-1.5 rounded-full ${isThinking ? 'bg-orange-500 animate-pulse' : 'bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.4)]'}`} />
-                <span className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest leading-none">
-                  {view === 'chat-session' && activeSession ? `Node: ${activeSession.title}` : 'Materialization Mesh // Online'}
-                </span>
-              </div>
+              <div className="w-2 h-2 rounded-full bg-orange-500 shadow-[0_0_10px_rgba(249,115,22,0.4)]" />
+              <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-[0.4em] font-mono">OpenStudio // Prime</span>
+            </div>
+            
+            <div className="hidden md:flex items-center gap-3 pl-6 border-l border-zinc-800">
+              <div className={`w-1.5 h-1.5 rounded-full ${isThinking ? 'bg-orange-500 animate-pulse' : 'bg-green-500'}`} />
+              <span className="text-[9px] font-bold text-zinc-600 uppercase tracking-widest leading-none font-mono">
+                {view === 'chat-session' && activeSession ? `Node: ${activeSession.title}` : 'Materialization Mesh // Online'}
+              </span>
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-4">
             {view === 'chat-session' && activeSession && (
               <button
                 onClick={handleShareToHub}
-                className="flex items-center gap-2 px-4 py-2 border border-zinc-900 bg-zinc-950 hover:border-zinc-700 transition-all text-[10px] font-bold uppercase tracking-widest text-zinc-400 hover:text-white group"
+                className="flex items-center gap-2 px-4 py-1.5 border border-zinc-800 bg-zinc-900/50 hover:border-zinc-600 hover:bg-zinc-800 transition-all text-[9px] font-bold uppercase tracking-widest text-zinc-400 hover:text-white rounded-full group"
               >
                 <ShareIcon className="w-3 h-3 group-hover:text-orange-500" />
                 <span>Share Build</span>
               </button>
             )}
             
-            <div className="w-[1px] h-4 bg-zinc-900 mx-2" />
-            
-            <div className="flex items-center gap-2 px-3 py-1.5 border border-zinc-900 bg-black">
-              <span className="text-[9px] font-bold text-zinc-700 uppercase tracking-widest">Protocol</span>
-              <span className="text-[9px] font-bold text-white uppercase tracking-widest">{profile?.username || 'GUEST'}</span>
+            <div className="flex items-center gap-3 px-4 py-1.5 border border-zinc-800 bg-black/40 rounded-full">
+              <span className="text-[9px] font-bold text-zinc-600 uppercase tracking-widest font-mono">Auth</span>
+              <span className="text-[9px] font-bold text-orange-500/80 uppercase tracking-widest font-mono">{profile?.username || 'GUEST'}</span>
             </div>
           </div>
         </header>

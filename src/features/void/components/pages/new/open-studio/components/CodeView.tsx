@@ -429,32 +429,32 @@ export function CodeView({ session, setActiveFile, onFileContentChange, generati
     );
 
     return (
-        <div className="flex flex-col h-full bg-[#0A0A0A]">
+        <div className="flex flex-col h-full bg-[#050505]">
             {activeTab === 'code' ? (
                 <div className="flex-1 flex overflow-hidden">
                     {isFileTreeVisible && (
-                        <aside className="w-56 bg-zinc-950 p-4 overflow-y-auto border-r border-zinc-900">
-                            <header className="flex items-center justify-between pb-4 border-b border-zinc-900 mb-4">
-                                <h3 className="text-[9px] font-bold text-zinc-600 uppercase tracking-[0.3em]">Node Files</h3>
+                        <aside className="w-64 bg-[#050505] p-6 overflow-y-auto border-r border-zinc-900/50">
+                            <header className="flex items-center justify-between pb-6 border-b border-zinc-900/30 mb-6">
+                                <h3 className="text-[10px] font-bold text-zinc-600 uppercase tracking-[0.2em] font-mono">Segment Manifest</h3>
                                 <div className="flex items-center gap-1">
-                                    <button onClick={() => setRootCreating('folder')} className="p-1.5 hover:bg-zinc-900 text-zinc-600 hover:text-white transition-colors" title="New Folder">
-                                        <FolderPlusIcon className="w-4 h-4" />
+                                    <button onClick={() => setRootCreating('folder')} className="p-1.5 hover:bg-zinc-900 text-zinc-600 hover:text-white transition-colors rounded-lg border border-transparent hover:border-zinc-800" title="New Folder">
+                                        <FolderPlusIcon className="w-3.5 h-3.5" />
                                     </button>
-                                    <button onClick={() => setRootCreating('file')} className="p-1.5 hover:bg-zinc-900 text-zinc-600 hover:text-white transition-colors" title="New File">
-                                        <FilePlusIcon className="w-4 h-4" />
+                                    <button onClick={() => setRootCreating('file')} className="p-1.5 hover:bg-zinc-900 text-zinc-600 hover:text-white transition-colors rounded-lg border border-transparent hover:border-zinc-800" title="New File">
+                                        <FilePlusIcon className="w-3.5 h-3.5" />
                                     </button>
                                 </div>
                             </header>
 
                             {rootCreating && (
-                                <form onSubmit={handleCreateSubmit} className="w-full text-left text-sm flex items-center gap-2 px-2 py-1.5 bg-zinc-900 border border-zinc-800 mb-2">
-                                    {rootCreating === 'file' ? <FileIcon className="h-4 w-4 text-zinc-500" /> : <FolderIcon className="h-4 w-4 text-zinc-500" />}
+                                <form onSubmit={handleCreateSubmit} className="w-full text-left text-sm flex items-center gap-2 px-3 py-2 bg-zinc-900/50 border border-zinc-800/50 rounded-xl mb-3">
+                                    {rootCreating === 'file' ? <FileIcon className="h-3.5 w-3.5 text-zinc-600" /> : <FolderIcon className="h-3.5 w-3.5 text-zinc-600" />}
                                     <input
                                         ref={inputRef}
                                         type="text"
                                         name="name"
                                         onBlur={() => setRootCreating(null)}
-                                        className="bg-transparent text-white text-xs w-full focus:outline-none placeholder-zinc-700"
+                                        className="bg-transparent text-white text-[11px] w-full focus:outline-none placeholder-zinc-700 font-medium"
                                         autoComplete="off"
                                         placeholder="Name..."
                                     />
@@ -472,31 +472,36 @@ export function CodeView({ session, setActiveFile, onFileContentChange, generati
                                     onRenameFileOrFolder={onRenameFileOrFolder}
                                 />
                             ) : (
-                                <p className="text-[9px] font-bold text-zinc-800 uppercase tracking-widest text-center mt-10">Neural void</p>
+                                <div className="flex flex-col items-center justify-center mt-20 opacity-20">
+                                   <div className="w-1 h-1 rounded-full bg-zinc-800 mb-4" />
+                                   <p className="text-[9px] font-bold text-zinc-800 uppercase tracking-widest text-center">Neural void</p>
+                                </div>
                             )}
                         </aside>
                     )}
 
-                    <main className="flex-1 flex flex-col overflow-hidden relative">
+                    <main className="flex-1 flex flex-col overflow-hidden relative bg-[#080808]">
                         {!isFileTreeVisible && (
                             <button
                                 onClick={() => setIsFileTreeVisible(true)}
-                                className="absolute top-4 left-4 z-10 p-2 bg-zinc-950 border border-zinc-900 hover:border-zinc-700 transition-colors"
-                                title="Show File Manager"
+                                className="absolute top-6 left-6 z-10 p-2 bg-zinc-900/80 border border-zinc-800/50 hover:border-zinc-700 transition-colors rounded-xl backdrop-blur-md"
+                                title="Show Explorer"
                             >
-                                <SidebarIcon className="w-4 h-4 text-zinc-500" />
+                                <SidebarIcon className="w-4 h-4 text-zinc-600" />
                             </button>
                         )}
                         {activeFile ? (
                             <>
-                                <div className="flex-shrink-0 bg-black px-6 py-3 flex items-center justify-between border-b border-zinc-900">
+                                <div className="flex-shrink-0 bg-[#080808] px-8 h-16 flex items-center justify-between border-b border-zinc-900/50">
                                     <div className="flex items-center gap-3">
-                                        <FileIcon className="h-3.5 w-3.5 text-zinc-600" />
-                                        <span className="text-[10px] font-bold text-zinc-300 uppercase tracking-widest">{activeFile.path}</span>
+                                        <div className="p-1.5 bg-zinc-900/50 border border-zinc-800/50 rounded-lg">
+                                           <FileIcon className="h-3.5 w-3.5 text-zinc-500" />
+                                        </div>
+                                        <span className="text-[11px] font-bold text-white uppercase tracking-widest">{activeFile.path}</span>
                                     </div>
-                                    <div className="flex items-center gap-2">
-                                        <div className="w-1.5 h-1.5 rounded-none bg-orange-500/50" />
-                                        <span className="text-[9px] font-bold text-zinc-600 uppercase tracking-[0.2em]">Materializing...</span>
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-1 h-1 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.5)]" />
+                                        <span className="text-[9px] font-bold text-zinc-600 uppercase tracking-widest font-mono">Synchronized</span>
                                     </div>
                                 </div>
                                 <div className="flex-1 relative">
@@ -509,7 +514,7 @@ export function CodeView({ session, setActiveFile, onFileContentChange, generati
                                         onMount={handleEditorDidMount}
                                         options={{
                                             minimap: { enabled: false },
-                                            fontSize: 13,
+                                            fontSize: 14,
                                             fontFamily: "'JetBrains Mono', monospace",
                                             wordWrap: 'on',
                                             lineNumbers: 'on',
@@ -521,18 +526,19 @@ export function CodeView({ session, setActiveFile, onFileContentChange, generati
                                             automaticLayout: true,
                                             tabSize: 2,
                                             insertSpaces: true,
-                                            padding: { top: 20, bottom: 20 },
+                                            padding: { top: 24, bottom: 24 },
+                                            backgroundColor: '#080808'
                                         }}
                                     />
                                 </div>
                             </>
                         ) : (
-                            <div className="flex flex-col items-center justify-center h-full text-zinc-800">
-                                <div className="w-12 h-12 bg-zinc-950 border border-zinc-900 flex items-center justify-center mb-6">
-                                    <FileIcon className="h-6 w-6 opacity-20" />
+                            <div className="flex flex-col items-center justify-center h-full">
+                                <div className="w-16 h-16 bg-zinc-900/30 border border-zinc-900/50 flex items-center justify-center mb-8 rounded-[2rem]">
+                                    <FileIcon className="h-6 w-6 text-zinc-800" />
                                 </div>
-                                <p className="text-[10px] font-bold uppercase tracking-[0.4em]">Select Node Segment</p>
-                                <p className="text-[9px] font-bold uppercase tracking-[0.2em] mt-2 opacity-50">Or ask the Architect to materialize one</p>
+                                <p className="text-[11px] font-bold uppercase tracking-[0.4em] text-zinc-700">Select Segment For Materialization</p>
+                                <p className="text-[9px] font-bold uppercase tracking-[0.2em] mt-3 text-zinc-800">Uplink active // Waiting for manifest</p>
                             </div>
                         )}
                     </main>

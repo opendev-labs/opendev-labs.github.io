@@ -1,0 +1,29 @@
+
+> opendev-labs@1.0.0 build
+> vite build
+
+vite v6.4.2 building for production...
+transforming...
+✓ 2201 modules transformed.
+✗ Build failed in 5.65s
+error during build:
+src/features/void/components/pages/new/open-studio/components/Sidebar.tsx (7:2): "PlusIcon" is not exported by "src/features/void/components/pages/new/open-studio/components/icons/Icons.tsx", imported by "src/features/void/components/pages/new/open-studio/components/Sidebar.tsx".
+file: /home/cube/syncstack/opendev-labs/opendev-labs.github.io/src/features/void/components/pages/new/open-studio/components/Sidebar.tsx:7:2
+
+5:   GithubIcon, TrashIcon,
+6:   DatabaseIcon, ZapIcon,
+7:   PlusIcon
+     ^
+8: } from './icons/Icons';
+9: import type { View, ChatSession } from '../types';
+
+    at getRollupError (file:///home/cube/syncstack/opendev-labs/opendev-labs.github.io/node_modules/rollup/dist/es/shared/parseAst.js:406:41)
+    at error (file:///home/cube/syncstack/opendev-labs/opendev-labs.github.io/node_modules/rollup/dist/es/shared/parseAst.js:402:42)
+    at Module.error (file:///home/cube/syncstack/opendev-labs/opendev-labs.github.io/node_modules/rollup/dist/es/shared/node-entry.js:17380:16)
+    at Module.traceVariable (file:///home/cube/syncstack/opendev-labs/opendev-labs.github.io/node_modules/rollup/dist/es/shared/node-entry.js:17813:29)
+    at ModuleScope.findVariable (file:///home/cube/syncstack/opendev-labs/opendev-labs.github.io/node_modules/rollup/dist/es/shared/node-entry.js:15403:39)
+    at FunctionScope.findVariable (file:///home/cube/syncstack/opendev-labs/opendev-labs.github.io/node_modules/rollup/dist/es/shared/node-entry.js:5676:38)
+    at FunctionBodyScope.findVariable (file:///home/cube/syncstack/opendev-labs/opendev-labs.github.io/node_modules/rollup/dist/es/shared/node-entry.js:5676:38)
+    at Identifier.bind (file:///home/cube/syncstack/opendev-labs/opendev-labs.github.io/node_modules/rollup/dist/es/shared/node-entry.js:5450:40)
+    at CallExpression.bind (file:///home/cube/syncstack/opendev-labs/opendev-labs.github.io/node_modules/rollup/dist/es/shared/node-entry.js:2828:28)
+    at CallExpression.bind (file:///home/cube/syncstack/opendev-labs/opendev-labs.github.io/node_modules/rollup/dist/es/shared/node-entry.js:12512:15)

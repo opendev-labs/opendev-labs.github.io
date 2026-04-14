@@ -87,83 +87,106 @@ export function ChatSessionView({
   }, [chatPanelWidth]);
 
   return (
-    <div className="flex flex-col h-full bg-[#050505] selection:bg-white selection:text-black transform-gpu">
-      {/* Refined Sub-Header for Workspace Actions */}
-      <div className="flex-shrink-0 flex items-center justify-between px-6 py-3 border-b border-zinc-900 bg-black/40 backdrop-blur-md h-12">
-        <div className="flex items-center gap-4">
-          <div className="flex items-center bg-zinc-950 border border-zinc-900 p-0.5 rounded-none">
-            <button
-              onClick={() => setActiveTab('code')}
-              className={`px-4 py-1.5 text-[9px] font-bold uppercase tracking-[0.2em] transition-all ${activeTab === 'code' ? 'bg-zinc-800 text-white shadow-[0_0_10px_rgba(255,255,255,0.05)]' : 'text-zinc-600 hover:text-zinc-400'}`}
-            >
-              Architect
-            </button>
-            <button
-              onClick={() => setActiveTab('preview')}
-              className={`px-4 py-1.5 text-[9px] font-bold uppercase tracking-[0.2em] transition-all ${activeTab === 'preview' ? 'bg-zinc-800 text-white shadow-[0_0_10px_rgba(255,255,255,0.05)]' : 'text-zinc-600 hover:text-zinc-400'}`}
-            >
-              Live Render
-            </button>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 pr-2 border-r border-zinc-900">
-             <span className="text-[9px] font-bold text-zinc-700 uppercase tracking-widest">Workspace</span>
-             <code className="text-[9px] font-mono text-zinc-500 bg-zinc-950 px-2 py-0.5 border border-zinc-900">nexus-v11</code>
-          </div>
-
-          <button
-            onClick={() => setIsCodeViewVisible(!isCodeViewVisible)}
-            className="p-1.5 border border-zinc-900 hover:border-zinc-700 transition-all rounded-none group bg-zinc-950"
-            title={isCodeViewVisible ? "Collapse Node" : "Expand Node"}
-          >
-            {isCodeViewVisible ? <PanelLeftCloseIcon className="h-3.5 w-3.5 text-zinc-600 group-hover:text-white" /> : <PanelRightCloseIcon className="h-3.5 w-3.5 text-zinc-600 group-hover:text-white" />}
-          </button>
-        </div>
-      </div>
-
-      <div className="flex-1 flex h-full overflow-hidden">
+    <div className="flex flex-col h-full bg-[#080808] selection:bg-white/10 selection:text-white overflow-hidden">
+      {/* 🏗️ WORKSPACE FRAME */}
+      <div className="flex-1 flex min-h-0 relative">
+        {/* CHAT PANEL */}
         <motion.div
           ref={chatViewRef}
-          className="h-full border-r border-neutral-900"
+          className="h-full bg-transparent overflow-hidden relative"
           initial={false}
           animate={{ width: isCodeViewVisible ? `${chatPanelWidth}px` : '100%' }}
           transition={{ type: 'spring', stiffness: 300, damping: 30 }}
         >
-          <ChatView
-            messages={session.messages}
-            isThinking={isThinking}
-            onSendMessage={onSendMessage}
-            suggestions={session.suggestions}
-            selectedModelId={selectedModelId}
-            onModelChange={onModelChange}
-          />
+          {/* Internal Panel Header */}
+          <div className="absolute top-0 left-0 right-0 h-16 border-b border-zinc-900/50 bg-[#080808]/80 backdrop-blur-md flex items-center justify-between px-8 z-20">
+            <div className="flex items-center gap-3">
+              <div className="w-1.5 h-1.5 rounded-full bg-zinc-800" />
+              <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em] font-mono">Architect // Neural Stream</span>
+            </div>
+            <button
+              onClick={() => setIsCodeViewVisible(!isCodeViewVisible)}
+              className="p-2 text-zinc-600 hover:text-white transition-colors bg-zinc-900/30 rounded-lg border border-zinc-800/50"
+              title={isCodeViewVisible ? "Maximize View" : "Restore View"}
+            >
+              {isCodeViewVisible ? <PanelLeftCloseIcon className="h-4 w-4" /> : <PanelRightCloseIcon className="h-4 w-4" />}
+            </button>
+          </div>
+
+          <div className="h-full pt-16">
+            <ChatView
+              messages={session.messages}
+              isThinking={isThinking}
+              onSendMessage={onSendMessage}
+              suggestions={session.suggestions}
+              selectedModelId={selectedModelId}
+              onModelChange={onModelChange}
+            />
+          </div>
         </motion.div>
+
+        {/* CODE / PREVIEW PANEL */}
         <AnimatePresence>
           {isCodeViewVisible && (
             <>
+              {/* SLICK RESIZER */}
               <div
                 onMouseDown={startResizing}
-                className="w-1 h-full cursor-col-resize bg-black hover:bg-orange-500/50 transition-colors flex-shrink-0 hidden lg:block z-10"
-              />
-              <motion.div
-                className="flex-1 h-full overflow-hidden"
-                initial={{ x: '100%' }}
-                animate={{ x: 0 }}
-                exit={{ x: '100%' }}
-                transition={{ type: 'spring', stiffness: 200, damping: 25 }}
+                className="w-[1px] h-full cursor-col-resize bg-zinc-900 hover:bg-zinc-700 transition-colors flex-shrink-0 z-30 group relative"
               >
-                <CodeView
-                  session={session}
-                  setActiveFile={setActiveFile}
-                  onFileContentChange={onFileContentChange}
-                  generationInfo={generationInfo}
-                  onAddFileOrFolder={onAddFileOrFolder}
-                  onDeleteFileOrFolder={onDeleteFileOrFolder}
-                  onRenameFileOrFolder={onRenameFileOrFolder}
-                  activeTab={activeTab}
-                />
+                <div className="absolute inset-y-0 -left-1 -right-1 z-10" />
+              </div>
+
+              <motion.div
+                className="flex-1 h-full bg-[#050505] relative overflow-hidden"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                {/* Internal Workspace Header */}
+                <div className="absolute top-0 left-0 right-0 h-16 border-b border-zinc-900/50 bg-[#050505]/80 backdrop-blur-md flex items-center justify-between px-8 z-20">
+                  <div className="flex bg-zinc-950/50 border border-zinc-900/80 rounded-xl p-1">
+                    <button
+                      onClick={() => setActiveTab('code')}
+                      className={`px-5 py-1.5 text-[9px] font-bold uppercase tracking-widest rounded-lg transition-all ${activeTab === 'code' ? 'bg-zinc-800 text-white shadow-lg' : 'text-zinc-600 hover:text-zinc-400'}`}
+                    >
+                      <div className="flex items-center gap-2">
+                         <CodeIcon className="w-3 h-3" />
+                         Code
+                      </div>
+                    </button>
+                    <button
+                      onClick={() => setActiveTab('preview')}
+                      className={`px-5 py-1.5 text-[9px] font-bold uppercase tracking-widest rounded-lg transition-all ${activeTab === 'preview' ? 'bg-zinc-800 text-white shadow-lg' : 'text-zinc-600 hover:text-zinc-400'}`}
+                    >
+                      <div className="flex items-center gap-2">
+                         <PlayIcon className="w-3 h-3" />
+                         Preview
+                      </div>
+                    </button>
+                  </div>
+                  
+                  <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-2 px-3 py-1.5 bg-zinc-900/50 border border-zinc-800/50 rounded-lg">
+                      <div className="w-1 h-1 rounded-full bg-emerald-500 animate-pulse" />
+                      <span className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest font-mono">Synced</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="h-full pt-16">
+                  <CodeView
+                    session={session}
+                    setActiveFile={setActiveFile}
+                    onFileContentChange={onFileContentChange}
+                    generationInfo={generationInfo}
+                    onAddFileOrFolder={onAddFileOrFolder}
+                    onDeleteFileOrFolder={onDeleteFileOrFolder}
+                    onRenameFileOrFolder={onRenameFileOrFolder}
+                    activeTab={activeTab}
+                  />
+                </div>
               </motion.div>
             </>
           )}
