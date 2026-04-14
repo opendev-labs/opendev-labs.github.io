@@ -21,14 +21,14 @@ export const Footer: React.FC = () => {
                             <span className="font-bold tracking-tighter text-xl lowercase">opendev-labs</span>
                         </div>
                         <p className="text-zinc-500 text-sm max-w-xs font-medium leading-relaxed">
-                            The sovereign intelligence ecosystem for high-fidelity autonomy and distributed state.
+                            A simple system to build and use smart software.
                         </p>
                     </div>
 
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-12 md:gap-20">
                         <div className="space-y-4">
-                            <h4 className="text-[10px] font-bold text-white uppercase tracking-[0.3em] mb-6">Platform</h4>
-                            <Link to="/void" className="block text-[11px] font-bold text-zinc-500 hover:text-white uppercase tracking-widest transition-colors">Void Hub</Link>
+                            <h4 className="text-[10px] font-bold text-white uppercase tracking-[0.3em] mb-6">Tools</h4>
+                            <Link to="/void" className="block text-[11px] font-bold text-zinc-500 hover:text-white uppercase tracking-widest transition-colors">Void</Link>
                             <Link to="/lamadb" className="block text-[11px] font-bold text-zinc-500 hover:text-white uppercase tracking-widest transition-colors">LamaDB</Link>
                             <Link to="/cli" className="block text-[11px] font-bold text-zinc-500 hover:text-white uppercase tracking-widest transition-colors">Spoon CLI</Link>
                         </div>
@@ -40,19 +40,19 @@ export const Footer: React.FC = () => {
                         </div>
                         <div className="space-y-4">
                             <h4 className="text-[10px] font-bold text-white uppercase tracking-[0.3em] mb-6">Legal</h4>
-                            <Link to="/terms" className="block text-[11px] font-bold text-zinc-500 hover:text-white uppercase tracking-widest transition-colors">Digital Pact</Link>
-                            <Link to="/privacy" className="block text-[11px] font-bold text-zinc-500 hover:text-white uppercase tracking-widest transition-colors">Privacy Protocol</Link>
+                            <Link to="/terms" className="block text-[11px] font-bold text-zinc-500 hover:text-white uppercase tracking-widest transition-colors">Terms of Use</Link>
+                            <Link to="/privacy" className="block text-[11px] font-bold text-zinc-500 hover:text-white uppercase tracking-widest transition-colors">Privacy Policy</Link>
                         </div>
                     </div>
                 </div>
 
                 <div className="flex flex-col md:flex-row justify-between items-center gap-6 border-t border-zinc-900 pt-8">
                     <p className="text-[10px] font-bold text-zinc-700 uppercase tracking-[0.2em]">
-                        &copy; 2026 opendev-labs protocol // Distributed State.
+                        &copy; 2026 opendev-labs
                     </p>
                     <div className="flex items-center gap-2">
                         <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-                        <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Hardline: All Nodes Operational</span>
+                        <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">All systems working normally</span>
                     </div>
                 </div>
             </div>

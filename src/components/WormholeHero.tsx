@@ -2,7 +2,11 @@ import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
-export const WormholeHero: React.FC = () => {
+interface WormholeHeroProps {
+    className?: string;
+}
+
+export const WormholeHero: React.FC<WormholeHeroProps> = ({ className = "absolute inset-0" }) => {
     const containerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -147,7 +151,7 @@ export const WormholeHero: React.FC = () => {
     return (
         <div 
             ref={containerRef} 
-            className="absolute inset-0 z-0 pointer-events-auto cursor-grab active:cursor-grabbing"
+            className={`${className} z-0 pointer-events-auto cursor-grab active:cursor-grabbing`}
             style={{ touchAction: 'none' }}
         />
     );

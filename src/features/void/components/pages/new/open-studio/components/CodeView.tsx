@@ -205,7 +205,7 @@ const PreviewPane: React.FC<{ files: FileNode[] }> = ({ files }) => {
     }, [babelLoaded]);
 
     useEffect(() => {
-        const loadingHtml = (title: string, message: string) => `<html><body style="margin: 0; background-color: #0A0A0A; color: #9ca3af; font-family: sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; text-align: center;"><div style="display: flex; flex-direction: column; align-items: center; gap: 8px;"><div>${title}</div><div style="font-size: 0.8rem; color: #6b7280;">${message}</div></div></body></html>`;
+        const loadingHtml = (title: string, message: string) => `<html><body style="margin: 0; background-color: #F9F9F9; color: #9ca3af; font-family: sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; text-align: center;"><div style="display: flex; flex-direction: column; align-items: center; gap: 8px;"><div>${title}</div><div style="font-size: 0.8rem; color: #6b7280;">${message}</div></div></body></html>`;
 
         if (!babelLoaded) {
             setSrcDoc(loadingHtml('Loading Preview Engine', 'Waiting for Babel transpiler...'));
@@ -292,10 +292,10 @@ const PreviewPane: React.FC<{ files: FileNode[] }> = ({ files }) => {
             }
 
             const errorDisplayScript = `
-              document.body.innerHTML = \`<div style="background-color: #0A0A0A; color: #e5e7eb; font-family: Inter, sans-serif; height: 100vh; display: flex; align-items: center; justify-content: center; padding: 2rem; box-sizing: border-box;">
-                <div style="border: 1px solid #27272A; background-color: #171717; padding: 1.5rem; border-radius: 0.5rem; max-width: 80%;">
-                  <h3 style="color: #fca5a5; font-size: 1.125rem; margin: 0 0 0.75rem 0; font-weight: 600;">Preview Runtime Error</h3>
-                  <pre style="background-color: #27272A; color: #d1d5db; padding: 1rem; border-radius: 0.25rem; white-space: pre-wrap; word-break: break-all; font-family: 'JetBrains Mono', monospace; font-size: 0.875rem;">\${error.message}</pre>
+              document.body.innerHTML = \`<div style="background-color: #F9F9F9; color: #171717; font-family: Inter, sans-serif; height: 100vh; display: flex; align-items: center; justify-content: center; padding: 2rem; box-sizing: border-box;">
+                <div style="border: 1px solid #E5E7EB; background-color: #FFFFFF; padding: 1.5rem; border-radius: 0.5rem; max-width: 80%; shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);">
+                  <h3 style="color: #EF4444; font-size: 1.125rem; margin: 0 0 0.75rem 0; font-weight: 600;">Preview Runtime Error</h3>
+                  <pre style="background-color: #F3F4F6; color: #374151; padding: 1rem; border-radius: 0.25rem; white-space: pre-wrap; word-break: break-all; font-family: 'JetBrains Mono', monospace; font-size: 0.875rem;">\${error.message}</pre>
                 </div>
               </div>\`;
               console.error("Preview Error:", error);
@@ -338,19 +338,47 @@ const PreviewPane: React.FC<{ files: FileNode[] }> = ({ files }) => {
 
         } catch (error: any) {
             console.error("Error creating preview:", error);
-            // Fix: Corrected the malformed regular expression in the replace call.
             const errorMessage = error.message.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-            setSrcDoc(`<html><body style="margin: 0; background-color: #0A0A0A; color: #fca5a5; font-family: 'JetBrains Mono', monospace; padding: 1rem; font-size: 0.9rem; white-space: pre-wrap;">Failed to transpile code for preview:\n\n${errorMessage}</body></html>`);
+            setSrcDoc(`<html><body style="margin: 0; background-color: #fff; color: #EF4444; font-family: 'Inter', sans-serif; padding: 2rem; font-size: 0.9rem; white-space: pre-wrap;">Failed to transpile code for preview:\n\n${errorMessage}</body></html>`);
         }
     }, [files, babelLoaded]);
 
     return (
-        <iframe
-            srcDoc={srcDoc}
-            title="Preview"
-            sandbox="allow-scripts allow-same-origin"
-            className="w-full h-full bg-white"
-        />
+        <div className="flex flex-col h-full bg-white">
+            {/* BROWSER BAR */}
+            <div className="h-10 bg-[#F3F3F3] border-b border-[#E5E5E5] flex items-center px-4 gap-4">
+               <div className="flex items-center gap-2">
+                  <button className="text-zinc-400 hover:text-zinc-600">
+                     <FilePlusIcon className="w-3.5 h-3.5 -scale-x-100" /> {/* Mock Back */}
+                  </button>
+                  <button className="text-zinc-400 hover:text-zinc-600">
+                     <FilePlusIcon className="w-3.5 h-3.5" /> {/* Mock Forward */}
+                  </button>
+                  <button className="text-zinc-400 hover:text-zinc-600 ml-1">
+                     <SpinnerIcon className="w-3.5 h-3.5" /> {/* Mock Reload */}
+                  </button>
+               </div>
+               
+               <div className="flex-1 bg-white border border-[#E5E5E5] rounded-lg h-7 flex items-center px-3 gap-2">
+                  <div className="w-3 h-3 rounded-full bg-zinc-100 border border-zinc-200" />
+                  <span className="text-[12px] text-zinc-500 font-medium truncate">2wn6s7-5173.csb.app</span>
+               </div>
+
+               <div className="flex items-center gap-2">
+                  <div className="px-2 py-0.5 bg-emerald-500/10 border border-emerald-500/20 rounded text-[10px] font-bold text-emerald-600 uppercase tracking-tighter">Latest</div>
+               </div>
+            </div>
+
+            <div className="flex-1 min-h-0 bg-white">
+                <iframe
+                    srcDoc={srcDoc}
+                    title="Preview"
+                    sandbox="allow-scripts allow-same-origin"
+                    className="w-full h-full border-none"
+                    style={{ backgroundColor: 'white' }}
+                />
+            </div>
+        </div>
     );
 };
 

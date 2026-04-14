@@ -41,47 +41,53 @@ export function PromptInput({ onSendMessage, disabled, selectedModelId, onModelC
   const currentModel = SUPPORTED_MODELS.find(m => m.id === selectedModelId);
 
   return (
-    <form onSubmit={handleSubmit} className="w-full max-w-5xl mx-auto relative group">
-      <div className="bg-[#0A0A0A]/80 backdrop-blur-3xl border border-zinc-900/80 rounded-3xl p-5 flex flex-col gap-3 transition-all duration-500 focus-within:border-zinc-700 focus-within:shadow-[0_0_50px_rgba(0,0,0,0.5)] relative overflow-hidden shadow-2xl">
-        <textarea
-          ref={textareaRef}
-          value={prompt}
-          onChange={(e) => setPrompt(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-              e.preventDefault();
-              handleSubmit(e);
-            }
-          }}
-          placeholder="Message OpenStudio..."
-          className="w-full bg-transparent text-white text-[15px] placeholder-zinc-700 resize-none focus:outline-none font-medium py-1 min-h-[40px] scrollbar-hide selection:bg-white/10"
-          rows={1}
-          disabled={disabled}
-          style={{ maxHeight: '200px' }}
-        />
-        
-        <div className="flex items-center justify-between gap-4 pt-4 border-t border-zinc-900/50">
-          <div className="flex items-center gap-1">
-            <button
-              type="button"
-              className="text-zinc-600 hover:text-white transition-all p-2 hover:bg-zinc-900 rounded-lg flex items-center justify-center border border-transparent hover:border-zinc-800"
-              title="Add attachment"
-            >
-              <PlusIcon className="h-4 w-4" />
-            </button>
+    <div className="w-full px-8 pb-8 pt-4">
+      <form onSubmit={handleSubmit} className="w-full relative group">
+        <div className="bg-[#1A1A1A] border border-zinc-900 rounded-2xl flex items-center gap-2 p-1.5 transition-all duration-300 focus-within:border-zinc-700 shadow-xl">
+          <div className="flex items-center pl-2 pr-1">
+             <button
+               type="button"
+               className="text-zinc-600 hover:text-white transition-all p-1.5 rounded-lg"
+               title="Upload Image"
+             >
+               <ImageIcon className="h-4 w-4" />
+             </button>
+             <button
+               type="button"
+               className="text-zinc-600 hover:text-white transition-all p-1.5 rounded-lg"
+               title="Star"
+             >
+               <StarIcon className="h-4 w-4" />
+             </button>
+          </div>
 
-            <div className="h-4 w-[1px] bg-zinc-900 mx-1" />
-
+          <textarea
+            ref={textareaRef}
+            value={prompt}
+            onChange={(e) => setPrompt(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                handleSubmit(e);
+              }
+            }}
+            placeholder="Ask a follow up question..."
+            className="flex-1 bg-transparent text-white text-[14px] placeholder-zinc-600 resize-none focus:outline-none font-normal py-2.5 px-1 min-h-[40px] max-h-[200px] scrollbar-hide selection:bg-white/10"
+            rows={1}
+            disabled={disabled}
+          />
+          
+          <div className="flex items-center gap-2 pr-1">
             <div className="relative">
               <button
                 ref={modelSelectorButtonRef}
                 type="button"
-                className="flex items-center gap-2 text-zinc-500 hover:text-white transition-colors text-[10px] font-bold uppercase tracking-[0.2em] px-3 py-1.5 hover:bg-zinc-900/80 rounded-lg border border-transparent hover:border-zinc-800"
+                className="flex items-center gap-1.5 text-zinc-500 hover:text-white transition-colors text-[11px] font-bold px-3 py-1 bg-black/50 border border-zinc-900 rounded-lg hover:border-zinc-700"
                 aria-label="Select model"
                 onClick={() => setIsModelDropdownOpen(prev => !prev)}
               >
-                <BrainCircuitIcon className="w-3.5 h-3.5 text-zinc-600" />
-                <span className="truncate max-w-[120px]">{currentModel?.name || 'NODE'}</span>
+                <span>{currentModel?.name || 'GPT-5'}</span>
+                <div className="w-1.5 h-1.5 rounded-full bg-zinc-700" />
               </button>
               <ModelDropdown
                 isOpen={isModelDropdownOpen}
@@ -91,25 +97,22 @@ export function PromptInput({ onSendMessage, disabled, selectedModelId, onModelC
                 onModelSelect={handleModelSelect}
               />
             </div>
-          </div>
 
-          <button
-            type="submit"
-            disabled={disabled || !hasContent}
-            className={`h-9 w-9 flex items-center justify-center transition-all duration-500 rounded-xl ${
-              hasContent 
-                ? 'bg-white text-black shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:scale-105 active:scale-95' 
-                : 'bg-zinc-900 text-zinc-700 cursor-not-allowed'
-            }`}
-            aria-label="Send message"
-          >
-            <ArrowUpIcon className={`h-4 w-4`} />
-          </button>
+            <button
+              type="submit"
+              disabled={disabled || !hasContent}
+              className={`h-8 w-8 flex items-center justify-center transition-all duration-300 rounded-lg ${
+                hasContent 
+                  ? 'bg-zinc-800 text-white hover:bg-zinc-700' 
+                  : 'bg-transparent text-zinc-700'
+              }`}
+              aria-label="Send message"
+            >
+              <ArrowUpIcon className="h-4 w-4" />
+            </button>
+          </div>
         </div>
-      </div>
-      <div className="mt-4 text-[9px] text-zinc-700 text-center uppercase tracking-[0.2em] font-medium">
-        OpenStudio can materialize errors. Check your nodes.
-      </div>
-    </form>
+      </form>
+    </div>
   );
 }

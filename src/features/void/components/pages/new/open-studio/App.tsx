@@ -512,8 +512,8 @@ function App() {
   }
 
   return (
-    <div className="flex h-full bg-[#030303] text-zinc-400 selection:bg-white/10 selection:text-white overflow-hidden">
-      {/* 🛸 LEFT ISLAND: THE MINI-SIDEBAR */}
+    <div className="flex h-full bg-[#000000] text-zinc-400 selection:bg-white/10 selection:text-white overflow-hidden">
+      {/* 🛸 LEFT SIDBAR */}
       <Sidebar
         onNavigate={handleNavigate}
         recentChats={sessions}
@@ -524,44 +524,10 @@ function App() {
         onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
       />
       
-      {/* 🏗️ MAIN ISLAND: THE ARCHITECT WORKSPACE */}
-      <main className="flex-1 flex flex-col min-w-0 bg-[#080808] relative overflow-hidden border-l border-zinc-900/80 shadow-2xl">
-        {/* Unified Workspace Header */}
-        <header className="flex-shrink-0 h-16 border-b border-zinc-900/50 bg-black/40 backdrop-blur-xl flex items-center justify-between px-8 z-30">
-          <div className="flex items-center gap-6">
-            <div className="flex items-center gap-3">
-              <div className="w-2 h-2 rounded-full bg-orange-500 shadow-[0_0_10px_rgba(249,115,22,0.4)]" />
-              <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-[0.4em] font-mono">OpenStudio // Prime</span>
-            </div>
-            
-            <div className="hidden md:flex items-center gap-3 pl-6 border-l border-zinc-800">
-              <div className={`w-1.5 h-1.5 rounded-full ${isThinking ? 'bg-orange-500 animate-pulse' : 'bg-green-500'}`} />
-              <span className="text-[9px] font-bold text-zinc-600 uppercase tracking-widest leading-none font-mono">
-                {view === 'chat-session' && activeSession ? `Node: ${activeSession.title}` : 'Materialization Mesh // Online'}
-              </span>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-4">
-            {view === 'chat-session' && activeSession && (
-              <button
-                onClick={handleShareToHub}
-                className="flex items-center gap-2 px-4 py-1.5 border border-zinc-800 bg-zinc-900/50 hover:border-zinc-600 hover:bg-zinc-800 transition-all text-[9px] font-bold uppercase tracking-widest text-zinc-400 hover:text-white rounded-full group"
-              >
-                <ShareIcon className="w-3 h-3 group-hover:text-orange-500" />
-                <span>Share Build</span>
-              </button>
-            )}
-            
-            <div className="flex items-center gap-3 px-4 py-1.5 border border-zinc-800 bg-black/40 rounded-full">
-              <span className="text-[9px] font-bold text-zinc-600 uppercase tracking-widest font-mono">Auth</span>
-              <span className="text-[9px] font-bold text-orange-500/80 uppercase tracking-widest font-mono">{profile?.username || 'GUEST'}</span>
-            </div>
-          </div>
-        </header>
-
+      {/* 🏗️ MAIN WORKSPACE */}
+      <main className="flex-1 flex flex-col min-w-0 bg-[#0C0C0C] relative overflow-hidden shadow-2xl">
         <div className="flex-1 overflow-hidden relative">
-          <div className="absolute inset-0 overflow-y-auto">
+          <div className="absolute inset-0 overflow-y-auto custom-scrollbar">
             {view === 'chat-session' && activeSession && (
               <ChatSessionView
                 session={activeSession}

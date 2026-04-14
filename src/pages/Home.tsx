@@ -6,7 +6,9 @@ import HeroBg from '../assets/bg.png';
 import { motion } from 'framer-motion';
 import { NewProjectIcon } from '../features/void/components/common/Icons';
 import { WormholeHero } from '../components/WormholeHero';
+import { ShowcaseSection } from '../components/ShowcaseSection';
 import { useAuth } from '../features/void/hooks/useAuth';
+import NewHeroBg from '../assets/cyberpunk-hero.jpg';
 
 const TechnologySection = () => {
     const techs = [
@@ -34,7 +36,7 @@ const TechnologySection = () => {
 
     return (
         <div className="py-24 border-y border-zinc-900 overflow-hidden bg-zinc-950/20 backdrop-blur-3xl relative z-10">
-            <p className="text-[10px] font-bold tracking-[0.4em] text-zinc-600 mb-16 uppercase text-center">Engineered with Elite Tech Stacks</p>
+            <p className="text-[10px] font-bold tracking-[0.4em] text-zinc-600 mb-16 uppercase text-center">Built with modern technology</p>
             <div className="relative flex overflow-x-hidden">
                 <div className="py-12 animate-marquee flex whitespace-nowrap gap-20">
                     {techs.concat(techs).map((tech, i) => (
@@ -60,8 +62,11 @@ export default function Home() {
         <div className="flex flex-col w-full bg-black">
             {/* Hero Section */}
             <section className="relative min-h-[85vh] flex flex-col items-center justify-center pt-24 pb-16 overflow-hidden border-b border-zinc-900">
-                {/* High-Fidelity Three.js Wormhole Background */}
-                <WormholeHero />
+                {/* Visual Background */}
+                <div className="absolute inset-0 z-0">
+                    <img src={NewHeroBg} className="w-full h-full object-cover" alt="Background" />
+                    <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px]" />
+                </div>
 
                 {/* Overlays for depth and atmosphere */}
                 <div className="absolute inset-0 z-[1] pointer-events-none">
@@ -69,7 +74,7 @@ export default function Home() {
                     <div
                         className="absolute inset-0"
                         style={{
-                            background: 'radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.8) 60%, #000 90%)'
+                            background: 'radial-gradient(circle at center, transparent 0%, rgba(0,0,0,1) 90%)'
                         }}
                     />
 
@@ -97,7 +102,7 @@ export default function Home() {
                         transition={{ delay: 0.2 }}
                         className="text-lg md:text-xl text-zinc-400 max-w-2xl mx-auto mb-14 font-medium leading-relaxed uppercase tracking-widest opacity-80"
                     >
-                        A powerful platform to build, share, and launch your software projects instantly.
+                        Learn, build, and launch your software projects in one place.
                     </motion.p>
 
                     <motion.div
@@ -154,16 +159,19 @@ export default function Home() {
             {/* Technologies Section */}
             <TechnologySection />
 
+            {/* Showcase Section */}
+            <ShowcaseSection />
+
             {/* Platform Primitives Grid */}
             <section className="py-32 relative bg-black">
                 <div className="max-w-[1400px] mx-auto px-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-1 ring-1 ring-zinc-900 rounded-none overflow-hidden">
                         {[
-                            { title: "open-studio IDE", desc: "A powerful AI code editor to build your software in full-screen.", icon: Cpu, path: "/open-studio" },
-                            { title: "Agents Hub", desc: "Build and manage autonomous AI agents for your team.", icon: Bot, path: "/agents" },
-                            { title: "Void Platform", desc: "Project management and orchestration for modern teams.", icon: Terminal, path: "/void" },
-                            { title: "LamaDB", desc: "Speedy browser database to keep your data local and fast.", icon: Database, path: "/lamadb" },
-                            { title: "SyncStack", desc: "Instantly sync your web projects with your desktop computer.", icon: Box, path: "/syncstack" }
+                            { title: "open-studio IDE", desc: "A great tool to write code and build apps.", icon: Cpu, path: "/open-studio" },
+                            { title: "Agents Hub", desc: "Create and use smart AI workers for your team.", icon: Bot, path: "/agents" },
+                            { title: "Void Platform", desc: "Manage your team and projects easily.", icon: Terminal, path: "/void" },
+                            { title: "LamaDB", desc: "A fast database that stays in your browser.", icon: Database, path: "/lamadb" },
+                            { title: "SyncStack", desc: "Keep your work in sync between web and desktop.", icon: Box, path: "/syncstack" }
                         ].map((item, i) => (
                             <motion.button
                                 key={i}
@@ -204,18 +212,18 @@ export default function Home() {
                             Smart Automation
                         </motion.div>
                         <h2 className="text-6xl md:text-7xl font-bold mb-10 tracking-tighter leading-[0.9] lowercase">
-                            Develop at the speed <br /><span className="text-zinc-600">of thought.</span>
+                            Build software <br /><span className="text-zinc-600">faster than ever.</span>
                         </h2>
                         <p className="text-zinc-500 text-lg leading-relaxed mb-14 font-medium max-w-lg uppercase tracking-widest text-[12px] opacity-80">
-                            The opendev-labs stack eliminates the friction between intent and execution.
+                            We make it easy to go from an idea to a working app.
                         </p>
 
                         <div className="grid grid-cols-2 gap-10">
                             {[
-                                { label: "Private by Default", icon: ShieldCheck },
-                                { label: "Instant Deployment", icon: Zap },
-                                { label: "Global Network", icon: Globe },
-                                { label: "Advanced Context", icon: Cpu }
+                                { label: "Private and Safe", icon: ShieldCheck },
+                                { label: "Fast to Launch", icon: Zap },
+                                { label: "Works Everywhere", icon: Globe },
+                                { label: "Smart AI Help", icon: Cpu }
                             ].map((item, i) => (
                                 <div key={i} className="flex items-center gap-4 group">
                                     <item.icon className="text-zinc-700 group-hover:text-white transition-colors" size={20} />

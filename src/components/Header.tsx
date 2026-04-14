@@ -49,11 +49,11 @@ const UserAvatar = ({ name }: { name: string }) => {
 /* --- NAVIGATION DATA --- */
 const MENU_DATA = [
     {
-        title: "Platform",
+        title: "Tools",
         items: [
-            { name: "OpenHub", desc: "Community Feed", icon: SparklesIcon, path: "/open-hub" },
-            { name: "OpenStudio", desc: "AI-Powered Code Editor", icon: BookOpenIcon, path: "/open-studio" },
-            { name: "Documentation", desc: "Learn & Build Guides", icon: TerminalIcon, path: "/docs" },
+            { name: "OpenHub", desc: "Social Feed", icon: SparklesIcon, path: "/open-hub" },
+            { name: "OpenStudio", desc: "Easy Code Editor", icon: BookOpenIcon, path: "/open-studio" },
+            { name: "Documentation", desc: "Help Guides", icon: TerminalIcon, path: "/docs" },
         ]
     }
 ];
@@ -109,31 +109,31 @@ export const Header: React.FC = () => {
                                 <button className="flex items-center gap-3 group">
                                     <div className="text-right hidden sm:block">
                                         <div className="text-[10px] font-bold text-white uppercase tracking-tight">{user?.name}</div>
-                                        <div className="text-[9px] font-medium text-zinc-600 uppercase tracking-widest">Protocol Linked</div>
+                                        <div className="text-[9px] font-medium text-zinc-600 uppercase tracking-widest">Logged In</div>
                                     </div>
                                     <UserAvatar name={user?.name || ''} />
                                 </button>
 
                                 <div className="absolute right-0 mt-3 w-56 bg-zinc-950 border border-zinc-900 rounded-none shadow-2xl py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-[110] ring-1 ring-white/5">
                                     <div className="px-4 py-3 border-b border-zinc-900 mb-1">
-                                        <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest leading-none mb-1">Authenticated Node</p>
+                                        <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest leading-none mb-1">User Account</p>
                                         <p className="text-[11px] text-zinc-200 font-bold truncate">{user?.email}</p>
                                     </div>
                                     <Link to="/open-hub" className="flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-orange-500 hover:bg-orange-500/5 transition-all">
-                                        Open-Hub Social
+                                        OpenHub Social
                                     </Link>
                                     <Link to="/open-studio" className="flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-zinc-400 hover:text-white hover:bg-zinc-900/50 transition-all">
-                                        Open-Studio IDE
+                                        OpenStudio Editor
                                     </Link>
                                     <Link to="/user/profile" className="flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-zinc-400 hover:text-white hover:bg-zinc-900/50 transition-all">
-                                        Sovereign Profile
+                                        My Profile
                                     </Link>
                                     <div className="h-px bg-zinc-900 my-1 mx-2" />
                                     <button
                                         onClick={logout}
                                         className="w-full text-left flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-red-500 hover:bg-red-500/5 transition-all"
                                     >
-                                        Initialize Logout
+                                        Log Out
                                     </button>
                                 </div>
                             </div>
