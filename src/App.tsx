@@ -52,6 +52,7 @@ const OfficeDashboard = lazyWithRetry(() => import('./pages/OfficeDashboard'));
 const LazyAuthPage = lazyWithRetry(() => import('./features/void/components/pages/AuthPage').then(m => ({ default: m.AuthPage })));
 const LazyVerifyEmailPage = lazyWithRetry(() => import('./features/void/components/pages/VerifyEmailPage').then(m => ({ default: m.VerifyEmailPage })));
 const OpenStudioApp = lazyWithRetry(() => import('./features/void/components/pages/new/open-studio/App'));
+const PreviewPage = lazyWithRetry(() => import('./pages/PreviewPage'));
 
 import { ProtectedRoute } from './components/ProtectedRoute';
 
@@ -134,6 +135,11 @@ const AppRoutes = () => {
           <Route path="changelog" element={<Changelog />} />
           <Route path="docs" element={<DocsPage />} />
           <Route path="product/:slug" element={<Product />} />
+          <Route path="preview" element={
+            <Suspense fallback={<div className="min-h-screen bg-black flex items-center justify-center text-zinc-500 font-mono text-[10px] uppercase tracking-widest">Loading Preview...</div>}>
+              <PreviewPage />
+            </Suspense>
+          } />
 
           {/* Legacy & Internal Redirections (Collapse into Studio) */}
           <Route path="office/*" element={<Navigate to="/open-studio" replace />} />
