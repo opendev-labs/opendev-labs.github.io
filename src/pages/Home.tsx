@@ -6,6 +6,7 @@ import HeroBg from '../assets/bg.png';
 import { motion } from 'framer-motion';
 import { NewProjectIcon } from '../features/void/components/common/Icons';
 import { WormholeHero } from '../components/WormholeHero';
+import { useAuth } from '../features/void/hooks/useAuth';
 
 const TechnologySection = () => {
     const techs = [
