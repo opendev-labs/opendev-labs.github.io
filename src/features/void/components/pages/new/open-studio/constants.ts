@@ -1,15 +1,13 @@
 import type { ModelConfig } from './types';
 
 export const SUGGESTED_PROMPTS = [
-    'Create a login page',
-    'Create a multi-step form',
-    'Create a dashboard',
-    'Create a blog',
-    'Create a landing page',
-    'Create a pricing page',
-    'Create a contact page',
-    'Create a product page',
-    'Create a portfolio website'
+    'Neural Wormhole Nexus with Three.js',
+    'Chrome Artifact Studio (Teapot Experiment)',
+    'Glassmorphic Admin Protocol',
+    'Liquid UI Hero Section',
+    '3D Nodal Graph Social Mesh',
+    'Architectural Dark Mode Landing',
+    'Neural-Mesh Dashboard Prototype'
 ];
 
 export const SUPPORTED_MODELS: ModelConfig[] = [

@@ -255,35 +255,7 @@ export default function OpenHub() {
         <div className="min-h-screen bg-[#050505] text-white selection:bg-orange-500 selection:text-black font-sans">
             <main className="max-w-[1200px] mx-auto p-3 md:p-8">
                 
-                {/* GLOBAL MESH HEADER */}
-                <header className="flex flex-col md:flex-row items-center justify-between gap-8 border-b border-zinc-900 pb-12 pt-10 mb-8">
-                    <div className="space-y-4 text-center md:text-left">
-                        <h1 className="text-5xl md:text-7xl font-bold tracking-tighter uppercase leading-none">
-                            Open<br /><span className="text-zinc-600">Hub.</span>
-                        </h1>
-                        <p className="max-w-xl text-zinc-500 text-[10px] font-bold uppercase tracking-[0.4em] opacity-80">
-                            Sovereign Social Mesh // NODE: <span className="text-white">@{profile?.username || user?.name || 'anonymous'}</span>
-                        </p>
-                    </div>
 
-                    <div className="flex flex-col items-center md:items-end gap-6 w-full md:w-auto">
-                        {/* NODAL SEARCH */}
-                        <div className="relative w-full md:w-80 group">
-                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-600 group-focus-within:text-orange-500 transition-colors" size={16} />
-                            <input 
-                                type="text"
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                                placeholder="Search the mesh..."
-                                className="w-full bg-zinc-950 border border-zinc-900 rounded-xl py-3 pl-12 pr-4 text-sm focus:border-orange-500 outline-none transition-all placeholder:text-zinc-700 shadow-2xl"
-                            />
-                        </div>
-                        <div className="flex items-center gap-4">
-                            <Activity size={14} className="text-emerald-500 animate-pulse" />
-                            <span className="text-2xl font-bold tracking-tighter uppercase whitespace-nowrap text-white">Mesh: SYNCED</span>
-                        </div>
-                    </div>
-                </header>
 
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 md:gap-8">
 
@@ -606,45 +578,39 @@ export default function OpenHub() {
                                             <p className="text-zinc-300 text-[14px] leading-relaxed font-medium">
                                                 {post.content}
                                             </p>
-                                            <div className="flex flex-wrap gap-2">
-                                                {post.tags?.map((tag: string) => (
-                                                    <span 
-                                                        key={tag} 
-                                                        onClick={() => {
-                                                            setActiveFeed('all');
-                                                            setSearchQuery(`#${tag}`);
-                                                        }}
-                                                        className="text-[8px] font-bold text-zinc-600 hover:text-orange-500 transition-colors cursor-pointer uppercase tracking-widest"
-                                                    >
-                                                        #{tag}
-                                                    </span>
-                                                ))}
-                                            </div>
+                                            
+                                            {post.attachedProject && (
+                                                <div className="bg-zinc-900/40 border border-zinc-900 rounded-2xl p-6 group cursor-pointer hover:border-zinc-700 transition-all">
+                                                    <div className="flex items-start justify-between">
+                                                        <div className="flex gap-4">
+                                                            <div className="w-12 h-12 bg-zinc-950 border border-zinc-800 rounded-xl flex items-center justify-center shrink-0">
+                                                                <Box size={24} className="text-zinc-600 group-hover:text-white transition-colors" />
+                                                            </div>
+                                                            <div>
+                                                                <h5 className="font-bold text-white text-sm uppercase tracking-tight mb-1">{post.attachedProject.title}</h5>
+                                                                <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest leading-relaxed line-clamp-2 max-w-sm">{post.attachedProject.description}</p>
+                                                            </div>
+                                                        </div>
+                                                        <ArrowRight size={16} className="text-zinc-800 group-hover:text-white transition-all transform group-hover:translate-x-1" />
+                                                    </div>
+                                                </div>
+                                            )}
                                         </div>
 
-                                        {post.projectMetadata && (
-                                            <ProjectCard metadata={post.projectMetadata} isAgent={post.author.isAgent} />
-                                        )}
-
-                                        <div className="pt-4 border-t border-zinc-900/50 flex items-center justify-between">
+                                        <div className="flex items-center justify-between pt-6 border-t border-zinc-900">
                                             <div className="flex items-center gap-6">
-                                                <button 
-                                                    onClick={() => handleToggleLike(post.id)}
-                                                    className={`flex items-center gap-2 text-[10px] font-bold transition-all uppercase tracking-widest focus:outline-none ${
-                                                        likedPosts.has(post.id) ? 'text-orange-500' : 'text-zinc-600 hover:text-orange-500'
-                                                    }`}
-                                                >
-                                                    <Heart size={16} fill={likedPosts.has(post.id) ? "currentColor" : "none"} />
-                                                    <span>{post.likes}</span>
-                                                </button>
-                                                <button className="flex items-center gap-2 text-[10px] font-bold text-zinc-600 hover:text-white transition-all uppercase tracking-widest focus:outline-none">
+                                                <button className="flex items-center gap-2 text-[10px] font-bold text-zinc-600 hover:text-white transition-all uppercase tracking-widest">
                                                     <MessageSquare size={16} />
-                                                    <span>{post.comments || 0}</span>
+                                                    <span>Re-Mesh</span>
+                                                </button>
+                                                <button className="flex items-center gap-2 text-[10px] font-bold text-zinc-600 hover:text-white transition-all uppercase tracking-widest">
+                                                    <Zap size={16} />
+                                                    <span>Pulse</span>
                                                 </button>
                                             </div>
                                             <button 
                                                 onClick={() => {
-                                                    navigator.clipboard.writeText(window.location.href + '?post=' + post.id);
+                                                    navigator.clipboard.writeText(window.location.href);
                                                     alert("Signal URL copied to clipboard!");
                                                 }}
                                                 className="flex items-center gap-2 text-[10px] font-bold text-zinc-600 hover:text-white transition-all uppercase tracking-widest focus:outline-none"
@@ -653,7 +619,7 @@ export default function OpenHub() {
                                                 <span>Share</span>
                                             </button>
                                         </div>
-                                </motion.div>
+                                    </motion.div>
                                 ))
                             ) : (
                                 <div className="py-20 text-center space-y-4 bg-zinc-950/10 border border-dashed border-zinc-900 rounded-3xl">
@@ -664,11 +630,10 @@ export default function OpenHub() {
                                     </div>
                                 </div>
                             )}
-                            </div>
-                            </>
-                        )}
                         </div>
-
+                        </>
+                    )}
+                    </div>
 
                     {/* Right Sidebar: Trending Topics & Suggestions */}
                     <div className="lg:col-span-3 space-y-6">
@@ -728,14 +693,10 @@ export default function OpenHub() {
                                             <div className="text-[8px] font-bold text-zinc-600 uppercase tracking-widest truncate max-w-[100px]">{person.headline || (person.isAgent ? 'Autonomous Intelligence' : 'Professional')}</div>
                                         </div>
                                         <Button 
-                                            size="icon" 
                                             variant="ghost" 
-                                            onClick={() => handleFollowUser(person.uid)}
-                                            className={`w-8 h-8 rounded-full border transition-all ${
-                                                followedUsers.has(person.uid) 
-                                                ? 'border-orange-500 text-orange-500 bg-orange-500/10' 
-                                                : 'border-zinc-900 text-zinc-600 hover:text-white hover:border-orange-500'
-                                            }`}
+                                            size="icon" 
+                                            onClick={() => toggleFollow(person.uid)}
+                                            className={`w-10 h-10 rounded-full border ${followedUsers.has(person.uid) ? 'bg-emerald-500/10 border-emerald-500/50 text-emerald-500' : 'bg-white/5 border-white/10 text-zinc-400 hover:text-white hover:bg-white/10'}`}
                                         >
                                             {followedUsers.has(person.uid) ? <Check size={14} /> : <Plus size={14} />}
                                         </Button>
@@ -799,8 +760,26 @@ export default function OpenHub() {
                         </Dialog>
                     </div>
                 </div>
-            </main>
 
+                {/* GLOBAL MESH STATUS FOOTER */}
+                <footer className="mt-20 pt-10 border-t border-zinc-900 flex flex-col md:flex-row items-center justify-between gap-8 pb-12">
+                    <div className="space-y-4 text-center md:text-left">
+                        <h2 className="text-4xl md:text-6xl font-bold tracking-tighter uppercase leading-none">
+                            Open<br /><span className="text-zinc-600">Hub.</span>
+                        </h2>
+                        <p className="max-w-xl text-zinc-500 text-[9px] font-bold uppercase tracking-[0.4em] opacity-80">
+                            Sovereign Social Mesh // NODE: <span className="text-white">@{profile?.username || user?.name || 'anonymous'}</span>
+                        </p>
+                    </div>
+
+                    <div className="flex flex-col items-center md:items-end gap-4 w-full md:w-auto">
+                        <div className="flex items-center gap-4 bg-zinc-950 border border-zinc-900 px-6 py-3 rounded-full shadow-2xl">
+                            <Activity size={14} className="text-emerald-500 animate-pulse" />
+                            <span className="text-lg font-bold tracking-tighter uppercase whitespace-nowrap text-white">Mesh: SYNCED</span>
+                        </div>
+                    </div>
+                </footer>
+            </main>
         </div>
     );
 }

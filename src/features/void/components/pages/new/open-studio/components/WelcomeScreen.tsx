@@ -47,7 +47,7 @@ export function WelcomeScreen({ onSendMessage, isThinking, selectedModelId, onMo
                         Open-Studio // Evolution Protocol
                     </div>
 
-                    <h1 className="text-6xl md:text-8xl font-bold text-white mb-6 tracking-tighter leading-[0.85] lowercase">
+                    <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 tracking-tighter leading-[0.85] lowercase">
                         evolve your<br />
                         <span className="text-zinc-600">imagination.</span>
                     </h1>
@@ -67,9 +67,9 @@ export function WelcomeScreen({ onSendMessage, isThinking, selectedModelId, onMo
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-3xl mx-auto">
                         {[
-                            { title: 'SaaS Engine', desc: 'Full-stack node with auth & state', icon: '⚡' },
-                            { title: 'Neural Dash', desc: 'AI-centric monitoring surface', icon: '🧠' },
-                            { title: 'Edge API', desc: 'Native high-velocity protocol', icon: '🌐' }
+                            { title: 'Wormhole Nexus', desc: 'Liquid Three.js generative environment', icon: '🌀' },
+                            { title: 'Neural Dash', desc: 'AI-centric glassmorphic monitor', icon: '🧠' },
+                            { title: 'Chrome Artifact', desc: 'High-fidelity WebGL studio', icon: '✨' }
                         ].map((template, i) => (
                             <button
                                 key={i}

@@ -4,8 +4,8 @@ import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import HeroBg from '../assets/bg.png';
 import { motion } from 'framer-motion';
-import { useAuth } from '../features/void/hooks/useAuth';
 import { NewProjectIcon } from '../features/void/components/common/Icons';
+import { WormholeHero } from '../components/WormholeHero';
 
 const TechnologySection = () => {
     const techs = [
@@ -58,24 +58,17 @@ export default function Home() {
     return (
         <div className="flex flex-col w-full bg-black">
             {/* Hero Section */}
-            <section className="relative min-h-[95vh] flex flex-col items-center justify-center pt-32 pb-20 overflow-hidden border-b border-zinc-900">
-                {/* Background Image with Cinematic Depth */}
-                <div className="absolute inset-0 z-0 pointer-events-none">
-                    <motion.img
-                        initial={{ scale: 1.1, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 0.6 }}
-                        transition={{ duration: 1.5, ease: "easeOut" }}
-                        src={HeroBg}
-                        alt="Background"
-                        className="w-full h-full object-cover opacity-60"
-                        style={{ objectPosition: 'center 20%' }}
-                    />
+            <section className="relative min-h-[85vh] flex flex-col items-center justify-center pt-24 pb-16 overflow-hidden border-b border-zinc-900">
+                {/* High-Fidelity Three.js Wormhole Background */}
+                <WormholeHero />
 
+                {/* Overlays for depth and atmosphere */}
+                <div className="absolute inset-0 z-[1] pointer-events-none">
                     {/* Dark Vignette Overlay */}
                     <div
                         className="absolute inset-0"
                         style={{
-                            background: 'radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.8) 50%, #000 80%)'
+                            background: 'radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.8) 60%, #000 90%)'
                         }}
                     />
 
@@ -99,7 +92,7 @@ export default function Home() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.1 }}
-                        className="text-6xl md:text-8xl lg:text-[10rem] font-bold tracking-tighter mb-10 text-white leading-[0.75] lowercase px-4"
+                        className="text-6xl md:text-8xl lg:text-[7rem] font-bold tracking-tighter mb-10 text-white leading-[0.8] lowercase px-4"
                     >
                         Professional.<br /><span className="text-orange-500">Infrastructure.</span>
                     </motion.h1>

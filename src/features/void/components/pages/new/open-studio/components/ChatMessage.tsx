@@ -48,7 +48,25 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
                   </div>
                 )}
                 <div className={`text-[15px] leading-relaxed font-medium ${isUser ? 'bg-zinc-900/30 p-6 border border-zinc-800' : ''}`}>
-                  {content}
+                  {content.trim().startsWith('{') && content.trim().endsWith('}') ? (
+                    <div className="bg-red-500/5 border border-red-500/20 p-6 font-mono text-xs overflow-x-auto">
+                      <div className="flex items-center gap-2 mb-4 text-red-500 font-bold uppercase tracking-widest text-[9px]">
+                        <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+                        Protocol Synchronization Error
+                      </div>
+                      <pre className="whitespace-pre-wrap text-zinc-400">
+                        {(() => {
+                          try {
+                            return JSON.stringify(JSON.parse(content), null, 2);
+                          } catch (e) {
+                            return content;
+                          }
+                        })()}
+                      </pre>
+                    </div>
+                  ) : (
+                    content
+                  )}
                 </div>
               </>
             )}

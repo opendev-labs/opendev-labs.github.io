@@ -18,7 +18,7 @@ export default function VoidLanding() {
                         <span>Titan // Sovereign AI Environment</span>
                     </div>
 
-                    <h1 className="text-5xl md:text-8xl font-bold tracking-tighter mb-8 text-transparent bg-clip-text bg-gradient-to-b from-white to-zinc-500 lowercase">
+                    <h1 className="text-5xl md:text-6xl font-bold tracking-tighter mb-8 text-transparent bg-clip-text bg-gradient-to-b from-white to-zinc-500 lowercase">
                         Void.
                     </h1>
                     <p className="text-xl md:text-2xl text-zinc-400 max-w-2xl mx-auto mb-10 leading-relaxed">

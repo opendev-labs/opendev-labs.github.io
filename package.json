@@ -25,6 +25,7 @@
     "@radix-ui/react-tabs": "^1.1.2",
     "@radix-ui/react-toast": "^1.2.5",
     "@radix-ui/react-tooltip": "^1.1.7",
+    "@types/three": "^0.183.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
@@ -35,7 +36,8 @@
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.1.0",
     "sonner": "^1.7.2",
-    "tailwind-merge": "^2.6.0"
+    "tailwind-merge": "^2.6.0",
+    "three": "^0.183.2"
   },
   "devDependencies": {
     "@types/react": "^19.0.7",

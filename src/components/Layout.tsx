@@ -11,7 +11,7 @@ export default function Layout() {
   return (
     <div className="min-h-screen bg-black text-white selection:bg-white selection:text-black font-sans flex flex-col">
       <Header />
-      <main className="flex-1 pt-14">
+      <main className="flex-1 pt-14 px-6 md:px-12 lg:px-16">
         <Outlet />
       </main>
       {isHomePage && <Footer />}

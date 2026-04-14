@@ -88,7 +88,7 @@ export function ChatSessionView({
 
   return (
     <div className="flex flex-col h-full bg-black selection:bg-white selection:text-black">
-      <header className="flex-shrink-0 flex items-center justify-between px-6 py-4 border-b border-zinc-900 bg-black">
+      <header className="flex-shrink-0 flex items-center justify-between px-8 py-5 border-b border-zinc-900 bg-black h-16">
         <div className="flex items-center gap-6">
           <button
             onClick={() => window.location.hash = '/'}
