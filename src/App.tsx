@@ -68,8 +68,7 @@ const AppRoutes = () => {
           <ProtectedRoute>
             <Suspense fallback={<div className="min-h-screen bg-black flex items-center justify-center text-zinc-500 font-mono text-[10px] uppercase tracking-widest">Materializing Neural Mesh...</div>}>
               <div className="h-screen bg-black overflow-hidden flex flex-col">
-                <Header />
-                <main className="flex-1 pt-14 overflow-hidden">
+                <main className="flex-1 overflow-hidden">
                   <OpenStudioApp />
                 </main>
               </div>
