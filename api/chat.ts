@@ -29,8 +29,9 @@ export default async function handler(req: Request) {
       });
     }
 
-    // Normalize model name - API needs just the model ID (no "models/" prefix)
-    const modelId = (model || 'gemini-1.5-flash-latest').replace(/^models\//, '');
+    // Normalize model name - strip any "models/" prefix
+    const rawModel = model || 'gemini-2.0-flash';
+    const modelId = rawModel.replace(/^models\//, '');
     
     // Prepare system instruction part safely
     const sysInstPayload = systemInstruction 
@@ -38,8 +39,9 @@ export default async function handler(req: Request) {
         : undefined;
 
     // 4. Forward the exact request to Google's REST API securely
+    // Using v1 (not v1beta) for the broadest model support
     const googleRes = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/${modelId}:streamGenerateContent?alt=sse&key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1/models/${modelId}:streamGenerateContent?alt=sse&key=${apiKey}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

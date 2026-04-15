@@ -52,6 +52,7 @@ export function ChatSessionView({
     return 600;
   });
   const chatViewRef = useRef<HTMLDivElement>(null);
+  const isResizingRef = useRef(false);
   const prevIsThinking = useRef(isThinking);
 
   useEffect(() => {
@@ -71,16 +72,29 @@ export function ChatSessionView({
     prevIsThinking.current = isThinking;
   }, [isThinking, generationInfo]);
 
+  // Restore cursor if the component unmounts mid-drag
+  useEffect(() => {
+    return () => {
+      if (isResizingRef.current) {
+        document.body.style.cursor = '';
+        document.body.style.userSelect = '';
+        isResizingRef.current = false;
+      }
+    };
+  }, []);
+
   const startResizing = useCallback((mouseDownEvent: React.MouseEvent) => {
     mouseDownEvent.preventDefault();
     const startWidth = chatViewRef.current?.offsetWidth ?? chatPanelWidth;
     const startPosition = mouseDownEvent.clientX;
 
     // Lock cursor globally so it doesn't flicker during fast drags
+    isResizingRef.current = true;
     document.body.style.cursor = 'col-resize';
     document.body.style.userSelect = 'none';
 
     function onMouseMove(mouseMoveEvent: MouseEvent) {
+      if (!isResizingRef.current) return;
       const newWidth = startWidth + mouseMoveEvent.clientX - startPosition;
       const minWidth = 400;
       const maxWidth = window.innerWidth - 400;
@@ -89,15 +103,16 @@ export function ChatSessionView({
       }
     }
     function onMouseUp() {
-      // Always restore cursor on release
+      // Always restore cursor & state on release
+      isResizingRef.current = false;
       document.body.style.cursor = '';
       document.body.style.userSelect = '';
-      window.removeEventListener("mousemove", onMouseMove);
-      window.removeEventListener("mouseup", onMouseUp);
+      window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('mouseup', onMouseUp);
     }
 
-    window.addEventListener("mousemove", onMouseMove);
-    window.addEventListener("mouseup", onMouseUp);
+    window.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('mouseup', onMouseUp);
   }, [chatPanelWidth]);
 
   return (
@@ -187,12 +202,13 @@ export function ChatSessionView({
         <AnimatePresence>
           {isCodeViewVisible && (
             <>
-              {/* SUBTLE RESIZER */}
+              {/* SUBTLE RESIZER — `relative` so the hit-area child stays scoped */}
               <div
                 onMouseDown={startResizing}
-                className="w-[1px] h-full cursor-col-resize bg-zinc-900 border-x border-black hover:bg-zinc-600 transition-colors flex-shrink-0 z-30 group"
+                className="relative w-[5px] h-full cursor-col-resize bg-zinc-900 hover:bg-zinc-600 transition-colors flex-shrink-0 z-30"
               >
-                <div className="absolute inset-y-0 -left-1 -right-1 z-10" />
+                {/* Expanded invisible hit-area — cursor-col-resize keeps cursor consistent */}
+                <div className="absolute inset-y-0 -left-1 -right-1 cursor-col-resize z-10" />
               </div>
 
               <motion.div
