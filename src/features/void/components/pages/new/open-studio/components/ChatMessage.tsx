@@ -1,6 +1,6 @@
 import React from 'react';
 import type { Message } from '../types';
-import { UserIcon, NexusIcon, SpinnerIcon } from './icons/Icons';
+import { UserIcon, NexusIcon, SpinnerIcon, GridIcon } from './icons/Icons';
 import { GenerationStatusView } from './GenerationStatusView';
 
 interface ChatMessageProps {
