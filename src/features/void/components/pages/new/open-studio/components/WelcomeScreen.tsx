@@ -51,23 +51,22 @@ export function WelcomeScreen({ onSendMessage, isThinking, selectedModelId, onMo
                         />
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full max-w-4xl">
+                    <div className="flex flex-wrap items-center justify-center gap-6 w-full max-w-4xl">
                         {[
-                            { title: 'Materialize UI', desc: 'Generate a professional dashboard', icon: '💎' },
-                            { title: 'Build Backend', desc: 'Create a robust serverless node', icon: '⚡' },
-                            { title: 'System Architecture', desc: 'Map out your next big project', icon: '🗺️' }
-                        ].map((template, i) => (
+                            'Create a beautiful landing page design',
+                            'Build a serverless Node backend',
+                            'Map out system architecture',
+                            'Generate a React dashboard'
+                        ].map((suggestion, i) => (
                             <motion.button
                                 key={i}
-                                initial={{ opacity: 0, y: 20 }}
+                                initial={{ opacity: 0, y: 10 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.1 + (i * 0.1) }}
-                                onClick={() => onSendMessage(`Build a ${template.title}: ${template.desc}`)}
-                                className="group p-6 bg-transparent border border-zinc-900 hover:border-zinc-700 transition-all duration-300 rounded-2xl text-left relative overflow-hidden"
+                                transition={{ delay: 0.1 + (i * 0.05) }}
+                                onClick={() => onSendMessage(suggestion)}
+                                className="text-sm text-zinc-500 hover:text-white transition-colors cursor-pointer flex items-center gap-2 tracking-wide"
                             >
-                                <div className="text-2xl mb-4 grayscale group-hover:grayscale-0 transition-opacity opacity-40 group-hover:opacity-100">{template.icon}</div>
-                                <h3 className="text-sm font-semibold text-zinc-300 mb-1 group-hover:text-white transition-colors">{template.title}</h3>
-                                <p className="text-xs text-zinc-500 leading-relaxed group-hover:text-zinc-400 transition-colors">{template.desc}</p>
+                                <span className="opacity-40">✦</span> {suggestion}
                             </motion.button>
                         ))}
                     </div>

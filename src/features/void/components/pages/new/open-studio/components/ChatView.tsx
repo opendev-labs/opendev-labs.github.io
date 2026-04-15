@@ -25,7 +25,7 @@ export function ChatView({ messages, isThinking, onSendMessage, suggestions, sel
 
   return (
     <div className="flex flex-col h-full bg-[#0C0C0C] relative">
-      <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-8 space-y-4 custom-scrollbar scroll-smooth">
+      <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 pt-2 pb-8 space-y-4 custom-scrollbar scroll-smooth">
         {messages.map((msg) => <ChatMessage key={msg.id} message={msg} />)}
         {isThinking && messages.length > 0 && messages[messages.length - 1].role === 'user' && (
            <div className="animate-pulse flex items-center gap-3 px-8 text-zinc-600">
