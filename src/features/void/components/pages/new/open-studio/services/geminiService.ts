@@ -42,52 +42,57 @@ export async function* streamGeminiResponse(
     modelConfig: ModelConfig,
     _manualApiKey?: string // Ignored in Zero-Config standard
 ): AsyncGenerator<{ text: string; }> {
-    const effectiveApiKey = import.meta.env.VITE_GEMINI_API_KEY;
-    if (!effectiveApiKey) {
-        throw new Error("Materialization handshake failed: VITE_GEMINI_API_KEY is not configured in the mesh environment.");
-    }
-    const ai = new GoogleGenAI({
-        apiKey: effectiveApiKey,
-        apiVersion: 'v1'
-    });
-
     const contents = [
         ...toGeminiHistory(history),
         { role: 'user', parts: [{ text: fullPrompt }] }
     ];
 
-    const genModel = ai.getGenerativeModel({
-        model: modelConfig.apiIdentifier,
-        systemInstruction: TARS_SYSTEM_INSTRUCTION_GEMINI,
+    // Point to Vercel API (either relative for local vercel dev, or absolute for production)
+    const apiUrl = process.env.NODE_ENV === 'development' 
+        ? '/api/chat' 
+        : 'https://opendev-labs.vercel.app/api/chat';
+
+    const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            model: modelConfig.apiIdentifier || 'gemini-1.5-flash',
+            contents: contents,
+            systemInstruction: TARS_SYSTEM_INSTRUCTION_GEMINI
+        })
     });
 
-    const result = await genModel.generateContentStream({
-        contents: contents,
-        generationConfig: {
-            responseMimeType: "application/json",
-            responseSchema: {
-                type: Type.OBJECT,
-                properties: {
-                    conversation: { type: Type.STRING },
-                    files: {
-                        type: Type.ARRAY,
-                        items: {
-                            type: Type.OBJECT,
-                            properties: {
-                                path: { type: Type.STRING },
-                                content: { type: Type.STRING },
-                                action: { type: Type.STRING }
-                            },
-                            required: ['path', 'action']
-                        }
+    if (!response.ok) {
+        const errText = await response.text();
+        throw new Error(`Vercel Backend connection failed: ${errText}`);
+    }
+
+    if (!response.body) throw new Error("No response body");
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder("utf-8");
+    let buffer = '';
+
+    while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split('\n');
+        buffer = lines.pop() || '';
+
+        for (const line of lines) {
+            if (line.startsWith('data: ') && line !== 'data: [DONE]') {
+                try {
+                    const data = JSON.parse(line.substring(6));
+                    const textChunk = data.candidates?.[0]?.content?.parts?.[0]?.text;
+                    if (textChunk) {
+                        yield { text: textChunk };
                     }
-                },
-                required: ['conversation', 'files']
+                } catch (e) {
+                    // Ignore parse errors on partial chunks
+                }
             }
         }
-    });
-
-    for await (const chunk of result) {
-        yield { text: chunk.text || '' };
     }
 }

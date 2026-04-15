@@ -306,41 +306,25 @@ export async function* streamChatResponse(
     }
 }
 
-// --- Suggestions Service (Remains the same, uses Gemini) ---
+// --- Suggestions Service ---
 export async function generateSuggestions(context: string): Promise<string[]> {
-    const envKey = import.meta.env.VITE_GEMINI_API_KEY;
-    if (!envKey) {
-        console.warn("VITE_GEMINI_API_KEY not set, cannot generate suggestions.");
-        return [];
-    }
     try {
-        const ai = new GoogleGenAI({
-            apiKey: envKey,
-            apiVersion: 'v1'
-        });
-        const genModel = ai.getGenerativeModel({
-            model: 'gemini-1.5-flash',
-            systemInstruction: `You are an expert developer assistant. Based on the user's last request and the files that were generated, provide 3-4 short, actionable follow-up prompts. Return a JSON object with a single key "suggestions" which is an array of strings. Example: {"suggestions": ["Make it responsive", "Add a loading state"]}`,
-        });
+        const apiUrl = process.env.NODE_ENV === 'development' 
+            ? '/api/suggest' 
+            : 'https://opendev-labs.vercel.app/api/suggest';
 
-        const response = await genModel.generateContent({
-            contents: [{ role: 'user', parts: [{ text: context }] }],
-            generationConfig: {
-                responseMimeType: "application/json",
-                responseSchema: {
-                    type: Type.OBJECT,
-                    properties: {
-                        suggestions: {
-                            type: Type.ARRAY,
-                            items: { type: Type.STRING }
-                        }
-                    },
-                    required: ['suggestions']
-                }
-            }
+        const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ context })
         });
-        const jsonStr = (response.text || "").trim();
-        const parsed = JSON.parse(jsonStr);
+        
+        if (!response.ok) {
+            console.warn("Backend suggestions API failed:", response.statusText);
+            return [];
+        }
+
+        const parsed = await response.json();
         return parsed.suggestions && Array.isArray(parsed.suggestions) ? parsed.suggestions.slice(0, 4) : [];
     } catch (error) {
         console.error("Error generating suggestions:", error);
