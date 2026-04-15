@@ -11,8 +11,9 @@ export const SUGGESTED_PROMPTS = [
 ];
 
 export const SUPPORTED_MODELS: ModelConfig[] = [
-    { id: 'gemini-1.5-pro', name: 'Gemini 1.5 Pro', provider: 'Google', apiIdentifier: 'gemini-1.5-pro' },
-    { id: 'gemini-1.5-flash', name: 'Gemini 1.5 Flash', provider: 'Google', apiIdentifier: 'gemini-1.5-flash' },
+    { id: 'gemini-2.0-flash', name: 'Gemini 2.0 Flash', provider: 'Google', apiIdentifier: 'gemini-2.0-flash' },
+    { id: 'gemini-1.5-pro', name: 'Gemini 1.5 Pro', provider: 'Google', apiIdentifier: 'gemini-1.5-pro-latest' },
+    { id: 'gemini-1.5-flash', name: 'Gemini 1.5 Flash', provider: 'Google', apiIdentifier: 'gemini-1.5-flash-latest' },
 
     // Top Free Coding Models
     { id: 'deepseek-coder-v2', name: 'DeepSeek Coder V2', provider: 'DeepSeek', apiIdentifier: 'deepseek-coder' },

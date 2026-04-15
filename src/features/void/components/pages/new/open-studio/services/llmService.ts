@@ -259,7 +259,10 @@ export async function* streamChatResponse(
         effectiveApiKey = getApiKeyFromEnv(modelConfig.provider);
     }
 
-    if (!effectiveApiKey) {
+    // Google provider: key is managed by the secure Vercel backend — no frontend key needed
+    const requiresKey = modelConfig.provider !== 'Google';
+
+    if (requiresKey && !effectiveApiKey) {
         const errJson = JSON.stringify({ conversation: `Materialization handshake failed: API key for ${modelConfig.provider} is not configured. Please initialize your keys in Settings for flawless materialization.`, files: [] });
         yield { text: errJson };
         return;
