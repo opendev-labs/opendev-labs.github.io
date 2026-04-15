@@ -76,6 +76,10 @@ export function ChatSessionView({
     const startWidth = chatViewRef.current?.offsetWidth ?? chatPanelWidth;
     const startPosition = mouseDownEvent.clientX;
 
+    // Lock cursor globally so it doesn't flicker during fast drags
+    document.body.style.cursor = 'col-resize';
+    document.body.style.userSelect = 'none';
+
     function onMouseMove(mouseMoveEvent: MouseEvent) {
       const newWidth = startWidth + mouseMoveEvent.clientX - startPosition;
       const minWidth = 400;
@@ -85,6 +89,9 @@ export function ChatSessionView({
       }
     }
     function onMouseUp() {
+      // Always restore cursor on release
+      document.body.style.cursor = '';
+      document.body.style.userSelect = '';
       window.removeEventListener("mousemove", onMouseMove);
       window.removeEventListener("mouseup", onMouseUp);
     }
