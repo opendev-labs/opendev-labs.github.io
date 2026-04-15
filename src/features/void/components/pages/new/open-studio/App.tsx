@@ -633,13 +633,13 @@ function App() {
             )}
             {view === 'chat-session' && !activeSession && !isInitialLoad && (
               <div className="p-8 text-white flex flex-col items-center justify-center h-full text-center">
-                <h1 className="text-xl font-bold mb-2 lowercase tracking-tighter">node not materialized</h1>
-                <p className="text-zinc-600 mb-8 max-w-sm uppercase text-[10px] font-bold tracking-[0.2em] leading-relaxed">the session you are attempting to uplink with is currently void or offline in this mesh.</p>
+                <h1 className="text-xl font-semibold mb-2 tracking-tight">Session not found</h1>
+                <p className="text-zinc-500 mb-8 max-w-sm leading-relaxed">The project session you are attempting to load does not exist or has been deleted.</p>
                 <button
                   onClick={() => handleNavigate('new-chat')}
-                  className="px-6 py-2.5 text-[10px] font-bold uppercase tracking-widest bg-white text-black hover:bg-orange-500 hover:text-white transition-all duration-300 rounded-none"
+                  className="px-6 py-2.5 text-sm font-medium bg-white text-black hover:bg-zinc-200 transition-colors rounded-lg"
                 >
-                  Materialize New Node
+                  Start New Session
                 </button>
               </div>
             )}

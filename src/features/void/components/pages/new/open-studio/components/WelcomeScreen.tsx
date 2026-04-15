@@ -27,19 +27,19 @@ export function WelcomeScreen({ onSendMessage, isThinking, selectedModelId, onMo
                     <motion.div 
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="inline-flex items-center gap-2 px-4 py-1.5 bg-zinc-900/50 border border-zinc-800/50 text-[10px] font-bold text-zinc-500 mb-10 uppercase tracking-[0.3em] rounded-lg font-mono"
+                        className="inline-flex items-center gap-2 px-3 py-1.5 bg-zinc-900/50 border border-zinc-800 text-xs font-medium text-zinc-400 mb-10 rounded-full"
                     >
-                        <div className="w-1 h-1 rounded-full bg-blue-500 animate-pulse" />
-                        nexus // core workstation
+                        <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                        OpenStudio AI IDE
                     </motion.div>
 
-                    <h1 className="text-6xl md:text-8xl font-bold text-white mb-6 tracking-tight leading-[0.9]">
-                        OpenStudio.<br />
-                        <span className="text-zinc-800">The Neural Architect.</span>
+                    <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 tracking-tight leading-[1.1]">
+                        Code at the speed<br />
+                        <span className="text-zinc-500">of thought.</span>
                     </h1>
 
-                    <p className="text-zinc-600 text-sm md:text-base font-bold mb-16 max-w-xl mx-auto leading-relaxed uppercase tracking-[0.4em] opacity-80 font-mono">
-                        Build, deploy, and materialize complex nodes.
+                    <p className="text-zinc-400 text-lg md:text-xl mb-16 max-w-2xl mx-auto leading-relaxed">
+                        AI-powered code generation with real npm execution.<br className="hidden md:block" /> Build, preview, and deploy instantly in your browser.
                     </p>
 
                     <div className="w-full max-w-4xl mb-24">
@@ -66,8 +66,8 @@ export function WelcomeScreen({ onSendMessage, isThinking, selectedModelId, onMo
                                 className="group p-6 bg-transparent border border-zinc-900 hover:border-zinc-700 transition-all duration-300 rounded-2xl text-left relative overflow-hidden"
                             >
                                 <div className="text-2xl mb-4 grayscale group-hover:grayscale-0 transition-opacity opacity-40 group-hover:opacity-100">{template.icon}</div>
-                                <h3 className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-1 group-hover:text-white transition-colors">{template.title}</h3>
-                                <p className="text-[9px] text-zinc-700 font-bold leading-relaxed uppercase tracking-widest opacity-80 group-hover:opacity-100">{template.desc}</p>
+                                <h3 className="text-sm font-semibold text-zinc-300 mb-1 group-hover:text-white transition-colors">{template.title}</h3>
+                                <p className="text-xs text-zinc-500 leading-relaxed group-hover:text-zinc-400 transition-colors">{template.desc}</p>
                             </motion.button>
                         ))}
                     </div>

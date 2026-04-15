@@ -28,10 +28,10 @@ export function Sidebar({ onNavigate, recentChats, onSelectChat, onDeleteSession
     <aside className="w-[260px] bg-[#000000] flex flex-col h-full z-40">
       {/* 🏙️ LOGO & BRANDING */}
       <div className="p-4 flex items-center gap-2 mb-4">
-        <div className="flex items-center gap-1.5 px-1">
-          <span className="text-xl font-black text-white tracking-tighter italic">hero</span>
-          <div className="bg-white px-2 py-0.5 rounded-full">
-             <span className="text-[10px] font-black text-black uppercase tracking-tighter">chat</span>
+        <div className="flex items-center px-1">
+          <span className="text-lg font-bold text-white tracking-tight">Open</span>
+          <div className="bg-zinc-800 px-1.5 py-0.5 rounded ml-1">
+             <span className="text-[11px] font-bold text-white">Studio</span>
           </div>
         </div>
         <button className="ml-auto text-zinc-500 hover:text-white transition-colors">
@@ -90,7 +90,7 @@ export function Sidebar({ onNavigate, recentChats, onSelectChat, onDeleteSession
                       : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-900/30'
                   }`}
                 >
-                  <span className="text-[13px] font-medium truncate w-full">{chat.title || 'Untitled Node'}</span>
+                  <span className="text-[13px] font-medium truncate w-full">{chat.title || 'Untitled Session'}</span>
                 </button>
               </div>
             ))}
@@ -101,7 +101,7 @@ export function Sidebar({ onNavigate, recentChats, onSelectChat, onDeleteSession
       {/* FOOTER */}
       <div className="p-4 mt-auto">
          <div className="flex items-center gap-3 p-2 hover:bg-zinc-900/50 rounded-xl transition-colors cursor-pointer group">
-           <div className="w-8 h-8 rounded-full bg-orange-500 flex items-center justify-center text-[11px] font-black text-black shadow-lg shadow-orange-500/10">
+           <div className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center text-[11px] font-semibold text-zinc-300">
              OL
            </div>
            <div className="flex flex-col">

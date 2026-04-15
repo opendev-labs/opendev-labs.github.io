@@ -276,7 +276,7 @@ export function CodeView({ session, setActiveFile, onFileContentChange, generati
                     {isFileTreeVisible && (
                         <aside className="w-64 bg-[#050505] p-6 overflow-y-auto border-r border-zinc-900/50">
                             <header className="flex items-center justify-between pb-6 border-b border-zinc-900/30 mb-6">
-                                <h3 className="text-[10px] font-bold text-zinc-600 uppercase tracking-[0.2em] font-mono">Segment Manifest</h3>
+                                <h3 className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">Project Files</h3>
                                 <div className="flex items-center gap-1">
                                     <button onClick={() => setRootCreating('folder')} className="p-1.5 hover:bg-zinc-900 text-zinc-600 hover:text-white transition-colors rounded-lg border border-transparent hover:border-zinc-800" title="New Folder">
                                         <FolderPlusIcon className="w-3.5 h-3.5" />
@@ -313,9 +313,9 @@ export function CodeView({ session, setActiveFile, onFileContentChange, generati
                                     onRenameFileOrFolder={onRenameFileOrFolder}
                                 />
                             ) : (
-                                <div className="flex flex-col items-center justify-center mt-20 opacity-20">
-                                   <div className="w-1 h-1 rounded-full bg-zinc-800 mb-4" />
-                                   <p className="text-[9px] font-bold text-zinc-800 uppercase tracking-widest text-center">Neural void</p>
+                                <div className="flex flex-col items-center justify-center mt-20 opacity-40">
+                                   <div className="w-1.5 h-1.5 rounded-full bg-zinc-600 mb-4" />
+                                   <p className="text-[11px] font-medium text-zinc-500 uppercase tracking-wider text-center">Empty Workspace</p>
                                 </div>
                             )}
                         </aside>
@@ -338,11 +338,11 @@ export function CodeView({ session, setActiveFile, onFileContentChange, generati
                                         <div className="p-1.5 bg-zinc-900/50 border border-zinc-800/50 rounded-lg">
                                            <FileIcon className="h-3.5 w-3.5 text-zinc-500" />
                                         </div>
-                                        <span className="text-[11px] font-bold text-white uppercase tracking-widest">{activeFile.path}</span>
+                                        <span className="text-[13px] font-medium text-white">{activeFile.path}</span>
                                     </div>
                                     <div className="flex items-center gap-3">
-                                        <div className="w-1 h-1 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.5)]" />
-                                        <span className="text-[9px] font-bold text-zinc-600 uppercase tracking-widest font-mono">Synchronized</span>
+                                        <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                                        <span className="text-[11px] font-medium text-zinc-500 uppercase tracking-wider">Saved</span>
                                     </div>
                                 </div>
                                 <div className="flex-1 relative">
@@ -378,8 +378,8 @@ export function CodeView({ session, setActiveFile, onFileContentChange, generati
                                 <div className="w-16 h-16 bg-zinc-900/30 border border-zinc-900/50 flex items-center justify-center mb-8 rounded-[2rem]">
                                     <FileIcon className="h-6 w-6 text-zinc-800" />
                                 </div>
-                                <p className="text-[11px] font-bold uppercase tracking-[0.4em] text-zinc-700">Select Segment For Materialization</p>
-                                <p className="text-[9px] font-bold uppercase tracking-[0.2em] mt-3 text-zinc-800">Uplink active // Waiting for manifest</p>
+                                <p className="text-sm font-medium text-zinc-500">Select a file to edit</p>
+                                <p className="text-xs text-zinc-600 mt-2">Create a new file or select from the file explorer</p>
                             </div>
                         )}
                     </main>

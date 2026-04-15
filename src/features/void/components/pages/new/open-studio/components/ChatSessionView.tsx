@@ -99,9 +99,9 @@ export function ChatSessionView({
       <header className="h-[52px] border-b border-zinc-900 bg-[#0C0C0C] flex items-center justify-between px-4 z-40">
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2">
-            <h1 className="text-[14px] font-medium text-white transition-all cursor-default">{session.title || 'Untitled Node'}</h1>
-            <div className="flex items-center gap-1.5 px-2 py-0.5 bg-zinc-900/50 border border-zinc-800/50 rounded-lg">
-               <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-tighter">Public</span>
+            <h1 className="text-sm font-medium text-white transition-all cursor-default">{session.title || 'Untitled Session'}</h1>
+            <div className="flex items-center gap-1.5 px-2 py-0.5 bg-zinc-900 border border-zinc-800 rounded-md">
+               <span className="text-[11px] font-medium text-zinc-400">Public</span>
             </div>
             <button className="text-zinc-500 hover:text-white transition-colors">
               <ChevronsRightIcon className="w-4 h-4" />
