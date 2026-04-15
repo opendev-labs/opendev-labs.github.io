@@ -1,4 +1,3 @@
-import { Request, Response } from 'express';
 import crypto from 'crypto';
 
 // Discord Interaction Types
@@ -6,7 +5,7 @@ const PING = 1;
 const APPLICATION_COMMAND = 2;
 
 // Verification Logic
-async function verifyDiscordRequest(req: Request, publicKey: string) {
+async function verifyDiscordRequest(req: any, publicKey: string) {
     const signature = req.headers['x-signature-ed25519'] as string;
     const timestamp = req.headers['x-signature-timestamp'] as string;
     const body = JSON.stringify(req.body);
@@ -23,7 +22,7 @@ async function verifyDiscordRequest(req: Request, publicKey: string) {
                 key: Buffer.from(publicKey, 'hex'),
                 format: 'der',
                 type: 'public',
-            },
+            } as any,
             Buffer.from(signature, 'hex')
         );
         return isValid;
@@ -34,7 +33,7 @@ async function verifyDiscordRequest(req: Request, publicKey: string) {
     }
 }
 
-export default async function handler(req: Request, res: Response) {
+export default async function handler(req: any, res: any) {
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Method not allowed' });
     }
