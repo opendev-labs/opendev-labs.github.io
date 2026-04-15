@@ -3,7 +3,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import type { ChatSession, FileNode, GenerationInfo } from '../types';
 import { ChatView } from './ChatView';
 import { CodeView } from './CodeView';
-import { DeployIcon, PanelLeftCloseIcon, PanelRightCloseIcon, CodeIcon, PlayIcon } from './icons/Icons';
+import { DeployDialog } from './DeployDialog';
+import { DeployIcon, PanelLeftCloseIcon, PanelRightCloseIcon, CodeIcon, PlayIcon, ShareIcon, ChevronsRightIcon } from './icons/Icons';
+import { hubService } from '../../../../../../../services/hubService';
+import { useAuth } from '../../../../../hooks/useAuth';
+import { toast } from 'sonner';
 
 interface ChatSessionViewProps {
   session: ChatSession;
@@ -31,10 +35,13 @@ export function ChatSessionView({
   selectedModelId,
   onModelChange,
 }: ChatSessionViewProps) {
+  const { user, profile } = useAuth();
   const lastMessage = session.messages[session.messages.length - 1];
   const generationInfo: GenerationInfo | null = (lastMessage?.role === 'open-studio' && lastMessage.generationInfo)
     ? lastMessage.generationInfo
     : null;
+
+  const [showDeployDialog, setShowDeployDialog] = useState(false);
 
   const [isCodeViewVisible, setIsCodeViewVisible] = useState(true);
   const [activeTab, setActiveTab] = useState<'code' | 'preview'>('code');
@@ -120,10 +127,26 @@ export function ChatSessionView({
           </div>
 
           <div className="flex items-center gap-2">
-            <button className="text-zinc-500 hover:text-white p-2 transition-colors">
+            <button
+              onClick={async () => {
+                if (!user || !profile) { toast.error('Login required to share.'); return; }
+                try {
+                  const content = `🚀 Built "${session.title}" with OpenStudio!\n\n${session.fileTree.length} files generated. Check it out!\n\n#OpenStudio #WebDev`;
+                  await hubService.shareToHub(user, profile, content, session.title);
+                  toast.success('Shared to OpenHub!');
+                } catch (e) {
+                  toast.error('Failed to share.');
+                }
+              }}
+              className="text-zinc-500 hover:text-white p-2 transition-colors"
+              title="Share to OpenHub"
+            >
               <ShareIcon className="w-4 h-4" />
             </button>
-            <button className="flex items-center gap-2 px-3 py-1.5 bg-white hover:bg-zinc-100 transition-colors text-black rounded-lg text-[12px] font-bold ml-1 shadow-2xl">
+            <button
+              onClick={() => setShowDeployDialog(true)}
+              className="flex items-center gap-2 px-3 py-1.5 bg-white hover:bg-zinc-100 transition-colors text-black rounded-lg text-[12px] font-bold ml-1 shadow-2xl"
+            >
               <DeployIcon className="w-3.5 h-3.5" />
               Deploy
             </button>
@@ -189,6 +212,14 @@ export function ChatSessionView({
           )}
         </AnimatePresence>
       </div>
+
+      {/* Deploy Dialog */}
+      <DeployDialog
+        open={showDeployDialog}
+        onClose={() => setShowDeployDialog(false)}
+        files={session.fileTree}
+        sessionTitle={session.title}
+      />
     </div>
   );
 }

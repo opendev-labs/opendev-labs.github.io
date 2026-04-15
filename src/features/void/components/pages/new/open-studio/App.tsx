@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Sidebar } from './components/Sidebar';
 import { WelcomeScreen } from './components/WelcomeScreen';
 import { ChatSessionView } from './components/ChatSessionView';
@@ -12,7 +12,8 @@ import { LamaDBOfficeCockpit, UnifiedOfficeCockpit } from '../../../../../../pag
 import { hubService } from '../../../../../../services/hubService';
 import { useAuth } from '../../../../hooks/useAuth';
 import { ShareIcon } from './components/icons/Icons';
-import { toast } from 'sonner'; // Assuming sonner or similar is available for feedback
+import { toast } from 'sonner';
+import { LamaDB } from '../../../../../../lib/lamaDB';
 
 // A simple ID generator
 const generateId = () => Date.now().toString() + Math.random().toString(36).substring(2);
@@ -26,6 +27,8 @@ function App() {
   const [isThinking, setIsThinking] = useState(false);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+  const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Model State
   const [selectedModelId, setSelectedModelId] = useState<string>(SUPPORTED_MODELS[0].id);
@@ -48,6 +51,80 @@ function App() {
 
 
   const { user, profile } = useAuth();
+
+  // ----- SESSION PERSISTENCE: Load from LamaDB on mount -----
+  useEffect(() => {
+    if (!user) return;
+    const loadSessions = async () => {
+      try {
+        const userContext = { uid: user.uid, email: user.email };
+        const saved = await (LamaDB as any).store.collection('openstudio_sessions', userContext).get();
+        if (saved && Array.isArray(saved) && saved.length > 0) {
+          const restored: ChatSession[] = saved.map((s: any) => ({
+            id: s.sessionId || s.id,
+            title: s.title || 'Untitled',
+            messages: s.messages ? (typeof s.messages === 'string' ? JSON.parse(s.messages) : s.messages) : [],
+            fileTree: s.files ? (typeof s.files === 'string' ? JSON.parse(s.files) : s.files) : [],
+            activeFile: null,
+            suggestions: [],
+            lastUpdated: s.updatedAt ? new Date(s.updatedAt).getTime() : Date.now(),
+          }));
+          setSessions(prev => {
+            // Merge: keep in-memory sessions that aren't in DB yet
+            const dbIds = new Set(restored.map(r => r.id));
+            const keepExisting = prev.filter(p => !dbIds.has(p.id));
+            return [...restored.sort((a, b) => b.lastUpdated - a.lastUpdated), ...keepExisting];
+          });
+          console.log(`✅ OpenStudio: Restored ${restored.length} sessions from LamaDB.`);
+        }
+      } catch (e) {
+        console.error('Failed to load sessions from LamaDB:', e);
+      }
+    };
+    loadSessions();
+  }, [user?.uid]);
+
+  // ----- SESSION PERSISTENCE: Auto-save active session (debounced 3s) -----
+  useEffect(() => {
+    if (!user || !activeSessionId || isThinking) return;
+    const session = sessions.find(s => s.id === activeSessionId);
+    if (!session || session.messages.length === 0) return;
+
+    if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
+
+    saveTimerRef.current = setTimeout(async () => {
+      setIsSaving(true);
+      try {
+        const userContext = { uid: user.uid, email: user.email };
+        const payload = {
+          sessionId: session.id,
+          userId: user.uid,
+          title: session.title,
+          messages: JSON.stringify(session.messages),
+          files: JSON.stringify(session.fileTree),
+          createdAt: new Date(session.lastUpdated).toISOString(),
+          updatedAt: new Date().toISOString(),
+        };
+
+        // Try to update existing, or create new
+        const existing = await (LamaDB as any).store.collection('openstudio_sessions', userContext).get();
+        const match = existing?.find((s: any) => s.sessionId === session.id);
+
+        if (match) {
+          await (LamaDB as any).store.collection('openstudio_sessions', userContext).update(match.id, payload);
+        } else {
+          await (LamaDB as any).store.collection('openstudio_sessions', userContext).add(payload);
+        }
+        console.log('💾 OpenStudio: Session saved.');
+      } catch (e) {
+        console.error('Failed to save session:', e);
+      } finally {
+        setIsSaving(false);
+      }
+    }, 3000);
+
+    return () => { if (saveTimerRef.current) clearTimeout(saveTimerRef.current); };
+  }, [sessions, activeSessionId, user?.uid, isThinking]);
 
   useEffect(() => {
     const handleHashChange = () => {
