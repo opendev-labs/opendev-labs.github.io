@@ -5,7 +5,7 @@ import { User as UserIcon, Briefcase, Globe, Github, Twitter, Linkedin, Mail, Sh
 import { useAuth } from "../features/void/hooks/useAuth";
 import { Button } from "../components/ui/shadcn/button";
 import { Card } from "../components/ui/Card";
-import { ProjectCard } from "../components/hub/ProjectCard";
+import { ProjectCard } from "../features/hub/components/ProjectCard";
 import { LamaDB } from "../lib/lamaDB";
 
 export default function ProfilePage() {

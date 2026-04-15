@@ -23,6 +23,7 @@ interface AuthState {
   profile: UserProfile | null;
   avatarUrl: string | null;
   bannerUrl: string | null;
+  hasApiKeys: boolean;
 }
 
 interface AuthContextType extends AuthState {
@@ -394,15 +395,31 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser(user);
   }, []);
 
+  const hasApiKeys = !!(profile?.geminiApiKey || profile?.openaiApiKey || profile?.openRouterApiKey || profile?.deepseekApiKey);
+
   const updateProfile = useCallback(async (data: Partial<UserProfile>) => {
     if (!user) return;
     try {
       console.log("🚀 LAMA_BRIDGE: Initiating Profile Synchronization...", data);
       const userContext = { uid: user.uid, email: user.email };
       
+      // ENCRYPT API KEYS IF PRESENT
+      const keysToEncrypt: Record<string, string> = {};
+      if (data.geminiApiKey) keysToEncrypt.geminiApiKey = data.geminiApiKey;
+      if (data.openaiApiKey) keysToEncrypt.openaiApiKey = data.openaiApiKey;
+      if (data.openRouterApiKey) keysToEncrypt.openRouterApiKey = data.openRouterApiKey;
+      if (data.deepseekApiKey) keysToEncrypt.deepseekApiKey = data.deepseekApiKey;
+
+      let finalData = { ...data };
+      if (Object.keys(keysToEncrypt).length > 0) {
+        const { encryptApiKeys } = await import('../../../lib/crypto');
+        const encrypted = await encryptApiKeys(keysToEncrypt);
+        finalData = { ...finalData, ...encrypted };
+      }
+
       const profileData = {
         ...(profile || {}),
-        ...data,
+        ...finalData,
         updatedAt: new Date().toISOString()
       };
 
@@ -463,7 +480,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       updateProfile,
       profile,
       avatarUrl,
-      bannerUrl
+      bannerUrl,
+      hasApiKeys
     }}>
       {children}
     </AuthContext.Provider>

@@ -1,12 +1,17 @@
-name: OpenDev Sovereign Sync (Ultimate)
+name: OpenDev Sovereign Sync (Professional)
 
 on:
   push:
     branches: [ main ]
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  sovereign-manifest:
+  build:
+    name: 🏗️ Build Nexus Manifest
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -18,11 +23,12 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+          cache: 'npm'
 
       - name: Install Dependencies
         run: npm install --legacy-peer-deps
 
-      - name: Build Nexus Manifest
+      - name: Build Production Bundle
         run: npm run build
         env:
           VITE_FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY }}
@@ -35,16 +41,44 @@ jobs:
           VITE_OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY || secrets.VITE_OPENROUTER_API_KEY }}
           VITE_GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY || secrets.VITE_GEMINI_API_KEY }}
 
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: production-dist
+          path: dist/
+          retention-days: 1
 
-      - name: 📦 Deploy to GitHub Pages
+  deploy-pages:
+    name: 📦 Deploy to GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Download Build Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: production-dist
+          path: dist/
+
+      - name: Deploy to gh-pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: dist
           branch: gh-pages
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: 🚀 Deploy to Vercel (The Void Engine)
-        uses: amondnet/vercel-action@v42.2.0
+  deploy-vercel:
+    name: 🚀 Deploy to Vercel
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Deploy to Vercel Production
+        uses: amondnet/vercel-action@v25
         with:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
@@ -54,42 +88,20 @@ jobs:
           force: true
         env:
           NODE_OPTIONS: "--max-old-space-size=4096"
-        continue-on-error: true
 
-      - name: 🔥 Deploy to Firebase (The Database Hub)
-        run: npx firebase-tools deploy --only hosting --token ${{ secrets.FIREBASE_TOKEN }} --project opendev-office || echo "Firebase deployment failed"
+  deploy-firebase:
+    name: 🔥 Deploy to Firebase
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
-#       - name: 🤗 Sync with Hugging Face (The Compute Engine)
-#         env:
-#           HF_TOKEN: ${{ secrets.HF_TOKEN }}
-#         run: |
-#           # Create clean manifest directory
-#           mkdir -p hf_manifest
-#           cp -r src public index.html package.json package-lock.json Dockerfile README.md hf_manifest/
-#           cp tsconfig.json tsconfig.app.json tsconfig.node.json hf_manifest/ 2>/dev/null || true
-#           cp vite.config.ts postcss.config.js tailwind.config.js hf_manifest/ 2>/dev/null || true
-#           
-#           cd hf_manifest
-#           
-#           # HARDCORE PURGE: Remove all non-text assets to satisfy Hugging Face Space limits
-#           # We keep only the source code and configuration.
-#           find . -type f -not -name "*.ts" \
-#                          -not -name "*.tsx" \
-#                          -not -name "*.js" \
-#                          -not -name "*.jsx" \
-#                          -not -name "*.json" \
-#                          -not -name "*.html" \
-#                          -not -name "*.css" \
-#                          -not -name "*.md" \
-#                          -not -name "Dockerfile" \
-#                          -not -name ".gitignore" \
-#                          -delete
-#           
-#           git init
-#           git config user.name "opendev-manifest"
-#           git config user.email "manifest@opendev-labs.ai"
-#           git checkout -b main
-#           git add .
-#           git commit -m "feat: manifest Nexus genesis protocol [text-only-sync]"
-#           git remote add hf https://opendev-labs:${HF_TOKEN}@huggingface.co/spaces/opendev-labs/nexus.git
-#           git push hf main --force
+      - name: Download Build Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: production-dist
+          path: dist/
+
+      - name: Deploy to Firebase Hosting
+        run: npx firebase-tools deploy --only hosting --token ${{ secrets.FIREBASE_TOKEN }} --project opendev-office

@@ -51,7 +51,7 @@ const VoidApp = lazyWithRetry(() => import('./features/void/VoidApp'));
 const OfficeDashboard = lazyWithRetry(() => import('./pages/OfficeDashboard'));
 const LazyAuthPage = lazyWithRetry(() => import('./features/void/components/pages/AuthPage').then(m => ({ default: m.AuthPage })));
 const LazyVerifyEmailPage = lazyWithRetry(() => import('./features/void/components/pages/VerifyEmailPage').then(m => ({ default: m.VerifyEmailPage })));
-const OpenStudioApp = lazyWithRetry(() => import('./features/void/components/pages/new/open-studio/App'));
+const OpenStudioApp = lazyWithRetry(() => import('./features/studio/App'));
 const PreviewPage = lazyWithRetry(() => import('./pages/PreviewPage'));
 
 import { ProtectedRoute } from './components/ProtectedRoute';

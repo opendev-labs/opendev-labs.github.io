@@ -136,17 +136,21 @@ export default function Home() {
                     >
                         <button
                             onClick={() => navigate(isAuthenticated ? '/open-studio' : '/auth')}
-                            className="px-8 py-3.5 bg-white text-black text-[15px] font-semibold rounded-md hover:bg-zinc-200 transition-colors shadow-xl"
+                            className="px-8 py-3.5 bg-white text-black text-[11px] font-bold uppercase tracking-[0.2em] rounded-md hover:bg-zinc-200 transition-all shadow-xl"
                         >
-                            Configure
+                            Configure Handshake →
                         </button>
                         <button
                             onClick={() => navigate('/docs')}
-                            className="px-8 py-3.5 text-[15px] font-medium text-white border border-zinc-800 rounded-md hover:bg-zinc-900 transition-colors"
+                            className="px-8 py-3.5 bg-black/40 text-white text-[11px] font-bold uppercase tracking-[0.2em] rounded-md border border-zinc-800 hover:bg-zinc-900 transition-all backdrop-blur-sm"
                         >
-                            Documentation <span aria-hidden="true" className="ml-1 opacity-50">→</span>
+                            Nexus Manifest
                         </button>
                     </motion.div>
+
+                    <p className="mt-12 text-[10px] text-zinc-700 font-bold uppercase tracking-[0.6em] animate-pulse">
+                        Protocol 2026 // Decentralized Materialization
+                    </p>
                 </div>
             </section>
 

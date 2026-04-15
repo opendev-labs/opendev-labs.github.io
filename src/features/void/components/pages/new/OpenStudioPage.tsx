@@ -1,5 +1,5 @@
 import React from 'react';
-import OpenStudio from './open-studio/App';
+import OpenStudio from '../../../../studio/App';
 
 export const OpenStudioPage: React.FC = () => {
     return (

@@ -9,8 +9,8 @@ import { LamaDB } from '../lib/lamaDB';
 import { Textarea } from '../components/ui/shadcn/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../components/ui/shadcn/dialog';
 
-import { ProjectCard } from '../components/hub/ProjectCard';
-import { MessagingLayer } from '../components/hub/MessagingLayer';
+import { ProjectCard } from '../features/hub/components/ProjectCard';
+import { MessagingLayer } from '../features/hub/components/MessagingLayer';
 import { HubService, ProjectMetadata } from '../services/hubService';
 import { AgentService } from '../services/agentService';
 import { SampleDataService } from '../services/sampleData';

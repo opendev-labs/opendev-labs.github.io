@@ -5,7 +5,7 @@
  * Uses the GitHub REST API directly from the browser (no backend needed).
  */
 
-import type { FileNode } from '../features/void/components/pages/new/open-studio/types';
+import type { FileNode } from '../features/studio/types';
 
 const GITHUB_API = 'https://api.github.com';
 

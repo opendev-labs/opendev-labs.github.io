@@ -48,45 +48,47 @@ export const PricingPage: React.FC = () => {
                 <span className="inline-block px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-[10px] font-bold tracking-[0.2em] uppercase text-zinc-500 mb-8">
                     Protocol Economics
                 </span>
-                <h1 className="text-6xl md:text-8xl font-bold tracking-tighter text-white mb-6">Scalable Infrastructure.</h1>
-                <p className="text-zinc-500 max-w-xl mx-auto text-lg font-medium">Start for free, then scale your intelligence across our global edge mesh. No hidden cycles.</p>
+                <h1 className="text-6xl md:text-8xl font-bold tracking-tighter text-white mb-6">Mesh Scalability.</h1>
+                <p className="text-zinc-500 max-w-xl mx-auto text-lg font-medium tracking-tight">Initialize your sovereign node for free, then scale your intelligence across the global edge mesh. Clear handshake protocol.</p>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-1">
                 <PricingCard
-                    plan="Hobby"
-                    price="$0"
-                    description="For individual pioneers and early experiments."
+                    plan="Free"
+                    price="₹0"
+                    description="For individual pioneers and early agent experiments."
                     features={[
-                        'Unlimited core nodes',
-                        'Automatic TLS rotation',
-                        'Global Git integration',
-                        'Edge assets delivery',
+                        '3 Active projects',
+                        '100MB Storage protocol',
+                        '50 AI Handshakes / day',
+                        '100 Agent interactions',
                     ]}
                 />
                 <PricingCard
                     plan="Node Pro"
-                    price="$20"
-                    description="For professional systems and scaled intelligence."
+                    price="₹999"
+                    description="For professional systems and high-fidelity intelligence."
                     features={[
-                        'Everything in Hobby, plus:',
-                        'Unlimited team nodes',
-                        'Neural edge routing',
-                        'Serverless logic primitives',
-                        'Dedicated queue support',
+                        'Everything in Free, plus:',
+                        'Unlimited projects',
+                        '10GB Dedicated storage',
+                        '5000 AI Handshakes / mo',
+                        'Real-time deployment mesh',
+                        'Custom domain handshake',
                     ]}
                     isFeatured
                 />
                 <PricingCard
-                    plan="Enterprise"
-                    price="Custom"
-                    description="For sovereign global architectures and scale."
+                    plan="Team"
+                    price="₹4,999"
+                    description="For global architectures and multi-node coordination."
                     features={[
                         'Everything in Pro, plus:',
-                        'Dedicated node clusters',
-                        'Customized uptime SLA',
-                        'Identity mesh (SSO)',
-                        'Protocol advisory support',
+                        '5 Mesh member seats',
+                        '100GB Global storage',
+                        '50000 AI Handshakes / mo',
+                        'Advanced proxy routing',
+                        'Priority protocol support',
                     ]}
                 />
             </div>
