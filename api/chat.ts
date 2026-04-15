@@ -39,18 +39,15 @@ export default async function handler(req: Request) {
         : undefined;
 
     // 4. Forward the exact request to Google's REST API securely
-    // Using v1 (not v1beta) for the broadest model support
+    // Must use v1beta — systemInstruction and responseMimeType are NOT in v1
     const googleRes = await fetch(
-      `https://generativelanguage.googleapis.com/v1/models/${modelId}:streamGenerateContent?alt=sse&key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/${modelId}:streamGenerateContent?alt=sse&key=${apiKey}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           contents,
           ...(sysInstPayload && { systemInstruction: sysInstPayload }),
-          generationConfig: {
-            responseMimeType: "application/json"
-          }
         }),
       }
     );
