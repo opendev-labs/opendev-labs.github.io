@@ -47,10 +47,8 @@ export async function* streamGeminiResponse(
         { role: 'user', parts: [{ text: fullPrompt }] }
     ];
 
-    // Point to Vercel API (either relative for local vercel dev, or absolute for production)
-    const apiUrl = process.env.NODE_ENV === 'development' 
-        ? '/api/chat' 
-        : 'https://opendev-labs.vercel.app/api/chat';
+    // Point to Vercel API (we use the absolute URL to ensure local testing works seamlessly across CORS)
+    const apiUrl = 'https://opendev-labs.vercel.app/api/chat';
 
     const response = await fetch(apiUrl, {
         method: 'POST',

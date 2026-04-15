@@ -309,9 +309,7 @@ export async function* streamChatResponse(
 // --- Suggestions Service ---
 export async function generateSuggestions(context: string): Promise<string[]> {
     try {
-        const apiUrl = process.env.NODE_ENV === 'development' 
-            ? '/api/suggest' 
-            : 'https://opendev-labs.vercel.app/api/suggest';
+        const apiUrl = 'https://opendev-labs.vercel.app/api/suggest';
 
         const response = await fetch(apiUrl, {
             method: 'POST',
