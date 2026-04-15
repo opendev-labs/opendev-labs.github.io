@@ -1,59 +1,28 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import officialLogo from '../assets/official-logo.png';
-
-const Logo = () => (
-    <img
-        src={officialLogo}
-        alt="OpenDev-Labs Logo"
-        className="h-6 w-auto object-contain brightness-90 hover:brightness-100 transition-all opacity-80 hover:opacity-100"
-    />
-);
 
 export const Footer: React.FC = () => {
     return (
-        <footer className="border-t border-zinc-900 bg-black py-16 px-6">
-            <div className="container mx-auto max-w-[1200px]">
-                <div className="flex flex-col md:flex-row justify-between items-start gap-12 mb-16">
-                    <div className="space-y-6">
-                        <div className="flex items-center gap-3">
-                            <Logo />
-                            <span className="font-bold tracking-tighter text-xl lowercase">opendev-labs</span>
-                        </div>
-                        <p className="text-zinc-500 text-sm max-w-xs font-medium leading-relaxed">
-                            A simple system to build and use smart software.
-                        </p>
-                    </div>
-
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-12 md:gap-20">
-                        <div className="space-y-4">
-                            <h4 className="text-[10px] font-bold text-white uppercase tracking-[0.3em] mb-6">Tools</h4>
-                            <Link to="/void" className="block text-[11px] font-bold text-zinc-500 hover:text-white uppercase tracking-widest transition-colors">Void</Link>
-                            <Link to="/lamadb" className="block text-[11px] font-bold text-zinc-500 hover:text-white uppercase tracking-widest transition-colors">LamaDB</Link>
-                            <Link to="/cli" className="block text-[11px] font-bold text-zinc-500 hover:text-white uppercase tracking-widest transition-colors">Spoon CLI</Link>
-                        </div>
-                        <div className="space-y-4">
-                            <h4 className="text-[10px] font-bold text-white uppercase tracking-[0.3em] mb-6">Resources</h4>
-                            <Link to="/docs" className="block text-[11px] font-bold text-zinc-500 hover:text-white uppercase tracking-widest transition-colors">Documentation</Link>
-                            <Link to="/changelog" className="block text-[11px] font-bold text-zinc-500 hover:text-white uppercase tracking-widest transition-colors">Changelog</Link>
-                            <a href="https://github.com/opendev-labs" className="block text-[11px] font-bold text-zinc-500 hover:text-white uppercase tracking-widest transition-colors" target="_blank" rel="noopener noreferrer">Community</a>
-                        </div>
-                        <div className="space-y-4">
-                            <h4 className="text-[10px] font-bold text-white uppercase tracking-[0.3em] mb-6">Legal</h4>
-                            <Link to="/terms" className="block text-[11px] font-bold text-zinc-500 hover:text-white uppercase tracking-widest transition-colors">Terms of Use</Link>
-                            <Link to="/privacy" className="block text-[11px] font-bold text-zinc-500 hover:text-white uppercase tracking-widest transition-colors">Privacy Policy</Link>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="flex flex-col md:flex-row justify-between items-center gap-6 border-t border-zinc-900 pt-8">
-                    <p className="text-[10px] font-bold text-zinc-700 uppercase tracking-[0.2em]">
-                        &copy; 2026 opendev-labs
-                    </p>
-                    <div className="flex items-center gap-2">
-                        <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-                        <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">All systems working normally</span>
-                    </div>
+        <footer className="border-t border-zinc-900 bg-black py-8 px-6">
+            <div className="max-w-[1100px] mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+                <p className="text-[13px] text-zinc-600">
+                    © {new Date().getFullYear()} OpenDev-Labs
+                </p>
+                <div className="flex items-center gap-6">
+                    <a
+                        href="https://github.com/opendev-labs"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[13px] text-zinc-600 hover:text-zinc-300 transition-colors"
+                    >
+                        GitHub
+                    </a>
+                    <Link to="/docs" className="text-[13px] text-zinc-600 hover:text-zinc-300 transition-colors">
+                        Documentation
+                    </Link>
+                    <Link to="/changelog" className="text-[13px] text-zinc-600 hover:text-zinc-300 transition-colors">
+                        Changelog
+                    </Link>
                 </div>
             </div>
         </footer>
