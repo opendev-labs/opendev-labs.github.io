@@ -397,40 +397,45 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const updateProfile = useCallback(async (data: Partial<UserProfile>) => {
     if (!user) return;
     try {
+      console.log("🚀 LAMA_BRIDGE: Initiating Profile Synchronization...", data);
       const userContext = { uid: user.uid, email: user.email };
+      
       const profileData = {
-        ...profile,
+        ...(profile || {}),
         ...data,
         updatedAt: new Date().toISOString()
       };
 
+      // Clean undefined values for Firestore/LamaDB compatibility
+      const cleanedProfileData = Object.fromEntries(
+        Object.entries(profileData).filter(([_, v]) => v !== undefined)
+      );
+
       if (profile?.id) {
-        await (LamaDB as any).store.collection('profiles', userContext).update(profile.id, profileData);
+        await (LamaDB as any).store.collection('profiles', userContext).update(profile.id, cleanedProfileData);
       } else {
-        const newProfile = await (LamaDB as any).store.collection('profiles', userContext).add(profileData);
+        const newProfile = await (LamaDB as any).store.collection('profiles', userContext).add(cleanedProfileData);
         profileData.id = newProfile.id;
       }
+      
       setProfile(profileData as UserProfile);
-      setAvatarUrl(profileData.avatarUrl || null);
-      setBannerUrl(profileData.bannerUrl || null);
+      if (profileData.avatarUrl) setAvatarUrl(profileData.avatarUrl);
+      if (profileData.bannerUrl) setBannerUrl(profileData.bannerUrl);
 
       // BROADCAST TO GLOBAL MESH
       const globalContext = { uid: 'global', email: 'global' };
       const globalProfiles = await (LamaDB as any).store.collection('global_mesh_profiles', globalContext).get();
       const existingGlobal = globalProfiles.find((p: any) => p.uid === user.uid);
       
-      // Clean undefined values for Firestore compatibility
-      const cleanedData = Object.fromEntries(
-        Object.entries(profileData).filter(([_, v]) => v !== undefined)
-      );
-
       if (existingGlobal) {
-        await (LamaDB as any).store.collection('global_mesh_profiles', globalContext).update(existingGlobal.id, cleanedData);
+        await (LamaDB as any).store.collection('global_mesh_profiles', globalContext).update(existingGlobal.id, cleanedProfileData);
       } else {
-        await (LamaDB as any).store.collection('global_mesh_profiles', globalContext).add(cleanedData);
+        await (LamaDB as any).store.collection('global_mesh_profiles', globalContext).add(cleanedProfileData);
       }
+      
+      console.log("✅ LAMA_BRIDGE: Profile Sync Complete.");
     } catch (error) {
-      console.error("Update Profile Error:", error);
+      console.error("❌ LAMA_BRIDGE: Profile Sync Error:", error);
       throw error;
     }
   }, [user, profile]);

@@ -216,6 +216,52 @@ async function* streamHuggingFaceResponse(fullPrompt: string, history: Message[]
 }
 
 
+async function* streamOllamaResponse(fullPrompt: string, history: Message[], modelConfig: ModelConfig): AsyncGenerator<{ text: string; }> {
+    const messages = [
+        { role: 'system', content: TARS_SYSTEM_INSTRUCTION_GENERIC },
+        ...toGenericHistory(history),
+        { role: 'user', content: fullPrompt }
+    ];
+
+    const response = await fetch(`http://localhost:11434/api/chat`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            model: modelConfig.apiIdentifier,
+            messages: messages,
+            stream: true,
+        })
+    });
+
+    if (!response.ok) {
+        throw new Error(`Ollama connection failed. Ensure Ollama is running at http://localhost:11434 and CORS is enabled (OLLAMA_ORIGINS="*" ollama serve).`);
+    }
+
+    if (!response.body) throw new Error("No response body from Ollama");
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+
+    while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        const chunks = decoder.decode(value, { stream: true }).split('\n').filter(Boolean);
+        for (const chunk of chunks) {
+            try {
+                const json = JSON.parse(chunk);
+                if (json.message?.content) {
+                    yield { text: json.message.content };
+                }
+                if (json.done) return;
+            } catch (e) {
+                console.error("Ollama parsing error:", e);
+            }
+        }
+    }
+}
+
+
 // --- Main Dispatcher ---
 
 export async function* streamChatResponse(
@@ -273,7 +319,11 @@ export async function* streamChatResponse(
     try {
         switch (modelConfig.provider) {
             case 'Google':
-                yield* streamGeminiResponse(fullPrompt, history, modelConfig, undefined);
+                yield* streamGeminiResponse(fullPrompt, history, modelConfig, effectiveApiKey);
+                break;
+
+            case 'Ollama':
+                yield* streamOllamaResponse(fullPrompt, history, modelConfig);
                 break;
 
             case 'OpenAI':

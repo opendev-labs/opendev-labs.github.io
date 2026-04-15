@@ -138,7 +138,7 @@ export default function Home() {
                             onClick={() => navigate(isAuthenticated ? '/open-studio' : '/auth')}
                             className="px-8 py-3.5 bg-white text-black text-[15px] font-semibold rounded-md hover:bg-zinc-200 transition-colors shadow-xl"
                         >
-                            Quick Start
+                            Configure
                         </button>
                         <button
                             onClick={() => navigate('/docs')}

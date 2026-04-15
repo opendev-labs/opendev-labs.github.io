@@ -135,33 +135,48 @@ export function SettingsView() {
                             </div>
                             
                             <SettingsRow label="Gemini API Key">
-                                <input 
-                                    type="password" 
-                                    placeholder="Enter your Google Gemini key..."
-                                    value={apiKeys.geminiApiKey}
-                                    onChange={(e) => setApiKeys({...apiKeys, geminiApiKey: e.target.value})}
-                                    className="bg-[#050505] border border-zinc-900/80 focus:border-zinc-700 rounded-xl px-4 py-3 text-[11px] font-mono w-full sm:w-80 text-white transition-all focus:outline-none" 
-                                />
+                                <div className="space-y-3 w-full sm:w-80">
+                                    <input 
+                                        type="password" 
+                                        placeholder="Enter your Google Gemini key..."
+                                        value={apiKeys.geminiApiKey}
+                                        onChange={(e) => setApiKeys({...apiKeys, geminiApiKey: e.target.value})}
+                                        className="bg-[#050505] border border-zinc-900/80 focus:border-zinc-700 rounded-xl px-4 py-3 text-[11px] font-mono w-full text-white transition-all focus:outline-none" 
+                                    />
+                                    <p className="text-[9px] text-zinc-600 font-medium tracking-wide">
+                                        Get your key from <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" className="text-zinc-400 hover:text-white underline decoration-zinc-800 underline-offset-4">Google AI Studio</a>.
+                                    </p>
+                                </div>
                             </SettingsRow>
                             
                             <SettingsRow label="OpenRouter Key">
-                                <input 
-                                    type="password" 
-                                    placeholder="Enter your OpenRouter key..."
-                                    value={apiKeys.openRouterApiKey}
-                                    onChange={(e) => setApiKeys({...apiKeys, openRouterApiKey: e.target.value})}
-                                    className="bg-[#050505] border border-zinc-900/80 focus:border-zinc-700 rounded-xl px-4 py-3 text-[11px] font-mono w-full sm:w-80 text-white transition-all focus:outline-none" 
-                                />
+                                <div className="space-y-3 w-full sm:w-80">
+                                    <input 
+                                        type="password" 
+                                        placeholder="Enter your OpenRouter key..."
+                                        value={apiKeys.openRouterApiKey}
+                                        onChange={(e) => setApiKeys({...apiKeys, openRouterApiKey: e.target.value})}
+                                        className="bg-[#050505] border border-zinc-900/80 focus:border-zinc-700 rounded-xl px-4 py-3 text-[11px] font-mono w-full text-white transition-all focus:outline-none" 
+                                    />
+                                    <p className="text-[9px] text-zinc-600 font-medium tracking-wide">
+                                        Optional. Connect to any model via <a href="https://openrouter.ai/keys" target="_blank" rel="noopener noreferrer" className="text-zinc-400 hover:text-white underline decoration-zinc-800 underline-offset-4">OpenRouter</a>.
+                                    </p>
+                                </div>
                             </SettingsRow>
                             
                             <SettingsRow label="OpenAI Key">
-                                <input 
-                                    type="password" 
-                                    placeholder="Enter your OpenAI key..."
-                                    value={apiKeys.openaiApiKey}
-                                    onChange={(e) => setApiKeys({...apiKeys, openaiApiKey: e.target.value})}
-                                    className="bg-[#050505] border border-zinc-900/80 focus:border-zinc-700 rounded-xl px-4 py-3 text-[11px] font-mono w-full sm:w-80 text-white transition-all focus:outline-none" 
-                                />
+                                <div className="space-y-3 w-full sm:w-80">
+                                    <input 
+                                        type="password" 
+                                        placeholder="Enter your OpenAI key..."
+                                        value={apiKeys.openaiApiKey}
+                                        onChange={(e) => setApiKeys({...apiKeys, openaiApiKey: e.target.value})}
+                                        className="bg-[#050505] border border-zinc-900/80 focus:border-zinc-700 rounded-xl px-4 py-3 text-[11px] font-mono w-full text-white transition-all focus:outline-none" 
+                                    />
+                                    <p className="text-[9px] text-zinc-600 font-medium tracking-wide">
+                                        Optional. Get your key from the <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener noreferrer" className="text-zinc-400 hover:text-white underline decoration-zinc-800 underline-offset-4">OpenAI Dashboard</a>.
+                                    </p>
+                                </div>
                             </SettingsRow>
 
                             <div className="pt-8 flex justify-end">
@@ -206,6 +221,9 @@ export function SettingsView() {
                                             <p className="mt-6 text-[9px] text-zinc-700 uppercase leading-relaxed font-bold tracking-widest italic opacity-60">
                                                 Uplink notice: Materialize these parameters in your host controller to enable specialized mesh features.
                                             </p>
+                                            <div className="mt-4 p-4 bg-blue-500/5 border border-blue-500/10 rounded-xl text-[9px] font-mono text-blue-400/80">
+                                                <span className="text-blue-500 font-bold uppercase tracking-widest">Auth Protocol Tip:</span> Ensure 'opendev-labs.vercel.app' is added to your Firebase Console > Authentication > Settings > Authorized Domains.
+                                            </div>
                                         </>
                                     ) : (
                                         <div className="flex items-center gap-3 p-4 bg-emerald-500/5 border border-emerald-500/10 rounded-xl text-[10px] font-mono text-emerald-600/80">

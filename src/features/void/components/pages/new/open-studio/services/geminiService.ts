@@ -40,14 +40,38 @@ export async function* streamGeminiResponse(
     fullPrompt: string,
     history: Message[],
     modelConfig: ModelConfig,
-    _manualApiKey?: string // Ignored in Zero-Config standard
+    manualApiKey?: string
 ): AsyncGenerator<{ text: string; }> {
     const contents = [
         ...toGeminiHistory(history),
         { role: 'user', parts: [{ text: fullPrompt }] }
     ];
 
-    // Point to Vercel API (we use the absolute URL to ensure local testing works seamlessly across CORS)
+    // If a manual API key is provided, call Google directly from the browser
+    if (manualApiKey) {
+        const modelId = modelConfig.apiIdentifier || 'gemini-1.5-flash';
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelId}:streamGenerateContent?alt=sse&key=${manualApiKey}`;
+        
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                contents,
+                systemInstruction: { parts: [{ text: TARS_SYSTEM_INSTRUCTION_GEMINI }] }
+            })
+        });
+
+        if (!response.ok) {
+            const errText = await response.text();
+            throw new Error(`Direct Google API Error: ${errText}`);
+        }
+
+        if (!response.body) throw new Error("No response body");
+        yield* streamReader(response.body);
+        return;
+    }
+
+    // Default: Point to Vercel API (Zero-Config standard)
     const apiUrl = 'https://opendev-labs.vercel.app/api/chat';
 
     const response = await fetch(apiUrl, {
@@ -66,8 +90,11 @@ export async function* streamGeminiResponse(
     }
 
     if (!response.body) throw new Error("No response body");
+    yield* streamReader(response.body);
+}
 
-    const reader = response.body.getReader();
+async function* streamReader(body: ReadableStream<Uint8Array>): AsyncGenerator<{ text: string }> {
+    const reader = body.getReader();
     const decoder = new TextDecoder("utf-8");
     let buffer = '';
 

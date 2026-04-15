@@ -27,6 +27,9 @@ export const SUPPORTED_MODELS: ModelConfig[] = [
     { id: 'phind-codellama-v2', name: 'Phind CodeLlama V2', provider: 'Phind', apiIdentifier: 'phind/Phind-CodeLlama-34B-v2' },
     { id: 'replit-code-v1.5', name: 'Replit Code V1.5', provider: 'Replit', apiIdentifier: 'replit/replit-code-v1-3b' },
 
+    // Ollama (Local)
+    { id: 'ollama-nanopi', name: 'NanoPi (Ollama) ⚡', provider: 'Ollama', apiIdentifier: 'opendev-labs/nanopi' },
+
     // Existing Models
     { id: 'openai-gpt-4o', name: 'GPT-4o', provider: 'OpenAI', apiIdentifier: 'gpt-4o' },
     { id: 'openai-gpt-4-turbo', name: 'GPT-4 Turbo', provider: 'OpenAI', apiIdentifier: 'gpt-4-turbo' },
