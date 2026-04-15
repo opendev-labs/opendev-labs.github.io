@@ -222,7 +222,7 @@ export function SettingsView() {
                                                 Uplink notice: Materialize these parameters in your host controller to enable specialized mesh features.
                                             </p>
                                             <div className="mt-4 p-4 bg-blue-500/5 border border-blue-500/10 rounded-xl text-[9px] font-mono text-blue-400/80">
-                                                <span className="text-blue-500 font-bold uppercase tracking-widest">Auth Protocol Tip:</span> Ensure 'opendev-labs.vercel.app' is added to your Firebase Console > Authentication > Settings > Authorized Domains.
+                                                <span className="text-blue-500 font-bold uppercase tracking-widest">Auth Protocol Tip:</span> Ensure 'opendev-labs.vercel.app' is added to your Firebase Console &gt; Authentication &gt; Settings &gt; Authorized Domains.
                                             </div>
                                         </>
                                     ) : (
