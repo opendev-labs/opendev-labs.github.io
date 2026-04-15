@@ -4,26 +4,21 @@ import { motion } from 'framer-motion';
 import { useAuth } from '../features/void/hooks/useAuth';
 
 /* ─────────────────────────────────────────────────────
-   TECHNOLOGY TICKER — Grayscale icons, auto-scroll
+   TECHNOLOGY ROW — Grayscale, static
    ─────────────────────────────────────────────────── */
-const TechTicker = () => {
-    const techs = [
-        'react', 'nextjs', 'typescript', 'nodejs', 'python', 'go', 'rust',
-        'postgres', 'redis', 'vite', 'tailwind', 'firebase', 'svelte', 'vue', 'docker'
-    ];
+const TechRow = () => {
+    const techs = ['react', 'nextjs', 'typescript', 'nodejs', 'vite', 'tailwind'];
     return (
-        <div className="border-y border-zinc-900 overflow-hidden py-8">
-            <div className="relative flex overflow-x-hidden">
-                <div className="animate-marquee flex whitespace-nowrap gap-12 items-center">
-                    {techs.concat(techs).map((id, i) => (
-                        <img
-                            key={`${id}-${i}`}
-                            src={`https://skillicons.dev/icons?i=${id}`}
-                            alt={id}
-                            className="h-8 w-8 grayscale opacity-40 hover:grayscale-0 hover:opacity-100 transition-all duration-300"
-                        />
-                    ))}
-                </div>
+        <div className="border-y border-zinc-800/60 py-12">
+            <div className="max-w-[1100px] mx-auto px-6 flex flex-wrap justify-center items-center gap-12 opacity-40">
+                {techs.map((id) => (
+                    <img
+                        key={id}
+                        src={`https://skillicons.dev/icons?i=${id}`}
+                        alt={id}
+                        className="h-7 w-auto grayscale"
+                    />
+                ))}
             </div>
         </div>
     );
@@ -106,110 +101,89 @@ export default function Home() {
         <div className="flex flex-col w-full bg-black min-h-screen">
 
             {/* ── HERO ─────────────────────────────── */}
-            <section className="relative pt-32 pb-24 md:pt-40 md:pb-32 overflow-hidden">
+            <section className="relative isolate px-6 pt-32 pb-24 md:pt-48 md:pb-32 overflow-hidden">
                 {/* Subtle dot grid */}
                 <div className="absolute inset-0 opacity-[0.03]"
-                    style={{ backgroundImage: 'radial-gradient(circle, #fff 1px, transparent 1px)', backgroundSize: '24px 24px' }}
+                    style={{ backgroundImage: 'radial-gradient(circle, #fff 1px, transparent 1px)', backgroundSize: '32px 32px' }}
                 />
 
-                <div className="relative z-10 max-w-[900px] mx-auto px-6 text-center">
+                <div className="relative z-10 max-w-4xl mx-auto text-center">
                     <motion.h1
-                        initial={{ opacity: 0, y: 16 }}
+                        initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5 }}
-                        className="text-5xl md:text-7xl font-bold tracking-tight text-white leading-[1.1] mb-6"
+                        transition={{ duration: 0.6 }}
+                        className="text-5xl md:text-7xl font-bold tracking-tight text-white leading-[1.05] mb-8"
                     >
-                        Universal Development{' '}
-                        <span className="text-zinc-500">Platform</span>
+                        Build, deploy, and share<br />
+                        <span className="text-zinc-500">with AI</span>
                     </motion.h1>
 
                     <motion.p
-                        initial={{ opacity: 0, y: 16 }}
+                        initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5, delay: 0.1 }}
-                        className="text-lg md:text-xl text-zinc-400 max-w-2xl mx-auto mb-10 leading-relaxed"
+                        transition={{ duration: 0.6, delay: 0.1 }}
+                        className="text-lg md:text-xl text-zinc-400 max-w-2xl mx-auto mb-12 leading-relaxed"
                     >
-                        Code, deploy, and share — all in one place. AI-powered IDE with real npm execution
-                        and one-click GitHub Pages deployment.
+                        OpenStudio is an AI-powered IDE that runs real code, installs any npm package,
+                        and deploys to GitHub Pages — all in your browser.
                     </motion.p>
 
                     <motion.div
-                        initial={{ opacity: 0, y: 16 }}
+                        initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5, delay: 0.2 }}
-                        className="flex flex-col sm:flex-row items-center justify-center gap-3"
+                        transition={{ duration: 0.6, delay: 0.2 }}
+                        className="flex flex-col sm:flex-row items-center justify-center gap-4"
                     >
                         <button
                             onClick={() => navigate(isAuthenticated ? '/open-studio' : '/auth')}
-                            className="px-6 py-3 bg-white text-black text-[14px] font-semibold rounded-lg hover:bg-zinc-200 transition-colors"
+                            className="px-8 py-3.5 bg-white text-black text-[15px] font-semibold rounded-md hover:bg-zinc-200 transition-colors shadow-xl"
                         >
-                            Get Started
+                            Quick Start
                         </button>
                         <button
                             onClick={() => navigate('/docs')}
-                            className="px-6 py-3 text-[14px] font-medium text-zinc-400 border border-zinc-800 rounded-lg hover:border-zinc-600 hover:text-white transition-all"
+                            className="px-8 py-3.5 text-[15px] font-medium text-white border border-zinc-800 rounded-md hover:bg-zinc-900 transition-colors"
                         >
-                            Documentation
+                            Documentation <span aria-hidden="true" className="ml-1 opacity-50">→</span>
                         </button>
                     </motion.div>
                 </div>
             </section>
 
-            {/* ── TECH TICKER ──────────────────────── */}
-            <TechTicker />
+            {/* ── TECHNOLOGY ROW ───────────────────── */}
+            <TechRow />
 
             {/* ── SCENARIO CARDS ────────────────────── */}
-            <section className="py-24 md:py-32">
+            <section className="py-32">
                 <div className="max-w-[1100px] mx-auto px-6">
-                    <div className="text-center mb-16">
+                    <div className="text-center mb-20">
                         <h2 className="text-3xl md:text-4xl font-bold text-white tracking-tight mb-4">
-                            Built for developers
+                            Everything you need to build
                         </h2>
-                        <p className="text-[15px] text-zinc-500 max-w-lg mx-auto">
-                            Everything you need to build, share, and deploy software projects.
+                        <p className="text-[17px] text-zinc-500 max-w-xl mx-auto leading-relaxed">
+                            AI-powered tools that actually work. No install required.
                         </p>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <ScenarioCard
-                            icon={Code2}
+                            icon={Zap}
                             title="OpenStudio IDE"
-                            desc="AI code generation with real npm packages. Write a prompt, get a working app with live preview."
+                            desc="AI code generation with real npm execution. Install any package, run any framework."
                             path="/open-studio"
                             onClick={() => navigate('/open-studio')}
                         />
                         <ScenarioCard
                             icon={Users}
                             title="OpenHub Social"
-                            desc="Developer feed to share projects, follow builders, and discover what others are creating."
+                            desc="Share projects, discover others, and build your developer network."
                             path="/open-hub"
                             onClick={() => navigate(isAuthenticated ? '/open-hub' : '/auth')}
                         />
                         <ScenarioCard
                             icon={Rocket}
-                            title="Deploy to GitHub"
-                            desc="One-click deployment to GitHub Pages. Your generated app goes live with a real URL instantly."
-                            path="/open-studio"
-                            onClick={() => navigate('/open-studio')}
-                        />
-                        <ScenarioCard
-                            icon={Layers}
-                            title="Multi-Framework"
-                            desc="Generate React, Vue, Svelte, or vanilla HTML/CSS/JS projects. Sandpack handles all frameworks."
-                            path="/open-studio"
-                            onClick={() => navigate('/open-studio')}
-                        />
-                        <ScenarioCard
-                            icon={Database}
-                            title="Session Persistence"
-                            desc="Your work saves automatically. Come back to any project — code, chat history, everything is preserved."
-                            path="/open-studio"
-                            onClick={() => navigate('/open-studio')}
-                        />
-                        <ScenarioCard
-                            icon={GitBranch}
-                            title="GitHub Integration"
-                            desc="Connected to your GitHub account. Create repos, push code, and manage your projects seamlessly."
+                            title="One-Click Deploy"
+                            desc="Deploy to GitHub Pages instantly. Your generated app goes live in seconds."
                             path="/open-studio"
                             onClick={() => navigate('/open-studio')}
                         />
