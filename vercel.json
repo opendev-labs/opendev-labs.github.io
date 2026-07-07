@@ -10,7 +10,11 @@
             "destination": "/api/$1"
         },
         {
-            "source": "/((?!api/).*)",
+            "source": "/syncstack/(.*)",
+            "destination": "/syncstack/$1"
+        },
+        {
+            "source": "/((?!api/|syncstack/).*)",
             "destination": "/index.html"
         }
     ],
